@@ -19,7 +19,7 @@
 
                             <div class="px-3 mt-3 d-flex align-items-center gap-2">
                                 <input type="text" id="search" name="search" class="form-control form-control-sm bg-light rounded w-25" placeholder="Search...">
-                                <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal">+ Add Job Skill</button>
+                                <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal">+ Add Skill</button>
                             </div>
 
                             <div class="card-body">
