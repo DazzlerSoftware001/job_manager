@@ -113,13 +113,12 @@ class CompanyController extends Controller
   
         // Define validation rules
         $rules = [
-            'name' => 'required|string|max:255|unique:users,name',
-            'email' => 'required|email|max:255|unique:users,email',
-            'phone' => 'required|digits_between:10,15|unique:users,phone',
-            'website' => 'required|url|max:255|unique:users,website',
+            'name' => 'required|string|max:255|unique:companies,name',
+            'email' => 'required|email|max:255|unique:companies,email',
+            'phone' => 'required|digits_between:10,15|unique:companies,phone',
+            'website' => 'required|url|max:255|unique:companies,website',
             'address' => 'required|string|min:10|max:255',
             'logo' => 'required|image|max:2048',
-            'password' => 'required|string|min:8|confirmed',
         ];
 
         // Validate the request
@@ -131,13 +130,11 @@ class CompanyController extends Controller
                 if ($request->hasFile('logo')) {
                     $logo = $request->file('logo');
                     $logoName = time() . '.' . $logo->getClientOriginalExtension(); 
-                    $logo->move(public_path('recruiter/logo'), $logoName);
-                    $logoPath = ('recruiter/logo/'. $logoName);
+                    $logo->move(public_path('company/logo'), $logoName);
+                    $logoPath = ('company/logo/'. $logoName);
                 }
 
                 $Companies = new Companies();
-                $Companies->user_type = 2;
-                $Companies->user_details = 'Recruiter';
                 $Companies->name = $request->input('name');
                 $Companies->email = $request->input('email');
                 $Companies->phone = $request->input('phone');
@@ -145,7 +142,6 @@ class CompanyController extends Controller
                 $Companies->address = $request->input('address');
                 $Companies->logo = $logoPath;
                 $Companies->status = 0;
-                $Companies->password = Hash::make($request->input('password'));
                 $Companies->created_at = now();
 
                 $Companies->save();
@@ -229,14 +225,13 @@ class CompanyController extends Controller
     public function updateCompany(Request $request)
     {
         $rules = [
-            'edit-id' => 'required|exists:users,id',
+            'edit-id' => 'required|exists:companies,id',
             'editname' => 'required|string|max:255',
             'editemail' => 'required|email|max:255',
             'editphone' => 'required|digits_between:10,15',
             'editwebsite' => 'required|url|max:255',
             'editaddress' => 'required|string|min:10|max:255',
             'editlogo' => 'nullable|image|max:2048',
-            'password' => 'nullable|string|min:8|confirmed',
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -248,8 +243,8 @@ class CompanyController extends Controller
             if ($request->hasFile('editlogo')) {
                 $logo = $request->file('editlogo');
                 $logoName = time() . '.' . $logo->getClientOriginalExtension(); 
-                $logo->move(public_path('recruiter/logo'), $logoName);
-                $logoPath = ('recruiter/logo/'. $logoName);
+                $logo->move(public_path('company/logo'), $logoName);
+                $logoPath = ('company/logo/'. $logoName);
             }
 
             $id = $request->input('edit-id');
@@ -269,11 +264,6 @@ class CompanyController extends Controller
                     $Company->logo = $logoPath;
                 }
         
-                // Update password if provided
-                if ($request->filled('password')) {
-                    $Company->password = Hash::make($request->input('password'));
-                }
-
                 $Company->updated_at = now();
 
                 $Company->save();

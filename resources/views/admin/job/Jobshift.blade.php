@@ -190,7 +190,7 @@
                                 gravity: "top",
                                 position: "right",
                                 style:{
-                                    background:"yellow",
+                                    background:"#c7ac14",
                                     color: "white",
                                 }
                             }).showToast();
@@ -251,14 +251,14 @@
                 }).showToast();
               } else if (result.status_code == 2) {
                 Toastify({
-                  text: result.message,
-                  duration: 3000,
-                  gravity: "top",
-                  position: "right",
-                  style:{
-                    background: "yellow",
-                    color: "white",
-                  }
+                    text: result.message,
+                    duration: 3000,
+                    gravity: "top",
+                    position: "right",
+                    style:{
+                        background:"#c7ac14",
+                        color: "white",
+                    }
                 }).showToast();
 
               } else {
@@ -401,9 +401,10 @@
                             duration: 3000,
                             gravity: "top",
                             position: "right",
-                            style: {
-                                background: "#c7ac14",
-                            },
+                            style:{
+                                background:"#c7ac14",
+                                color: "white",
+                            }
                         }).showToast();
                     } else {
                         Toastify({
@@ -411,9 +412,10 @@
                             duration: 3000,
                             gravity: "top",
                             position: "right",
-                            style: {
-                            background: "#c7ac14",
-                        },
+                            style:{
+                                background:"#c7ac14",
+                                color: "white",
+                            }
                         }).showToast();
                     }
                 },

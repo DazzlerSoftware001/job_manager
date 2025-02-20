@@ -191,7 +191,7 @@
                                 gravity: "top",
                                 position: "right",
                                 style:{
-                                    background:"yellow",
+                                    background:"#c7ac14",
                                     color: "white",
                                 }
                             }).showToast();
@@ -257,9 +257,9 @@
                   gravity: "top",
                   position: "right",
                   style:{
-                    background: "yellow",
-                    color: "white",
-                  }
+                        background:"#c7ac14",
+                        color: "white",
+                    }
                 }).showToast();
 
               } else {
@@ -402,9 +402,10 @@
                             duration: 3000,
                             gravity: "top",
                             position: "right",
-                            style: {
-                                background: "#c7ac14",
-                            },
+                            style:{
+                                    background:"#c7ac14",
+                                    color: "white",
+                                }
                         }).showToast();
                     } else {
                         Toastify({

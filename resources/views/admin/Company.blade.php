@@ -113,26 +113,6 @@
                         <input type="file" class="form-control" name="logo" id="logo" accept="image/*" required>
                     </div>
 
-                    <div class="mb-3 position-relative">
-                        <label for="password" class="form-label">Password</label>
-                        <div class="position-relative">
-                            <input type="password" class="form-control pe-5" name="password" id="password" required>
-                            <span class="position-absolute end-0 top-50 translate-middle-y me-3" onclick="togglePassword('password', 'toggleIcon1')" style="cursor: pointer;">
-                                <i class="far fa-eye" id="toggleIcon1"></i>
-                            </span>
-                        </div>
-                    </div>
-                    
-                    <div class="mb-3 position-relative">
-                        <label for="password_confirmation" class="form-label">Confirm Password</label>
-                        <div class="position-relative">
-                            <input type="password" class="form-control pe-5" name="password_confirmation" id="password_confirmation" required>
-                            <span class="position-absolute end-0 top-50 translate-middle-y me-3" onclick="togglePassword('password_confirmation', 'toggleIcon2')" style="cursor: pointer;">
-                                <i class="far fa-eye" id="toggleIcon2"></i>
-                            </span>
-                        </div>
-                    </div>
-
                     {{-- <div class="mb-3 position-relative">
                         <label for="password" class="form-label">Password</label>
                         <div class="position-relative">
@@ -152,8 +132,6 @@
                             </span>
                         </div>
                     </div> --}}
-                    
-                    
                     
                     
             </div>
@@ -254,7 +232,7 @@
 @section('script')
 
     {{-- password toggle --}}
-    <script>
+    {{-- <script>
         function togglePassword(inputId, iconId) {
             let passwordInput = document.getElementById(inputId);
             let toggleIcon = document.getElementById(iconId);
@@ -269,7 +247,7 @@
                 toggleIcon.classList.add("fa-eye");
             }
         }
-    </script>
+    </script> --}}
 
     {{--  copy website--}}
     <script>

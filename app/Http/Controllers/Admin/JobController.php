@@ -527,7 +527,7 @@ class JobController extends Controller
   
         // Define validation rules
         $rules = [
-            'category' => 'required|string|max:100',
+            'category' => 'required|string|max:100|unique:job_category,name',
         ];
 
         // Validate the request
@@ -735,7 +735,7 @@ class JobController extends Controller
   
         // Define validation rules
         $rules = [
-            'types' => 'required|string|max:100',
+            'types' => 'required|string|max:100|unique:job_types,type',
         ];
 
         // Validate the request
@@ -944,7 +944,7 @@ class JobController extends Controller
   
         // Define validation rules
         $rules = [
-            'shift' => 'required|string|max:100',
+            'shift' => 'required|string|max:100|unique:job_shift,shift',
         ];
 
         // Validate the request
@@ -1152,7 +1152,7 @@ class JobController extends Controller
   
         // Define validation rules
         $rules = [
-            'experience' => 'required|string|max:100',
+            'experience' => 'required|string|max:100|unique:job_experience,experience',
         ];
 
         // Validate the request
