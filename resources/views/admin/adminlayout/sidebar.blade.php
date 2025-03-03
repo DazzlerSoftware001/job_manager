@@ -56,7 +56,16 @@
                     <li>
                         <a href="javascript: void(0);" class="has-arrow">
                             <i class="icon nav-icon" data-eva="briefcase-outline"></i>
-                            <span class="menu-item" data-key="t-projects">Jobs</span>
+                            <span class="menu-item" data-key="t-projects">Jobs Manager</span>
+                        </a>
+                        <ul class="sub-menu" aria-expanded="false">
+                            <li><a href="{{route('Admin.JobSkill')}}" data-key="t-p-grid">All Jobs</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="javascript: void(0);" class="has-arrow">
+                            <i class="icon nav-icon" data-eva="briefcase-outline"></i>
+                            <span class="menu-item" data-key="t-projects">Jobs Attributes</span>
                         </a>
                         <ul class="sub-menu" aria-expanded="false">
                             <li><a href="{{route('Admin.JobSkill')}}" data-key="t-p-grid">Jobs Skill</a></li>
