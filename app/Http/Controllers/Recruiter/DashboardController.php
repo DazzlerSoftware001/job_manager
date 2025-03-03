@@ -11,7 +11,4 @@ class DashboardController extends Controller
         return view('recruiter.dashboard');
     }
 
-    public function dfdfd() {
-        return view('recruiter.dashboard');
-    }
 }
