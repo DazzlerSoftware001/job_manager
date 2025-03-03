@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\JobController;
 use App\Http\Controllers\Admin\CompanyController;
+use App\Http\Controllers\Admin\RecruiterController;
 
 Route::prefix('Admin')->group(function () {
     Route::get('/Dashboard', [DashboardController::class, 'dashboard'])->name('Admin.dashboard');
@@ -68,5 +69,13 @@ Route::prefix('Admin')->group(function () {
     Route::post('/EditCompany',[CompanyController::class,'editCompany'])->name('Admin.EditCompany');
     Route::post('/UpdateCompany',[CompanyController::class,'updateCompany'])->name('Admin.UpdateCompany');
 
+    // Recruiters
+    Route::get('/Recruiters', [RecruiterController::class, 'recruiters'])->name('Admin.Recruiters');
+    Route::post('/GetRecruiters', [RecruiterController::class, 'getRecruiters'])->name('Admin.GetRecruiters');
+    Route::post('/AddRecruiter', [RecruiterController::class, 'addRecruiter'])->name('Admin.AddRecruiter');
+    Route::post('/ChangeRecruiterStatus',[RecruiterController::class,'changeRecruiterStatus'])->name('Admin.ChangeRecruiterStatus');
+    Route::post('/DeleteRecruiter',[RecruiterController::class,'deleteRecruiter'])->name('Admin.DeleteRecruiter');
+    Route::post('/EditRecruiter',[RecruiterController::class,'editRecruiter'])->name('Admin.EditRecruiter');
+    Route::post('/UpdateRecruiter',[RecruiterController::class,'updateRecruiter'])->name('Admin.UpdateRecruiter');
 
 });

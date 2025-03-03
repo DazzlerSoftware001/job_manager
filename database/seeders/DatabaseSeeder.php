@@ -28,6 +28,7 @@ class DatabaseSeeder extends Seeder
             JobExperienceSeeder::class,
             JobSkillSeeder::class,
             CompaniesSeeder::class,
+            RecruitersSeeder::class,
             
         ]);
     }

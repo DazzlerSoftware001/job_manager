@@ -194,7 +194,7 @@
                         <input type="file" class="form-control" name="editlogo" id="editlogo" accept="image/*">
                     </div>
 
-                    <div class="mb-3 position-relative">
+                    {{-- <div class="mb-3 position-relative">
                         <label for="password" class="form-label">Password</label>
                         <div class="position-relative">
                             <input type="password" class="form-control pe-5" name="password" id="password" >
@@ -212,7 +212,7 @@
                                 <i class="far fa-eye" id="toggleIcon2"></i>
                             </span>
                         </div>
-                    </div>
+                    </div> --}}
 
             </div>
                     

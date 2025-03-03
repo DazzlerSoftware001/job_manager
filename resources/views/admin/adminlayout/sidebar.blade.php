@@ -65,7 +65,6 @@
                             <li><a href="{{route('Admin.JobTypes')}}" data-key="t-p-list">Jobs Types</a></li>
                             <li><a href="{{route('Admin.JobShift')}}" data-key="t-p-list">Jobs Shift</a></li>
                             <li><a href="{{route('Admin.JobExperience')}}" data-key="t-p-list">Jobs Experience</a></li>
-                            <li><a href="projects-create.html" data-key="t-create-new">Create New</a></li>
                         </ul>
                     </li>
 
@@ -76,6 +75,12 @@
                         </a>
                     </li>
 
+                    <li>
+                        <a href="{{route('Admin.Recruiters')}}">
+                            <i class="far fas fa-user-tie"></i>
+                            <span class="menu-item" data-key="t-projects">Recruiters</span>
+                        </a>
+                    </li>
 
                     <li>
                         <a href="apps-calendar.html">
