@@ -55,6 +55,7 @@
                         </a>
                         <ul class="sub-menu" aria-expanded="false">
                             <li><a href="{{route('Admin.JobSkill')}}" data-key="t-p-grid">Jobs Skill</a></li>
+                            <li><a href="{{route('Recruiter.jobpost')}}" data-key="t-p-grid">Post Job</a></li>
                             {{-- <li><a href="{{route('Admin.JobLocation')}}" data-key="t-p-grid">Jobs Location</a></li>
                             <li><a href="{{route('Admin.JobCategory')}}" data-key="t-p-list">Jobs Category</a></li>
                             <li><a href="{{route('Admin.JobTypes')}}" data-key="t-p-list">Jobs Types</a></li>
