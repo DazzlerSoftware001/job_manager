@@ -286,9 +286,39 @@
                                         </div>
 
 
+                                        <div class="col-xl-4 mt-3">
+                                            <label for="questions">Ask questions to candidatesthey should respond to when they are applying</label>
+                                            <input type="text" class="form-control" placeholder="How many experience do you have in non it recruitment?">
+                                        </div>
+
+
+                                        <div class="col-xl-4 mt-3">
+                                            <label for="company_name">Company Name</label>
+                                            <input type="text" class="form-control" placeholder="Dazzler" name="company_name">
+                                            <a href="">Add Website Name</a>
+                                        </div>
+
+
+                                        <div class="col-xl-4 mt-3">
+                                            <label for="company_details">Company Details</label>
+                                            <textarea class="form-control" name="company_details"></textarea>
+                                        </div>
+
+
+                                        <div class="col-xl-4 mt-3">
+                                            <label for="recruiter_details">Recruiter Details</label>
+                                            <input type="text" class="form-control" name="recruiter_details">
+                                        </div>
+
+
                                         
 
 
+                                    </div>
+
+
+                                    <div class="col-12 mb-3">
+                                        <button type="submit" class="btn btn-primary">Preview & Post Job</button>
                                     </div>
                                 </form>
                             </div>
