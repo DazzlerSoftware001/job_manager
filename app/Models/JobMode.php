@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class JobTypes extends Model
+class JobMode extends Model
 {
     use HasFactory;
 
-    protected $table = 'job_mode'; 
+    protected $table = 'job_types'; 
 
-    protected $fillable = ['mode', 'status'];
+    protected $fillable = ['type', 'status'];
 }

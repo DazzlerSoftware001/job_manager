@@ -42,6 +42,14 @@ Route::prefix('Admin')->group(function () {
     Route::post('/EditJobTypes',[JobController::class,'editJobTypes'])->name('Admin.EditJobTypes');
     Route::post('/UpdateJobTypes',[JobController::class,'updateJobTypes'])->name('Admin.UpdateJobTypes');
 
+    Route::get('/JobMode', [JobController::class, 'jobMode'])->name('Admin.JobMode');
+    Route::post('/GetJobMode', [JobController::class, 'getJobMode'])->name('Admin.GetJobMode');
+    Route::post('/AddJobMode', [JobController::class, 'addJobMode'])->name('Admin.AddJobMode');
+    Route::post('/ChangeJobModeStatus',[JobController::class,'changeJobModeStatus'])->name('Admin.ChangeJobModeStatus');
+    Route::post('/DeleteJobMode',[JobController::class,'deleteJobMode'])->name('Admin.DeleteJobMode');
+    Route::post('/EditJobMode',[JobController::class,'editJobMode'])->name('Admin.EditJobMode');
+    Route::post('/UpdateJobMode',[JobController::class,'updateJobMode'])->name('Admin.UpdateJobMode');
+
     // Shift
     Route::get('/JobShift', [JobController::class, 'jobShift'])->name('Admin.JobShift');
     Route::post('/GetJobShift', [JobController::class, 'getJobShift'])->name('Admin.GetJobShift');

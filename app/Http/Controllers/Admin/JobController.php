@@ -860,6 +860,11 @@ class JobController extends Controller
         }
     }
 
+    public function jobMode()
+    {
+        return view('admin.job.Jobmode');
+    }
+
     // Shift
     public function jobShift()
     {
