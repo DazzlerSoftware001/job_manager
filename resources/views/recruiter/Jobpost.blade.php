@@ -6,7 +6,36 @@
     Job Post
 @endsection
 @section('main-container')
-<style></style>
+<style>
+    .choices {
+        border: var(--bs-border-width) solid var(--bs-border-color);
+        border-radius: var(--bs-border-radius);
+        overflow: hidden;
+        line-height: 0.8;
+        height: 38px;
+    }
+    .choices__inner {
+        background-color: var(--bs-secondary-bg);
+        color: var(--bs-body-color);
+    }
+
+    .choices__list--single .choices__item {
+        color: #000000;
+    }
+
+    .choices[data-type*=select-one] .choices__input {
+        display: block;
+        width: 100%;
+        border: 1px solid #a29898 !important;
+        background-color: #ffffff;
+        border-radius: 10px;
+    }
+    .is-focused .choices__inner,
+    .is-open .choices__inner {
+        border: var(--bs-border-width) solid var(--bs-border-color);
+        border-radius: var(--bs-border-radius);
+    }
+</style>
     <div class="main-content">
         <div class="page-content">
             <div class="container-fluid">
