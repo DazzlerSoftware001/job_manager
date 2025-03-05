@@ -9,7 +9,7 @@ class JobTypes extends Model
 {
     use HasFactory;
 
-    protected $table = 'job_mode'; 
+    protected $table = 'job_types'; 
 
-    protected $fillable = ['mode', 'status'];
+    protected $fillable = ['type', 'status'];
 }
