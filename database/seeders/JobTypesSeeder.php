@@ -14,9 +14,7 @@ class JobTypesSeeder extends Seeder
      */
     public function run(): void
     {
-        JobTypes::create(['type' => 'Full Time', 'status' => 0]);
+        JobTypes::create(['type' => 'Full Time', 'status' => 1]);
         JobTypes::create(['type' => 'Part Time', 'status' => 0]);
-        JobTypes::create(['type' => 'WFH', 'status' => 1]);
-        JobTypes::create(['type' => 'Hybrid', 'status' => 1]);
     }
 }

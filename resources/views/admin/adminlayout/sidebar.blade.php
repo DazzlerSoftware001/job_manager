@@ -72,6 +72,7 @@
                             <li><a href="{{route('Admin.JobLocation')}}" data-key="t-p-grid">Jobs Location</a></li>
                             <li><a href="{{route('Admin.JobCategory')}}" data-key="t-p-list">Jobs Category</a></li>
                             <li><a href="{{route('Admin.JobTypes')}}" data-key="t-p-list">Jobs Types</a></li>
+                            <li><a href="{{route('Admin.JobMode')}}" data-key="t-p-list">Jobs Mode</a></li>
                             <li><a href="{{route('Admin.JobShift')}}" data-key="t-p-list">Jobs Shift</a></li>
                             <li><a href="{{route('Admin.JobExperience')}}" data-key="t-p-list">Jobs Experience</a></li>
                         </ul>
