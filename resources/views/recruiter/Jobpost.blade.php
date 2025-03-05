@@ -35,6 +35,36 @@
         border: var(--bs-border-width) solid var(--bs-border-color);
         border-radius: var(--bs-border-radius);
     }
+
+    .choices[data-type*="select-one"]::after {
+        content: "";
+        width: 12px; /* Adjust based on your icon size */
+        height: 12px;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%2322354e' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: contain;
+        position: absolute;
+        right: 15px;
+        top: 60%; /* Keep it centered */
+        transform: translateY(-50%); /* Ensure it remains vertically aligned */
+        pointer-events: none;
+        border: none; /* Remove existing arrow */
+        transition: transform 0.3s ease; /* Smooth transition */
+    }
+
+    /* When select box is open, rotate the arrow */
+    .choices[data-type*="select-one"].is-open::after {
+        transform: translateY(-90%) rotate(180deg); 
+    }
+
+
+
+    .choices[data-type*="select-one"].is-open::after {
+        border-color: transparent transparent #333;
+        margin-top: 2px;
+
+    }
 </style>
     <div class="main-content">
         <div class="page-content">
@@ -144,22 +174,20 @@
                                         <div class="col-xl-4">
                                             <label for="job_type">Job Type</label>
                                             <select class="form-select" id="job_type">
-                                                <option>Select</option>
-                                                <option>Full Time</option>
-                                                <option>Part Time</option>
-                                                <option>Contract</option>
-                                                <option>Internship</option>
-                                                <option>Freelance</option>
+                                                <option value="">Select</option>
+                                                @foreach($jobTypes as $key => $value)
+                                                <option value="{{ $value->type }}">{{ $value->type }}</option>
+                                                @endforeach
                                             </select>
                                         </div>
 
 
                                         <div class="col-xl-4">
-                                            <label for="work_mode">Work Mode</label>
+                                            <label for="work_mode">Job Mode</label>
                                             <select class="form-select" id="work_mode">
                                                 <option value="">Select</option>
-                                                @foreach($jobTypes as $key => $value)
-                                                <option value="{{ $value->type }}">{{ $value->type }}</option>
+                                                @foreach($jobMode as $key => $value)
+                                                <option value="{{ $value->mode }}">{{ $value->mode }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -174,11 +202,10 @@
                                         <div class="col-xl-4 mt-3">
                                             <label for="skills">Skills</label>
                                             <select class="form-select" id="skills">
-                                                <option>Select</option>
-                                                <option>Part Time</option>
-                                                <option>Contract</option>
-                                                <option>Internship</option>
-                                                <option>Freelance</option>
+                                                <option value="">Select</option>
+                                                @foreach($jobSkill as $key => $value)
+                                                <option value="{{ $value->skill }}">{{ $value->skill }}</option>
+                                                @endforeach
                                             </select>
                                         </div>
 
@@ -234,10 +261,9 @@
                                             <label for="location">Location</label>
                                             <select class="form-select" id="location">
                                                 <option>Select</option>
-                                                <option>Part Time</option>
-                                                <option>Contract</option>
-                                                <option>Internship</option>
-                                                <option>Freelance</option>
+                                                @foreach($JobLocation as $key => $value)
+                                                <option value="{{ $value->country . ' - ' . $value->city }}">{{ $value->country . ' - ' . $value->city }}</option>
+                                                @endforeach
                                             </select>
                                         </div>
 
@@ -246,11 +272,10 @@
                                         <div class="col-xl-4 mt-3">
                                             <label for="industry">Industry</label>
                                             <select class="form-select" id="industry">
-                                                <option>Select</option>
-                                                <option>Part Time</option>
-                                                <option>Contract</option>
-                                                <option>Internship</option>
-                                                <option>Freelance</option>
+                                                <option value="">Select</option>
+                                                @foreach($JobCategory as $key => $value)
+                                                <option value="{{ $value->name }}">{{ $value->name }}</option>
+                                                @endforeach
                                             </select>
                                         </div>
                                         
@@ -323,7 +348,7 @@
 
                                         <div class="col-xl-4 mt-3">
                                             <label for="company_name">Company Name</label>
-                                            <input type="text" class="form-control" placeholder="Dazzler" name="company_name">
+                                            <input type="text" class="form-control" placeholder="Dazzler" name="company_name" value="{{$Companies->name}}">
                                             <a href="">Add Website Name</a>
                                         </div>
 
@@ -380,6 +405,50 @@
             var element1 = document.getElementById('work_mode');
             if (element1) {
                 const choices1 = new Choices(element1, {
+                    shouldSort: false,
+                    position: 'down',
+                    resetScrollPosition: true,
+                });
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var job_type = document.getElementById('job_type');
+            if (job_type) {
+                const job_type1 = new Choices(job_type, {
+                    shouldSort: false,
+                    position: 'down',
+                    resetScrollPosition: true,
+                });
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var skills = document.getElementById('skills');
+            if (skills) {
+                const skills1 = new Choices(skills, {
+                    shouldSort: false,
+                    position: 'down',
+                    resetScrollPosition: true,
+                });
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var location = document.getElementById('location');
+            if (location) {
+                const location1 = new Choices(location, {
+                    shouldSort: false,
+                    position: 'down',
+                    resetScrollPosition: true,
+                });
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var industry = document.getElementById('industry');
+            if (industry) {
+                const industry1 = new Choices(industry, {
                     shouldSort: false,
                     position: 'down',
                     resetScrollPosition: true,
