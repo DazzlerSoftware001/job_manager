@@ -10,6 +10,7 @@ use App\Models\JobCategory;
 use App\Models\JobTypes;
 use App\Models\JobShift;
 use App\Models\JobExperience;
+use App\Models\JobMode;
 
 use Illuminate\Support\Facades\Validator;
 
@@ -864,6 +865,210 @@ class JobController extends Controller
     {
         return view('admin.job.Jobmode');
     }
+
+    public function getJobMode(Request $request)
+    {
+        // dd($request->all());
+        $draw = intval($request->input("draw"));
+        $offset = trim($request->input('start'));
+        // $limit = 10;
+        $limit = intval($request->input('length', 10));
+        $order = $request->input("order");
+        $search = $request->input("search");
+        $columns = array(
+            0 => 'id',
+            1 => 'mode',
+            2 => 'status',
+            3 => 'created_at',
+            4 => 'id',
+        );
+
+        $query = JobMode::query();
+        // Count Data
+
+        if (!empty($search)) {
+            $query->where('mode', 'like', '%' . $search . '%');
+        }
+    
+        if ($order) {
+            $column = $columns[$order[0]['column']];
+            $dir = $order[0]['dir'];
+            $query->orderBy($column, $dir);
+        }
+
+        $totalRecords = $query->count();
+
+        $records = $query->offset($offset)->limit($limit)->orderBy('id', 'desc')->get();
+
+
+        $data = [];
+        foreach ($records as $record) {
+            $dataArray = [];
+
+            $dataArray[] = $record->id;
+            $dataArray[] = ucfirst($record->mode);
+
+            $status = $record->status == 1
+                ? '<div class="d-flex justify-content-center"><span onclick="changeStatus(' . $record->id . ');" class="badge bg-success text-uppercase"  style="cursor: pointer;">Active</span></div>'
+                : '<div class="d-flex justify-content-center"><span onclick="changeStatus(' . $record->id . ');" class="badge bg-danger text-uppercase" style="cursor: pointer;">Inactive</span></div>';
+
+            $dataArray[] = $status;
+
+
+            $dataArray[] = date('d-M-Y', strtotime($record->created_at));
+
+            $dataArray[] = '<div class="d-flex gap-2">
+                                <div class="edit">
+                                    <a href="javascript:void(0);" class="edit-item-btn text-primary" data-bs-toggle="modal" data-bs-target="#EditModal" onclick="edit(' . $record->id . ');"><i class="far fa-edit"></i></a>
+                                </div>
+                                <div class="remove">
+                                    <a href="javascript:void(0);" class="remove-item-btn text-danger" onclick="deleteRecord(' . $record->id . ');">
+                                        <i class="far fa-trash-alt"></i>
+                                    </a>
+                                </div>
+                            </div>';
+
+            $data[] = $dataArray;
+        }
+
+        return response()->json([
+            "draw" => $draw,
+            "recordsTotal" => $totalRecords,
+            "recordsFiltered" => $totalRecords,
+            "data" => $data
+        ]);
+    }
+
+    public function addJobMode(Request $request)
+    {
+  
+        // Define validation rules
+        $rules = [
+            'mode' => 'required|string|max:100|unique:job_mode,mode',
+        ];
+
+        // Validate the request
+        $validator = Validator::make($request->all(), $rules);
+
+        if (!$validator->fails()) {
+            try {
+                $JobMode = new JobMode();
+                $JobMode->mode = $request->input('mode');
+                $JobMode->status = 0;
+                $JobMode->created_at = now();
+
+                $JobMode->save();
+
+                return response()->json(['status_code' => 1, 'message' => 'Job mode added successfully ']);
+            } catch (\Exception $e) {
+                // Handle any exception that occurs during saving
+                return response()->json(['status_code' => 0, 'message' => 'Unable to add mode']);
+            }
+        } else {
+            // Return validation errors
+            return response()->json(['status_code' => 2, 'message' => $validator->errors()->first()]);
+        }
+    }
+
+    public function changeJobModeStatus(Request $request)
+    {
+        $id = $request->input('id');
+    
+        if (!empty($id)) {
+            // Find the record by ID
+            $JobMode = JobMode::find($id);
+    
+           
+            if ($JobMode) {
+                // Toggle the status
+                $JobMode->status = $JobMode->status == 1 ? 0 : 1;
+    
+                // Save the updated record
+                if ($JobMode->save()) {
+                    return response()->json(['status_code' => 1, 'message' => 'Status successfully changed']);
+                } else {
+                    return response()->json(['status_code' => 0, 'message' => 'Unable to change status']);
+                }
+            } else {
+                return response()->json(['status_code' => 0, 'message' => 'Invalid id found']);
+            }
+        } else {
+            return response()->json(['status_code' => 2, 'message' => 'Id is required']);
+        }
+    }
+
+    public function deleteJobMode(Request $request)
+    {
+        $id = $request->input('id');
+    
+        if (!empty($id)) {
+            // Attempt to find and delete the record
+            $JobMode = JobMode::find($id);
+    
+            if ($JobMode) {
+                $JobMode->delete();
+                return response()->json(['status_code' => 1, 'message' => 'Job mode deleted successfully ']);
+            } else {
+                return response()->json(['status_code' => 0, 'message' => 'Job mode not found']);
+            }
+        } else {
+            return response()->json(['status_code' => 2, 'message' => 'Id is required']);
+        }
+    }
+
+    public function editJobMode(Request $request)
+    {
+        $id = $request->input('id');
+
+        if (!empty($id)) {
+            // Find the record by ID
+         
+            $JobMode = JobMode::find($id);
+
+            if ($JobMode) {
+                return response()->json(['data' => $JobMode]);
+            } else {
+                return response()->json(['status_code' => 0, 'message' => 'Invalid id found']);
+            }
+        } else {
+            return response()->json(['status_code' => 2, 'message' => 'Id is required']);
+        }
+    }
+
+    public function updateJobMode(Request $request)
+    {
+        $rules = [
+            'edit-id' => 'required|exists:job_mode,id',
+            'editMode' => 'required|max:100',
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if (!$validator->fails()) {
+            $id = $request->input('edit-id');
+
+
+            // Find the record by ID
+            $JobMode = JobMode::find($id);
+
+            if ($JobMode) {
+                $JobMode->mode = $request->input('editMode');
+                $JobMode->updated_at = now();
+
+                if ($JobMode->save()) {
+                    return response()->json(['status_code' => 1, 'message' => 'Mode updated successfully']);
+                } else {
+                    return response()->json(['status_code' => 0, 'message' => 'Unable to update data']);
+                }
+            } else {
+                return response()->json(['status_code' => 0, 'message' => 'Invalid id found']);
+            }
+        } else {
+            return response()->json(['status_code' => 2, 'message' => $validator->errors()->first()]);
+        }
+    }
+
+    
 
     // Shift
     public function jobShift()

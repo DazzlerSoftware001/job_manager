@@ -19,7 +19,7 @@
 
                             <div class="px-3 mt-3 d-flex align-items-center gap-2">
                                 <input type="text" id="search" name="search" class="form-control form-control-sm bg-light rounded w-25" placeholder="Search...">
-                                <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal">+ Add Job Type</button>
+                                <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal">+ Add Job Mode</button>
                             </div>
 
                             <div class="card-body">
@@ -62,7 +62,7 @@
                 <form method="POST" action="javascript:void(0)" id="AddJobMode">
                     <div class="mb-3">
                         <label for="Mode" class="form-label">Mode</label>
-                        <input type="text" class="form-control" name="Mode" id="Mode" aria-describedby="countryHelp">
+                        <input type="text" class="form-control" name="mode" id="mode" required>
                     </div>
             </div>
                     
@@ -94,10 +94,9 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="editType" class="form-label">Type</label>
-                        <input type="text" class="form-control" name="editType" id="editType" aria-describedby="countryHelp">
+                        <label for="editMode" class="form-label">Mode</label>
+                        <input type="text" class="form-control" name="editMode" id="editMode" required>
                     </div>
-
             </div>
                     
             <div class="modal-footer">
@@ -356,7 +355,7 @@
 
             var record = result.data;
             $('#edit-id').val(record.id);
-            $('#editType').val(record.type);
+            $('#editMode').val(record.mode);
 
             },
         });
