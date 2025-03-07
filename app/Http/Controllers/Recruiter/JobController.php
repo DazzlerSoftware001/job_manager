@@ -26,4 +26,8 @@ class JobController extends Controller
         // dd($data);
         return view('recruiter.Jobpost',$data);
     }
+
+    public function postjobdata(Request $request) {
+        dd($request->all());
+    }
 }
