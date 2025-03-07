@@ -376,9 +376,9 @@ class JobController extends Controller
     
             if ($JobRole) {
                 $JobRole->delete();
-                return response()->json(['status_code' => 1, 'message' => 'Category deleted successfully ']);
+                return response()->json(['status_code' => 1, 'message' => 'JobRole deleted successfully ']);
             } else {
-                return response()->json(['status_code' => 0, 'message' => 'Category not found']);
+                return response()->json(['status_code' => 0, 'message' => 'JobRole not found']);
             }
         } else {
             return response()->json(['status_code' => 2, 'message' => 'Id is required']);
