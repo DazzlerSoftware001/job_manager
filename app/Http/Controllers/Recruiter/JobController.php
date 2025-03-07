@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\JobTypes;
 use App\Models\JobMode;
 use App\Models\JobSkill;
+use App\Models\JobRole;
 use App\Models\JobExperience;
 use App\Models\JobLocation;
 use App\Models\JobCategory;
@@ -19,6 +20,7 @@ class JobController extends Controller
         $data['jobTypes'] = JobTypes::where('status', 1)->select('type','status')->get(); 
         $data['jobMode'] = JobMode::where('status', 1)->select('mode','status')->get(); 
         $data['jobSkill'] = JobSkill::where('status', 1)->select('skill','status')->get(); 
+        $data['JobRole'] = JobRole::where('status', 1)->select('role','status')->get(); 
         $data['JobExperience'] = JobExperience::where('status', 1)->select('experience','status')->get(); 
         $data['JobLocation'] = JobLocation::where('status', 1)->select('country','city','status')->get(); 
         $data['JobCategory'] = JobCategory::where('status', 1)->select('name','status')->get(); 

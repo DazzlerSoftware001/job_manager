@@ -17,6 +17,21 @@ Route::prefix('Admin')->group(function () {
     Route::post('/EditJobSkill',[JobController::class,'editJobSkill'])->name('Admin.EditJobSkill');
     Route::post('/UpdateJobSkill',[JobController::class,'updateJobSkill'])->name('Admin.UpdateJobSkill');
 
+
+    // Department
+
+    //Role
+    Route::get('/JobRole', [JobController::class, 'JobRole'])->name('Admin.JobRole');
+    Route::post('/GetJobRole', [JobController::class, 'getJobRole'])->name('Admin.GetJobRole');
+    Route::post('/AddJobRole', [JobController::class, 'addJobRole'])->name('Admin.AddJobRole');
+    Route::post('/ChangeJobRoleStatus',[JobController::class,'changeJobRoleStatus'])->name('Admin.ChangeJobRoleStatus');
+    Route::post('/DeleteJobRole',[JobController::class,'deleteJobRole'])->name('Admin.DeleteJobRole');
+    Route::post('/EditJobRole',[JobController::class,'editJobRole'])->name('Admin.EditJobRole');
+    Route::post('/UpdateJobRole',[JobController::class,'updateJobRole'])->name('Admin.UpdateJobRole');
+
+
+
+    // Location
     Route::get('/JobLocation', [JobController::class, 'JobLocation'])->name('Admin.JobLocation');
     Route::post('/GetJobLocation', [JobController::class, 'getJobLocation'])->name('Admin.GetJobLocation');
     Route::post('/AddJobLocation', [JobController::class, 'addJobLocation'])->name('Admin.AddJobLocation');

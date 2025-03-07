@@ -224,13 +224,12 @@
 
 
                                         <div class="col-xl-4 mt-3">
-                                            <label for="Role">Role</label>
-                                            <select class="form-select" id="Role" name="Role">
+                                            <label for="role">Role</label>
+                                            <select class="form-select" id="role" name="role" multiple>
                                                 <option>Select</option>
-                                                <option>Part Time</option>
-                                                <option>Contract</option>
-                                                <option>Internship</option>
-                                                <option>Freelance</option>
+                                                @foreach ($JobRole as $key => $value)
+                                                    <option value="{{ $value->role }}">{{ $value->role }}</option>
+                                                @endforeach
                                             </select>
                                         </div>
 
@@ -445,6 +444,18 @@
                         shouldSort: false,
                         position: 'down',
                         removeItemButton: true, // Enables removing selected items
+                    });
+                }
+            });
+
+
+            document.addEventListener('DOMContentLoaded', function() {
+                var role = document.getElementById('role');
+                if (role) {
+                    const role1 = new Choices(role, {
+                        shouldSort: false,
+                        position: 'down',
+                        resetScrollPosition: true,
                     });
                 }
             });
