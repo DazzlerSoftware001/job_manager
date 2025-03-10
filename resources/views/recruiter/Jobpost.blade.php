@@ -193,7 +193,8 @@
 
                                         <div class="col-xl-4">
                                             <label for="job_type">Job Type</label>
-                                            <select class="form-select" id="job_type" name="job_type[]" multiple>
+                                            <select class="form-select" id="job_type" name="job_type">
+                                                <option value="">Select</option>
                                                 @foreach ($jobTypes as $key => $value)
                                                     <option value="{{ $value->type }}">{{ $value->type }}</option>
                                                 @endforeach
@@ -214,19 +215,18 @@
                                         <div class="col-xl-4 mt-3">
                                             <label for="department">Department</label>
                                             <select class="form-select" id="department" name="department">
-                                                <option>Select</option>
-                                                <option>Part Time</option>
-                                                <option>Contract</option>
-                                                <option>Internship</option>
-                                                <option>Freelance</option>
+                                                <option value="">Select</option>
+                                                @foreach ($JobDepartment as $key => $value)
+                                                    <option value="{{ $value->department }}">{{ $value->department }}</option>
+                                                @endforeach
                                             </select>
                                         </div>
 
 
                                         <div class="col-xl-4 mt-3">
                                             <label for="role">Role</label>
-                                            <select class="form-select" id="role" name="role" multiple>
-                                                <option>Select</option>
+                                            <select class="form-select" id="role" name="role">
+                                                <option value="">Select</option>
                                                 @foreach ($JobRole as $key => $value)
                                                     <option value="{{ $value->role }}">{{ $value->role }}</option>
                                                 @endforeach
@@ -236,7 +236,8 @@
 
                                         <div class="col-xl-4 mt-3">
                                             <label for="work_mode">Job Mode</label>
-                                            <select class="form-select" id="work_mode" name="work_mode[]" multiple>
+                                            <select class="form-select" id="work_mode" name="work_mode">
+                                                <option value="">Select</option>
                                                 @foreach ($jobMode as $key => $value)
                                                     <option value="{{ $value->mode }}">{{ $value->mode }}</option>
                                                 @endforeach
@@ -247,7 +248,7 @@
                                         <div class="col-xl-4 mt-3">
                                             <label for="location">Location</label>
                                             <select class="form-select" id="location" name="location">
-                                                <option>Select</option>
+                                                <option value="">Select</option>
                                                 @foreach ($JobLocation as $key => $value)
                                                     <option value="{{ $value->country . ' - ' . $value->city }}">
                                                         {{ $value->country . ' - ' . $value->city }}</option>
@@ -259,20 +260,24 @@
                                         <div class="col-xl-4 mt-3">
                                             <label for="min_experience">Work Experience (Min - Max)</label>
                                             <div class="d-flex gap-2">
-                                                <select class="form-select" id="min_experience" name="min_experience">
+                                                <!-- Min Experience Dropdown -->
+                                                <select class="form-select" id="min_experience" name="min_experience" onchange="updateMaxExperience()">
                                                     <option value="">Min</option>
-                                                    <?php for ($i = 0; $i <= 50; $i++) { ?>
-                                                    <option value="<?= $i ?>"><?= $i ?> Years</option>
-                                                    <?php } ?>
+                                                    @foreach ($JobExperience as $value)
+                                                        <option value="{{ $value->experience }}">{{ $value->experience }}</option>
+                                                    @endforeach
                                                 </select>
-                                                <select class="form-select" id="max_experience" name="max_experience">
+                                        
+                                                <!-- Max Experience Dropdown -->
+                                                <select class="form-select" id="max_experience" name="max_experience" disabled>
                                                     <option value="">Max</option>
-                                                    <?php for ($i = 0; $i <= 50; $i++) { ?>
-                                                    <option value="<?= $i ?>"><?= $i ?> Years</option>
-                                                    <?php } ?>
+                                                    @foreach ($JobExperience as $value)
+                                                        <option value="{{ $value->experience }}">{{ $value->experience }}</option>
+                                                    @endforeach
                                                 </select>
                                             </div>
-                                        </div>                                        
+                                        </div>
+                                                                              
 
 
                                         <div class="col-xl-4 mt-3">
@@ -330,7 +335,7 @@
                                         <div class="col-xl-4 mt-3">
                                             <label for="condidate_industry">Condidate Industry</label>
                                             <select class="form-select" id="condidate_industry" name="condidate_industry">
-                                                <option>Select</option>
+                                                <option value="">Select</option>
                                                 <option>Part Time</option>
                                                 <option>Contract</option>
                                                 <option>Internship</option>
@@ -366,29 +371,35 @@
 
 
                                         <div class="col-xl-4 col-lg-6 col-md-8 col-sm-12">
-                                            <label for="interview_type" class="d-block">Interview Hiring</label>
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="checkbox" id="walk_in" name="interview_type" value="walk in">
-                                                <label class="form-check-label" for="walk_in">Walk in</label>
-                                            </div>
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="checkbox" id="online" name="interview_type" value="online">
-                                                <label class="form-check-label" for="online">Online</label>
-                                            </div>
+                                            <label for="interview_type" class="d-block">Interview Type</label>
+                                            <select class="form-select" id="interview_type" name="interview_type">
+                                                <option value="">Select</option>
+                                                @foreach ($JobIntType as $key => $value)
+                                                    <option value="{{ $value->int_type }}">{{ $value->int_type }}</option>
+                                                @endforeach
+                                            </select>
                                         </div>
 
 
                                         <div class="col-xl-4 mt-3">
                                             <label for="company_name">Company Name</label>
-                                            <input type="text" class="form-control" placeholder="Dazzler"
-                                                name="company_name" value="{{ $Companies->name }}">
+                                            <select class="form-select" id="company_name" name="company_name" onchange="updateCompanyDetails()">
+                                                <option value="">Select</option>
+                                                @foreach ($Companies as $company)
+                                                    <option value="{{ $company->id }}" data-details="{{ $company->details }}">
+                                                        {{ $company->name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
                                         </div>
+                                        
 
 
                                         <div class="col-xl-4 mt-3">
                                             <label for="company_details">Company Details</label>
-                                            <textarea class="form-control" name="company_details"></textarea>
+                                            <textarea class="form-control" id="company_details" name="company_details" readonly></textarea>
                                         </div>
+                                        
 
 
                                     </div>
@@ -421,7 +432,7 @@
                     const choices1 = new Choices(element1, {
                         shouldSort: false,
                         position: 'down',
-                        removeItemButton: true,
+                        resetScrollPosition: true,
                     });
                 }
             });
@@ -432,7 +443,7 @@
                     const job_type1 = new Choices(job_type, {
                         shouldSort: false,
                         position: 'down',
-                        removeItemButton: true,
+                        resetScrollPosition: true,
                     });
                 }
             });
@@ -444,6 +455,17 @@
                         shouldSort: false,
                         position: 'down',
                         removeItemButton: true, // Enables removing selected items
+                    });
+                }
+            });
+
+            document.addEventListener('DOMContentLoaded', function() {
+                var department = document.getElementById('department');
+                if (department) {
+                    const department1 = new Choices(department, {
+                        shouldSort: false,
+                        position: 'down',
+                        resetScrollPosition: true,
                     });
                 }
             });
@@ -490,6 +512,28 @@
                         shouldSort: false,
                         position: 'down',
                         removeItemButton: true,
+                    });
+                }
+            });
+
+            document.addEventListener('DOMContentLoaded', function() {
+                var interview_type = document.getElementById('interview_type');
+                if (interview_type) {
+                    const interview_type1 = new Choices(interview_type, {
+                        shouldSort: false,
+                        position: 'down',
+                        resetScrollPosition: true,
+                    });
+                }
+            });
+
+            document.addEventListener('DOMContentLoaded', function() {
+                var company_name = document.getElementById('company_name');
+                if (company_name) {
+                    const company_name1 = new Choices(company_name, {
+                        shouldSort: false,
+                        position: 'down',
+                        resetScrollPosition: true,
                     });
                 }
             });
@@ -570,4 +614,53 @@
                 });
             });
         </script> --}}
+
+        <!-- For Company Details -->
+        <script>
+            function updateCompanyDetails() {
+                var select = document.getElementById("company_name");
+                var detailsTextarea = document.getElementById("company_details");
+        
+                // Get the selected option
+                var selectedOption = select.options[select.selectedIndex];
+        
+                // Check if data-details exists
+                if (selectedOption) {
+                    var details = selectedOption.getAttribute("data-details") || "";
+                    detailsTextarea.value = details;
+                }
+            }
+        </script>
+
+
+        <script>
+            function updateMaxExperience() {
+                var minSelect = document.getElementById("min_experience");
+                var maxSelect = document.getElementById("max_experience");
+
+                // Get selected Min Experience value
+                var minValue = parseInt(minSelect.value) || 0;
+
+                // Enable Max Experience dropdown
+                maxSelect.disabled = false;
+
+                // Remove previous options
+                maxSelect.innerHTML = '<option value="">Max</option>';
+
+                // Get all experience options from Min selector
+                var options = minSelect.querySelectorAll("option");
+
+                options.forEach(option => {
+                    var experienceValue = parseInt(option.value);
+                    if (!isNaN(experienceValue) && experienceValue >= minValue) {
+                        var newOption = document.createElement("option");
+                        newOption.value = experienceValue;
+                        newOption.textContent = experienceValue;
+                        maxSelect.appendChild(newOption);
+                    }
+                });
+            }
+        </script>
+
+        
     @endsection

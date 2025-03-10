@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 use App\Models\Companies;
 
@@ -32,11 +33,12 @@ class CompanyController extends Controller
             2 => 'email',
             3 => 'phone',
             4 => 'website',
-            5 => 'address',
-            6 => 'logo',
-            7 => 'status',
-            8 => 'created_at',
-            9 => 'id',
+            5 => 'details',
+            6 => 'address',
+            7 => 'logo',
+            8 => 'status',
+            9 => 'created_at',
+            10 => 'id',
         );
 
         $query = Companies::query();
@@ -71,6 +73,12 @@ class CompanyController extends Controller
             $dataArray[] = $record->phone;
             // $dataArray[] = $record->website;
             $dataArray[] = '<a href="javascript:void(0);" onclick="copyToClipboard(\'' . $record->website . '\')">' . $record->website . '</a>';
+
+            // Details with "View More" Popup
+            $shortDetails = Str::limit($record->details, 40, '...');
+            $dataArray[] = '<span>' . $shortDetails . '</span>
+                    <a href="javascript:void(0);" class="view-more" onclick="openDetailsModal(\'' . htmlspecialchars($record->details, ENT_QUOTES) . '\')">View More</a>';
+
 
             $dataArray[] = $record->address;
             // $dataArray[] = $record->logo;
@@ -117,6 +125,7 @@ class CompanyController extends Controller
             'email' => 'required|email|max:255|unique:companies,email',
             'phone' => 'required|digits_between:10,15|unique:companies,phone',
             'website' => 'required|url|max:255|unique:companies,website',
+            'details' => 'required|string|max:255|unique:companies,website',
             'address' => 'required|string|min:10|max:255',
             'logo' => 'required|image|max:2048',
         ];
@@ -139,6 +148,7 @@ class CompanyController extends Controller
                 $Companies->email = $request->input('email');
                 $Companies->phone = $request->input('phone');
                 $Companies->website = $request->input('website');
+                $Companies->details = $request->input('details');
                 $Companies->address = $request->input('address');
                 $Companies->logo = $logoPath;
                 $Companies->status = 0;
@@ -230,6 +240,7 @@ class CompanyController extends Controller
             'editemail' => 'required|email|max:255',
             'editphone' => 'required|digits_between:10,15',
             'editwebsite' => 'required|url|max:255',
+            'editdetails' => 'required|string|min:10|max:255',
             'editaddress' => 'required|string|min:10|max:255',
             'editlogo' => 'nullable|image|max:2048',
         ];
@@ -257,6 +268,7 @@ class CompanyController extends Controller
                 $Company->email = $request->input('editemail');
                 $Company->phone = $request->input('editphone');
                 $Company->website = $request->input('editwebsite');
+                $Company->details = $request->input('editdetails');
                 $Company->address = $request->input('editaddress');
 
                 // Update logoPath if provided

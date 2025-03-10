@@ -19,6 +19,14 @@ Route::prefix('Admin')->group(function () {
 
 
     // Department
+    Route::get('/JobDepartment', [JobController::class, 'JobDepartment'])->name('Admin.JobDepartment');
+    Route::post('/GetJobDepartment', [JobController::class, 'getJobDepartment'])->name('Admin.GetJobDepartment');
+    Route::post('/AddJobDepartment', [JobController::class, 'addJobDepartment'])->name('Admin.AddJobDepartment');
+    Route::post('/ChangeJobDepartmentStatus',[JobController::class,'changeJobDepartmentStatus'])->name('Admin.ChangeJobDepartmentStatus');
+    Route::post('/DeleteJobDepartment',[JobController::class,'deleteJobDepartment'])->name('Admin.DeleteJobDepartment');
+    Route::post('/EditJobDepartment',[JobController::class,'editJobDepartment'])->name('Admin.EditJobDepartment');
+    Route::post('/UpdateJobDepartment',[JobController::class,'updateJobDepartment'])->name('Admin.UpdateJobDepartment');
+
 
     //Role
     Route::get('/JobRole', [JobController::class, 'JobRole'])->name('Admin.JobRole');
@@ -84,6 +92,27 @@ Route::prefix('Admin')->group(function () {
     Route::post('/EditJobExperience',[JobController::class,'editJobExperience'])->name('Admin.EditJobExperience');
     Route::post('/UpdateJobExperience',[JobController::class,'updateJobExperience'])->name('Admin.UpdateJobExperience');
 
+
+    // Currency
+    Route::get('/JobCurrency', [JobController::class, 'jobCurrency'])->name('Admin.JobCurrency');
+    Route::post('/GetJobCurrency', [JobController::class, 'getJobCurrency'])->name('Admin.GetJobCurrency');
+    Route::post('/AddJobCurrency', [JobController::class, 'addJobCurrency'])->name('Admin.AddJobCurrency');
+    Route::post('/ChangeJobCurrencyStatus',[JobController::class,'changeJobCurrencyStatus'])->name('Admin.ChangeJobCurrencyStatus');
+    Route::post('/DeleteJobCurrency',[JobController::class,'deleteJobCurrency'])->name('Admin.DeleteJobCurrency');
+    Route::post('/EditJobCurrency',[JobController::class,'editJobCurrency'])->name('Admin.EditJobCurrency');
+    Route::post('/UpdateJobCurrency',[JobController::class,'updateJobCurrency'])->name('Admin.UpdateJobCurrency');
+
+    // Annual Salary
+    Route::get('/JobSalary', [JobController::class, 'jobSalary'])->name('Admin.JobSalary');
+    Route::post('/GetJobSalary', [JobController::class, 'getJobSalary'])->name('Admin.GetJobSalary');
+    Route::post('/AddJobSalary', [JobController::class, 'addJobSalary'])->name('Admin.AddJobSalary');
+    Route::post('/ChangeJobSalaryStatus',[JobController::class,'changeJobSalaryStatus'])->name('Admin.ChangeJobSalaryStatus');
+    Route::post('/DeleteJobSalary',[JobController::class,'deleteJobSalary'])->name('Admin.DeleteJobSalary');
+    Route::post('/EditJobSalary',[JobController::class,'editJobSalary'])->name('Admin.EditJobSalary');
+    Route::post('/UpdateJobSalary',[JobController::class,'updateJobSalary'])->name('Admin.UpdateJobSalary');
+
+
+
     //  CompanyController
     Route::get('/Companies', [CompanyController::class, 'Companies'])->name('Admin.Companies');
     Route::post('/GetCompanies', [CompanyController::class, 'getCompanies'])->name('Admin.GetCompanies');
@@ -101,5 +130,15 @@ Route::prefix('Admin')->group(function () {
     Route::post('/DeleteRecruiter',[RecruiterController::class,'deleteRecruiter'])->name('Admin.DeleteRecruiter');
     Route::post('/EditRecruiter',[RecruiterController::class,'editRecruiter'])->name('Admin.EditRecruiter');
     Route::post('/UpdateRecruiter',[RecruiterController::class,'updateRecruiter'])->name('Admin.UpdateRecruiter');
+
+
+    // Interview Type
+    Route::get('/JobIntType', [JobController::class, 'JobIntType'])->name('Admin.JobIntType');
+    Route::post('/GetJobIntType', [JobController::class, 'getJobIntType'])->name('Admin.GetJobIntType');
+    Route::post('/AddJobIntType', [JobController::class, 'addJobIntType'])->name('Admin.AddJobIntType');
+    Route::post('/ChangeJobIntTypeStatus',[JobController::class,'changeJobIntTypeStatus'])->name('Admin.ChangeJobIntTypeStatus');
+    Route::post('/DeleteJobIntType',[JobController::class,'deleteJobIntType'])->name('Admin.DeleteJobIntType');
+    Route::post('/EditJobIntType',[JobController::class,'editJobIntType'])->name('Admin.EditJobIntType');
+    Route::post('/UpdateJobIntType',[JobController::class,'updateJobIntType'])->name('Admin.UpdateJobIntType');
 
 });

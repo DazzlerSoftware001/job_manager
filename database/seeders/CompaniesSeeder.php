@@ -20,6 +20,7 @@ class CompaniesSeeder extends Seeder
                             'phone'=>8769455933,
                             'website'=>'https://dazzlersoftware.com',
                             'address'=>'Jaipur Rajasthan',
+                            'details'=>'We help businesses elevate their value through custom software development, product design, QA and consultancy services.',
                             'logo'=>null,
                             'status'=>1,
                         ]);

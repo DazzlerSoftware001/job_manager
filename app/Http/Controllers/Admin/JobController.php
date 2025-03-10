@@ -5,13 +5,18 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\JobSkill;
+use App\Models\JobDepartment;
 use App\Models\JobRole;
 use App\Models\JobLocation;
 use App\Models\JobCategory;
 use App\Models\JobTypes;
 use App\Models\JobShift;
 use App\Models\JobExperience;
+use App\Models\JobCurrency;
+use App\Models\JobSalary;
 use App\Models\JobMode;
+use App\Models\JobIntType;
+
 
 use Illuminate\Support\Facades\Validator;
 
@@ -227,6 +232,215 @@ class JobController extends Controller
         }
     }
 
+
+
+    // Department
+    public function JobDepartment() {
+        return view('admin.job.Jobdepartment');
+    }
+
+    public function getJobDepartment(Request $request)
+    {
+        // dd($request->all());
+        $draw = intval($request->input("draw"));
+        $offset = trim($request->input('start'));
+        // $limit = 10;
+        $limit = intval($request->input('length', 10));
+
+        $order = $request->input("order");
+        $search = $request->input("search");
+        $columns = array(
+            0 => 'id',
+            1 => 'department',
+            2 => 'status',
+            3 => 'created_at',
+            4 => 'id',
+        );
+
+        $query = JobDepartment::query();
+        // Count Data
+
+        if (!empty($search)) {
+            $query->where('department', 'like', '%' . $search . '%');
+        }
+    
+        if ($order) {
+            $column = $columns[$order[0]['column']];
+            $dir = $order[0]['dir'];
+            $query->orderBy($column, $dir);
+        }
+
+        $totalRecords = $query->count();
+
+        $records = $query->offset($offset)->limit($limit)->orderBy('id', 'desc')->get();
+
+
+        $data = [];
+        foreach ($records as $record) {
+            $dataArray = [];
+
+            $dataArray[] = $record->id;
+            $dataArray[] = ucfirst($record->department);
+
+            $status = $record->status == 1
+                ? '<div class="d-flex "><span onclick="changeStatus(' . $record->id . ');" class="badge bg-success text-uppercase"  style="cursor: pointer;">Active</span></div>'
+                : '<div class="d-flex "><span onclick="changeStatus(' . $record->id . ');" class="badge bg-danger text-uppercase" style="cursor: pointer;">Inactive</span></div>';
+
+            $dataArray[] = $status;
+
+
+            $dataArray[] = date('d-M-Y', strtotime($record->created_at));
+
+            $dataArray[] = '<div class="d-flex gap-2">
+                                <div class="edit">
+                                    <a href="javascript:void(0);" class="edit-item-btn text-primary" data-bs-toggle="modal" data-bs-target="#EditModal" onclick="edit(' . $record->id . ');"><i class="far fa-edit"></i></a>
+                                </div>
+                                <div class="remove">
+                                    <a href="javascript:void(0);" class="remove-item-btn text-danger" onclick="deleteRecord(' . $record->id . ');">
+                                        <i class="far fa-trash-alt"></i>
+                                    </a>
+                                </div>
+                            </div>';
+
+            $data[] = $dataArray;
+        }
+
+        return response()->json([
+            "draw" => $draw,
+            "recordsTotal" => $totalRecords,
+            "recordsFiltered" => $totalRecords,
+            "data" => $data
+        ]);
+    }
+
+    public function addJobDepartment(Request $request)
+    {
+  
+        // Define validation rules
+        $rules = [
+            'department' => 'required|string|max:100|unique:job_department,department',
+        ];
+
+        // Validate the request
+        $validator = Validator::make($request->all(), $rules);
+
+        if (!$validator->fails()) {
+            try {
+                $JobDepartment = new JobDepartment();
+                $JobDepartment->department = $request->input('department');
+                $JobDepartment->status = 0;
+                $JobDepartment->created_at = now();
+
+                $JobDepartment->save();
+
+                return response()->json(['status_code' => 1, 'message' => 'Department successfully added']);
+            } catch (\Exception $e) {
+                // Handle any exception that occurs during saving
+                return response()->json(['status_code' => 0, 'message' => 'Unable to add Department']);
+            }
+        } else {
+            // Return validation errors
+            return response()->json(['status_code' => 2, 'message' => $validator->errors()->first()]);
+        }
+    }
+
+    public function changeJobDepartmentStatus(Request $request)
+    {
+        $id = $request->input('id');
+    
+        if (!empty($id)) {
+            // Find the record by ID
+            $JobDepartment = JobDepartment::find($id);
+    
+           
+            if ($JobDepartment) {
+                // Toggle the status
+                $JobDepartment->status = $JobDepartment->status == 1 ? 0 : 1;
+    
+                // Save the updated record
+                if ($JobDepartment->save()) {
+                    return response()->json(['status_code' => 1, 'message' => 'Status successfully changed']);
+                } else {
+                    return response()->json(['status_code' => 0, 'message' => 'Unable to change status']);
+                }
+            } else {
+                return response()->json(['status_code' => 0, 'message' => 'Invalid id found']);
+            }
+        } else {
+            return response()->json(['status_code' => 2, 'message' => 'Id is required']);
+        }
+    }
+
+    public function deleteJobDepartment(Request $request)
+    {
+        $id = $request->input('id');
+    
+        if (!empty($id)) {
+            // Attempt to find and delete the record
+            $JobDepartment = JobDepartment::find($id);
+    
+            if ($JobDepartment) {
+                $JobDepartment->delete();
+                return response()->json(['status_code' => 1, 'message' => 'JobDepartment deleted successfully ']);
+            } else {
+                return response()->json(['status_code' => 0, 'message' => 'JobDepartment not found']);
+            }
+        } else {
+            return response()->json(['status_code' => 2, 'message' => 'Id is required']);
+        }
+    }
+
+    public function editJobDepartment(Request $request)
+    {
+        $id = $request->input('id');
+
+        if (!empty($id)) {
+            // Find the record by ID
+         
+            $JobDepartment = JobDepartment::find($id);
+
+            if ($JobDepartment) {
+                return response()->json(['data' => $JobDepartment]);
+            } else {
+                return response()->json(['status_code' => 0, 'message' => 'Invalid id found']);
+            }
+        } else {
+            return response()->json(['status_code' => 2, 'message' => 'Id is required']);
+        }
+    }
+
+    public function updateJobDepartment(Request $request)
+    {
+        $rules = [
+            'edit-id' => 'required|exists:job_department,id',
+            'editdepartment' => 'required|max:100',
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if (!$validator->fails()) {
+            $id = $request->input('edit-id');
+
+
+            // Find the record by ID
+            $JobDepartment = JobDepartment::find($id);
+
+            if ($JobDepartment) {
+                $JobDepartment->department = $request->input('editdepartment');
+                $JobDepartment->updated_at = now();
+
+                if ($JobDepartment->save()) {
+                    return response()->json(['status_code' => 1, 'message' => 'JobDepartment updated successfully']);
+                } else {
+                    return response()->json(['status_code' => 0, 'message' => 'Unable to update data']);
+                }
+            } else {
+                return response()->json(['status_code' => 0, 'message' => 'Invalid id found']);
+            }
+        } else {
+            return response()->json(['status_code' => 2, 'message' => $validator->errors()->first()]);
+        }
+    }
 
 
     // Role
@@ -1685,6 +1899,631 @@ class JobController extends Controller
 
                 if ($JobExp->save()) {
                     return response()->json(['status_code' => 1, 'message' => 'Experience updated successfully']);
+                } else {
+                    return response()->json(['status_code' => 0, 'message' => 'Unable to update data']);
+                }
+            } else {
+                return response()->json(['status_code' => 0, 'message' => 'Invalid id found']);
+            }
+        } else {
+            return response()->json(['status_code' => 2, 'message' => $validator->errors()->first()]);
+        }
+    }
+
+    // Currency
+    public function jobCurrency()
+    {
+        return view('admin.job.JobCurrency');
+    }
+
+    public function getJobCurrency(Request $request)
+    {
+        // dd($request->all());
+        $draw = intval($request->input("draw"));
+        $offset = trim($request->input('start'));
+        // $limit = 10;
+        $limit = intval($request->input('length', 10));
+        $order = $request->input("order");
+        $search = $request->input("search");
+        $columns = array(
+            0 => 'id',
+            1 => 'currency',
+            2 => 'status',
+            3 => 'created_at',
+            4 => 'id',
+        );
+
+        $query = JobCurrency::query();
+        // Count Data
+
+        if (!empty($search)) {
+            $query->where('currency', 'like', '%' . $search . '%');
+        }
+    
+        if ($order) {
+            $column = $columns[$order[0]['column']];
+            $dir = $order[0]['dir'];
+            $query->orderBy($column, $dir);
+        }
+
+        $totalRecords = $query->count();
+
+        $records = $query->offset($offset)->limit($limit)->orderBy('id', 'desc')->get();
+
+
+        $data = [];
+        foreach ($records as $record) {
+            $dataArray = [];
+
+            $dataArray[] = $record->id;
+            $dataArray[] = ucfirst($record->currency);
+
+            $status = $record->status == 1
+                ? '<div class="d-flex justify-content"><span onclick="changeStatus(' . $record->id . ');" class="badge bg-success text-uppercase"  style="cursor: pointer;">Active</span></div>'
+                : '<div class="d-flex justify-content"><span onclick="changeStatus(' . $record->id . ');" class="badge bg-danger text-uppercase" style="cursor: pointer;">Inactive</span></div>';
+
+            $dataArray[] = $status;
+
+
+            $dataArray[] = date('d-M-Y', strtotime($record->created_at));
+
+            $dataArray[] = '<div class="d-flex gap-2">
+                                <div class="edit">
+                                    <a href="javascript:void(0);" class="edit-item-btn text-primary" data-bs-toggle="modal" data-bs-target="#EditModal" onclick="edit(' . $record->id . ');"><i class="far fa-edit"></i></a>
+                                </div>
+                                <div class="remove">
+                                    <a href="javascript:void(0);" class="remove-item-btn text-danger" onclick="deleteRecord(' . $record->id . ');">
+                                        <i class="far fa-trash-alt"></i>
+                                    </a>
+                                </div>
+                            </div>';
+
+            $data[] = $dataArray;
+        }
+
+        return response()->json([
+            "draw" => $draw,
+            "recordsTotal" => $totalRecords,
+            "recordsFiltered" => $totalRecords,
+            "data" => $data
+        ]);
+    }
+
+    public function addJobCurrency(Request $request)
+    {
+  
+        // Define validation rules
+        $rules = [
+            'currency' => 'required|string|unique:currency,currency',
+        ];
+
+        // Validate the request
+        $validator = Validator::make($request->all(), $rules);
+
+        if (!$validator->fails()) {
+            try {
+                $JobCurrency = new JobCurrency();
+                $JobCurrency->currency = $request->input('currency');
+                $JobCurrency->status = 0;
+                $JobCurrency->created_at = now();
+
+                $JobCurrency->save();
+
+                return response()->json(['status_code' => 1, 'message' => 'Currency added successfully ']);
+            } catch (\Exception $e) {
+                // Handle any exception that occurs during saving
+                return response()->json(['status_code' => 0, 'message' => 'Unable to add Currency']);
+            }
+        } else {
+            // Return validation errors
+            return response()->json(['status_code' => 2, 'message' => $validator->errors()->first()]);
+        }
+    }
+
+    public function changeJobCurrencyStatus(Request $request)
+    {
+        $id = $request->input('id');
+    
+        if (!empty($id)) {
+            // Find the record by ID
+            $JobCurrency = JobCurrency::find($id);
+    
+           
+            if ($JobCurrency) {
+                // Toggle the status
+                $JobCurrency->status = $JobCurrency->status == 1 ? 0 : 1;
+    
+                // Save the updated record
+                if ($JobCurrency->save()) {
+                    return response()->json(['status_code' => 1, 'message' => 'Status successfully changed']);
+                } else {
+                    return response()->json(['status_code' => 0, 'message' => 'Unable to change status']);
+                }
+            } else {
+                return response()->json(['status_code' => 0, 'message' => 'Invalid id found']);
+            }
+        } else {
+            return response()->json(['status_code' => 2, 'message' => 'Id is required']);
+        }
+    }
+
+    public function deleteJobCurrency(Request $request)
+    {
+        $id = $request->input('id');
+    
+        if (!empty($id)) {
+            // Attempt to find and delete the record
+            $JobCurrency = JobCurrency::find($id);
+    
+            if ($JobCurrency) {
+                $JobCurrency->delete();
+                return response()->json(['status_code' => 1, 'message' => 'Currency deleted successfully ']);
+            } else {
+                return response()->json(['status_code' => 0, 'message' => 'Currency not found']);
+            }
+        } else {
+            return response()->json(['status_code' => 2, 'message' => 'Id is required']);
+        }
+    }
+
+    public function editJobCurrency(Request $request)
+    {
+        $id = $request->input('id');
+
+        if (!empty($id)) {
+            // Find the record by ID
+         
+            $JobCurrency = JobCurrency::find($id);
+
+            if ($JobCurrency) {
+                return response()->json(['data' => $JobCurrency]);
+            } else {
+                return response()->json(['status_code' => 0, 'message' => 'Invalid id found']);
+            }
+        } else {
+            return response()->json(['status_code' => 2, 'message' => 'Id is required']);
+        }
+    }
+
+    public function updateJobCurrency(Request $request)
+    {
+        $rules = [
+            'edit-id' => 'required|exists:currency,id',
+            'editcurrency' => 'required|string|unique:currency,currency',
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if (!$validator->fails()) {
+            $id = $request->input('edit-id');
+
+            // Find the record by ID
+            $JobCurrency = JobCurrency::find($id);
+
+            if ($JobCurrency) {
+                $JobCurrency->currency = $request->input('editcurrency');
+                $JobCurrency->updated_at = now();
+
+                if ($JobCurrency->save()) {
+                    return response()->json(['status_code' => 1, 'message' => 'Currency updated successfully']);
+                } else {
+                    return response()->json(['status_code' => 0, 'message' => 'Unable to update data']);
+                }
+            } else {
+                return response()->json(['status_code' => 0, 'message' => 'Invalid id found']);
+            }
+        } else {
+            return response()->json(['status_code' => 2, 'message' => $validator->errors()->first()]);
+        }
+    }
+
+
+    // Annual Salary
+    public function jobSalary()
+    {
+        return view('admin.job.Jobsalary');
+    }
+
+    public function getJobSalary(Request $request)
+    {
+        // dd($request->all());
+        $draw = intval($request->input("draw"));
+        $offset = trim($request->input('start'));
+        // $limit = 10;
+        $limit = intval($request->input('length', 10));
+        $order = $request->input("order");
+        $search = $request->input("search");
+        $columns = array(
+            0 => 'id',
+            1 => 'salary',
+            2 => 'status',
+            3 => 'created_at',
+            4 => 'id',
+        );
+
+        $query = JobSalary::query();
+        // Count Data
+
+        if (!empty($search)) {
+            $query->where('salary', 'like', '%' . $search . '%');
+        }
+    
+        if ($order) {
+            $column = $columns[$order[0]['column']];
+            $dir = $order[0]['dir'];
+            $query->orderBy($column, $dir);
+        }
+
+        $totalRecords = $query->count();
+
+        $records = $query->offset($offset)->limit($limit)->orderBy('id', 'desc')->get();
+
+
+        $data = [];
+        foreach ($records as $record) {
+            $dataArray = [];
+
+            $dataArray[] = $record->id;
+            $dataArray[] = ucfirst($record->salary);
+
+            $status = $record->status == 1
+                ? '<div class="d-flex justify-content-center"><span onclick="changeStatus(' . $record->id . ');" class="badge bg-success text-uppercase"  style="cursor: pointer;">Active</span></div>'
+                : '<div class="d-flex justify-content-center"><span onclick="changeStatus(' . $record->id . ');" class="badge bg-danger text-uppercase" style="cursor: pointer;">Inactive</span></div>';
+
+            $dataArray[] = $status;
+
+
+            $dataArray[] = date('d-M-Y', strtotime($record->created_at));
+
+            $dataArray[] = '<div class="d-flex gap-2">
+                                <div class="edit">
+                                    <a href="javascript:void(0);" class="edit-item-btn text-primary" data-bs-toggle="modal" data-bs-target="#EditModal" onclick="edit(' . $record->id . ');"><i class="far fa-edit"></i></a>
+                                </div>
+                                <div class="remove">
+                                    <a href="javascript:void(0);" class="remove-item-btn text-danger" onclick="deleteRecord(' . $record->id . ');">
+                                        <i class="far fa-trash-alt"></i>
+                                    </a>
+                                </div>
+                            </div>';
+
+            $data[] = $dataArray;
+        }
+
+        return response()->json([
+            "draw" => $draw,
+            "recordsTotal" => $totalRecords,
+            "recordsFiltered" => $totalRecords,
+            "data" => $data
+        ]);
+    }
+
+    public function addJobSalary(Request $request)
+    {
+  
+        // Define validation rules
+        $rules = [
+            'salary' => 'required|integer|min:1000|max:10000000|unique:annual_salary,salary',
+        ];
+
+        // Validate the request
+        $validator = Validator::make($request->all(), $rules);
+
+        if (!$validator->fails()) {
+            try {
+                $JobSalary = new JobSalary();
+                $JobSalary->salary = $request->input('salary');
+                $JobSalary->status = 0;
+                $JobSalary->created_at = now();
+
+                $JobSalary->save();
+
+                return response()->json(['status_code' => 1, 'message' => 'Salary added successfully ']);
+            } catch (\Exception $e) {
+                // Handle any exception that occurs during saving
+                return response()->json(['status_code' => 0, 'message' => 'Unable to add Salary']);
+            }
+        } else {
+            // Return validation errors
+            return response()->json(['status_code' => 2, 'message' => $validator->errors()->first()]);
+        }
+    }
+
+    public function changeJobSalaryStatus(Request $request)
+    {
+        $id = $request->input('id');
+    
+        if (!empty($id)) {
+            // Find the record by ID
+            $JobSalary = JobSalary::find($id);
+    
+           
+            if ($JobSalary) {
+                // Toggle the status
+                $JobSalary->status = $JobSalary->status == 1 ? 0 : 1;
+    
+                // Save the updated record
+                if ($JobSalary->save()) {
+                    return response()->json(['status_code' => 1, 'message' => 'Status successfully changed']);
+                } else {
+                    return response()->json(['status_code' => 0, 'message' => 'Unable to change status']);
+                }
+            } else {
+                return response()->json(['status_code' => 0, 'message' => 'Invalid id found']);
+            }
+        } else {
+            return response()->json(['status_code' => 2, 'message' => 'Id is required']);
+        }
+    }
+
+    public function deleteJobSalary(Request $request)
+    {
+        $id = $request->input('id');
+    
+        if (!empty($id)) {
+            // Attempt to find and delete the record
+            $JobSalary = JobSalary::find($id);
+    
+            if ($JobSalary) {
+                $JobSalary->delete();
+                return response()->json(['status_code' => 1, 'message' => 'Salary deleted successfully ']);
+            } else {
+                return response()->json(['status_code' => 0, 'message' => 'Salary not found']);
+            }
+        } else {
+            return response()->json(['status_code' => 2, 'message' => 'Id is required']);
+        }
+    }
+
+    public function editJobSalary(Request $request)
+    {
+        $id = $request->input('id');
+
+        if (!empty($id)) {
+            // Find the record by ID
+         
+            $JobSalary = JobSalary::find($id);
+
+            if ($JobSalary) {
+                return response()->json(['data' => $JobSalary]);
+            } else {
+                return response()->json(['status_code' => 0, 'message' => 'Invalid id found']);
+            }
+        } else {
+            return response()->json(['status_code' => 2, 'message' => 'Id is required']);
+        }
+    }
+
+    public function updateJobSalary(Request $request)
+    {
+        $rules = [
+            'edit-id' => 'required|exists:annual_salary,id',
+            'editsalary' => 'required|integer|min:1000|max:10000000|unique:annual_salary,salary',
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if (!$validator->fails()) {
+            $id = $request->input('edit-id');
+
+            // Find the record by ID
+            $JobSalary = JobSalary::find($id);
+
+            if ($JobSalary) {
+                $JobSalary->salary = $request->input('editsalary');
+                $JobSalary->updated_at = now();
+
+                if ($JobSalary->save()) {
+                    return response()->json(['status_code' => 1, 'message' => 'Salary updated successfully']);
+                } else {
+                    return response()->json(['status_code' => 0, 'message' => 'Unable to update data']);
+                }
+            } else {
+                return response()->json(['status_code' => 0, 'message' => 'Invalid id found']);
+            }
+        } else {
+            return response()->json(['status_code' => 2, 'message' => $validator->errors()->first()]);
+        }
+    }
+
+
+
+    // Interview Type
+    public function JobIntType() {
+        return view('admin.job.Jobinttype');
+    }
+
+    public function getJobIntType(Request $request)
+    {
+        // dd($request->all());
+        $draw = intval($request->input("draw"));
+        $offset = trim($request->input('start'));
+        // $limit = 10;
+        $limit = intval($request->input('length', 10));
+
+        $order = $request->input("order");
+        $search = $request->input("search");
+        $columns = array(
+            0 => 'id',
+            1 => 'int_type',
+            2 => 'status',
+            3 => 'created_at',
+            4 => 'id',
+        );
+
+        $query = JobIntType::query();
+        // Count Data
+
+        if (!empty($search)) {
+            $query->where('int_type', 'like', '%' . $search . '%');
+        }
+    
+        if ($order) {
+            $column = $columns[$order[0]['column']];
+            $dir = $order[0]['dir'];
+            $query->orderBy($column, $dir);
+        }
+
+        $totalRecords = $query->count();
+
+        $records = $query->offset($offset)->limit($limit)->orderBy('id', 'desc')->get();
+
+
+        $data = [];
+        foreach ($records as $record) {
+            $dataArray = [];
+
+            $dataArray[] = $record->id;
+            $dataArray[] = ucfirst($record->int_type);
+
+            $status = $record->status == 1
+                ? '<div class="d-flex "><span onclick="changeStatus(' . $record->id . ');" class="badge bg-success text-uppercase"  style="cursor: pointer;">Active</span></div>'
+                : '<div class="d-flex "><span onclick="changeStatus(' . $record->id . ');" class="badge bg-danger text-uppercase" style="cursor: pointer;">Inactive</span></div>';
+
+            $dataArray[] = $status;
+
+
+            $dataArray[] = date('d-M-Y', strtotime($record->created_at));
+
+            $dataArray[] = '<div class="d-flex gap-2">
+                                <div class="edit">
+                                    <a href="javascript:void(0);" class="edit-item-btn text-primary" data-bs-toggle="modal" data-bs-target="#EditModal" onclick="edit(' . $record->id . ');"><i class="far fa-edit"></i></a>
+                                </div>
+                                <div class="remove">
+                                    <a href="javascript:void(0);" class="remove-item-btn text-danger" onclick="deleteRecord(' . $record->id . ');">
+                                        <i class="far fa-trash-alt"></i>
+                                    </a>
+                                </div>
+                            </div>';
+
+            $data[] = $dataArray;
+        }
+
+        return response()->json([
+            "draw" => $draw,
+            "recordsTotal" => $totalRecords,
+            "recordsFiltered" => $totalRecords,
+            "data" => $data
+        ]);
+    }
+
+    public function addJobIntType(Request $request)
+    {
+  
+        // Define validation rules
+        $rules = [
+            'IntType' => 'required|string|max:100|unique:interview_type,int_type',
+        ];
+
+        // Validate the request
+        $validator = Validator::make($request->all(), $rules);
+
+        if (!$validator->fails()) {
+            try {
+                $JobIntType = new JobIntType();
+                $JobIntType->int_type = $request->input('IntType');
+                $JobIntType->status = 0;
+                $JobIntType->created_at = now();
+
+                $JobIntType->save();
+
+                return response()->json(['status_code' => 1, 'message' => 'Interview Type successfully added']);
+            } catch (\Exception $e) {
+                // Handle any exception that occurs during saving
+                return response()->json(['status_code' => 0, 'message' => 'Unable to add Department']);
+            }
+        } else {
+            // Return validation errors
+            return response()->json(['status_code' => 2, 'message' => $validator->errors()->first()]);
+        }
+    }
+
+    public function changeJobIntTypeStatus(Request $request)
+    {
+        $id = $request->input('id');
+    
+        if (!empty($id)) {
+            // Find the record by ID
+            $JobIntType = JobIntType::find($id);
+    
+           
+            if ($JobIntType) {
+                // Toggle the status
+                $JobIntType->status = $JobIntType->status == 1 ? 0 : 1;
+    
+                // Save the updated record
+                if ($JobIntType->save()) {
+                    return response()->json(['status_code' => 1, 'message' => 'Status successfully changed']);
+                } else {
+                    return response()->json(['status_code' => 0, 'message' => 'Unable to change status']);
+                }
+            } else {
+                return response()->json(['status_code' => 0, 'message' => 'Invalid id found']);
+            }
+        } else {
+            return response()->json(['status_code' => 2, 'message' => 'Id is required']);
+        }
+    }
+
+    public function deleteJobIntType(Request $request)
+    {
+        $id = $request->input('id');
+    
+        if (!empty($id)) {
+            // Attempt to find and delete the record
+            $JobIntType = JobIntType::find($id);
+    
+            if ($JobIntType) {
+                $JobIntType->delete();
+                return response()->json(['status_code' => 1, 'message' => 'Interview Type deleted successfully ']);
+            } else {
+                return response()->json(['status_code' => 0, 'message' => 'Interview Type not found']);
+            }
+        } else {
+            return response()->json(['status_code' => 2, 'message' => 'Id is required']);
+        }
+    }
+
+    public function editJobIntType(Request $request)
+    {
+        $id = $request->input('id');
+
+        if (!empty($id)) {
+            // Find the record by ID
+         
+            $JobIntType = JobIntType::find($id);
+
+            if ($JobIntType) {
+                return response()->json(['data' => $JobIntType]);
+            } else {
+                return response()->json(['status_code' => 0, 'message' => 'Invalid id found']);
+            }
+        } else {
+            return response()->json(['status_code' => 2, 'message' => 'Id is required']);
+        }
+    }
+
+    public function updateJobIntType(Request $request)
+    {
+        $rules = [
+            'edit-id' => 'required|exists:interview_type,id',
+            'editIntType' => 'required|max:100',
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if (!$validator->fails()) {
+            $id = $request->input('edit-id');
+
+
+            // Find the record by ID
+            $JobIntType = JobIntType::find($id);
+
+            if ($JobIntType) {
+                $JobIntType->int_type = $request->input('editIntType');
+                $JobIntType->updated_at = now();
+
+                if ($JobIntType->save()) {
+                    return response()->json(['status_code' => 1, 'message' => 'Interview Type updated successfully']);
                 } else {
                     return response()->json(['status_code' => 0, 'message' => 'Unable to update data']);
                 }

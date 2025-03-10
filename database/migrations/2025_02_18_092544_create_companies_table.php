@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('phone')->unique();
             $table->string('website')->unique();
             $table->text('address');
+            $table->text('details');
             $table->string('logo')->nullable();
             $table->string('status')->default(0);
             $table->timestamps();

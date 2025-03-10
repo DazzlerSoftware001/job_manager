@@ -27,10 +27,14 @@ class DatabaseSeeder extends Seeder
             JobShiftSeeder::class,
             JobExperienceSeeder::class,
             JobSkillSeeder::class,
+            JobDepartmentSeeder::class,
             CompaniesSeeder::class,
             RecruitersSeeder::class,
             JobRoleSeeder::class,
             JobModeSeeder::class,
+            JobIntTypeSeeder::class,
+            JobCurrencySeeder::class,
+            JobSalarySeeder::class,
             
         ]);
     }
