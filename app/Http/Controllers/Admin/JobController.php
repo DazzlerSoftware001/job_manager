@@ -16,6 +16,7 @@ use App\Models\JobCurrency;
 use App\Models\JobSalary;
 use App\Models\JobMode;
 use App\Models\JobIntType;
+use App\Models\JobEducation;
 
 
 use Illuminate\Support\Facades\Validator;
@@ -2550,7 +2551,215 @@ class JobController extends Controller
     }
 
 
+    // Educational Qualifications
+    public function jobEducation()
+    {
+        return view('admin.job.Jobeducation');
+    }
 
+    public function getJobEducation(Request $request)
+    {
+        // dd($request->all());
+        $draw = intval($request->input("draw"));
+        $offset = trim($request->input('start'));
+        // $limit = 10;
+        $limit = intval($request->input('length', 10));
+
+        $order = $request->input("order");
+        $search = $request->input("search");
+        $columns = array(
+            0 => 'id',
+            1 => 'education',
+            2 => 'status',
+            3 => 'created_at',
+            4 => 'id',
+        );
+
+        $query = JobEducation::query();
+        // Count Data
+
+        if (!empty($search)) {
+            $query->where('education', 'like', '%' . $search . '%');
+        }
+    
+        if ($order) {
+            $column = $columns[$order[0]['column']];
+            $dir = $order[0]['dir'];
+            $query->orderBy($column, $dir);
+        }
+
+        $totalRecords = $query->count();
+
+        $records = $query->offset($offset)->limit($limit)->orderBy('id', 'desc')->get();
+
+
+        $data = [];
+        foreach ($records as $record) {
+            $dataArray = [];
+
+            $dataArray[] = $record->id;
+            $dataArray[] = ucfirst($record->education);
+
+            $status = $record->status == 1
+                ? '<div class="d-flex "><span onclick="changeStatus(' . $record->id . ');" class="badge bg-success text-uppercase"  style="cursor: pointer;">Active</span></div>'
+                : '<div class="d-flex "><span onclick="changeStatus(' . $record->id . ');" class="badge bg-danger text-uppercase" style="cursor: pointer;">Inactive</span></div>';
+
+            $dataArray[] = $status;
+
+
+            $dataArray[] = date('d-M-Y', strtotime($record->created_at));
+
+            $dataArray[] = '<div class="d-flex gap-2">
+                                <div class="edit">
+                                    <a href="javascript:void(0);" class="edit-item-btn text-primary" data-bs-toggle="modal" data-bs-target="#EditModal" onclick="edit(' . $record->id . ');"><i class="far fa-edit"></i></a>
+                                </div>
+                                <div class="remove">
+                                    <a href="javascript:void(0);" class="remove-item-btn text-danger" onclick="deleteRecord(' . $record->id . ');">
+                                        <i class="far fa-trash-alt"></i>
+                                    </a>
+                                </div>
+                            </div>';
+
+            $data[] = $dataArray;
+        }
+
+        return response()->json([
+            "draw" => $draw,
+            "recordsTotal" => $totalRecords,
+            "recordsFiltered" => $totalRecords,
+            "data" => $data
+        ]);
+    }
+
+
+    public function addJobEducation(Request $request)
+    {
+  
+        // Define validation rules
+        $rules = [
+            'education' => 'required|string|max:100|unique:education,education',
+        ];
+
+        // Validate the request
+        $validator = Validator::make($request->all(), $rules);
+
+        if (!$validator->fails()) {
+            try {
+                $JobEducation = new JobEducation();
+                $JobEducation->education = $request->input('education');
+                $JobEducation->status = 0;
+                $JobEducation->created_at = now();
+
+                $JobEducation->save();
+
+                return response()->json(['status_code' => 1, 'message' => 'Educational Qualification successfully added']);
+            } catch (\Exception $e) {
+                // Handle any exception that occurs during saving
+                return response()->json(['status_code' => 0, 'message' => 'Unable to add Educational Qualification']);
+            }
+        } else {
+            // Return validation errors
+            return response()->json(['status_code' => 2, 'message' => $validator->errors()->first()]);
+        }
+    }
+
+    public function changeJobEducationStatus(Request $request)
+    {
+        $id = $request->input('id');
+    
+        if (!empty($id)) {
+            // Find the record by ID
+            $JobEducation = JobEducation::find($id);
+    
+           
+            if ($JobEducation) {
+                // Toggle the status
+                $JobEducation->status = $JobEducation->status == 1 ? 0 : 1;
+    
+                // Save the updated record
+                if ($JobEducation->save()) {
+                    return response()->json(['status_code' => 1, 'message' => 'Status successfully changed']);
+                } else {
+                    return response()->json(['status_code' => 0, 'message' => 'Unable to change status']);
+                }
+            } else {
+                return response()->json(['status_code' => 0, 'message' => 'Invalid id found']);
+            }
+        } else {
+            return response()->json(['status_code' => 2, 'message' => 'Id is required']);
+        }
+    }
+
+    public function deleteJobEducation(Request $request)
+    {
+        $id = $request->input('id');
+    
+        if (!empty($id)) {
+            // Attempt to find and delete the record
+            $JobEducation = JobEducation::find($id);
+    
+            if ($JobEducation) {
+                $JobEducation->delete();
+                return response()->json(['status_code' => 1, 'message' => 'Educational Qualification deleted successfully ']);
+            } else {
+                return response()->json(['status_code' => 0, 'message' => 'Educational Qualification not found']);
+            }
+        } else {
+            return response()->json(['status_code' => 2, 'message' => 'Id is required']);
+        }
+    }
+
+    public function editJobEducation(Request $request)
+    {
+        $id = $request->input('id');
+
+        if (!empty($id)) {
+            // Find the record by ID
+         
+            $JobEducation = JobEducation::find($id);
+
+            if ($JobEducation) {
+                return response()->json(['data' => $JobEducation]);
+            } else {
+                return response()->json(['status_code' => 0, 'message' => 'Invalid id found']);
+            }
+        } else {
+            return response()->json(['status_code' => 2, 'message' => 'Id is required']);
+        }
+    }
+
+    public function updateJobEducation(Request $request)
+    {
+        $rules = [
+            'edit-id' => 'required|exists:education,id',
+            'editeducation' => 'required|max:100',
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if (!$validator->fails()) {
+            $id = $request->input('edit-id');
+
+
+            // Find the record by ID
+            $JobEducation = JobEducation::find($id);
+
+            if ($JobEducation) {
+                $JobEducation->education = $request->input('editeducation');
+                $JobEducation->updated_at = now();
+
+                if ($JobEducation->save()) {
+                    return response()->json(['status_code' => 1, 'message' => 'Educational Qualification updated successfully']);
+                } else {
+                    return response()->json(['status_code' => 0, 'message' => 'Unable to update data']);
+                }
+            } else {
+                return response()->json(['status_code' => 0, 'message' => 'Invalid id found']);
+            }
+        } else {
+            return response()->json(['status_code' => 2, 'message' => $validator->errors()->first()]);
+        }
+    }
 
 
 

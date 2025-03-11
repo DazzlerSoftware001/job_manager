@@ -16,6 +16,7 @@ use App\Models\JobLocation;
 use App\Models\JobCategory;
 use App\Models\Companies;
 use App\Models\JobIntType;
+use App\Models\JobEducation;
 
 
 class JobController extends Controller
@@ -32,8 +33,9 @@ class JobController extends Controller
         $data['Companies'] = Companies::where('status', 1)->select('id', 'name', 'details', 'status')->get(); 
         $data['JobIntType'] = JobIntType::where('status', 1)->select('id', 'int_type','status')->get();
         $data['JobCurrency'] = JobCurrency::where('status', 1)->select('id', 'currency', 'status')->get();
-        $data['JobSalary'] = JobSalary::where('status', 1)->select('id', 'salary', 'status')->orderBy('salary', 'asc')->get();
-        // dd($data);
+        $data['JobEducation'] = JobEducation::where('status', 1)->select('education', 'status')->get();
+        $data['JobSalary'] = JobSalary::where('status', 1)->select('id', 'salary', 'status')->orderBy('salary', 'ASC')->get();
+        // dd($data['JobSalary']);
         return view('recruiter.Jobpost',$data);
     }
 
@@ -47,6 +49,19 @@ class JobController extends Controller
         return response()->json($JobDepartment);
 
     }
+
+    public function getRole(Request $request) {
+        if (!$request->has('department_name')) {
+            return response()->json(['error' => 'Department Name is missing'], 400);
+        }
+    
+        $JobRole = JobRole::where('department_name', $request->department_name)
+                            ->select('role')
+                            ->get();
+    
+        return response()->json($JobRole);
+    }
+    
 
 
     public function postjobdata(Request $request) {

@@ -80,6 +80,7 @@
                             <li><a href="{{route('Admin.JobCurrency')}}" data-key="t-p-list">Jobs Currency</a></li>
                             <li><a href="{{route('Admin.JobSalary')}}" data-key="t-p-list">Jobs Salary</a></li>
                             <li><a href="{{route('Admin.JobIntType')}}" data-key="t-p-list">Jobs Interview Type</a></li>
+                            <li><a href="{{route('Admin.JobEducation')}}" data-key="t-p-list">Jobs Qualification</a></li>
                         </ul>
                     </li>
 

@@ -223,9 +223,6 @@
                                             <label for="role">Role</label>
                                             <select class="form-select" id="role" name="role">
                                                 <option value="">Select</option>
-                                                @foreach ($JobRole as $key => $value)
-                                                    <option value="{{ $value->role }}">{{ $value->role }}</option>
-                                                @endforeach
                                             </select>
                                         </div>
 
@@ -259,7 +256,7 @@
                                                 <!-- Min Experience Dropdown -->
                                                 <select class="form-select" id="min_experience" name="min_experience"
                                                     onchange="updateMaxExperience()">
-                                                    <option value="">Min</option>
+                                                    <option value="0">Fresher</option>
                                                     @foreach ($JobExperience as $value)
                                                         <option value="{{ $value->experience }}">{{ $value->experience }}
                                                         </option>
@@ -311,25 +308,22 @@
 
                                         <div class="col-xl-4 mt-3">
                                             <label for="education">Educational Qualification</label>
-                                            <select class="form-select" id="education" name="education[]" multiple>
-                                                <option>Select</option>
-                                                <option>Part Time</option>
-                                                <option>Contract</option>
-                                                <option>Internship</option>
-                                                <option>Freelance</option>
+                                            <select class="form-select" id="education" name="education">
+                                                <option value="">Choose Qualification</option>
+                                                @foreach ($JobEducation as $key => $value)
+                                                    <option value="{{ $value->education }}">{{ $value->education }}</option>
+                                                @endforeach
                                             </select>
                                         </div>
 
 
                                         <div class="col-xl-4 mt-3">
-                                            <label for="condidate_industry">Condidate Industry</label>
-                                            <select class="form-select" id="condidate_industry"
-                                                name="condidate_industry">
-                                                <option value="">Select</option>
-                                                <option>Part Time</option>
-                                                <option>Contract</option>
-                                                <option>Internship</option>
-                                                <option>Freelance</option>
+                                            <label for="industry">Condidate Industry</label>
+                                            <select class="form-select" id="industry" name="industry">
+                                                <option value="">Choose Industry</option>
+                                                @foreach ($JobCategory as $key => $value)
+                                                    <option value="{{ $value->name }}">{{ $value->name }}</option>
+                                                @endforeach
                                             </select>
                                         </div>
 
@@ -450,20 +444,6 @@
                         shouldSort: false,
                         position: 'down',
                         removeItemButton: true, // Enables removing selected items
-                    });
-                }
-            });
-
-
-
-
-            document.addEventListener('DOMContentLoaded', function() {
-                var role = document.getElementById('role');
-                if (role) {
-                    const role1 = new Choices(role, {
-                        shouldSort: false,
-                        position: 'down',
-                        resetScrollPosition: true,
                     });
                 }
             });
@@ -639,7 +619,7 @@
 
                 options.forEach(option => {
                     var experienceValue = parseInt(option.value);
-                    if (!isNaN(experienceValue) && experienceValue >= minValue) {
+                    if (!isNaN(experienceValue) && experienceValue > minValue) {
                         var newOption = document.createElement("option");
                         newOption.value = experienceValue;
                         newOption.textContent = experienceValue;
@@ -680,13 +660,15 @@
             }
         </script>
 
-        {{-- For selecting department according to category --}}
+        {{-- For selecting department according to category & Role according to department --}}
 
         <script>
             $(document).ready(function() {
+                // When category changes, load departments
                 $('#industry').change(function() {
                     var category_name = $(this).val();
                     $('#department').html('<option value="">Loading...</option>');
+                    $('#role').html('<option value="">Select</option>'); // Reset role dropdown
 
                     if (category_name) {
                         $.ajax({
@@ -696,7 +678,7 @@
                                 category_name: category_name
                             },
                             success: function(data) {
-                                console.log("Response Data:", data);
+                                // console.log("Departments Response:", data);
                                 $('#department').html(
                                 '<option value="">Select Department</option>');
 
@@ -718,6 +700,40 @@
                         });
                     } else {
                         $('#department').html('<option value="">Select Department</option>');
+                    }
+                });
+
+                // When department changes, load roles
+                $('#department').change(function() {
+                    var department_name = $(this).val();
+                    $('#role').html('<option value="">Loading...</option>');
+
+                    if (department_name) {
+                        $.ajax({
+                            url: "{{ route('Recruiter.getRole') }}", // Create this route
+                            type: "GET",
+                            data: {
+                                department_name: department_name
+                            },
+                            success: function(data) {
+                                // console.log("Roles Response:", data);
+                                $('#role').html('<option value="">Select Role</option>');
+
+                                if (data.length > 0) {
+                                    $.each(data, function(index, item) {
+                                        $('#role').append('<option value="' + item.role +
+                                            '">' + item.role + '</option>');
+                                    });
+                                } else {
+                                    $('#role').html('<option value="">No Roles Found</option>');
+                                }
+                            },
+                            error: function() {
+                                $('#role').html('<option value="">Error loading data</option>');
+                            }
+                        });
+                    } else {
+                        $('#role').html('<option value="">Select Role</option>');
                     }
                 });
             });

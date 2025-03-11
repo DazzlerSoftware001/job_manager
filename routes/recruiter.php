@@ -11,4 +11,6 @@ Route::prefix('Recruiter')->group(function () {
 
 
     Route::get('/getDepartment', [JobController::class, 'getDepartment'])->name('Recruiter.getDepartment');
+    Route::get('/getRole', [JobController::class, 'getRole'])->name('Recruiter.getRole');
+
 });

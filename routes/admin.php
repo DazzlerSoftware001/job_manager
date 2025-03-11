@@ -48,6 +48,8 @@ Route::prefix('Admin')->group(function () {
     Route::post('/EditJobLocation',[JobController::class,'editJobLocation'])->name('Admin.EditJobLocation');
     Route::post('/UpdateJobLocation',[JobController::class,'updateJobLocation'])->name('Admin.UpdateJobLocation');
 
+
+    // Category
     Route::get('/JobCategory', [JobController::class, 'jobCategory'])->name('Admin.JobCategory');
     Route::post('/GetJobCategory', [JobController::class, 'getJobCategory'])->name('Admin.GetJobCategory');
     Route::post('/AddJobCategory', [JobController::class, 'addJobCategory'])->name('Admin.AddJobCategory');
@@ -140,5 +142,15 @@ Route::prefix('Admin')->group(function () {
     Route::post('/DeleteJobIntType',[JobController::class,'deleteJobIntType'])->name('Admin.DeleteJobIntType');
     Route::post('/EditJobIntType',[JobController::class,'editJobIntType'])->name('Admin.EditJobIntType');
     Route::post('/UpdateJobIntType',[JobController::class,'updateJobIntType'])->name('Admin.UpdateJobIntType');
+
+
+    // Educational Qualifications
+    Route::get('/JobEducation', [JobController::class, 'jobEducation'])->name('Admin.JobEducation');
+    Route::post('/GetJobEducation', [JobController::class, 'getJobEducation'])->name('Admin.GetJobEducation');
+    Route::post('/AddJobEducation', [JobController::class, 'addJobEducation'])->name('Admin.AddJobEducation');
+    Route::post('/ChangeJobEducationStatus',[JobController::class,'changeJobEducationStatus'])->name('Admin.ChangeJobEducationStatus');
+    Route::post('/DeleteJobEducation',[JobController::class,'deleteJobEducation'])->name('Admin.DeleteJobEducation');
+    Route::post('/EditJobEducation',[JobController::class,'editJobEducation'])->name('Admin.EditJobEducation');
+    Route::post('/UpdateJobEducation',[JobController::class,'updateJobEducation'])->name('Admin.UpdateJobEducation');
 
 });
