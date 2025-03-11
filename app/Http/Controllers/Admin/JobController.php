@@ -236,7 +236,8 @@ class JobController extends Controller
 
     // Department
     public function JobDepartment() {
-        return view('admin.job.Jobdepartment');
+        $data['JobCategory'] = JobCategory::select('name')->get(); 
+        return view('admin.job.Jobdepartment',$data);
     }
 
     public function getJobDepartment(Request $request)
@@ -251,10 +252,11 @@ class JobController extends Controller
         $search = $request->input("search");
         $columns = array(
             0 => 'id',
-            1 => 'department',
-            2 => 'status',
-            3 => 'created_at',
-            4 => 'id',
+            1 => 'category_name',
+            2 => 'department',
+            3 => 'status',
+            4 => 'created_at',
+            5 => 'id',
         );
 
         $query = JobDepartment::query();
@@ -280,6 +282,7 @@ class JobController extends Controller
             $dataArray = [];
 
             $dataArray[] = $record->id;
+            $dataArray[] = ucfirst($record->category_name);
             $dataArray[] = ucfirst($record->department);
 
             $status = $record->status == 1
@@ -318,6 +321,7 @@ class JobController extends Controller
   
         // Define validation rules
         $rules = [
+            'category' => 'required',
             'department' => 'required|string|max:100|unique:job_department,department',
         ];
 
@@ -327,6 +331,7 @@ class JobController extends Controller
         if (!$validator->fails()) {
             try {
                 $JobDepartment = new JobDepartment();
+                $JobDepartment->category_name = $request->input('category');
                 $JobDepartment->department = $request->input('department');
                 $JobDepartment->status = 0;
                 $JobDepartment->created_at = now();
@@ -413,6 +418,7 @@ class JobController extends Controller
     {
         $rules = [
             'edit-id' => 'required|exists:job_department,id',
+            'editcategory' => 'required',
             'editdepartment' => 'required|max:100',
         ];
 
@@ -426,6 +432,7 @@ class JobController extends Controller
             $JobDepartment = JobDepartment::find($id);
 
             if ($JobDepartment) {
+                $JobDepartment->category_name = $request->input('editcategory');
                 $JobDepartment->department = $request->input('editdepartment');
                 $JobDepartment->updated_at = now();
 
@@ -445,7 +452,8 @@ class JobController extends Controller
 
     // Role
     public function JobRole() {
-        return view('admin.job.Jobrole');
+        $data['JobDepartment'] = JobDepartment::select('department')->get(); 
+        return view('admin.job.Jobrole',$data);
     }
 
     public function getJobRole(Request $request)
@@ -460,10 +468,11 @@ class JobController extends Controller
         $search = $request->input("search");
         $columns = array(
             0 => 'id',
-            1 => 'role',
-            2 => 'status',
-            3 => 'created_at',
-            4 => 'id',
+            1 => 'department_name',
+            2 => 'role',
+            3 => 'status',
+            4 => 'created_at',
+            5 => 'id',
         );
 
         $query = JobRole::query();
@@ -489,6 +498,7 @@ class JobController extends Controller
             $dataArray = [];
 
             $dataArray[] = $record->id;
+            $dataArray[] = ucfirst($record->department_name);
             $dataArray[] = ucfirst($record->role);
 
             $status = $record->status == 1
@@ -527,6 +537,7 @@ class JobController extends Controller
   
         // Define validation rules
         $rules = [
+            'department' => 'required',
             'role' => 'required|string|max:100|unique:job_role,role',
         ];
 
@@ -536,6 +547,7 @@ class JobController extends Controller
         if (!$validator->fails()) {
             try {
                 $JobRole = new JobRole();
+                $JobRole->department_name = $request->input('department');
                 $JobRole->role = $request->input('role');
                 $JobRole->status = 0;
                 $JobRole->created_at = now();
@@ -622,6 +634,7 @@ class JobController extends Controller
     {
         $rules = [
             'edit-id' => 'required|exists:job_role,id',
+            'editdepartment' => 'required',
             'editrole' => 'required|max:100',
         ];
 
@@ -635,6 +648,7 @@ class JobController extends Controller
             $JobRole = JobRole::find($id);
 
             if ($JobRole) {
+                $JobRole->department_name = $request->input('editdepartment');
                 $JobRole->role = $request->input('editrole');
                 $JobRole->updated_at = now();
 
@@ -2167,8 +2181,8 @@ class JobController extends Controller
             $dataArray[] = ucfirst($record->salary);
 
             $status = $record->status == 1
-                ? '<div class="d-flex justify-content-center"><span onclick="changeStatus(' . $record->id . ');" class="badge bg-success text-uppercase"  style="cursor: pointer;">Active</span></div>'
-                : '<div class="d-flex justify-content-center"><span onclick="changeStatus(' . $record->id . ');" class="badge bg-danger text-uppercase" style="cursor: pointer;">Inactive</span></div>';
+                ? '<div class="d-flex justify-content"><span onclick="changeStatus(' . $record->id . ');" class="badge bg-success text-uppercase"  style="cursor: pointer;">Active</span></div>'
+                : '<div class="d-flex justify-content"><span onclick="changeStatus(' . $record->id . ');" class="badge bg-danger text-uppercase" style="cursor: pointer;">Inactive</span></div>';
 
             $dataArray[] = $status;
 

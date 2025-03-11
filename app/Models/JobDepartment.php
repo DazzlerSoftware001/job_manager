@@ -10,5 +10,5 @@ class JobDepartment extends Model
     use HasFactory;
 
     protected $table = 'job_department'; 
-    protected $fillable = ['department', 'status'];
+    protected $fillable = ['category_name', 'department', 'status'];
 }

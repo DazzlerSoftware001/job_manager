@@ -10,6 +10,7 @@ use App\Models\JobSkill;
 use App\Models\JobDepartment;
 use App\Models\JobRole;
 use App\Models\JobExperience;
+use App\Models\JobCurrency;
 use App\Models\JobSalary;
 use App\Models\JobLocation;
 use App\Models\JobCategory;
@@ -30,10 +31,23 @@ class JobController extends Controller
         $data['JobCategory'] = JobCategory::where('status', 1)->select('name','status')->get(); 
         $data['Companies'] = Companies::where('status', 1)->select('id', 'name', 'details', 'status')->get(); 
         $data['JobIntType'] = JobIntType::where('status', 1)->select('id', 'int_type','status')->get();
-        $data['JobSalary'] = JobSalary::where('status', 1)->select('id', 'salary', 'status')->get();
+        $data['JobCurrency'] = JobCurrency::where('status', 1)->select('id', 'currency', 'status')->get();
+        $data['JobSalary'] = JobSalary::where('status', 1)->select('id', 'salary', 'status')->orderBy('salary', 'asc')->get();
         // dd($data);
         return view('recruiter.Jobpost',$data);
     }
+
+    public function getDepartment(Request $request) {
+
+        if (!$request->has('category_name')) {
+            return response()->json(['error' => 'Category Name is missing'], 400);
+        }
+        $JobDepartment = JobDepartment::where('category_name', $request->category_name)->select('department')->get();
+    
+        return response()->json($JobDepartment);
+
+    }
+
 
     public function postjobdata(Request $request) {
         dd($request->all());

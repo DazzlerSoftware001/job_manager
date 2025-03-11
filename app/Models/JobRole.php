@@ -10,7 +10,7 @@ class JobRole extends Model
     use HasFactory;
 
     protected $table = 'job_role'; 
-    protected $fillable = ['role', 'status'];
+    protected $fillable = ['department_name', 'role', 'status'];
 }
 
     

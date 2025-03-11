@@ -28,6 +28,7 @@
                                         <thead class="table-light">
                                             <tr>
                                                 <th>#</th>
+                                                <th>Category</th>
                                                 <th>Department</th>
                                                 <th>Status</th>
                                                 <th>Create Date</th>
@@ -61,6 +62,15 @@
                 <!-- form -->
                 <form method="POST" action="javascript:void(0)" id="AddJobDepartment">
                     <div class="mb-3">
+                        <label for="category" class="form-label">Category</label>
+                        <select class="form-select" id="category" name="category">
+                            <option value="">Choose Industry</option>
+                            @foreach ($JobCategory as $key => $value)
+                                <option value="{{ $value->name }}">{{ $value->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="mb-3">
                         <label for="department" class="form-label">Department</label>
                         <input type="text" class="form-control" name="department" id="department" aria-describedby="countryHelp">
                     </div>
@@ -92,6 +102,16 @@
                     <div class="mb-3" id="modal-id" style="display: none;">
                         <label for="edit-id" class="form-label">ID</label>
                         <input type="text" name="edit-id" id="edit-id" class="form-control" placeholder="ID" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="editcategory" class="form-label">Category Name</label>
+                        <select class="form-select" id="editcategory" name="editcategory">
+                            <option value="">Choose Industry</option>
+                            @foreach ($JobCategory as $key => $value)
+                                <option value="{{ $value->name }}">{{ $value->name }}</option>
+                            @endforeach
+                        </select>
                     </div>
 
                     <div class="mb-3">
@@ -357,6 +377,7 @@
 
             var record = result.data;
             $('#edit-id').val(record.id);
+            $('#editcategory').val(record.category_name);
             $('#editdepartment').val(record.department);
 
             },

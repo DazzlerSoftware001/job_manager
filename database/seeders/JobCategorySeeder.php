@@ -13,8 +13,8 @@ class JobCategorySeeder extends Seeder
      */
     public function run(): void
     {
-        JobCategory::create(['name' => 'IT & Software', 'status' => 0]);
-        JobCategory::create(['name' => 'Marketing', 'status' => 0]);
+        JobCategory::create(['name' => 'IT & Software', 'status' => 1]);
+        JobCategory::create(['name' => 'Marketing', 'status' => 1]);
         JobCategory::create(['name' => 'Finance', 'status' => 1]);
         JobCategory::create(['name' => 'Healthcare', 'status' => 1]);
         JobCategory::create(['name' => 'Education', 'status' => 1]);

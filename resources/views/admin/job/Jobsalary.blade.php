@@ -62,7 +62,7 @@
                 <form method="POST" action="javascript:void(0)" id="AddJobSalary">
                     <div class="mb-3">
                         <label for="salary" class="form-label">Salary</label>
-                        <input type="text" class="form-control" name="salary" id="salary" aria-describedby="countryHelp">
+                        <input type="number" class="form-control" name="salary" id="salary" aria-describedby="countryHelp">
                     </div>
             </div>
                     
@@ -90,7 +90,7 @@
 
                     <div class="mb-3" id="modal-id" style="display: none;">
                         <label for="edit-id" class="form-label">ID</label>
-                        <input type="text" name="edit-id" id="edit-id" class="form-control" placeholder="ID" />
+                        <input type="number" name="edit-id" id="edit-id" class="form-control" placeholder="ID" />
                     </div>
 
                     <div class="mb-3">

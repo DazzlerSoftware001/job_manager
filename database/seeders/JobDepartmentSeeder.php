@@ -13,8 +13,8 @@ class JobDepartmentSeeder extends Seeder
      */
     public function run(): void
     {
-        JobRole::create(['department' => 'Software Development', 'status' => 0]);
-        JobRole::create(['department' => 'Service Deapartment', 'status' => 1]);
-        JobRole::create(['department' => 'Electrician Department', 'status' => 0]);
+        JobRole::create(['category_name' => 'IT & Software','department' => 'Software Development', 'status' => 1]);
+        JobRole::create(['category_name' => 'Finance','department' => 'Accounting', 'status' => 1]);
+        JobRole::create(['category_name' => 'Healthcare', 'department' => 'Pharmaceuticals', 'status' => 1]);
     }
 }

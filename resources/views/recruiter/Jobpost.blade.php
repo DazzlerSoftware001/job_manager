@@ -72,18 +72,6 @@
             margin-top: 2px;
 
         }
-
-        /* For Chrome, Safari, Edge, and Opera */
-        input[type="number"]::-webkit-outer-spin-button,
-        input[type="number"]::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-
-        /* For Firefox */
-        input[type="number"] {
-            -moz-appearance: textfield;
-        }
     </style>
     <div class="main-content">
         <div class="page-content">
@@ -181,7 +169,7 @@
 
                         <div class="card">
                             <div class="card-body pb-0">
-                                <form method="POST" action="{{route('Recruiter.PostJobData')}}">
+                                <form method="POST" action="{{ route('Recruiter.PostJobData') }}">
                                     @csrf
                                     <div class="row mb-3">
                                         <div class="col-xl-4">
@@ -213,12 +201,20 @@
 
 
                                         <div class="col-xl-4 mt-3">
+                                            <label for="industry">Category</label>
+                                            <select class="form-select" id="industry" name="industry">
+                                                <option value="">Choose Industry</option>
+                                                @foreach ($JobCategory as $key => $value)
+                                                    <option value="{{ $value->name }}">{{ $value->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+
+
+                                        <div class="col-xl-4 mt-3">
                                             <label for="department">Department</label>
                                             <select class="form-select" id="department" name="department">
                                                 <option value="">Select</option>
-                                                @foreach ($JobDepartment as $key => $value)
-                                                    <option value="{{ $value->department }}">{{ $value->department }}</option>
-                                                @endforeach
                                             </select>
                                         </div>
 
@@ -261,23 +257,27 @@
                                             <label for="min_experience">Work Experience (Min - Max)</label>
                                             <div class="d-flex gap-2">
                                                 <!-- Min Experience Dropdown -->
-                                                <select class="form-select" id="min_experience" name="min_experience" onchange="updateMaxExperience()">
+                                                <select class="form-select" id="min_experience" name="min_experience"
+                                                    onchange="updateMaxExperience()">
                                                     <option value="">Min</option>
                                                     @foreach ($JobExperience as $value)
-                                                        <option value="{{ $value->experience }}">{{ $value->experience }}</option>
+                                                        <option value="{{ $value->experience }}">{{ $value->experience }}
+                                                        </option>
                                                     @endforeach
                                                 </select>
-                                        
+
                                                 <!-- Max Experience Dropdown -->
-                                                <select class="form-select" id="max_experience" name="max_experience" disabled>
+                                                <select class="form-select" id="max_experience" name="max_experience"
+                                                    disabled>
                                                     <option value="">Max</option>
                                                     @foreach ($JobExperience as $value)
-                                                        <option value="{{ $value->experience }}">{{ $value->experience }}</option>
+                                                        <option value="{{ $value->experience }}">{{ $value->experience }}
+                                                        </option>
                                                     @endforeach
                                                 </select>
                                             </div>
                                         </div>
-                                                                              
+
 
 
                                         <div class="col-xl-4 mt-3">
@@ -285,39 +285,28 @@
                                             <div class="d-flex gap-2">
                                                 <select class="form-select" id="currency" name="currency">
                                                     <option value="">Currency</option>
-                                                    <option value="INR">INR (₹)</option>
-                                                    <option value="USD">USD ($)</option>
-                                                    <option value="EUR">EUR (€)</option>
-                                                    <option value="GBP">GBP (£)</option>
-                                                    <option value="AUD">AUD (A$)</option>
-                                                    <option value="CAD">CAD (C$)</option>
-                                                    <option value="JPY">JPY (¥)</option>
+                                                    @foreach ($JobCurrency as $value)
+                                                        <option value="{{ $value->currency }}">{{ $value->currency }}
+                                                        </option>
+                                                    @endforeach
                                                 </select>
-                                                <select class="form-select" id="min_salary" name="min_salary">
+                                                <select class="form-select" id="min_salary" name="min_salary"
+                                                    onchange="updateMaxSalary()">
                                                     <option value="">Min Salary</option>
-                                                    <?php for ($i = 10000; $i <= 1000000; $i += 10000) { ?>
-                                                    <option value="<?= $i ?>"><?= number_format($i) ?></option>
-                                                    <?php } ?>
+                                                    @foreach ($JobSalary as $value)
+                                                        <option value="{{ $value->salary }}">{{ $value->salary }}
+                                                        </option>
+                                                    @endforeach
                                                 </select>
-                                                <select class="form-select" id="max_salary" name="max_salary">
+                                                <select class="form-select" id="max_salary" name="max_salary" disabled>
                                                     <option value="">Max Salary</option>
-                                                    <?php for ($i = 10000; $i <= 1000000; $i += 10000) { ?>
-                                                    <option value="<?= $i ?>"><?= number_format($i) ?></option>
-                                                    <?php } ?>
+                                                    @foreach ($JobSalary as $value)
+                                                        <option value="{{ $value->salary }}">{{ $value->salary }}
+                                                        </option>
+                                                    @endforeach
                                                 </select>
                                             </div>
-                                        </div>    
-
-
-                                        <div class="col-xl-4 mt-3">
-                                            <label for="industry">Industry</label>
-                                            <select class="form-select" id="industry" name="industry">
-                                                <option value="">Select</option>
-                                                @foreach ($JobCategory as $key => $value)
-                                                    <option value="{{ $value->name }}">{{ $value->name }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>           
+                                        </div>
 
 
                                         <div class="col-xl-4 mt-3">
@@ -329,33 +318,36 @@
                                                 <option>Internship</option>
                                                 <option>Freelance</option>
                                             </select>
-                                        </div>         
+                                        </div>
 
 
                                         <div class="col-xl-4 mt-3">
                                             <label for="condidate_industry">Condidate Industry</label>
-                                            <select class="form-select" id="condidate_industry" name="condidate_industry">
+                                            <select class="form-select" id="condidate_industry"
+                                                name="condidate_industry">
                                                 <option value="">Select</option>
                                                 <option>Part Time</option>
                                                 <option>Contract</option>
                                                 <option>Internship</option>
                                                 <option>Freelance</option>
                                             </select>
-                                        </div>   
-                                        
-                                        
+                                        </div>
+
+
                                         <div class="col-xl-4 col-lg-6 col-md-8 col-sm-12 mt-3">
                                             <label for="diversity" class="d-block">Diversity Hiring</label>
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="checkbox" id="male" name="diversity" value="Male">
+                                                <input class="form-check-input" type="checkbox" id="male"
+                                                    name="diversity" value="Male">
                                                 <label class="form-check-label" for="male">Male</label>
                                             </div>
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="checkbox" id="female" name="diversity" value="Female">
+                                                <input class="form-check-input" type="checkbox" id="female"
+                                                    name="diversity" value="Female">
                                                 <label class="form-check-label" for="female">Female</label>
                                             </div>
                                         </div>
-                                        
+
 
 
                                         <div class="col-xl-4 mt-3">
@@ -375,7 +367,8 @@
                                             <select class="form-select" id="interview_type" name="interview_type">
                                                 <option value="">Select</option>
                                                 @foreach ($JobIntType as $key => $value)
-                                                    <option value="{{ $value->int_type }}">{{ $value->int_type }}</option>
+                                                    <option value="{{ $value->int_type }}">{{ $value->int_type }}
+                                                    </option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -383,23 +376,25 @@
 
                                         <div class="col-xl-4 mt-3">
                                             <label for="company_name">Company Name</label>
-                                            <select class="form-select" id="company_name" name="company_name" onchange="updateCompanyDetails()">
+                                            <select class="form-select" id="company_name" name="company_name"
+                                                onchange="updateCompanyDetails()">
                                                 <option value="">Select</option>
                                                 @foreach ($Companies as $company)
-                                                    <option value="{{ $company->id }}" data-details="{{ $company->details }}">
+                                                    <option value="{{ $company->id }}"
+                                                        data-details="{{ $company->details }}">
                                                         {{ $company->name }}
                                                     </option>
                                                 @endforeach
                                             </select>
                                         </div>
-                                        
+
 
 
                                         <div class="col-xl-4 mt-3">
                                             <label for="company_details">Company Details</label>
                                             <textarea class="form-control" id="company_details" name="company_details" readonly></textarea>
                                         </div>
-                                        
+
 
 
                                     </div>
@@ -459,16 +454,7 @@
                 }
             });
 
-            document.addEventListener('DOMContentLoaded', function() {
-                var department = document.getElementById('department');
-                if (department) {
-                    const department1 = new Choices(department, {
-                        shouldSort: false,
-                        position: 'down',
-                        resetScrollPosition: true,
-                    });
-                }
-            });
+
 
 
             document.addEventListener('DOMContentLoaded', function() {
@@ -620,10 +606,10 @@
             function updateCompanyDetails() {
                 var select = document.getElementById("company_name");
                 var detailsTextarea = document.getElementById("company_details");
-        
+
                 // Get the selected option
                 var selectedOption = select.options[select.selectedIndex];
-        
+
                 // Check if data-details exists
                 if (selectedOption) {
                     var details = selectedOption.getAttribute("data-details") || "";
@@ -633,6 +619,7 @@
         </script>
 
 
+        {{-- Showing min & max Experience --}}
         <script>
             function updateMaxExperience() {
                 var minSelect = document.getElementById("min_experience");
@@ -662,5 +649,77 @@
             }
         </script>
 
-        
+
+        {{-- Showing min & max Salary --}}
+        <script>
+            function updateMaxSalary() {
+                var minSelect = document.getElementById("min_salary");
+                var maxSelect = document.getElementById("max_salary");
+
+                // Get selected Min Salary value
+                var minValue = parseInt(minSelect.value) || 0;
+
+                // Enable Max Salary dropdown
+                maxSelect.disabled = false;
+
+                // Remove previous options
+                maxSelect.innerHTML = '<option value="">Max Salary</option>';
+
+                // Get all salary options from Min selector
+                var options = minSelect.querySelectorAll("option");
+
+                options.forEach(option => {
+                    var salaryValue = parseInt(option.value);
+                    if (!isNaN(salaryValue) && salaryValue >= minValue) {
+                        var newOption = document.createElement("option");
+                        newOption.value = salaryValue;
+                        newOption.textContent = salaryValue;
+                        maxSelect.appendChild(newOption);
+                    }
+                });
+            }
+        </script>
+
+        {{-- For selecting department according to category --}}
+
+        <script>
+            $(document).ready(function() {
+                $('#industry').change(function() {
+                    var category_name = $(this).val();
+                    $('#department').html('<option value="">Loading...</option>');
+
+                    if (category_name) {
+                        $.ajax({
+                            url: "{{ route('Recruiter.getDepartment') }}",
+                            type: "GET",
+                            data: {
+                                category_name: category_name
+                            },
+                            success: function(data) {
+                                console.log("Response Data:", data);
+                                $('#department').html(
+                                '<option value="">Select Department</option>');
+
+                                if (data.length > 0) {
+                                    $.each(data, function(index, item) {
+                                        $('#department').append('<option value="' + item
+                                            .department + '">' + item.department +
+                                            '</option>');
+                                    });
+                                } else {
+                                    $('#department').html(
+                                        '<option value="">No Departments Found</option>');
+                                }
+                            },
+                            error: function() {
+                                $('#department').html(
+                                    '<option value="">Error loading data</option>');
+                            }
+                        });
+                    } else {
+                        $('#department').html('<option value="">Select Department</option>');
+                    }
+                });
+            });
+        </script>
     @endsection

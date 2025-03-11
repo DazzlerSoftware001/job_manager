@@ -13,8 +13,8 @@ class JobRoleSeeder extends Seeder
      */
     public function run(): void
     {
-        JobRole::create(['role' => 'Backend Developer', 'status' => 0]);
-        JobRole::create(['role' => 'Frontend Developer', 'status' => 1]);
-        JobRole::create(['role' => 'Fullstack Developer', 'status' => 0]);
+        JobRole::create(['department_name' => 'Software Development', 'role' => 'Backend Developer', 'status' => 1]);
+        JobRole::create(['department_name' => 'Accounting', 'role' => ' Accountant', 'status' => 1]);
+        JobRole::create(['department_name' => 'Pharmaceuticals', 'role' => 'Pharmacist', 'status' => 1]);
     }
 }

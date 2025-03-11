@@ -8,4 +8,7 @@ Route::prefix('Recruiter')->group(function () {
     Route::get('/Dashboard', [DashboardController::class, 'dashboard'])->name('Recruiter.dashboard');
     Route::get('/jobpost', [JobController::class, 'jobpost'])->name('Recruiter.jobpost');
     Route::post('postjobdata', [JobController::class, 'postjobdata'])->name('Recruiter.PostJobData');
+
+
+    Route::get('/getDepartment', [JobController::class, 'getDepartment'])->name('Recruiter.getDepartment');
 });
