@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('annual_salary', function (Blueprint $table) {
             $table->id();
-            $table->integer('salary');
+            $table->string('salary');
             $table->tinyInteger('status')->default(0);
             $table->timestamps();
         });
