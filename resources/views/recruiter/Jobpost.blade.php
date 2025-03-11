@@ -6,6 +6,19 @@
     Job Post
 @endsection
 @section('main-container')
+
+<script src="https://cdn.tiny.cloud/1/k73iszd3tzdamw58yk6fmdzasoe86nkkbzktvgqtvxvcrr17/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        tinymce.init({
+            selector: '#job_description',
+            height: 400,
+            plugins: 'advlist autolink lists link image charmap preview',
+            toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | bullist numlist outdent indent | link image',
+        });
+    });
+</script>
+
     <style>
         .choices {
             border: var(--bs-border-width) solid var(--bs-border-color);
@@ -342,14 +355,6 @@
                                             </div>
                                         </div>
 
-
-
-                                        <div class="col-xl-4 mt-3">
-                                            <label for="job_description">Job Description</label>
-                                            <textarea class="form-control" name="job_description"></textarea>
-                                        </div>
-
-
                                         <div class="col-xl-4 mt-3">
                                             <label for="vacancies">Number of Vacancies</label>
                                             <input type="number" class="form-control" name="vacancies">
@@ -368,7 +373,7 @@
                                         </div>
 
 
-                                        <div class="col-xl-4 mt-3">
+                                        <div class="col-xl-6 mt-3">
                                             <label for="company_name">Company Name</label>
                                             <select class="form-select" id="company_name" name="company_name"
                                                 onchange="updateCompanyDetails()">
@@ -384,11 +389,23 @@
 
 
 
-                                        <div class="col-xl-4 mt-3">
+                                        <div class="col-xl-6 mt-3">
                                             <label for="company_details">Company Details</label>
                                             <textarea class="form-control" id="company_details" name="company_details" readonly></textarea>
                                         </div>
 
+                                        {{-- <div class="col-xl-8 mt-3 text-center">
+                                            <label for="job_description">Job Description</label>
+                                            <textarea class="form-control" id="job_description" name="job_description"></textarea>
+                                        </div> --}}
+
+                                        <div class="d-flex justify-content-center mt-3">
+                                            <div class="col-xl-8 text-center">
+                                                <label for="job_description">Job Description</label>
+                                                <textarea class="form-control" id="job_description" name="job_description"></textarea>
+                                            </div>
+                                        </div>
+                                        
 
 
                                     </div>
@@ -505,82 +522,6 @@
             });
         </script>
 
-
-        {{-- <script>
-            $(document).ready(function() {
-                $('#PostJobData').on('submit', function(event) {
-                    event.preventDefault(); // Prevent default form submission
-
-                    var url = "{{ route('Recruiter.PostJobData') }}";
-                    $.ajax({
-                        url: url,
-                        type: 'POST',
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        },
-                        data: new FormData(this),
-                        contentType: false,
-                        cache: false,
-                        processData: false,
-                        dataType: 'json',
-                        success: function(result) {
-                            if (result.status_code === 1) {
-                                $('#exampleModal').modal('hide');
-                                $('#PostJobData').trigger("reset");
-                                $('#myTable').DataTable().ajax.reload(null, false);
-                                Toastify({
-                                    text: result.message,
-                                    duration: 3000,
-                                    gravity: "top",
-                                    position: "right",
-                                    style: {
-                                        background: "green",
-                                        color: "white",
-                                    }
-                                }).showToast();
-
-                            } else if (result.status_code === 2) {
-                                Toastify({
-                                    text: result.message,
-                                    duration: 3000,
-                                    gravity: "top",
-                                    position: "right",
-                                    style: {
-                                        background: "#c7ac14",
-                                        color: "white",
-                                    }
-                                }).showToast();
-                            } else {
-                                Toastify({
-                                    text: result.message,
-                                    duration: 3000,
-                                    gravity: "top",
-                                    position: "right",
-                                    style: {
-                                        background: "red",
-                                        color: "white",
-                                    }
-                                }).showToast();
-                            }
-                        },
-                        error: function(xhr, status, error) {
-                            console.error('AJAX Error:', error);
-                            Toastify({
-                                text: 'An error occurred. Please try again.',
-                                duration: 3000,
-                                gravity: "top",
-                                position: "right",
-                                style: {
-                                    background: "red",
-                                    color: "white",
-                                }
-                            }).showToast();
-                        }
-                    });
-                });
-            });
-        </script> --}}
-
         <!-- For Company Details -->
         <script>
             function updateCompanyDetails() {
@@ -650,7 +591,7 @@
 
                 options.forEach(option => {
                     var salaryValue = parseInt(option.value);
-                    if (!isNaN(salaryValue) && salaryValue >= minValue) {
+                    if (!isNaN(salaryValue) && salaryValue > minValue) {
                         var newOption = document.createElement("option");
                         newOption.value = salaryValue;
                         newOption.textContent = salaryValue;

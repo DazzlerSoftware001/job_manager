@@ -34,8 +34,12 @@ class JobController extends Controller
         $data['JobIntType'] = JobIntType::where('status', 1)->select('id', 'int_type','status')->get();
         $data['JobCurrency'] = JobCurrency::where('status', 1)->select('id', 'currency', 'status')->get();
         $data['JobEducation'] = JobEducation::where('status', 1)->select('education', 'status')->get();
-        $data['JobSalary'] = JobSalary::where('status', 1)->select('id', 'salary', 'status')->orderBy('salary', 'ASC')->get();
-        // dd($data['JobSalary']);
+        // $data['JobSalary'] = JobSalary::where('status', 1)->select('id', 'salary', 'status')->orderBy('salary', 'ASC')->get();
+
+        $data['JobSalary'] = JobSalary::where('status', 1)
+        ->orderByRaw('CAST(salary AS UNSIGNED) ASC') // Ensures numeric sorting
+        ->get();
+
         return view('recruiter.Jobpost',$data);
     }
 

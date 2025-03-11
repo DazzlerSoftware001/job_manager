@@ -13,9 +13,9 @@ class JobSalarySeeder extends Seeder
      */
     public function run(): void
     {
-        JobSalary::create(['salary' => '10,000', 'status' => 0]);
-        JobSalary::create(['salary' => '20,000', 'status' => 1]);
-        JobSalary::create(['salary' => '40,000', 'status' => 0]);
-        JobSalary::create(['salary' => '50,000', 'status' => 1]);
+        JobSalary::create(['salary' => '10000', 'status' => 0]);
+        JobSalary::create(['salary' => '20000', 'status' => 1]);
+        JobSalary::create(['salary' => '40000', 'status' => 0]);
+        JobSalary::create(['salary' => '50000', 'status' => 1]);
     }
 }
