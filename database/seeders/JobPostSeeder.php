@@ -1,0 +1,37 @@
+<?php
+
+namespace Database\Seeders;
+
+use Illuminate\Database\Seeder;
+use App\Models\JobPost;
+
+class JobPostSeeder extends Seeder
+{
+    public function run()
+    {
+        JobPost::create([
+            'title' => 'Software Engineer',
+            'type' => 'Full Time',
+            'skills' => 'PHP, Laravel, JavaScript, MySQL',
+            'industry' => 'IT & Software',
+            'department' => 'Software Development',
+            'role' => 'Backend Developer',
+            'mode' => 'Remote',
+            'location' => 'India - Mumbai',
+            'min_exp' => 1,
+            'max_exp' => 5,
+            'currency' => 'INR (₹)',
+            'min_sal' => 60000,
+            'max_sal' => 90000,
+            'education' => 'B.Tech in Computer Science',
+            'condidate_industry' => 'Software Development',
+            'diversity' => 'Both',
+            'vacancies' => 3,
+            'int_type' => 'walk in',
+            'com_name' => 'Dazzler Software',
+            'com_details' => 'We help businesses elevate their value through custom software development, product design, QA and consultancy services.',
+            'job_desc' => 'Develop and maintain web applications using Laravel.',
+            'status' => 0,
+        ]);
+    }
+}

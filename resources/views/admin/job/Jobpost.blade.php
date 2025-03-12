@@ -1,9 +1,9 @@
 @extends('admin.adminlayout.main')
 @section('title')
-    Admin-Job Experience
+    Admin-Job List
 @endsection
 @section('page-title')
-    Job Experience
+    Job List
 @endsection
 
 @section('main-container')
@@ -14,12 +14,12 @@
                     <div class="col-lg-12">
                         <div class="card">
                             <div class="card-header">
-                                <h4 class="card-title">Job Experience</h4>
+                                <h4 class="card-title">Job List</h4>
                             </div>
 
                             <div class="px-3 mt-3 d-flex align-items-center gap-2">
                                 <input type="text" id="search" name="search" class="form-control form-control-sm bg-light rounded w-25" placeholder="Search...">
-                                <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal">+ Add Job Experience</button>
+                                <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal">+ Create Job</button>
                             </div>
 
                             <div class="card-body">
@@ -28,7 +28,24 @@
                                         <thead class="table-light">
                                             <tr>
                                                 <th>#</th>
-                                                <th>Experience</th>
+                                                <th>Title</th>
+                                                <th>Type</th>
+                                                <th>Skills</th>
+                                                <th>Industry</th>
+                                                <th>Department</th>
+                                                <th>Role</th>
+                                                <th>Mode</th>
+                                                <th>Location</th>
+                                                <th>Experience(Min - Max)</th>
+                                                <th>Salary Range</th>
+                                                <th>Qualifications</th>
+                                                <th>Condidate Industry</th>
+                                                <th>Diversity</th>
+                                                <th>No. of Vacancies</th>
+                                                <th>Interview type</th>
+                                                <th>Company Name</th>
+                                                <th>Company Details</th>
+                                                <th>Job Description</th>
                                                 <th>Status</th>
                                                 <th>Create Date</th>
                                                 <th>Action</th>
@@ -54,16 +71,17 @@
         <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-            <h1 class="modal-title fs-5" id="exampleModalLabel">Add job experience</h1>
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Create job</h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <!-- form -->
-                <form method="POST" action="javascript:void(0)" id="AddJobExperience">
+                <form method="POST" action="javascript:void(0)" id="AddJobCategory">
                     <div class="mb-3">
-                        <label for="experience" class="form-label">Experience</label>
-                        <input type="number" class="form-control" name="experience" id="experience" aria-describedby="countryHelp">
+                        <label for="category" class="form-label">Category</label>
+                        <input type="text" class="form-control" name="category" id="category" aria-describedby="countryHelp">
                     </div>
+
             </div>
                     
             <div class="modal-footer">
@@ -81,12 +99,12 @@
         <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-            <h1 class="modal-title fs-5" id="exampleModalLabel">Edit job Experience</h1>
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Edit job</h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <!-- form -->
-                <form method="POST" action="javascript:void(0)" id="EditJobExp">
+                <form method="POST" action="javascript:void(0)" id="EditJobCategory">
 
                     <div class="mb-3" id="modal-id" style="display: none;">
                         <label for="edit-id" class="form-label">ID</label>
@@ -94,8 +112,8 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="editExp" class="form-label">Experience</label>
-                        <input type="number" class="form-control" name="editExp" id="editExp" aria-describedby="countryHelp">
+                        <label for="editcategory" class="form-label">Category</label>
+                        <input type="text" class="form-control" name="editcategory" id="editcategory" aria-describedby="countryHelp">
                     </div>
 
             </div>
@@ -128,7 +146,7 @@
             "fixedHeader": true,
             "order": [[0, "desc"]],
             "ajax": {
-                url: "{{ route('Admin.GetJobExperience') }}",
+                url: "{{ route('Admin.GetJobPost') }}",
                 type: 'POST',
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -149,13 +167,13 @@
         });
     </script>
 
-        {{-- AddJobExperience --}}
+    {{-- CreateJob --}}
     <script>
         $(document).ready(function() {
-            $('#AddJobExperience').on('submit', function(event) {
+            $('#AddJobCategory').on('submit', function(event) {
                 event.preventDefault(); // Prevent default form submission
         
-                var url = "{{ route('Admin.AddJobExperience') }}";
+                var url = "{{ route('Admin.AddJobCategory') }}";
                 $.ajax({
                     url: url,
                     type: 'POST',
@@ -170,7 +188,7 @@
                     success: function(result) {
                         if (result.status_code === 1) {
                             $('#exampleModal').modal('hide');
-                            $('#AddJobExperience').trigger("reset");
+                            $('#AddJobCategory').trigger("reset");
                             $('#myTable').DataTable().ajax.reload(null, false);
                             Toastify({
                                 text: result.message,
@@ -229,7 +247,7 @@
      <script>
         function changeStatus(id){
           $.ajax({
-            url : "{{ route('Admin.ChangeJobExperienceStatus') }}",
+            url : "{{ route('Admin.ChangeJobCategoryStatus') }}",
             type: 'POST',
             headers: {
               'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -251,11 +269,11 @@
                 }).showToast();
               } else if (result.status_code == 2) {
                 Toastify({
-                    text: result.message,
-                    duration: 3000,
-                    gravity: "top",
-                    position: "right",
-                    style:{
+                  text: result.message,
+                  duration: 3000,
+                  gravity: "top",
+                  position: "right",
+                  style:{
                         background:"#c7ac14",
                         color: "white",
                     }
@@ -279,7 +297,7 @@
     </script>
 
     
-    {{-- DeleteJobExperience --}}
+    {{-- DeleteJobCategory --}}
     <script>
         function deleteRecord(id) {
             // First AJAX to show confirmation modal
@@ -300,7 +318,7 @@
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
-                        url: "{{ route('Admin.DeleteJobExperience') }}",
+                        url: "{{ route('Admin.DeleteJobCategory') }}",
                         data: { id: id },
                         dataType: 'json',
                         success: function (deleteResult) {
@@ -339,7 +357,7 @@
         }
     </script>
 
-    {{--EditJobExperience --}}
+    {{--Edit Category --}}
     <script>
         function edit(id)
         {
@@ -348,7 +366,7 @@
             headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
-            url: "{{ route('Admin.EditJobExperience') }}",
+            url: "{{ route('Admin.EditJobCategory') }}",
             data:{ id:id },
             dataType:'json',
             success:function(result)
@@ -356,20 +374,20 @@
 
             var record = result.data;
             $('#edit-id').val(record.id);
-            $('#editExp').val(record.experience);
+            $('#editcategory').val(record.name);
 
             },
         });
         }
     </script>
 
-    {{-- UpdateJobExperience --}}
+    {{-- Update Category --}}
     <script>
     $(document).ready(function() {
-        $('#EditJobExp').on('submit', function(event) {
+        $('#EditJobCategory').on('submit', function(event) {
             event.preventDefault(); // Prevent default form submission
     
-            var url = "{{ route('Admin.UpdateJobExperience') }}";
+            var url = "{{ route('Admin.UpdateJobCategory') }}";
             $.ajax({
                 url: url,
                 type: 'POST',
@@ -384,7 +402,7 @@
                 success: function(result) {
                     if (result.status_code === 1) {
                         $('#EditModal').modal('hide');
-                        $('#EditJobExp').trigger("reset");
+                        $('#EditJobCategory').trigger("reset");
                         $('#myTable').DataTable().ajax.reload(null, false);
                         Toastify({
                             text: result.message,
@@ -402,9 +420,9 @@
                             gravity: "top",
                             position: "right",
                             style:{
-                                background:"#c7ac14",
-                                color: "white",
-                            }
+                                    background:"#c7ac14",
+                                    color: "white",
+                                }
                         }).showToast();
                     } else {
                         Toastify({
@@ -412,10 +430,9 @@
                             duration: 3000,
                             gravity: "top",
                             position: "right",
-                            style:{
-                                background:"#c7ac14",
-                                color: "white",
-                            }
+                            style: {
+                            background: "#c7ac14",
+                        },
                         }).showToast();
                     }
                 },

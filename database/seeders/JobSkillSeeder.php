@@ -16,9 +16,9 @@ class JobSkillSeeder extends Seeder
     {
         JobSkill::create(['skill' => 'HTML', 'status' => 0]);
         JobSkill::create(['skill' => 'CSS', 'status' => 1]);
-        JobSkill::create(['skill' => 'JS', 'status' => 0]);
+        JobSkill::create(['skill' => 'JavaScript', 'status' => 0]);
         JobSkill::create(['skill' => 'PHP', 'status' => 1]);
         JobSkill::create(['skill' => 'Laravel', 'status' => 0]);
-        JobSkill::create(['skill' => 'Mysql', 'status' => 1]);
+        JobSkill::create(['skill' => 'MySQL', 'status' => 1]);
     }
 }

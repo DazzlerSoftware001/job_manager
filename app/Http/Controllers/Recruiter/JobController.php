@@ -17,7 +17,9 @@ use App\Models\JobCategory;
 use App\Models\Companies;
 use App\Models\JobIntType;
 use App\Models\JobEducation;
+use App\Models\JobPost;
 
+use Illuminate\Support\Facades\Validator;
 
 class JobController extends Controller
 {
@@ -43,6 +45,80 @@ class JobController extends Controller
         return view('recruiter.Jobpost',$data);
     }
 
+    public function PostJobData(Request $request)
+    {
+        // dd($request->skills);
+  
+        // Define validation rules
+        $rules = [
+            'job_title' => 'required|string|max:100|',
+            'job_type' => 'required|string',
+            'skills' => 'required',
+            'industry' => 'required|string',
+            'department' => 'required|string',
+            'role' => 'required|string',
+            'work_mode' => 'required|string',
+            'location' => 'required|string',
+            'min_experience' => 'required|integer',
+            'max_experience' => 'required|integer',
+            'currency' => 'required|string',
+            'min_salary' => 'required|integer',
+            'max_salary' => 'required|integer',
+            'education' => 'required|string',
+            'candidate_industry' => 'required|string',
+            'diversity' => 'required|string',
+            'vacancies' => 'required|integer',
+            'interview_type' => 'required|string',
+            'company_name' => 'required|string',
+            'company_details' => 'required|string',
+            'job_description'=> 'required|string',
+
+        ];
+
+        // Validate the request
+        $validator = Validator::make($request->all(), $rules);
+
+        if (!$validator->fails()) {
+            // try {
+                $JobPost = new JobPost();
+                $JobPost->title = $request->input('job_title');
+                $JobPost->type = $request->input('job_type');
+                // $JobPost->skills = $request->input('skills');
+                $JobPost->skills = implode(',', $request->input('skills'));
+                $JobPost->industry = $request->input('industry');
+                $JobPost->department = $request->input('department');
+                $JobPost->role = $request->input('role');
+                $JobPost->mode = $request->input('work_mode');
+                $JobPost->location = $request->input('location');
+                $JobPost->min_exp = $request->input('min_experience');
+                $JobPost->max_exp = $request->input('max_experience');
+                $JobPost->currency = $request->input('currency');
+                $JobPost->min_sal = $request->input('min_salary');
+                $JobPost->max_sal = $request->input('max_salary');
+                $JobPost->education = $request->input('education');
+                $JobPost->condidate_industry = $request->input('candidate_industry');
+                $JobPost->diversity = $request->input('diversity');
+                $JobPost->vacancies = $request->input('vacancies');
+                $JobPost->int_type = $request->input('interview_type');
+                $JobPost->com_name = $request->input('company_name');
+                $JobPost->com_details = $request->input('company_details');
+                $JobPost->job_desc = $request->input('job_description');
+                $JobPost->status = 0;
+                $JobPost->created_at = now();
+
+                $JobPost->save();
+
+                return response()->json(['status_code' => 1, 'message' => 'Experience added successfully ']);
+            // } catch (\Exception $e) {
+            //     // Handle any exception that occurs during saving
+            //     return response()->json(['status_code' => 0, 'message' => 'Unable to add Experience']);
+            // }
+        } else {
+            // Return validation errors
+            return response()->json(['status_code' => 2, 'message' => $validator->errors()->first()]);
+        }
+    }
+
     public function getDepartment(Request $request) {
 
         if (!$request->has('category_name')) {
@@ -64,11 +140,5 @@ class JobController extends Controller
                             ->get();
     
         return response()->json($JobRole);
-    }
-    
-
-
-    public function postjobdata(Request $request) {
-        dd($request->all());
     }
 }

@@ -17,6 +17,7 @@ use App\Models\JobSalary;
 use App\Models\JobMode;
 use App\Models\JobIntType;
 use App\Models\JobEducation;
+use App\Models\JobPost;
 
 
 use Illuminate\Support\Facades\Validator;
@@ -1802,7 +1803,7 @@ class JobController extends Controller
   
         // Define validation rules
         $rules = [
-            'experience' => 'required|string|max:100|unique:job_experience,experience',
+            'experience' => 'required|integer|max:100|unique:job_experience,experience',
         ];
 
         // Validate the request
@@ -2762,6 +2763,119 @@ class JobController extends Controller
     }
 
 
+    // Job Post
+    public function jobPost()
+    {
+        return view('admin.job.Jobpost');
+    }
+
+    public function getJobPost(Request $request)
+    {
+        // dd($request->all());
+        $draw = intval($request->input("draw"));
+        $offset = trim($request->input('start'));
+        // $limit = 10;
+        $limit = intval($request->input('length', 10));
+
+        $order = $request->input("order");
+        $search = $request->input("search");
+        $columns = array(
+            0 => 'id',
+            1 => 'title',
+            2 => 'type',
+            3 => 'skills',
+            4 => 'industry',
+            5 => 'department',
+            6 => 'role',
+            7 => 'mode',
+            8 => 'location',
+            9 => 'min_exp',
+            10 => 'min_sal',
+            11 => 'education',
+            12 => 'condidate_industry',
+            13 => 'diversity',
+            14 => 'vacancies',
+            15 => 'int_type',
+            16 => 'com_name',
+            17 => 'com_details',
+            18 => 'job_desc',
+            19 => 'status',
+            20 => 'created_at',
+            21 => 'id',
+        );
+
+        $query = JobPost::query();
+        // Count Data
+
+        if (!empty($search)) {
+            $query->where('title', 'like', '%' . $search . '%');
+        }
+    
+        if ($order) {
+            $column = $columns[$order[0]['column']];
+            $dir = $order[0]['dir'];
+            $query->orderBy($column, $dir);
+        }
+
+        $totalRecords = $query->count();
+
+        $records = $query->offset($offset)->limit($limit)->orderBy('id', 'desc')->get();
+
+
+        $data = [];
+        foreach ($records as $record) {
+            $dataArray = [];
+
+            $dataArray[] = $record->id;
+            $dataArray[] = ucfirst($record->title);
+            $dataArray[] = ucfirst($record->type);
+            $dataArray[] = ucfirst($record->skills);
+            $dataArray[] = ucfirst($record->industry);
+            $dataArray[] = ucfirst($record->department);
+            $dataArray[] = ucfirst($record->role);
+            $dataArray[] = ucfirst($record->mode);
+            $dataArray[] = ucfirst($record->location);
+            $dataArray[] = ucfirst($record->min_exp) . ' - ' . ucfirst($record->max_exp);
+            $dataArray[] = ucfirst($record->currency). ' - ' . ucfirst($record->min_sal) . ' - ' . ucfirst($record->max_sal);
+            $dataArray[] = ucfirst($record->education);
+            $dataArray[] = ucfirst($record->condidate_industry);
+            $dataArray[] = ucfirst($record->diversity);
+            $dataArray[] = ucfirst($record->vacancies);
+            $dataArray[] = ucfirst($record->int_type);
+            $dataArray[] = ucfirst($record->com_name);
+            $dataArray[] = ucfirst($record->com_details);
+            $dataArray[] = ucfirst($record->job_desc);
+
+            $status = $record->status == 1
+                ? '<div class="d-flex "><span onclick="changeStatus(' . $record->id . ');" class="badge bg-success text-uppercase"  style="cursor: pointer;">Active</span></div>'
+                : '<div class="d-flex "><span onclick="changeStatus(' . $record->id . ');" class="badge bg-danger text-uppercase" style="cursor: pointer;">Inactive</span></div>';
+
+            $dataArray[] = $status;
+
+
+            $dataArray[] = date('d-M-Y', strtotime($record->created_at));
+
+            $dataArray[] = '<div class="d-flex gap-2">
+                                <div class="edit">
+                                    <a href="javascript:void(0);" class="edit-item-btn text-primary" data-bs-toggle="modal" data-bs-target="#EditModal" onclick="edit(' . $record->id . ');"><i class="far fa-edit"></i></a>
+                                </div>
+                                <div class="remove">
+                                    <a href="javascript:void(0);" class="remove-item-btn text-danger" onclick="deleteRecord(' . $record->id . ');">
+                                        <i class="far fa-trash-alt"></i>
+                                    </a>
+                                </div>
+                            </div>';
+
+            $data[] = $dataArray;
+        }
+
+        return response()->json([
+            "draw" => $draw,
+            "recordsTotal" => $totalRecords,
+            "recordsFiltered" => $totalRecords,
+            "data" => $data
+        ]);
+    }
 
 
 }

@@ -182,7 +182,7 @@
 
                         <div class="card">
                             <div class="card-body pb-0">
-                                <form method="POST" action="{{ route('Recruiter.PostJobData') }}">
+                                <form method="POST" action="javascript:void(0)" id="AddJobPost">
                                     @csrf
                                     <div class="row mb-3">
                                         <div class="col-xl-4">
@@ -269,7 +269,7 @@
                                                 <!-- Min Experience Dropdown -->
                                                 <select class="form-select" id="min_experience" name="min_experience"
                                                     onchange="updateMaxExperience()">
-                                                    <option value="0">Fresher</option>
+                                                    <option value=0>Fresher</option>
                                                     @foreach ($JobExperience as $value)
                                                         <option value="{{ $value->experience }}">{{ $value->experience }}
                                                         </option>
@@ -279,7 +279,7 @@
                                                 <!-- Max Experience Dropdown -->
                                                 <select class="form-select" id="max_experience" name="max_experience"
                                                     disabled>
-                                                    <option value="">Max</option>
+                                                    <option value=0>Max</option>
                                                     @foreach ($JobExperience as $value)
                                                         <option value="{{ $value->experience }}">{{ $value->experience }}
                                                         </option>
@@ -309,7 +309,7 @@
                                                     @endforeach
                                                 </select>
                                                 <select class="form-select" id="max_salary" name="max_salary" disabled>
-                                                    <option value="">Max Salary</option>
+                                                    <option value="0">Max Salary</option>
                                                     @foreach ($JobSalary as $value)
                                                         <option value="{{ $value->salary }}">{{ $value->salary }}
                                                         </option>
@@ -331,8 +331,8 @@
 
 
                                         <div class="col-xl-4 mt-3">
-                                            <label for="industry">Condidate Industry</label>
-                                            <select class="form-select" id="industry" name="industry">
+                                            <label for="candidate_industry">Condidate Industry</label>
+                                            <select class="form-select" id="candidate_industry" name="candidate_industry">
                                                 <option value="">Choose Industry</option>
                                                 @foreach ($JobCategory as $key => $value)
                                                     <option value="{{ $value->name }}">{{ $value->name }}</option>
@@ -361,7 +361,7 @@
                                         </div>
 
 
-                                        <div class="col-xl-4 col-lg-6 col-md-8 col-sm-12">
+                                        <div class="col-xl-4 col-lg-6 col-md-8 col-sm-12 mt-3">
                                             <label for="interview_type" class="d-block">Interview Type</label>
                                             <select class="form-select" id="interview_type" name="interview_type">
                                                 <option value="">Select</option>
@@ -379,7 +379,7 @@
                                                 onchange="updateCompanyDetails()">
                                                 <option value="">Select</option>
                                                 @foreach ($Companies as $company)
-                                                    <option value="{{ $company->id }}"
+                                                    <option value="{{ $company->name }}"
                                                         data-details="{{ $company->details }}">
                                                         {{ $company->name }}
                                                     </option>
@@ -545,22 +545,40 @@
             function updateMaxExperience() {
                 var minSelect = document.getElementById("min_experience");
                 var maxSelect = document.getElementById("max_experience");
-
-                // Get selected Min Experience value
+        
                 var minValue = parseInt(minSelect.value) || 0;
-
+                
                 // Enable Max Experience dropdown
                 maxSelect.disabled = false;
-
-                // Remove previous options
-                maxSelect.innerHTML = '<option value="">Max</option>';
-
+                maxSelect.innerHTML = '';
+        
                 // Get all experience options from Min selector
-                var options = minSelect.querySelectorAll("option");
-
-                options.forEach(option => {
-                    var experienceValue = parseInt(option.value);
-                    if (!isNaN(experienceValue) && experienceValue > minValue) {
+                var options = Array.from(minSelect.querySelectorAll("option")).map(option => parseInt(option.value)).filter(value => !isNaN(value));
+                var maxValue = Math.max(...options); // Get the maximum experience value
+                
+                // If "Fresher" (0) is selected, set max_experience to 0 and disable it
+                if (minValue === 0) {
+                    var fresherOption = document.createElement("option");
+                    fresherOption.value = "0";
+                    fresherOption.textContent = "0";
+                    maxSelect.appendChild(fresherOption);
+                    // maxSelect.disabled = true;
+                    // return;
+                }
+        
+                // If minValue is the maximum experience, set max_experience to "N/A" and disable it
+                if (minValue === maxValue) {
+                    var naOption = document.createElement("option");
+                    naOption.value = "N/A";
+                    naOption.textContent = "N/A";
+                    maxSelect.appendChild(naOption);
+                    maxSelect.disabled = true;
+                    return;
+                }
+        
+                // Add valid max experience options
+                options.forEach(experienceValue => {
+                    if (experienceValue > minValue) {
                         var newOption = document.createElement("option");
                         newOption.value = experienceValue;
                         newOption.textContent = experienceValue;
@@ -569,6 +587,7 @@
                 });
             }
         </script>
+        
 
 
         {{-- Showing min & max Salary --}}
@@ -602,7 +621,6 @@
         </script>
 
         {{-- For selecting department according to category & Role according to department --}}
-
         <script>
             $(document).ready(function() {
                 // When category changes, load departments
@@ -676,6 +694,83 @@
                     } else {
                         $('#role').html('<option value="">Select Role</option>');
                     }
+                });
+            });
+        </script>
+
+
+        {{-- AddJobExperience --}}
+        <script>
+            $(document).ready(function() {
+                $('#AddJobPost').on('submit', function(event) {
+                    event.preventDefault(); // Prevent default form submission
+            
+                    var url = "{{ route('Recruiter.PostJobData') }}";
+                    $.ajax({
+                        url: url,
+                        type: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        data: new FormData(this),
+                        contentType: false,
+                        cache: false,
+                        processData: false,
+                        dataType: 'json',
+                        success: function(result) {
+                            if (result.status_code === 1) {
+                                $('#exampleModal').modal('hide');
+                                $('#AddJobPost').trigger("reset");
+                                $('#myTable').DataTable().ajax.reload(null, false);
+                                Toastify({
+                                    text: result.message,
+                                    duration: 3000,
+                                    gravity: "top",
+                                    position: "right",
+                                    style:{
+                                        background:"green",
+                                        color: "white",
+                                    }
+                                }).showToast();
+                                
+                            } else if (result.status_code === 2) {
+                                Toastify({
+                                    text: result.message,
+                                    duration: 3000,
+                                    gravity: "top",
+                                    position: "right",
+                                    style:{
+                                        background:"#c7ac14",
+                                        color: "white",
+                                    }
+                                }).showToast();
+                            } else {
+                                Toastify({
+                                    text: result.message,
+                                    duration: 3000,
+                                    gravity: "top",
+                                    position: "right",
+                                    style:{
+                                        background:"red",
+                                        color: "white",
+                                    }
+                                }).showToast();
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('AJAX Error:', error);
+                            Toastify({
+                                text: 'An error occurred. Please try again.',
+                                duration: 3000,
+                                gravity: "top",
+                                position: "right",
+                                style:{
+                                        background:"red",
+                                        color: "white",
+                                    }
+                            }).showToast();
+                        }
+                    });
                 });
             });
         </script>

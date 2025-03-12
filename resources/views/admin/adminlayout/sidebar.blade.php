@@ -59,7 +59,7 @@
                             <span class="menu-item" data-key="t-projects">Jobs Manager</span>
                         </a>
                         <ul class="sub-menu" aria-expanded="false">
-                            <li><a href="{{route('Admin.JobSkill')}}" data-key="t-p-grid">All Jobs</a></li>
+                            <li><a href="{{route('Admin.JobPost')}}" data-key="t-p-grid">All Jobs</a></li>
                         </ul>
                     </li>
                     <li>

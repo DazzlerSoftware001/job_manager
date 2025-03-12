@@ -13,11 +13,8 @@ class JobExperienceSeeder extends Seeder
      */
     public function run(): void
     {
-        JobExperience::create(['experience' => '6 months', 'status' => 0]);
-        JobExperience::create(['experience' => '1 year', 'status' => 1]);
-        JobExperience::create(['experience' => '1.5 year', 'status' => 0]);
-        JobExperience::create(['experience' => '2 years', 'status' => 1]);
-        JobExperience::create(['experience' => '2.5 years', 'status' => 0]);
-        JobExperience::create(['experience' => '3 years', 'status' => 1]);
+        JobExperience::create(['experience' => 1, 'status' => 1]);
+        JobExperience::create(['experience' => 2, 'status' => 1]);
+        JobExperience::create(['experience' => 3, 'status' => 1]);
     }
 }

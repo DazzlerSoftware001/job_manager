@@ -153,4 +153,14 @@ Route::prefix('Admin')->group(function () {
     Route::post('/EditJobEducation',[JobController::class,'editJobEducation'])->name('Admin.EditJobEducation');
     Route::post('/UpdateJobEducation',[JobController::class,'updateJobEducation'])->name('Admin.UpdateJobEducation');
 
+
+
+    // Job Post 
+    Route::get('/JobPost', [JobController::class, 'jobPost'])->name('Admin.JobPost');
+    Route::post('/GetJobPost', [JobController::class, 'getJobPost'])->name('Admin.GetJobPost');
+    Route::post('/ChangeJobPostStatus',[JobController::class,'changeJobPostStatus'])->name('Admin.ChangeJobPostStatus');
+    Route::post('/DeleteJobPost',[JobController::class,'deleteJobPost'])->name('Admin.DeleteJobPost');
+    Route::post('/EditJobPost',[JobController::class,'editJobPost'])->name('Admin.EditJobPost');
+    Route::post('/UpdateJobPost',[JobController::class,'updateJobPost'])->name('Admin.UpdateJobPost');
+
 });
