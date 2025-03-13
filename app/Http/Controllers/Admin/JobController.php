@@ -18,6 +18,9 @@ use App\Models\JobMode;
 use App\Models\JobIntType;
 use App\Models\JobEducation;
 use App\Models\JobPost;
+use App\Models\Companies;
+use Illuminate\Support\Str;
+
 
 
 use Illuminate\Support\Facades\Validator;
@@ -2766,7 +2769,24 @@ class JobController extends Controller
     // Job Post
     public function jobPost()
     {
-        return view('admin.job.Jobpost');
+        $data['jobTypes'] = JobTypes::where('status', 1)->select('type','status')->get(); 
+        $data['jobMode'] = JobMode::where('status', 1)->select('mode','status')->get(); 
+        $data['jobSkill'] = JobSkill::where('status', 1)->select('skill','status')->get(); 
+        $data['JobDepartment'] = JobDepartment::where('status', 1)->select('department','status')->get(); 
+        $data['JobRole'] = JobRole::where('status', 1)->select('role','status')->get(); 
+        $data['JobExperience'] = JobExperience::where('status', 1)->select('experience','status')->get(); 
+        $data['JobLocation'] = JobLocation::where('status', 1)->select('country','city','status')->get(); 
+        $data['JobCategory'] = JobCategory::where('status', 1)->select('name','status')->get(); 
+        $data['Companies'] = Companies::where('status', 1)->select('id', 'name', 'details', 'status')->get(); 
+        $data['JobIntType'] = JobIntType::where('status', 1)->select('id', 'int_type','status')->get();
+        $data['JobCurrency'] = JobCurrency::where('status', 1)->select('id', 'currency', 'status')->get();
+        $data['JobEducation'] = JobEducation::where('status', 1)->select('education', 'status')->get();
+        // $data['JobSalary'] = JobSalary::where('status', 1)->select('id', 'salary', 'status')->orderBy('salary', 'ASC')->get();
+
+        $data['JobSalary'] = JobSalary::where('status', 1)
+        ->orderByRaw('CAST(salary AS UNSIGNED) ASC') // Ensures numeric sorting
+        ->get();
+        return view('admin.job.Jobpost',$data);
     }
 
     public function getJobPost(Request $request)
@@ -2843,7 +2863,13 @@ class JobController extends Controller
             $dataArray[] = ucfirst($record->vacancies);
             $dataArray[] = ucfirst($record->int_type);
             $dataArray[] = ucfirst($record->com_name);
-            $dataArray[] = ucfirst($record->com_details);
+
+
+             // Details with "View More" Popup
+             $shortDetails = Str::limit($record->com_details, 40, '...');
+             $dataArray[] = '<span>' . $shortDetails . '</span>
+                     <a href="javascript:void(0);" class="view-more" onclick="openDetailsModal(\'' . htmlspecialchars($record->com_details, ENT_QUOTES) . '\')">View More</a>';
+
             $dataArray[] = ucfirst($record->job_desc);
 
             $status = $record->status == 1
@@ -2875,6 +2901,52 @@ class JobController extends Controller
             "recordsFiltered" => $totalRecords,
             "data" => $data
         ]);
+    }
+
+    public function changeJobPostStatus(Request $request)
+    {
+        $id = $request->input('id');
+    
+        if (!empty($id)) {
+            // Find the record by ID
+            $JobPost = JobPost::find($id);
+    
+           
+            if ($JobPost) {
+                // Toggle the status
+                $JobPost->status = $JobPost->status == 1 ? 0 : 1;
+    
+                // Save the updated record
+                if ($JobPost->save()) {
+                    return response()->json(['status_code' => 1, 'message' => 'Status successfully changed']);
+                } else {
+                    return response()->json(['status_code' => 0, 'message' => 'Unable to change status']);
+                }
+            } else {
+                return response()->json(['status_code' => 0, 'message' => 'Invalid id found']);
+            }
+        } else {
+            return response()->json(['status_code' => 2, 'message' => 'Id is required']);
+        }
+    }
+
+    public function deleteJobPost(Request $request)
+    {
+        $id = $request->input('id');
+    
+        if (!empty($id)) {
+            // Attempt to find and delete the record
+            $JobPost = JobPost::find($id);
+    
+            if ($JobPost) {
+                $JobPost->delete();
+                return response()->json(['status_code' => 1, 'message' => 'Educational Qualification deleted successfully ']);
+            } else {
+                return response()->json(['status_code' => 0, 'message' => 'Educational Qualification not found']);
+            }
+        } else {
+            return response()->json(['status_code' => 2, 'message' => 'Id is required']);
+        }
     }
 
 
