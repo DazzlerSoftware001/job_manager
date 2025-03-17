@@ -443,6 +443,21 @@
             </div>
         </div>
 
+        <!--Description Modal -->
+        <div class="modal fade" id="descModal" tabindex="-1" aria-labelledby="descModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="descModalLabel">Details</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" id="descModalBody">
+                        <!-- Description content will be inserted here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
     @endsection
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     @section('script')
@@ -755,6 +770,15 @@
             function openDetailsModal(com_details) {
                 document.getElementById('detailsModalBody').innerHTML = com_details;
                 var myModal = new bootstrap.Modal(document.getElementById('detailsModal'));
+                myModal.show();
+            }
+        </script>
+
+        {{-- For Showing Description --}}
+        <script>
+            function openDescModal(job_desc) {
+                document.getElementById('descModalBody').innerHTML = job_desc;
+                var myModal = new bootstrap.Modal(document.getElementById('descModal'));
                 myModal.show();
             }
         </script>

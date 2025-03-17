@@ -2870,7 +2870,9 @@ class JobController extends Controller
              $dataArray[] = '<span>' . $shortDetails . '</span>
                      <a href="javascript:void(0);" class="view-more" onclick="openDetailsModal(\'' . htmlspecialchars($record->com_details, ENT_QUOTES) . '\')">View More</a>';
 
-            $dataArray[] = ucfirst($record->job_desc);
+            $shortDesc = Str::limit($record->job_desc, 40, '...');
+            $dataArray[] = '<span>' . $shortDesc . '</span>
+                    <a href="javascript:void(0);" class="view-more" onclick="openDescModal(\'' . htmlspecialchars($record->job_desc, ENT_QUOTES) . '\')">View More</a>';
 
             $status = $record->status == 1
                 ? '<div class="d-flex "><span onclick="changeStatus(' . $record->id . ');" class="badge bg-success text-uppercase"  style="cursor: pointer;">Active</span></div>'
@@ -2940,9 +2942,9 @@ class JobController extends Controller
     
             if ($JobPost) {
                 $JobPost->delete();
-                return response()->json(['status_code' => 1, 'message' => 'Educational Qualification deleted successfully ']);
+                return response()->json(['status_code' => 1, 'message' => 'Job Post deleted successfully ']);
             } else {
-                return response()->json(['status_code' => 0, 'message' => 'Educational Qualification not found']);
+                return response()->json(['status_code' => 0, 'message' => 'Job Post not found']);
             }
         } else {
             return response()->json(['status_code' => 2, 'message' => 'Id is required']);

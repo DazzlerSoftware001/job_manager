@@ -31,8 +31,6 @@
                                                 <th>Name</th>
                                                 <th>Email</th>
                                                 <th>Phone</th>
-                                                <th>Website</th>
-                                                <th>Address</th>
                                                 <th>Logo</th>
                                                 <th>Status</th>
                                                 <th>Created</th>
@@ -95,17 +93,6 @@
                     <div class="mb-3">
                         <label for="phone" class="form-label">Phone</label>
                         <input type="number" class="form-control" name="phone" id="phone" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="website" class="form-label">Website</label>
-                        <input type="url" class="form-control" name="website" id="website" required>
-                        <small id="websiteHelp" class="form-text text-muted">Enter a valid website URL (e.g., https://example.com).</small>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="address" class="form-label">Address</label>
-                        <input type="text" class="form-control" name="address" id="address" required>
                     </div>
 
                     <div class="mb-3">
@@ -179,17 +166,6 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="editwebsite" class="form-label">Website</label>
-                        <input type="url" class="form-control" name="editwebsite" id="editwebsite" required>
-                        <small id="websiteHelp" class="form-text text-muted">Enter a valid website URL (e.g., https://example.com).</small>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="editaddress" class="form-label">Address</label>
-                        <input type="text" class="form-control" name="editaddress" id="editaddress" required>
-                    </div>
-
-                    <div class="mb-3">
                         <label for="editlogo" class="form-label">Logo</label>
                         <input type="file" class="form-control" name="editlogo" id="editlogo" accept="image/*">
                     </div>
@@ -246,32 +222,6 @@
                 toggleIcon.classList.remove("fa-eye-slash");
                 toggleIcon.classList.add("fa-eye");
             }
-        }
-    </script>
-
-    {{--  copy website--}}
-    <script>
-        function copyToClipboard(text) {
-            // Create a temporary input element to copy the text
-            var tempInput = document.createElement('input');
-            document.body.appendChild(tempInput);
-            tempInput.value = text; // Set the value to the website URL
-            tempInput.select(); // Select the input value
-            document.execCommand('copy'); // Copy the selected text
-            document.body.removeChild(tempInput); // Remove the temporary input element
-            
-            // alert('Website URL copied to clipboard!');
-
-            Toastify({
-                text: 'Website URL copied to clipboard!',
-                duration: 3000,
-                gravity: "top",
-                position: "right",
-                style:{
-                    background:"green",
-                    color: "white",
-                }
-            }).showToast();
         }
     </script>
 
@@ -532,8 +482,6 @@
             $('#editname').val(record.name);
             $('#editemail').val(record.email);
             $('#editphone').val(record.phone);
-            $('#editwebsite').val(record.website);
-            $('#editaddress').val(record.address);
             },
         });
         }

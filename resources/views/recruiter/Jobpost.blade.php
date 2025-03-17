@@ -2,22 +2,24 @@
 @section('title')
     Recruiter-JobPost
 @endsection
+
+
 @section('page-title')
     Job Post
 @endsection
 @section('main-container')
-
-<script src="https://cdn.tiny.cloud/1/k73iszd3tzdamw58yk6fmdzasoe86nkkbzktvgqtvxvcrr17/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        tinymce.init({
-            selector: '#job_description',
-            height: 400,
-            plugins: 'advlist autolink lists link image charmap preview',
-            toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | bullist numlist outdent indent | link image',
+    <script src="https://cdn.tiny.cloud/1/k73iszd3tzdamw58yk6fmdzasoe86nkkbzktvgqtvxvcrr17/tinymce/6/tinymce.min.js"
+        referrerpolicy="origin"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            tinymce.init({
+                selector: '#job_description',
+                height: 400,
+                plugins: 'advlist autolink lists link image charmap preview',
+                toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | bullist numlist outdent indent | link image',
+            });
         });
-    });
-</script>
+    </script>
 
     <style>
         .choices {
@@ -324,7 +326,8 @@
                                             <select class="form-select" id="education" name="education">
                                                 <option value="">Choose Qualification</option>
                                                 @foreach ($JobEducation as $key => $value)
-                                                    <option value="{{ $value->education }}">{{ $value->education }}</option>
+                                                    <option value="{{ $value->education }}">{{ $value->education }}
+                                                    </option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -332,7 +335,8 @@
 
                                         <div class="col-xl-4 mt-3">
                                             <label for="candidate_industry">Condidate Industry</label>
-                                            <select class="form-select" id="candidate_industry" name="candidate_industry">
+                                            <select class="form-select" id="candidate_industry"
+                                                name="candidate_industry">
                                                 <option value="">Choose Industry</option>
                                                 @foreach ($JobCategory as $key => $value)
                                                     <option value="{{ $value->name }}">{{ $value->name }}</option>
@@ -342,7 +346,7 @@
 
 
                                         <div class="col-xl-4 col-lg-6 col-md-8 col-sm-12 mt-3">
-                                            <label for="diversity" class="d-block">Diversity Hiring</label>
+                                            <label for="diversity" class="d-block">Diversity Hiring (Optional)</label>
                                             <div class="form-check form-check-inline">
                                                 <input class="form-check-input" type="checkbox" id="male"
                                                     name="diversity" value="Male">
@@ -400,7 +404,7 @@
                                                 <textarea class="form-control" id="job_description" name="job_description"></textarea>
                                             </div>
                                         </div>
-                                        
+
 
 
                                     </div>
@@ -425,7 +429,10 @@
         </div>
         <!-- End Page-content -->
     @endsection
+
     @section('script')
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
         <script type="text/javascript">
             document.addEventListener('DOMContentLoaded', function() {
                 var element1 = document.getElementById('work_mode');
@@ -540,17 +547,18 @@
             function updateMaxExperience() {
                 var minSelect = document.getElementById("min_experience");
                 var maxSelect = document.getElementById("max_experience");
-        
+
                 var minValue = parseInt(minSelect.value) || 0;
-                
+
                 // Enable Max Experience dropdown
                 maxSelect.disabled = false;
                 maxSelect.innerHTML = '';
-        
+
                 // Get all experience options from Min selector
-                var options = Array.from(minSelect.querySelectorAll("option")).map(option => parseInt(option.value)).filter(value => !isNaN(value));
+                var options = Array.from(minSelect.querySelectorAll("option")).map(option => parseInt(option.value)).filter(
+                    value => !isNaN(value));
                 var maxValue = Math.max(...options); // Get the maximum experience value
-                
+
                 // If "Fresher" (0) is selected, set max_experience to 0 and disable it
                 if (minValue === 0) {
                     var fresherOption = document.createElement("option");
@@ -560,17 +568,17 @@
                     // maxSelect.disabled = true;
                     // return;
                 }
-        
+
                 // If minValue is the maximum experience, set max_experience to "N/A" and disable it
                 if (minValue === maxValue) {
                     var naOption = document.createElement("option");
                     naOption.value = "N/A";
                     naOption.textContent = "N/A";
                     maxSelect.appendChild(naOption);
-                    maxSelect.disabled = true;
-                    return;
+                    // maxSelect.disabled = true;
+                    // return;
                 }
-        
+
                 // Add valid max experience options
                 options.forEach(experienceValue => {
                     if (experienceValue > minValue) {
@@ -581,7 +589,7 @@
                     }
                 });
             }
-        </script>      
+        </script>
 
         {{-- Showing min & max Salary --}}
         <script>
@@ -632,7 +640,7 @@
                             success: function(data) {
                                 // console.log("Departments Response:", data);
                                 $('#department').html(
-                                '<option value="">Select Department</option>');
+                                    '<option value="">Select Department</option>');
 
                                 if (data.length > 0) {
                                     $.each(data, function(index, item) {
@@ -692,13 +700,13 @@
         </script>
 
 
-        {{-- AddJobExperience --}}
+        {{-- AddJobPost --}}
         <script>
             $(document).ready(function() {
                 $('#AddJobPost').on('submit', function(event) {
                     event.preventDefault(); // Prevent default form submission
-            
-                    var url = "{{ route('Recruiter.PostJobData') }}";
+
+                    var url = "{{ route('Recruiter.PostJobData') }}"; // Submission URL
                     $.ajax({
                         url: url,
                         type: 'POST',
@@ -715,26 +723,32 @@
                                 $('#exampleModal').modal('hide');
                                 $('#AddJobPost').trigger("reset");
                                 $('#myTable').DataTable().ajax.reload(null, false);
+
                                 Toastify({
                                     text: result.message,
                                     duration: 3000,
                                     gravity: "top",
                                     position: "right",
-                                    style:{
-                                        background:"green",
-                                        color: "white",
+                                    style: {
+                                        background: "green",
+                                        color: "white"
                                     }
                                 }).showToast();
-                                
+
+                                // Redirect to another route after successful submission
+                                setTimeout(function() {
+                                    window.location.href =
+                                        "{{ route('Recruiter.JobList') }}"; // Change this to your desired route
+                                }, 1500);
                             } else if (result.status_code === 2) {
                                 Toastify({
                                     text: result.message,
                                     duration: 3000,
                                     gravity: "top",
                                     position: "right",
-                                    style:{
-                                        background:"#c7ac14",
-                                        color: "white",
+                                    style: {
+                                        background: "#c7ac14",
+                                        color: "white"
                                     }
                                 }).showToast();
                             } else {
@@ -743,9 +757,9 @@
                                     duration: 3000,
                                     gravity: "top",
                                     position: "right",
-                                    style:{
-                                        background:"red",
-                                        color: "white",
+                                    style: {
+                                        background: "red",
+                                        color: "white"
                                     }
                                 }).showToast();
                             }
@@ -757,10 +771,10 @@
                                 duration: 3000,
                                 gravity: "top",
                                 position: "right",
-                                style:{
-                                        background:"red",
-                                        color: "white",
-                                    }
+                                style: {
+                                    background: "red",
+                                    color: "white"
+                                }
                             }).showToast();
                         }
                     });

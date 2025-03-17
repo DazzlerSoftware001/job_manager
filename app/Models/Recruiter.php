@@ -11,6 +11,6 @@ class Recruiter extends Model
 
     protected $table = 'users'; 
 
-    protected $fillable = ['user_type','user_details','name','email','phone','website','address','logo','status','password'];
+    protected $fillable = ['user_type','user_details','name','email','phone','logo','status','password'];
     public $timestamps = false; 
 }

@@ -31,12 +31,10 @@ class RecruiterController extends Controller
             1 => 'name',
             2 => 'email',
             3 => 'phone',
-            4 => 'website',
-            5 => 'address',
-            6 => 'logo',
-            7 => 'status',
-            8 => 'created_at',
-            9 => 'id',
+            4 => 'logo',
+            5 => 'status',
+            6 => 'created_at',
+            7 => 'id',
         );
 
         $query = Recruiter::query();
@@ -45,9 +43,7 @@ class RecruiterController extends Controller
         if (!empty($search)) {
             $query->where('name', 'like', '%' . $search . '%')
                     ->orwhere('email', 'like', '%' . $search . '%')
-                    ->orwhere('phone', 'like', '%' . $search . '%')
-                    ->orwhere('website', 'like', '%' . $search . '%')
-                    ->orwhere('address', 'like', '%' . $search . '%');
+                    ->orwhere('phone', 'like', '%' . $search . '%');
         }
     
         if ($order) {
@@ -69,10 +65,6 @@ class RecruiterController extends Controller
             $dataArray[] = ucfirst($record->name);
             $dataArray[] = $record->email;
             $dataArray[] = $record->phone;
-            // $dataArray[] = $record->website;
-            $dataArray[] = '<a href="javascript:void(0);" onclick="copyToClipboard(\'' . $record->website . '\')">' . $record->website . '</a>';
-
-            $dataArray[] = $record->address;
             // $dataArray[] = $record->logo;
             // $dataArray[] = '<img src="' . asset( $record->logo) . '" alt="Logo" style="height: 100px; width: 100px;">';
             $dataArray[] = '<img src="' . asset($record->logo) . '" alt="Logo" style="height: 100px; width: 100px;" onclick="openImageModal(\'' . asset($record->logo) . '\')">';
@@ -116,8 +108,6 @@ class RecruiterController extends Controller
             'name' => 'required|string|max:255|unique:users,name',
             'email' => 'required|email|max:255|unique:users,email',
             'phone' => 'required|digits_between:10,15|unique:users,phone',
-            'website' => 'required|url|max:255|unique:users,website',
-            'address' => 'required|string|min:10|max:255',
             'logo' => 'required|image|max:2048',
             'password'=>'required|min:8|max:100|confirmed',
         ];
@@ -139,8 +129,6 @@ class RecruiterController extends Controller
                 $Recruiter->name = $request->input('name');
                 $Recruiter->email = $request->input('email');
                 $Recruiter->phone = $request->input('phone');
-                $Recruiter->website = $request->input('website');
-                $Recruiter->address = $request->input('address');
                 $Recruiter->logo = $logoPath;
                 $Recruiter->password = Hash::make($request->input('password'));
                 $Recruiter->status = 0;
@@ -231,8 +219,6 @@ class RecruiterController extends Controller
             'editname' => 'required|string|max:255',
             'editemail' => 'required|email|max:255',
             'editphone' => 'required|digits_between:10,15',
-            'editwebsite' => 'required|url|max:255',
-            'editaddress' => 'required|string|min:10|max:255',
             'editlogo' => 'nullable|image|max:2048',
             'password'=>'nullable|min:8|max:100|confirmed',
 
@@ -260,8 +246,6 @@ class RecruiterController extends Controller
                 $Recruiter->name = $request->input('editname');
                 $Recruiter->email = $request->input('editemail');
                 $Recruiter->phone = $request->input('editphone');
-                $Recruiter->website = $request->input('editwebsite');
-                $Recruiter->address = $request->input('editaddress');
 
                 // Update logoPath if provided
                 if ($logoPath) {
