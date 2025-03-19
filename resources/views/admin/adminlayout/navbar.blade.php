@@ -12,7 +12,7 @@
                     <div class="d-flex">
                         <!-- LOGO -->
                         <div class="navbar-brand-box">
-                            <a href="index.html" class="logo logo-dark">
+                            <a href="{{route('Admin.dashboard')}}" class="logo logo-dark">
                                 <span class="logo-sm">
                                     <img src="assets/images/logo-dark-sm.png" alt="" height="22">
                                 </span>
@@ -21,7 +21,7 @@
                                 </span>
                             </a>
 
-                            <a href="index.html" class="logo logo-light">
+                            <a href="{{route('Admin.dashboard')}}" class="logo logo-light">
                                 <span class="logo-lg">
                                     <img src="assets/images/logo-light.png" alt="" height="22">
                                 </span>
@@ -272,9 +272,68 @@
                                 <a class="dropdown-item" href="#"><i class="mdi mdi-wallet text-muted font-size-16 align-middle me-1"></i> <span class="align-middle">Balance : <b>$6951.02</b></span></a>
                                 <a class="dropdown-item d-flex align-items-center" href="#"><i class="mdi mdi-cog-outline text-muted font-size-16 align-middle me-1"></i> <span class="align-middle">Settings</span><span class="badge bg-success-subtle text-success ms-auto">New</span></a>
                                 <a class="dropdown-item" href="auth-lock-screen.html"><i class="mdi mdi-lock text-muted font-size-16 align-middle me-1"></i> <span class="align-middle">Lock screen</span></a>
-                                <a class="dropdown-item" href="auth-logout.html"><i class="mdi mdi-logout text-muted font-size-16 align-middle me-1"></i> <span class="align-middle">Logout</span></a>
+                                <a class="dropdown-item" href="javascript:void(0);" id="logoutButton">
+                                    <i class="mdi mdi-logout text-muted font-size-16 align-middle me-1"></i>
+                                    <span class="align-middle">Logout</span>
+                                </a>
                             </div>
                         </div>
                     </div>
                 </div>
             </header>
+
+            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+         <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+         <script type="text/javascript">
+             $('#logoutButton').on('click', function() {
+                 var url = "{{ route('Admin.logout') }}";
+
+                 $.ajax({
+                     url: url,
+                     type: 'POST',
+                     headers: {
+                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                     },
+                     dataType: 'json',
+
+                     success: function(result) {
+                         if (result.status_code == 1) {
+                             Toastify({
+                                 text: result.message,
+                                 duration: 3000,
+                                 gravity: "top",
+                                 position: "right",
+                                 className: "bg-success",
+                                 style: "style",
+                             }).showToast();
+
+                             // Redirect to login or home page
+                             setTimeout(function() {
+                                 window.location.href = result.redirect_url;
+                             }, 1000);
+                         } else {
+                             Toastify({
+                                 text: result.message,
+                                 duration: 3000,
+                                 gravity: "top",
+                                 position: "right",
+                                 className: "bg-danger",
+                                 style: "style",
+                             }).showToast();
+                         }
+                     },
+                     error: function() {
+                         Toastify({
+                             text: 'Logout failed. Please try again.',
+                             duration: 3000,
+                             gravity: "top",
+                             position: "right",
+                             className: "bg-danger",
+                             style: "style",
+                         }).showToast();
+                     }
+                 });
+             });
+         </script>
