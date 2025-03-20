@@ -354,10 +354,10 @@
                                  style: "style",
                              }).showToast();
 
-                             // Redirect to login or home page
+                             // Redirect to login or home page & Reload after 0.7 seconds (750 ms)
                              setTimeout(function() {
                                  window.location.href = result.redirect_url;
-                             }, 1000);
+                             }, 750);
                          } else {
                              Toastify({
                                  text: result.message,

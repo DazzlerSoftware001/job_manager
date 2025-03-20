@@ -229,10 +229,10 @@
                             style: "style",
                         }).showToast();
                         
-                        // Reload after 2 seconds (2000 ms)
+                        // Redirect to login or home page & Reload after 0.7 seconds (750 ms)
                         setTimeout(function() {
                             window.location.href = result.redirect_url;
-                        }, 1000);
+                        }, 750);
 
                     } else if (result.status_code == 2) {
                         Toastify({
