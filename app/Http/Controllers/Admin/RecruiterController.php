@@ -37,13 +37,15 @@ class RecruiterController extends Controller
             7 => 'id',
         );
 
-        $query = Recruiter::query();
-        // Count Data
+        $query = Recruiter::query()->where('user_type', 2);
 
+        // Count Data
         if (!empty($search)) {
-            $query->where('name', 'like', '%' . $search . '%')
-                    ->orwhere('email', 'like', '%' . $search . '%')
-                    ->orwhere('phone', 'like', '%' . $search . '%');
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', '%' . $search . '%')
+                  ->orWhere('email', 'like', '%' . $search . '%')
+                  ->orWhere('phone', 'like', '%' . $search . '%');
+            });
         }
     
         if ($order) {
