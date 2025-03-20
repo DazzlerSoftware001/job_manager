@@ -6,10 +6,12 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
-
+use App\Models\User;
+use App\Models\JobPost;
 
 class DashboardController extends Controller
 {
+
   public function login() {
     return view('admin.login');
   }
@@ -53,10 +55,21 @@ class DashboardController extends Controller
       }
   }
 
-  public function dashboard()
-  {
-    return view('admin.dashboard');
-  }
+    public function dashboard() {
+        return view('admin.dashboard');
+    }
+
+    public function getDashboardData() {
+        // Get user and job counts
+        $userCount = User::where('user_type', 0)->count();
+        $jobCount = JobPost::count();
+
+        return response()->json([
+            'userCount' => $userCount,
+            'jobCount' => $jobCount,
+        ]);
+    }
+
 
 
 

@@ -25,8 +25,8 @@ Dashboard
                                                 </div>
                                             </div>
                                             <div class="flex-grow-1">
-                                                <p class="text-muted mb-1">Revenue</p>
-                                                <h4 class="mb-0">$21,456</h4>
+                                                <p class="text-muted mb-1">Users</p>
+                                                <h4 class="mb-0" id="userCount">0</h4>
                                             </div>
 
                                             <div class="flex-shrink-0 align-self-end ms-2">
@@ -52,8 +52,8 @@ Dashboard
                                                 </div>
                                             </div>
                                             <div class="flex-grow-1">
-                                                <p class="text-muted mb-1">Orders</p>
-                                                <h4 class="mb-0">5,643</h4>
+                                                <p class="text-muted mb-1">Job Post</p>
+                                                <h4 class="mb-0" id="jobCount">0</h4>
                                             </div>
                                             <div class="flex-shrink-0 align-self-end ms-2">
                                                 <div class="badge rounded-pill font-size-13  bg-danger-subtle  text-danger ">- 0.82%
@@ -496,9 +496,9 @@ Dashboard
                                                 </div>
                                             </div>
                                         </div>
-    
-                                        <hr class="mb-4">
-                                        <div class="px-4 mx-n3" data-simplebar style="height: 258px;">
+{{--     
+                                        <hr class="mb-4"> --}}
+                                        {{-- <div class="px-4 mx-n3" data-simplebar style="height: 258px;">
     
                                             <div>
                                                 <h5 class="card-title mb-3">Recent Activity</h5>
@@ -556,7 +556,7 @@ Dashboard
                                                     </li>
                                                 </ul>
                                             </div>
-                                        </div>
+                                        </div> --}}
                                     </div>
                                 </div>
                                 <!-- end card body -->
@@ -1135,5 +1135,25 @@ Dashboard
             <!-- container-fluid -->
         </div>
         <!-- End Page-content -->
+@endsection
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+@section('script')
+    <script>
+        $(document).ready(function() {
+        $.ajax({
+            url: "{{ route('Admin.dashboardData') }}",
+            type: 'GET',
+            dataType: 'json',
+            success: function(data) {
+            $('#userCount').text(data.userCount);
+            $('#jobCount').text(data.jobCount);
+            },
+            error: function() {
+            alert('Failed to fetch data!');
+            }
+        });
+        });
+    </script>
 @endsection
               

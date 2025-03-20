@@ -13,6 +13,7 @@ Route::prefix('Admin')->group(function () {
     // Protected Routes with Middleware
     Route::middleware('admin')->group(function () {
         Route::get('/Dashboard', [DashboardController::class, 'dashboard'])->name('Admin.dashboard');
+        Route::get('/dashboard-data', [DashboardController::class, 'getDashboardData'])->name('Admin.dashboardData');
 
         Route::get('/JobSkill', [JobController::class, 'JobSkill'])->name('Admin.JobSkill');
         Route::post('/GetJobSkill', [JobController::class, 'getJobSkill'])->name('Admin.GetJobSkill');
