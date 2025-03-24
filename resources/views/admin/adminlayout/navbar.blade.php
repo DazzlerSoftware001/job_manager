@@ -257,7 +257,7 @@
                         <div class="dropdown d-inline-block">
                             <button type="button" class="btn header-item user text-start d-flex align-items-center" id="page-header-user-dropdown-v"
                                 data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <img class="rounded-circle header-profile-user" src="assets/images/users/avatar-1.jpg"
+                                <img class="rounded-circle header-profile-user" id="profileImage1" src="{{ url('admin/assets/images/users/avatar-1.jpg') }}"
                                 alt="Header Avatar">
                             </button>
                             <div class="dropdown-menu dropdown-menu-end pt-0">
@@ -337,3 +337,29 @@
                  });
              });
          </script>
+
+         {{-- To get details --}}
+        <script>
+            $(document).ready(function() {
+                $.ajax({
+                    url: "{{ route('Admin.dashboardData') }}",
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(data) {
+
+                        // Check if logo exists and update the profile image
+                        if (data.logo) {
+                            $('#profileImage1').attr('src', "{{ url('admin') }}/" + data.logo);
+                        } else {
+                            $('#profileImage1').attr('src',
+                                "{{ url('admin/assets/images/users/avatar-1.jpg') }}");
+                        }
+
+                        $('#nameDisplay').text(data.name);
+                    },
+                    error: function() {
+                        alert('Failed to fetch data!');
+                    }
+                });
+            });
+        </script>

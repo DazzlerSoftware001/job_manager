@@ -14,6 +14,8 @@ Route::prefix('Admin')->group(function () {
     Route::middleware('admin')->group(function () {
         Route::get('/Dashboard', [DashboardController::class, 'dashboard'])->name('Admin.dashboard');
         Route::get('/dashboard-data', [DashboardController::class, 'getDashboardData'])->name('Admin.dashboardData');
+        Route::post('/updateProfileImage', [DashboardController::class, 'updateProfileImage'])->name('Admin.UpdateProfileImage');
+        Route::post('/updateProfileName', [DashboardController::class, 'updateProfileName'])->name('Admin.UpdateProfileName');
 
         Route::get('/JobSkill', [JobController::class, 'JobSkill'])->name('Admin.JobSkill');
         Route::post('/GetJobSkill', [JobController::class, 'getJobSkill'])->name('Admin.GetJobSkill');
