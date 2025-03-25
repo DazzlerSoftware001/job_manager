@@ -121,7 +121,7 @@ Home
                     <div class="col-lg-4 col-md-10 wow animated fadeInUp" data-wow-delay=".3s">
                         <div class="rts__workprocess__box">
                             <div class="rts__icon">
-                                <img src="assets/img/home-1/process/icon-3.svg" alt="">
+                                <img src="{{url('user/assets/img/home-1/process/icon-3.svg')}}" alt="">
                             </div>
                             <span class="process__title h6 d-block">Apply  job</span>
                             <p>Consectetur adipisicing elit. Possimus 
@@ -180,56 +180,56 @@ Home
                             <div class="swiper-slide">
                                 <div class="brand__item">
                                     <a href="#" class="brand__item__link" aria-label="brand">
-                                        <img src="assets/img/home-1/brand/b51.svg" alt="">
+                                        <img src="{{url('user/assets/img/home-1/brand/b51.svg')}}" alt="">
                                     </a>
                                 </div>
                             </div>
                             <div class="swiper-slide">
                                 <div class="brand__item">
                                     <a href="#" class="brand__item__link" aria-label="brand">
-                                        <img src="assets/img/home-1/brand/image1.svg" alt="">
+                                        <img src="{{url('user/assets/img/home-1/brand/image1.svg')}}" alt="">
                                     </a>
                                 </div>
                             </div>
                             <div class="swiper-slide">
                                 <div class="brand__item">
                                     <a href="#" class="brand__item__link" aria-label="brand">
-                                        <img src="assets/img/home-1/brand/image2.svg" alt="">
+                                        <img src="{{url('user/assets/img/home-1/brand/image2.svg')}}" alt="">
                                     </a>
                                 </div>
                             </div>
                             <div class="swiper-slide">
                                 <div class="brand__item">
                                     <a href="#" class="brand__item__link" aria-label="brand">
-                                        <img src="assets/img/home-1/brand/image3.svg" alt="">
+                                        <img src="{{url('user/assets/img/home-1/brand/image3.svg')}}" alt="">
                                     </a>
                                 </div>
                             </div>
                             <div class="swiper-slide">
                                 <div class="brand__item">
                                     <a href="#" class="brand__item__link" aria-label="brand">
-                                        <img src="assets/img/home-1/brand/image4.svg" alt="">
+                                        <img src="{{url('user/assets/img/home-1/brand/image4.svg')}}" alt="">
                                     </a>
                                 </div>
                             </div>
                             <div class="swiper-slide">
                                 <div class="brand__item">
                                     <a href="#" class="brand__item__link" aria-label="brand">
-                                        <img src="assets/img/home-1/brand/image5.svg" alt="">
+                                        <img src="{{url('user/assets/img/home-1/brand/image5.svg')}}" alt="">
                                     </a>
                                 </div>
                             </div>
                             <div class="swiper-slide">
                                 <div class="brand__item">
                                     <a href="#" class="brand__item__link" aria-label="brand">
-                                        <img src="assets/img/home-1/brand/image1.svg" alt="">
+                                        <img src="{{url('user/assets/img/home-1/brand/image1.svg')}}" alt="">
                                     </a>
                                 </div>
                             </div>
                             <div class="swiper-slide">
                                 <div class="brand__item">
                                     <a href="#" class="brand__item__link" aria-label="brand">
-                                        <img src="assets/img/home-1/brand/linkedin-logo-png-20321.svg" alt="">
+                                        <img src="{{url('user/assets/img/home-1/brand/linkedin-logo-png-20321.svg')}}" alt="">
                                     </a>
                                 </div>
                             </div>
@@ -303,7 +303,7 @@ Home
             <div class="swiper-slide">
                 <div class="single__cat d-flex gap-4">
                     <div class="single__cat__icon color-1">
-                        <img src="assets/img/home-1/cat/1.svg" alt="">
+                        <img src="{{url('user/assets/img/home-1/cat/1.svg')}}" alt="">
                     </div>
                     <div class="single__cat__link d-flex flex-column">
                         <a href="job-list-1.html" aria-label="cat__label">Development</a>
@@ -315,7 +315,7 @@ Home
             <div class="swiper-slide">
                 <div class="single__cat d-flex gap-4">
                     <div class="single__cat__icon color-2">
-                        <img src="assets/img/home-1/cat/2.svg" alt="">
+                        <img src="{{url('user/assets/img/home-1/cat/2.svg')}}" alt="">
                     </div>
                     <div class="single__cat__link d-flex flex-column">
                         <a href="job-list-1.html" aria-label="cat__label">Design &amp; arts</a>
@@ -327,7 +327,7 @@ Home
             <div class="swiper-slide">
                 <div class="single__cat d-flex gap-4">
                     <div class="single__cat__icon color-3">
-                        <img src="assets/img/home-1/cat/3.svg" alt="">
+                        <img src="{{url('user/assets/img/home-1/cat/3.svg')}}" alt="">
                     </div>
                     <div class="single__cat__link d-flex flex-column">
                         <a href="job-list-1.html" aria-label="cat__label">Accounting</a>
@@ -339,7 +339,7 @@ Home
             <div class="swiper-slide">
                 <div class="single__cat d-flex gap-4">
                     <div class="single__cat__icon color-4">
-                        <img src="assets/img/home-1/cat/4.svg" alt="">
+                        <img src="{{url('user/assets/img/home-1/cat/4.svg')}}" alt="">
                     </div>
                     <div class="single__cat__link d-flex flex-column">
                         <a href="job-list-1.html" aria-label="cat__label">Marketting</a>
@@ -372,7 +372,7 @@ Home
                         <div class="rts__job__card">
                             <div class="d-flex align-items-center justify-content-between">
                                 <div class="company__icon">
-                                    <img src="assets/img/home-1/company/apple.svg" alt="">
+                                    <img src="{{url('user/assets/img/home-1/company/apple.svg')}}" alt="">
                                 </div>
                                 <div class="featured__option">
                                     <span>Featured</span>
@@ -407,7 +407,7 @@ Home
                         <div class="rts__job__card">
                             <div class="d-flex align-items-center justify-content-between">
                                 <div class="company__icon">
-                                    <img src="assets/img/home-1/company/google.svg" alt="">
+                                    <img src="{{url('user/assets/img/home-1/company/google.svg')}}" alt="">
                                 </div>
                                 <div class="featured__option">
                                   
@@ -442,7 +442,7 @@ Home
                         <div class="rts__job__card">
                             <div class="d-flex align-items-center justify-content-between">
                                 <div class="company__icon">
-                                    <img src="assets/img/home-1/company/microsoft.svg" alt="">
+                                    <img src="{{url('user/assets/img/home-1/company/microsoft.svg')}}" alt="">
                                 </div>
                                 <div class="featured__option">
                                     
@@ -477,7 +477,7 @@ Home
                         <div class="rts__job__card">
                             <div class="d-flex align-items-center justify-content-between">
                                 <div class="company__icon">
-                                    <img src="assets/img/home-1/company/upwork.svg" alt="">
+                                    <img src="{{url('user/assets/img/home-1/company/upwork.svg')}}" alt="">
                                 </div>
                                 <div class="featured__option">
                                     <span>Upcoming</span>
@@ -512,7 +512,7 @@ Home
                         <div class="rts__job__card">
                             <div class="d-flex align-items-center justify-content-between">
                                 <div class="company__icon">
-                                    <img src="assets/img/home-1/company/facebook.svg" alt="">
+                                    <img src="{{url('user/assets/img/home-1/company/facebook.svg')}}" alt="">
                                 </div>
                                 <div class="featured__option">
                                     
@@ -547,7 +547,7 @@ Home
                         <div class="rts__job__card">
                             <div class="d-flex align-items-center justify-content-between">
                                 <div class="company__icon">
-                                    <img src="assets/img/home-1/company/in.svg" alt="">
+                                    <img src="{{url('user/assets/img/home-1/company/in.svg')}}" alt="">
                                 </div>
                                 <div class="featured__option">
                                     <span>Featured</span>
@@ -588,7 +588,7 @@ Home
                 <div class="row align-items-center g-5">
                     <div class="col-lg-5">
                         <div class="rts__image__section">
-                            <img src="assets/img/home-1/we-are/image.webp"  alt="">
+                            <img src="{{url('user/assets/img/home-1/we-are/image.webp')}}"  alt="">
                         </div>
                     </div>
                     <div class="col-lg-7">
@@ -657,12 +657,12 @@ Home
                                 <div class="swiper-slide">
                                     <div class="rts__single__testimonial text-center">
                                         <div class="rts__quote mb-40">
-                                            <img class="opacity-50" src="assets/img/icon/quote.svg" alt="">
+                                            <img class="opacity-50" src="{{url('user/assets/img/icon/quote.svg')}}" alt="">
                                         </div>
                                         <div class="testimonial__text h6    ">Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia</div>
                                         <div class="d-flex align-items-center justify-content-center mx-auto gap-3 pt-40 max-content">
                                             <div class="author__image">
-                                                <img src="assets/img/home-1/testimonial/author.jpg" alt="">
+                                                <img src="{{url('user/assets/img/home-1/testimonial/author.jpg')}}" alt="">
                                             </div>
                                             <div class="author__content text-start">
                                                 <span class="h6">Alexander Joy</span>
@@ -674,12 +674,12 @@ Home
                                 <div class="swiper-slide">
                                     <div class="rts__single__testimonial text-center">
                                         <div class="rts__quote mb-40">
-                                            <img class="opacity-50" src="assets/img/icon/quote.svg" alt="">
+                                            <img class="opacity-50" src="{{url('user/assets/img/icon/quote.svg')}}" alt="">
                                         </div>
                                         <div class="testimonial__text h6    ">Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia</div>
                                         <div class="d-flex align-items-center justify-content-center mx-auto gap-3 pt-40 max-content">
                                             <div class="author__image">
-                                                <img src="assets/img/home-1/testimonial/author.jpg" alt="">
+                                                <img src="{{url('user/assets/img/home-1/testimonial/author.jpg')}}" alt="">
                                             </div>
                                             <div class="author__content text-start">
                                                 <span class="h6">Alexander Joy</span>
@@ -871,12 +871,12 @@ Home
                     <div class="col-lg-6 col-xl-4 col-md-10">
                         <div class="rts__single__blog">
                             <a href="blog-details.html" class="blog__img">
-                                <img src="assets/img/home-1/blog/1.webp" class="mb-2" alt="blog">
+                                <img src="{{url('user/assets/img/home-1/blog/1.webp')}}" class="mb-2" alt="blog">
                             </a>
                             <div class="blog__meta">
                                 <div class="blog__meta__info d-flex gap-3 my-3">
-                                    <span class="d-flex gap-1 align-items-center"> <img class="svg" src="assets/img/icon/calender.svg" alt=""> 20 March, 2022</span>
-                                    <a href="#" class="d-flex gap-1 align-items-center"> <img class="svg" src="assets/img/icon/user.svg" alt=""> Jon Adom</a>
+                                    <span class="d-flex gap-1 align-items-center"> <img class="svg" src="{{url('user/assets/img/icon/calender.svg')}}" alt=""> 20 March, 2022</span>
+                                    <a href="#" class="d-flex gap-1 align-items-center"> <img class="svg" src="{{url('user/assets/img/icon/user.svg')}}" alt=""> Jon Adom</a>
                                 </div>
                                 <a href="blog-details.html" class="h6 fw-semibold">
                                     7 Ways Job Post Has Improved Business Today
@@ -888,12 +888,12 @@ Home
                     <div class="col-lg-6 col-xl-4 col-md-10">
                         <div class="rts__single__blog">
                             <a href="blog-details.html" class="blog__img">
-                                <img src="assets/img/home-1/blog/2.webp" class="mb-2" alt="blog">
+                                <img src="{{url('user/assets/img/home-1/blog/2.webp')}}" class="mb-2" alt="blog">
                             </a>
                             <div class="blog__meta">
                                 <div class="blog__meta__info d-flex gap-3 my-3">
-                                    <span class="d-flex gap-1 align-items-center"> <img class="svg" src="assets/img/icon/calender.svg" alt=""> 20 March, 2022</span>
-                                    <a href="#" class="d-flex gap-1 align-items-center"> <img class="svg" src="assets/img/icon/user.svg" alt=""> Jon Adom</a>
+                                    <span class="d-flex gap-1 align-items-center"> <img class="svg" src="{{url('user/assets/img/icon/calender.svg')}}" alt=""> 20 March, 2022</span>
+                                    <a href="#" class="d-flex gap-1 align-items-center"> <img class="svg" src="{{url('user/assets/img/icon/user.svg')}}" alt=""> Jon Adom</a>
                                 </div>
                                 <a href="blog-details.html" class="h6 fw-semibold">
                                     Start an online Job and work from home
@@ -905,12 +905,12 @@ Home
                     <div class="col-lg-6 col-xl-4 col-md-10">
                         <div class="rts__single__blog">
                             <a href="blog-details.html" class="blog__img">
-                                <img src="assets/img/home-1/blog/3.webp" class="mb-2" alt="blog">
+                                <img src="{{url('user/assets/img/home-1/blog/3.webp')}}" class="mb-2" alt="blog">
                             </a>
                             <div class="blog__meta">
                                 <div class="blog__meta__info d-flex gap-3 my-3">
-                                    <span class="d-flex gap-1 align-items-center"> <img class="svg" src="assets/img/icon/calender.svg" alt=""> 20 March, 2022</span>
-                                    <a href="#" class="d-flex gap-1 align-items-center"> <img class="svg" src="assets/img/icon/user.svg" alt=""> Jon Adom</a>
+                                    <span class="d-flex gap-1 align-items-center"> <img class="svg" src="{{url('user/assets/img/icon/calender.svg')}}" alt=""> 20 March, 2022</span>
+                                    <a href="#" class="d-flex gap-1 align-items-center"> <img class="svg" src="{{url('user/assets/img/icon/user.svg')}}" alt=""> Jon Adom</a>
                                 </div>
                                 <a href="blog-details.html" class="h6 fw-semibold">
                                     Insider Strategies for Success on Job Websites
@@ -930,11 +930,11 @@ Home
             <div class="row">
                 <div class="rts__appcenter">
                     <div class="rts__appcenter__shape">
-                        <img src="assets/img/home-1/app/shape.png" alt="">
+                        <img src="{{url('user/assets/img/home-1/app/shape.png')}}" alt="">
                     </div>
                     <div class="rts__appcenter__content d-flex flex-wrap flex-xl-nowrap align-items-center justify-content-between justify-content-lg-center">
                         <div class="content__left align-items-end d-flex position-relative top-15px">
-                            <img src="assets/img/home-1/app/app_screen.png" alt="">
+                            <img src="{{url('user/assets/img/home-1/app/app_screen.png')}}" alt="">
                         </div>
                         <div class="content__right text-white text-center text-xl-start max-630">
                             <h3 class="l--1 mb-4 text-white wow animated fadeInUp" data-wow-delay=".1s ">Download The app Free!</h3>
@@ -942,12 +942,12 @@ Home
                             <div class="d-flex gap-3 justify-content-center justify-content-xl-start flex-wrap mt-40 wow animated fadeInUp" data-wow-delay=".3s">
                                 <div class="link">
                                     <a href="https://appstore.com/" target="_blank" title="app store">
-                                        <img src="assets/img/home-1/app/app-store.svg" alt="">
+                                        <img src="{{url('user/assets/img/home-1/app/app-store.svg')}}" alt="">
                                     </a>
                                 </div>
                                 <div class="link">
                                     <a href="https://google.com/" target="_blank" title="play store">
-                                        <img src="assets/img/home-1/app/play-store.svg" alt="">
+                                        <img src="{{url('user/assets/img/home-1/app/play-store.svg')}}" alt="">
                                     </a>
                                 </div>
                             </div>
@@ -970,12 +970,12 @@ Home
                     <i class="fa-regular fa-xmark text-primary"></i>
                 </button>
             </div>
-            <div class="d-block has__line text-center"><p>Choose your Account Type</p></div>
+            {{-- <div class="d-block has__line text-center"><p>Choose your Account Type</p></div>
             
             <div class="tab__switch flex-wrap flex-sm-nowrap nav-tab mt-30 mb-30">
                 <button class="rts__btn nav-link  active"><i class="fa-light fa-user"></i>Candidate</button>
                 <button class="rts__btn nav-link"><i class="rt-briefcase"></i> Employer</button>
-            </div>
+            </div> --}}
             <div class="tab-content" id="">
                 
             </div>
@@ -1007,15 +1007,15 @@ Home
                     <button class="rts__btn w-100 fill__btn">Login</button>
                 </div>
             </form>
-            <div class="d-block has__line text-center"><p>Or</p></div>
+            {{-- <div class="d-block has__line text-center"><p>Or</p></div>
             <div class="d-flex gap-4 flex-wrap justify-content-center mt-20 mb-20">
                 <div class="is__social google">
-                    <button><img src="assets/img/icon/google-small.svg" alt="">Continue with Google</button>
+                    <button><img src="{{url('user/assets/img/icon/google-small.svg')}}" alt="">Continue with Google</button>
                 </div>
                 <div class="is__social facebook">
-                    <button><img src="assets/img/icon/facebook-small.svg" alt="">Continue with Facebook</button>
+                    <button><img src="{{url('user/assets/img/icon/facebook-small.svg')}}" alt="">Continue with Facebook</button>
                 </div>
-            </div>
+            </div> --}}
             <span class="d-block text-center fw-medium">Don`t have an account? <a href="#" data-bs-target="#signupModal" data-bs-toggle="modal" class="text-primary">Sign Up</a> </span>
         </div>
       </div>
@@ -1033,12 +1033,12 @@ Home
                     <i class="fa-regular fa-xmark text-primary"></i>
                 </button>
             </div>
-            <div class="d-block has__line text-center"><p>Choose your Account Type</p></div>
+            {{-- <div class="d-block has__line text-center"><p>Choose your Account Type</p></div>
             
             <div class="tab__switch flex-wrap flex-sm-nowrap nav-tab mt-30 mb-30">
                 <button class="rts__btn nav-link  active"><i class="fa-light fa-user"></i>Candidate</button>
                 <button class="rts__btn nav-link"><i class="rt-briefcase"></i> Employer</button>
-            </div>
+            </div> --}}
             <form action="#" class="d-flex flex-column gap-3">
                 
                 <div class="form-group">
@@ -1068,15 +1068,15 @@ Home
                     <button class="rts__btn w-100 fill__btn">Login</button>
                 </div>
             </form>
-            <div class="d-block has__line text-center"><p>Or</p></div>
+            {{-- <div class="d-block has__line text-center"><p>Or</p></div>
             <div class="d-flex flex-wrap justify-content-center gap-4 mt-20 mb-20">
                 <div class="is__social google">
-                    <button><img src="assets/img/icon/google-small.svg" alt="">Continue with Google</button>
+                    <button><img src="{{url('user/assets/img/icon/google-small.svg')}}" alt="">Continue with Google</button>
                 </div>
                 <div class="is__social facebook">
-                    <button><img src="assets/img/icon/facebook-small.svg" alt="">Continue with Facebook</button>
+                    <button><img src="{{url('user/assets/img/icon/facebook-small.svg')}}" alt="">Continue with Facebook</button>
                 </div>
-            </div>
+            </div> --}}
             <span class="d-block text-center fw-medium">Have an account? <a href="#" data-bs-target="#loginModal" data-bs-toggle="modal" class="text-primary">Login</a> </span>
         </div>
       </div>
