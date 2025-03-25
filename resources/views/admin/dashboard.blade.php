@@ -435,7 +435,8 @@
                                                             </a>
 
                                                             <ul class="dropdown-menu dropdown-menu-end">
-                                                                <li><a class="dropdown-item" href="#">Action</a></li>
+                                                                <li><a class="dropdown-item" href="#">Action</a>
+                                                                </li>
                                                                 <li><a class="dropdown-item" href="#">Another
                                                                         action</a>
                                                                 </li>
@@ -454,7 +455,7 @@
                                         <div class="text-center">
                                             <!-- Profile Image with Camera Icon -->
                                             <div class="position-relative d-inline-block">
-                                                <img id="profileImage" src="assets/images/users/avatar-1.jpg"
+                                                <img id="profileImage" src="{{url('admin/assets/images/users/avatar-1.jpg')}}" onerror="this.onerror=null; this.src='{{ url('admin/assets/images/users/avatar-1.jpg') }}';"
                                                     alt="" class="avatar-xl rounded-circle img-thumbnail">
                                                 <button
                                                     class="btn btn-sm btn-primary position-absolute bottom-0 end-0 rounded-circle"
@@ -1301,6 +1302,8 @@
         {{-- To get details --}}
         <script>
             $(document).ready(function() {
+                var defaultImage = "{{ url('admin/assets/images/users/avatar-1.jpg') }}";
+                
                 $.ajax({
                     url: "{{ route('Admin.dashboardData') }}",
                     type: 'GET',
@@ -1313,8 +1316,7 @@
                         if (data.logo) {
                             $('#profileImage').attr('src', "{{ url('admin') }}/" + data.logo);
                         } else {
-                            $('#profileImage').attr('src',
-                                "{{ url('admin/assets/images/users/avatar-1.jpg') }}");
+                            $('#profileImage').attr('src', defaultImage);
                         }
 
                         $('#nameDisplay').text(data.name);
@@ -1455,7 +1457,7 @@
                                     position: "right",
                                     backgroundColor: "#4CAF50"
                                 }).showToast();
-                                
+
                                 // Rleoad data
                                 location.reload();
                             }

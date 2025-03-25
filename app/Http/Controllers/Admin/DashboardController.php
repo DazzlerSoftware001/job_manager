@@ -38,6 +38,10 @@ class DashboardController extends Controller
         $user = Auth::user();
 
         if ($request->hasFile('image')) {
+            if ($user->logo && file_exists(public_path('admin/' . $user->logo))) {
+                unlink(public_path('admin/' . $user->logo));
+            }
+            
             $imageName = time() . '.' . $request->image->extension();
             $request->image->move(public_path('admin/logo/'), $imageName);
             $user->logo = 'logo/' . $imageName;
