@@ -1,0 +1,5 @@
+@include('User.UserLayout.header')
+@include('User.UserLayout.navbar')
+@include('User.UserLayout.header')
+@yield('main-container')
+@include('User.UserLayout.footer')
