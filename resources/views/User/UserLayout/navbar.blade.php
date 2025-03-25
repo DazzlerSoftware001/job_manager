@@ -26,9 +26,9 @@
                                         </ul> --}}
                                     </li>
 
-                                    <li class="navigation__menu--item has-child has-arrow">
-                                        <a href="#" class="navigation__menu--item__link">Browse Jobs</a>
-                                        <ul class="submenu sub__style" role="menu">
+                                    <li class="navigation__menu--item has-child">
+                                        <a href="#" class="navigation__menu--item__link"> Jobs</a>
+                                        {{-- <ul class="submenu sub__style" role="menu">
                                             <li role="menuitem" class="has-child has-arrow">
                                                 <a href="#">Job List</a>
                                                 <ul class="sub__style" role="menu">
@@ -48,7 +48,7 @@
                                                     <li role="menuitem"><a href="job-details-4.html">Job Details Four</a></li>
                                                 </ul>
                                             </li>
-                                        </ul>
+                                        </ul> --}}
                                     </li>
 
                                     <li class="navigation__menu--item has-child has-arrow">
