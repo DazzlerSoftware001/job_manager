@@ -276,7 +276,7 @@ Jobs
                                         </div>
                                         <div class="d-flex gap-3 flex-wrap mt-4">
                                             <div class="d-flex gap-1 align-items-center">
-                                                <i class="fa-light fa-location-dot"></i> Newyork, USA
+                                                <i class="fa-light fa-location-dot"></i> Newyork, UsssSA
                                             </div>
                                             <div class="d-flex gap-1 align-items-center">
                                                 <i class="fa-light fa-briefcase"></i> Full Time
