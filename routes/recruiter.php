@@ -3,10 +3,11 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Recruiter\DashboardController;
 use App\Http\Controllers\Recruiter\JobController;
+use App\Http\Controllers\Recruiter\AuthController;
 
 Route::prefix('Recruiter')->group(function () {
-    Route::get('/login', [DashboardController::class, 'login'])->name('Recruiter.login');
-    Route::post('/loginInsert', [DashboardController::class, 'loginInsert'])->name('Recruiter.loginInsert');
+    Route::get('/login', [AuthController::class, 'login'])->name('Recruiter.login');
+    Route::post('/loginInsert', [AuthController::class, 'loginInsert'])->name('Recruiter.loginInsert');
 
     // Protected Routes with Middleware
     Route::middleware('recruiter')->group(function () {
@@ -26,7 +27,7 @@ Route::prefix('Recruiter')->group(function () {
         Route::post('/UpdateJobPost', [JobController::class, 'updateJobPost'])->name('Recruiter.UpdateJobPost');
 
 
-        Route::post('/logout', [DashboardController::class, 'logout'])->name('Recruiter.logout');
+        Route::post('/logout', [AuthController::class, 'logout'])->name('Recruiter.logout');
 
     });
 });

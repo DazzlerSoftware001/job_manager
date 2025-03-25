@@ -435,9 +435,7 @@
                                                             </a>
 
                                                             <ul class="dropdown-menu dropdown-menu-end">
-                                                                <li><a class="dropdown-item" href="#"
-                                                                        data-bs-toggle="modal"
-                                                                        data-bs-target="#updateModal">Action</a></li>
+                                                                <li><a class="dropdown-item" href="#">Action</a></li>
                                                                 <li><a class="dropdown-item" href="#">Another
                                                                         action</a>
                                                                 </li>
@@ -451,37 +449,6 @@
                                         </div>
                                     </div>
                                     <!-- end user-profile-img -->
-
-                                    <!-- Modal -->
-                                    <div class="modal fade" id="updateModal" tabindex="-1"
-                                        aria-labelledby="updateModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="updateModalLabel">Update Name and Image
-                                                    </h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                        aria-label="Close"></button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <form method="POST" action="javascript:void(0)" id="UpdateProfile">
-                                                        <div class="mb-3">
-                                                            <label for="nameInput" class="form-label">Name</label>
-                                                            <input type="text" class="form-control" id="nameInput"
-                                                                placeholder="Enter Name" />
-                                                        </div>
-                                                        <div class="mb-3">
-                                                            <label for="imageInput" class="form-label">Upload
-                                                                Image</label>
-                                                            <input type="file" class="form-control" id="imageInput" />
-                                                        </div>
-                                                        <button type="submit" class="btn btn-primary">Update</button>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {{-- Modal End --}}
 
                                     <div class="mt-n5 position-relative">
                                         <div class="text-center">

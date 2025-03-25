@@ -5,10 +5,11 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\JobController;
 use App\Http\Controllers\Admin\CompanyController;
 use App\Http\Controllers\Admin\RecruiterController;
+use App\Http\Controllers\Admin\AuthController;
 
 Route::prefix('Admin')->group(function () {
-    Route::get('/login', [DashboardController::class, 'login'])->name('Admin.login');
-    Route::post('/loginInsert', [DashboardController::class, 'loginInsert'])->name('Admin.loginInsert');
+    Route::get('/login', [AuthController::class, 'login'])->name('Admin.login');
+    Route::post('/loginInsert', [AuthController::class, 'loginInsert'])->name('Admin.loginInsert');
 
     // Protected Routes with Middleware
     Route::middleware('admin')->group(function () {
@@ -175,7 +176,7 @@ Route::prefix('Admin')->group(function () {
 
 
 
-        Route::post('/logout', [DashboardController::class, 'logout'])->name('Admin.logout');
+        Route::post('/logout', [AuthController::class, 'logout'])->name('Admin.logout');
 
     });
 

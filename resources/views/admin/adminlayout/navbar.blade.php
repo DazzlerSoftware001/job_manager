@@ -262,8 +262,8 @@
                             </button>
                             <div class="dropdown-menu dropdown-menu-end pt-0">
                                 <div class="p-3 border-bottom">
-                                    <h6 class="mb-0">Jennifer Bennett</h6>
-                                    <p class="mb-0 font-size-11 text-muted">jennifer.bennett@email.com</p>
+                                    <h6 class="mb-0" id="nameDisplay">Jennifer Bennett</h6>
+                                    <p class="mb-0 font-size-11 text-muted" id="emailDisplay">jennifer.bennett@email.com</p>
                                 </div>
                                 <a class="dropdown-item" href="contacts-profile.html"><i class="mdi mdi-account-circle text-muted font-size-16 align-middle me-1"></i> <span class="align-middle">Profile</span></a>
                                 {{-- <a class="dropdown-item" href="apps-chat.html"><i class="mdi mdi-message-text-outline text-muted font-size-16 align-middle me-1"></i> <span class="align-middle">Messages</span></a>
@@ -356,6 +356,7 @@
                         }
 
                         $('#nameDisplay').text(data.name);
+                        $('#emailDisplay').text(data.email);
                     },
                     error: function() {
                         alert('Failed to fetch data!');
