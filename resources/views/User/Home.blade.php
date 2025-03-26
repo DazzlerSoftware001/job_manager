@@ -981,14 +981,14 @@ Home
             </div>
             <form action="#" method="post" class="d-flex flex-column gap-3">
                 <div class="form-group">
-                    <label for="email" class="fw-medium text-dark mb-3">Your Email</label>
+                    <label for="email" class="fw-medium text-dark mb-2">Your Email</label>
                     <div class="position-relative">
-                        <input type="email" name="email" id="email" value="user@test.com" placeholder="Enter your email" required>
+                        <input type="email" name="email" id="email" value="" placeholder="Enter your email" required>
                         <i class="fa-light fa-user icon"></i>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="password" class="fw-medium text-dark mb-3">Password</label>
+                    <label for="password" class="fw-medium text-dark mb-2">Password</label>
                     <div class="position-relative">
                         <input type="password" name="password" value="1234" id="password" placeholder="Enter your password" required>
                         <i class="fa-light fa-lock icon"></i>

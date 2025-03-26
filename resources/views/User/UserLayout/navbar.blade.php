@@ -27,7 +27,7 @@
                                     </li>
 
                                     <li class="navigation__menu--item has-child">
-                                        <a href="#" class="navigation__menu--item__link"> Jobs</a>
+                                        <a href="{{route('User.JobList')}}" class="navigation__menu--item__link"> Jobs</a>
                                         {{-- <ul class="submenu sub__style" role="menu">
                                             <li role="menuitem" class="has-child has-arrow">
                                                 <a href="#">Job List</a>
