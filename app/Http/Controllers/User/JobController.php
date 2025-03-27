@@ -10,7 +10,7 @@ class JobController extends Controller
 {
     public function JobList()
     {
-        $jobs = JobPost::where('status',1)->paginate(5);
+        $jobs = JobPost::where('status',1)->paginate(1);
         return view('User.JobList',compact('jobs'));
     }
 

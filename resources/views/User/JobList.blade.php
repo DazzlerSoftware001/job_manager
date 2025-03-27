@@ -2,6 +2,43 @@
 @section('title')
     Jobs
 @endsection
+<style>
+    .rts__pagination ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+}
+
+.rts__pagination ul li {
+    display: inline-block;
+}
+
+.rts__pagination ul li a, 
+.rts__pagination ul li span {
+    padding: 10px 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    text-decoration: none;
+    color: #555;
+    transition: background 0.3s ease;
+}
+
+.rts__pagination ul li a:hover {
+    background: #f0f0f0;
+}
+
+.rts__pagination ul li a.active {
+    background: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+.rts__pagination ul li .inactive {
+    color: #bbb;
+    cursor: not-allowed;
+}
+</style>
 @section('main-container')
     <div class="rts__section breadcrumb__background">
         <div class="container">
@@ -593,7 +630,7 @@
                         </div>
                     </div>
 
-                    <div class="rts__pagination mx-auto pt-60 max-content">
+                    {{-- <div class="rts__pagination mx-auto pt-60 max-content">
                         <ul class="d-flex gap-2">
                             <li><a href="#" class="inactive"><i class="rt-chevron-left"></i></a></li>
                             <li><a class="active" href="#">1</a></li>
@@ -601,7 +638,40 @@
                             <li><a href="#">3</a></li>
                             <li><a href="#"><i class="rt-chevron-right"></i></a></li>
                         </ul>
+                    </div> --}}
+
+                    {{-- <div class="rts__pagination mx-auto pt-60 max-content">
+                        {{ $jobs->links('pagination::bootstrap-4') }}
+                    </div> --}}
+
+                    <div class="rts__pagination mx-auto pt-60 max-content">
+                        <ul class="d-flex gap-2">
+                            {{-- Previous Page Link --}}
+                            @if ($jobs->onFirstPage())
+                                <li><span class="inactive"><i class="rt-chevron-left"></i></span></li>
+                            @else
+                                <li><a href="{{ $jobs->previousPageUrl() }}"><i class="rt-chevron-left"></i></a></li>
+                            @endif
+                    
+                            {{-- Pagination Numbers --}}
+                            @for ($page = 1; $page <= $jobs->lastPage(); $page++)
+                                <li>
+                                    <a href="{{ $jobs->url($page) }}" class="{{ $page == $jobs->currentPage() ? 'active' : '' }}">
+                                        {{ $page }}
+                                    </a>
+                                </li>
+                            @endfor
+                    
+                            {{-- Next Page Link --}}
+                            @if ($jobs->hasMorePages())
+                                <li><a href="{{ $jobs->nextPageUrl() }}"><i class="rt-chevron-right"></i></a></li>
+                            @else
+                                <li><span class="inactive"><i class="rt-chevron-right"></i></span></li>
+                            @endif
+                        </ul>
                     </div>
+                    
+                    
                 </div>
             </div>
         </div>
