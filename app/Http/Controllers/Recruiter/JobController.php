@@ -108,7 +108,7 @@ class JobController extends Controller
 
                 $JobPost->save();
 
-                return response()->json(['status_code' => 1, 'message' => 'Job Post added successfully ']);
+                return response()->json(['status_code' => 1, 'message' => 'Job Post added successfully']);
             // } catch (\Exception $e) {
             //     // Handle any exception that occurs during saving
             //     return response()->json(['status_code' => 0, 'message' => 'Unable to add Experience']);

@@ -304,7 +304,7 @@
                                                 </select>
                                                 <select class="form-select" id="min_salary" name="min_salary"
                                                     onchange="updateMaxSalary()">
-                                                    <option value="">Min Salary</option>
+                                                    <option value="0">Min Salary</option>
                                                     @foreach ($JobSalary as $value)
                                                         <option value="{{ $value->salary }}">{{ $value->salary }}
                                                         </option>
@@ -575,8 +575,6 @@
                     naOption.value = "N/A";
                     naOption.textContent = "N/A";
                     maxSelect.appendChild(naOption);
-                    // maxSelect.disabled = true;
-                    // return;
                 }
 
                 // Add valid max experience options
@@ -597,21 +595,37 @@
                 var minSelect = document.getElementById("min_salary");
                 var maxSelect = document.getElementById("max_salary");
 
-                // Get selected Min Salary value
+                // // If no value is selected, set both minValue and maxValue to "N/A"
+                // if (!minSelect.value) {
+                //     minSelect.innerHTML = '<option value="N/A">N/A</option>';
+                //     maxSelect.innerHTML = '<option value="N/A">N/A</option>';
+                //     maxSelect.disabled = flase;
+                //     // return;
+                // }
+
                 var minValue = parseInt(minSelect.value) || 0;
 
                 // Enable Max Salary dropdown
                 maxSelect.disabled = false;
-
-                // Remove previous options
-                maxSelect.innerHTML = '<option value="">Max Salary</option>';
+                maxSelect.innerHTML = '';
 
                 // Get all salary options from Min selector
-                var options = minSelect.querySelectorAll("option");
+                var options = Array.from(minSelect.querySelectorAll("option"))
+                    .map(option => parseInt(option.value))
+                    .filter(value => !isNaN(value));
+                var maxValue = Math.max(...options);
 
-                options.forEach(option => {
-                    var salaryValue = parseInt(option.value);
-                    if (!isNaN(salaryValue) && salaryValue > minValue) {
+                // If minValue is the maximum salary, set max_salary to "N/A" and disable it
+                if (minValue === maxValue) {
+                    var naOption = document.createElement("option");
+                    naOption.value = "N/A";
+                    naOption.textContent = "N/A";
+                    maxSelect.appendChild(naOption);
+                }
+
+                // Add valid max salary options
+                options.forEach(salaryValue => {
+                    if (salaryValue > minValue) {
                         var newOption = document.createElement("option");
                         newOption.value = salaryValue;
                         newOption.textContent = salaryValue;
@@ -720,7 +734,6 @@
                         dataType: 'json',
                         success: function(result) {
                             if (result.status_code === 1) {
-                                $('#exampleModal').modal('hide');
                                 $('#AddJobPost').trigger("reset");
                                 $('#myTable').DataTable().ajax.reload(null, false);
 
@@ -736,10 +749,10 @@
                                 }).showToast();
 
                                 // Redirect to another route after successful submission
-                                setTimeout(function() {
-                                    window.location.href =
-                                        "{{ route('Recruiter.JobList') }}"; // Change this to your desired route
-                                }, 1500);
+                                // setTimeout(function() {
+                                //     window.location.href =
+                                //         "{{ route('Recruiter.JobList') }}"; // Change this to your desired route
+                                // }, 1500);
                             } else if (result.status_code === 2) {
                                 Toastify({
                                     text: result.message,
