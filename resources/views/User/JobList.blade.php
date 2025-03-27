@@ -294,21 +294,23 @@
                        
                         <div class="d-flex flex-wrap align-items-center gap-4">
                             <form action="{{ route('User.JobList') }}" method="GET" class="category-select" id="categoryForm">
-
+                                <input type="hidden" name="category" id="selectedCategory" value="">
+                            
                                 <div class="position-relative">
                                     <div class="nice-select" tabindex="0">
                                         <span class="current">Industry</span>
                                         <ul class="list">
-                                            <li data-value="Nothing" data-display="All Category" class="option selected focus">
+                                            <li data-value="" data-display="All Category" class="option selected focus">
                                                 All Category
                                             </li>
                                             @foreach ($JobCategory as $industry)
-                                                <li data-value="{{ $industry->id }}" class="option">{{ $industry->name }}</li>
+                                                <li data-value="{{ $industry->name }}" class="option">{{ $industry->name }}</li>
                                             @endforeach
                                         </ul>
                                     </div>
                                 </div>
                             </form>
+                            
                             {{-- <div class="d-flex align-items-center gap-3" id="nav-tab" role="tablist">
                                 <button class="rts__btn no__fill__btn grid-style nav-link active" data-bs-toggle="tab" data-bs-target="#grid"> <i class="rt-hamburger"></i> Grid</button>
                                 <button class="rts__btn no__fill__btn list-style nav-link active" data-bs-toggle="tab" data-bs-target="#list"> <i class="rt-list"></i> List</button>
@@ -906,19 +908,33 @@
 @section('script')
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const categorySelect = document.getElementById("categorySelect");
-        const categoryForm = document.getElementById("categoryForm");
-        const hiddenInput = document.getElementById("selectedCategory");
+    // document.addEventListener("DOMContentLoaded", function() {
+    //     const categorySelect = document.getElementById("categorySelect");
+    //     const categoryForm = document.getElementById("categoryForm");
+    //     const hiddenInput = document.getElementById("selectedCategory");
     
-        document.querySelectorAll(".nice-select .option").forEach(option => {
-            option.addEventListener("click", function() {
-                const selectedValue = this.getAttribute("data-value");
-                hiddenInput.value = selectedValue; // Set hidden input value
-                categoryForm.submit(); // Auto-submit form
-            });
+    //     document.querySelectorAll(".nice-select .option").forEach(option => {
+    //         option.addEventListener("click", function() {
+    //             const selectedValue = this.getAttribute("data-value");
+    //             hiddenInput.value = selectedValue; // Set hidden input value
+    //             categoryForm.submit(); // Auto-submit form
+    //         });
+    //     });
+    // });
+
+    document.addEventListener("DOMContentLoaded", function() {
+    const categoryForm = document.getElementById("categoryForm");
+    const hiddenInput = document.getElementById("selectedCategory");
+
+    document.querySelectorAll(".nice-select .option").forEach(option => {
+        option.addEventListener("click", function() {
+            const selectedValue = this.getAttribute("data-value");
+            hiddenInput.value = selectedValue; // Set the hidden input value
+            categoryForm.submit(); // Submit the form automatically
         });
     });
+});
+
     </script>
     
 

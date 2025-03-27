@@ -9,22 +9,38 @@ use App\Models\JobCategory;
 
 class JobController extends Controller
 {
-    public function JobList(Request $request)
-    {
+    // public function JobList(Request $request)
+    // {
 
-        dd($request->all());
-        $query = JobPost::where('status', 1);
+    //     // dd($request->all());
+    //     $query = JobPost::where('status', 1);
     
-        // Filter by category if selected
-        if ($request->has('category') && $request->category != '') {
-            $query->where('category_id', $request->category);
-        }
+    //     // Filter by category if selected
+    //     if ($request->has('category') && $request->category != '') {
+    //         $query->where('category_id', $request->category);
+    //     }
     
-        $jobs = $query->paginate(2); // Adjust pagination as needed
-        $JobCategory = JobCategory::all();
+    //     $jobs = $query->paginate(2); // Adjust pagination as needed
+    //     $JobCategory = JobCategory::all();
     
-        return view('User.JobList', compact('jobs', 'JobCategory'));
+    //     return view('User.JobList', compact('jobs', 'JobCategory'));
+    // }
+
+    public function JobList(Request $request)
+{
+    $query = JobPost::where('status', 1);
+
+    // Filter by category if selected
+    if ($request->has('category') && $request->category !== '') {
+        $query->where('industry', $request->category);
     }
+
+    $jobs = $query->paginate(2); // Adjust pagination as needed
+    $JobCategory = JobCategory::all();
+
+    return view('User.JobList', compact('jobs', 'JobCategory'));
+}
+
     
 
 

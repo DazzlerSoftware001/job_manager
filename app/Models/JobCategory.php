@@ -11,5 +11,5 @@ class JobCategory extends Model
 
     protected $table = 'job_category'; 
 
-    protected $fillable = ['name', 'status'];
+    protected $fillable = ['id', 'name', 'status'];
 }
