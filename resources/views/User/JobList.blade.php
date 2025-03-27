@@ -286,20 +286,25 @@
                 <div class="col-lg-7 col-xl-8">
                     <div
                         class="top__query mb-40 d-flex flex-wrap gap-4 gap-xl-0 justify-content-between align-items-center">
-                        <span class="text-dark font-20 fw-medium">Showing 1-9 of 19 results</span>
+                        {{-- <span class="text-dark font-20 fw-medium">Showing 1-9 of 19 results</span> --}}
+                        <span class="text-dark font-20 fw-medium">
+                            Showing {{ $jobs->firstItem() }}-{{ $jobs->lastItem() }} of {{ $jobs->total() }} results
+                        </span>
+                        
+                       
                         <div class="d-flex flex-wrap align-items-center gap-4">
-                            <form action="#" class="category-select">
+                            <form action="{{ route('User.JobList') }}" method="GET" class="category-select" id="categoryForm">
+
                                 <div class="position-relative">
                                     <div class="nice-select" tabindex="0">
-                                        <span class="current">All Category</span>
+                                        <span class="current">Industry</span>
                                         <ul class="list">
-                                            <li data-value="Nothing" data-display="All Category"
-                                                class="option selected focus">All Category</li>
-                                            <li data-value="1" class="option">Part Time</li>
-                                            <li data-value="2" class="option">Full Time</li>
-                                            <li data-value="3" class="option">Government</li>
-                                            <li data-value="4" class="option">NGO</li>
-                                            <li data-value="5" class="option">Private</li>
+                                            <li data-value="Nothing" data-display="All Category" class="option selected focus">
+                                                All Category
+                                            </li>
+                                            @foreach ($JobCategory as $industry)
+                                                <li data-value="{{ $industry->id }}" class="option">{{ $industry->name }}</li>
+                                            @endforeach
                                         </ul>
                                     </div>
                                 </div>
@@ -605,8 +610,9 @@
                                                         <i class="fa-light rt-briefcase"></i> {{$data->type}}
                                                     </div>
                                                     <div class="d-flex gap-2 align-items-center">
-                                                        <i class="fa-light fa-clock"></i> 1 Years Ago
+                                                        <i class="fa-light fa-clock"></i> {{ $data->created_at->diffForHumans() }}
                                                     </div>
+                                                    
                                                 </div>
                                                 <div class="job__tags d-flex flex-wrap gap-3" id="skills">
                                                     @foreach(explode(',', $data->skills) as $skill)
@@ -898,4 +904,22 @@
     </div>
 @endsection
 @section('script')
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const categorySelect = document.getElementById("categorySelect");
+        const categoryForm = document.getElementById("categoryForm");
+        const hiddenInput = document.getElementById("selectedCategory");
+    
+        document.querySelectorAll(".nice-select .option").forEach(option => {
+            option.addEventListener("click", function() {
+                const selectedValue = this.getAttribute("data-value");
+                hiddenInput.value = selectedValue; // Set hidden input value
+                categoryForm.submit(); // Auto-submit form
+            });
+        });
+    });
+    </script>
+    
+
 @endsection
