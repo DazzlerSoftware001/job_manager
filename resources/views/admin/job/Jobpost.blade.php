@@ -7,17 +7,18 @@
 @endsection
 
 @section('main-container')
-<script src="https://cdn.tiny.cloud/1/k73iszd3tzdamw58yk6fmdzasoe86nkkbzktvgqtvxvcrr17/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        tinymce.init({
-            selector: '#job_description',
-            height: 400,
-            plugins: 'advlist autolink lists link image charmap preview',
-            toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | bullist numlist outdent indent | link image',
+    <script src="https://cdn.tiny.cloud/1/k73iszd3tzdamw58yk6fmdzasoe86nkkbzktvgqtvxvcrr17/tinymce/6/tinymce.min.js"
+        referrerpolicy="origin"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            tinymce.init({
+                selector: '#job_description',
+                height: 400,
+                plugins: 'advlist autolink lists link image charmap preview',
+                toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | bullist numlist outdent indent | link image',
+            });
         });
-    });
-</script>
+    </script>
 
     <style>
         .choices {
@@ -125,6 +126,7 @@
                                                 <th>No. of Vacancies</th>
                                                 <th>Interview type</th>
                                                 <th>Company Name</th>
+                                                <th>Logo</th>
                                                 <th>Company Details</th>
                                                 <th>Job Description</th>
                                                 <th>Status</th>
@@ -145,6 +147,22 @@
             <!-- container-fluid -->
         </div>
         <!-- End Page-content -->
+
+
+        <!-- Modal to view image -->
+        <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="imageModalLabel">Logo Image</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <img id="modalImage" src="" alt="Logo" class="img-fluid">
+                    </div>
+                </div>
+            </div>
+        </div>
 
 
         <!--add Modal -->
@@ -251,8 +269,7 @@
                                         </select>
 
                                         <!-- Max Experience Dropdown -->
-                                        <select class="form-select" id="max_experience" name="max_experience"
-                                            disabled>
+                                        <select class="form-select" id="max_experience" name="max_experience" disabled>
                                             <option value=0>Max</option>
                                             @foreach ($JobExperience as $value)
                                                 <option value="{{ $value->experience }}">{{ $value->experience }}
@@ -318,13 +335,13 @@
                                 <div class="col-xl-4 col-lg-6 col-md-8 col-sm-12 mt-3">
                                     <label for="diversity" class="d-block">Diversity Hiring</label>
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="checkbox" id="male"
-                                            name="diversity" value="Male">
+                                        <input class="form-check-input" type="checkbox" id="male" name="diversity"
+                                            value="Male">
                                         <label class="form-check-label" for="male">Male</label>
                                     </div>
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="checkbox" id="female"
-                                            name="diversity" value="Female">
+                                        <input class="form-check-input" type="checkbox" id="female" name="diversity"
+                                            value="Female">
                                         <label class="form-check-label" for="female">Female</label>
                                     </div>
                                 </div>
@@ -353,8 +370,7 @@
                                         onchange="updateCompanyDetails()">
                                         <option value="">Select</option>
                                         @foreach ($Companies as $company)
-                                            <option value="{{ $company->name }}"
-                                                data-details="{{ $company->details }}">
+                                            <option value="{{ $company->name }}" data-details="{{ $company->details }}">
                                                 {{ $company->name }}
                                             </option>
                                         @endforeach
@@ -374,7 +390,7 @@
                                         <textarea class="form-control" id="job_description" name="job_description"></textarea>
                                     </div>
                                 </div>
-                                
+
 
 
                             </div>
@@ -384,7 +400,7 @@
                                 <button type="submit" class="btn btn-primary">Preview & Post Job</button>
                             </div>
 
-                        </div>
+                    </div>
                     </form>
 
                 </div>
@@ -457,7 +473,6 @@
                 </div>
             </div>
         </div>
-
     @endsection
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     @section('script')
@@ -496,6 +511,16 @@
                     $('#myTable').DataTable().draw();
                 });
             });
+        </script>
+
+        {{--  open the image modal --}}
+        <script>
+            function openImageModal(imageSrc) {
+                // Set the modal image source to the clicked image
+                document.getElementById('modalImage').src = imageSrc;
+                // Open the modal
+                $('#imageModal').modal('show');
+            }
         </script>
 
         <script type="text/javascript">

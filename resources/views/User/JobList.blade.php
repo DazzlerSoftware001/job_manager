@@ -595,7 +595,7 @@
                                         <div
                                             class="d-flex flex-wrap flex-md-nowrap flex-lg-wrap flex-xl-nowrap gap-4 align-items-center">
                                             <div class="company__icon rounded-2">
-                                                <img src="{{ url('user/assets/img/home-1/company/apple.svg') }}"
+                                                <img src="{{ parse_url($data->com_logo, PHP_URL_PATH) ?? '' }}"
                                                     alt="">
                                             </div>
                                             <div class="job__meta w-100 d-flex flex-column gap-2">

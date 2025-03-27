@@ -329,7 +329,7 @@
         }
     </script>
 
-    
+    {{-- Get Company List --}}
     <script>
         $(document).ready(function () {
         $('#myTable').DataTable({

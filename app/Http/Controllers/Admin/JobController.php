@@ -2864,7 +2864,7 @@ class JobController extends Controller
             $dataArray[] = ucfirst($record->int_type);
             $dataArray[] = ucfirst($record->com_name);
 
-
+            $dataArray[] = '<img src="' . asset($record->com_logo) . '" alt="Logo" style="height: 100px; width: 100px;" onclick="openImageModal(\'' . asset($record->com_logo) . '\')">';
              // Details with "View More" Popup
              $shortDetails = Str::limit($record->com_details, 40, '...');
              $dataArray[] = '<span>' . $shortDetails . '</span>

@@ -33,7 +33,7 @@ class JobController extends Controller
         $data['JobExperience'] = JobExperience::where('status', 1)->select('experience','status')->get(); 
         $data['JobLocation'] = JobLocation::where('status', 1)->select('country','city','status')->get(); 
         $data['JobCategory'] = JobCategory::where('status', 1)->select('name','status')->get(); 
-        $data['Companies'] = Companies::where('status', 1)->select('id', 'name', 'details', 'status')->get(); 
+        $data['Companies'] = Companies::where('status', 1)->select('id', 'name', 'details','logo', 'status')->get(); 
         $data['JobIntType'] = JobIntType::where('status', 1)->select('id', 'int_type','status')->get();
         $data['JobCurrency'] = JobCurrency::where('status', 1)->select('id', 'currency', 'status')->get();
         $data['JobEducation'] = JobEducation::where('status', 1)->select('education', 'status')->get();
@@ -48,7 +48,7 @@ class JobController extends Controller
 
     public function PostJobData(Request $request)
     {
-        // dd($request->skills);
+        // dd($request->all());
   
         // Define validation rules
         $rules = [
@@ -101,6 +101,7 @@ class JobController extends Controller
                 $JobPost->vacancies = $request->input('vacancies');
                 $JobPost->int_type = $request->input('interview_type');
                 $JobPost->com_name = $request->input('company_name');
+                $JobPost->com_logo = $request->input('company_logo');
                 $JobPost->com_details = $request->input('company_details');
                 $JobPost->job_desc = $request->input('job_description');
                 $JobPost->status = 0;

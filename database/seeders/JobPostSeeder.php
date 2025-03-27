@@ -29,6 +29,7 @@ class JobPostSeeder extends Seeder
             'vacancies' => 3,
             'int_type' => 'walk in',
             'com_name' => 'Dazzler Software',
+            'com_logo' => 'copany/logo/image.jpg',
             'com_details' => 'We help businesses elevate their value through custom software development, product design, QA and consultancy services.',
             'job_desc' => 'Develop and maintain web applications using Laravel.',
             'status' => 0,

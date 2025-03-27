@@ -32,6 +32,7 @@ return new class extends Migration
             $table->integer('vacancies');
             $table->string('int_type');
             $table->string('com_name');
+            $table->string('com_logo');
             $table->text('com_details');
             $table->text('job_desc');
             $table->tinyInteger('status')->default(0);

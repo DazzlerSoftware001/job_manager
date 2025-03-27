@@ -376,27 +376,46 @@
                                             </select>
                                         </div>
 
+                                        <div class="col-12 col-md-6">
+                                            <div class="row">
+                                                <!-- Company Name Selection -->
+                                                <div class="col-12 col-md-12 mt-3">
+                                                    <label for="company_name">Company Name</label>
+                                                    <select class="form-select" id="company_name" name="company_name"
+                                                        onchange="updateCompanyDetails()">
+                                                        <option value="">Select</option>
+                                                        @foreach ($Companies as $company)
+                                                            <option value="{{ $company->name }}"
+                                                                data-details="{{ $company->details }}"
+                                                                data-logo="{{ asset($company->logo) }}">
+                                                                {{ $company->name }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
 
-                                        <div class="col-xl-6 mt-3">
-                                            <label for="company_name">Company Name</label>
-                                            <select class="form-select" id="company_name" name="company_name"
-                                                onchange="updateCompanyDetails()">
-                                                <option value="">Select</option>
-                                                @foreach ($Companies as $company)
-                                                    <option value="{{ $company->name }}"
-                                                        data-details="{{ $company->details }}">
-                                                        {{ $company->name }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
+                                                <!-- Company Details -->
+                                                <div class="col-12 col-md-12 mt-3">
+                                                    <label for="company_details">Company Details</label>
+                                                    <textarea class="form-control" id="company_details" name="company_details" readonly></textarea>
+                                                </div>
+                                            </div>
                                         </div>
 
 
 
-                                        <div class="col-xl-6 mt-3">
-                                            <label for="company_details">Company Details</label>
-                                            <textarea class="form-control" id="company_details" name="company_details" readonly></textarea>
+                                        <!-- Image Preview Section -->
+                                        <div class="col-xl-6 text-center mt-3">
+                                            <label for="job_image">Job Image</label>
+                                            <div class="mt-3">
+                                                <img id="imagePreview" src=""
+                                                    alt="Image Preview"
+                                                    style="width: 200px; height: 200px; object-fit: cover; border-radius: 10px;">
+                                                    <input type="hidden" id="company_logo" name="company_logo" value="">
+                                            </div>
                                         </div>
+
+
 
                                         <div class="d-flex justify-content-center mt-3">
                                             <div class="col-xl-8 text-center">
@@ -404,7 +423,6 @@
                                                 <textarea class="form-control" id="job_description" name="job_description"></textarea>
                                             </div>
                                         </div>
-
 
 
                                     </div>
@@ -533,11 +551,37 @@
                 // Get the selected option
                 var selectedOption = select.options[select.selectedIndex];
 
-                // Check if data-details exists
+                // Check if data-details exists and update the textarea
                 if (selectedOption) {
                     var details = selectedOption.getAttribute("data-details") || "";
                     detailsTextarea.value = details;
+
+                    // Get and update the logo URL
+                    const logoUrl = selectedOption.getAttribute('data-logo');
+                    const imgElement = document.getElementById('imagePreview');
+                    var hiddenLogoInput = document.getElementById("company_logo");
+                    if (logoUrl) {
+                        const logoPath = new URL(logoUrl).pathname.replace(/^\/+/, '');
+                        imgElement.src = logoUrl;
+                        hiddenLogoInput.value = logoPath;
+                    } else {
+                        imgElement.src = 'path_to_placeholder.jpg'; // Fallback image
+                        hiddenLogoInput.value = "";
+                    }
                 }
+            }
+        </script>
+
+        <!-- JavaScript to Preview Image -->
+        <script>
+            function previewImage(event) {
+                const reader = new FileReader();
+                reader.onload = function() {
+                    const imgElement = document.getElementById('imagePreview');
+                    imgElement.src = reader.result;
+                    imgElement.style.display = 'block';
+                }
+                reader.readAsDataURL(event.target.files[0]);
             }
         </script>
 

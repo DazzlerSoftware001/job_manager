@@ -31,6 +31,7 @@ class Jobpost extends Model
         'vacancies',
         'int_type',
         'com_name',
+        'com_logo',
         'com_details',
         'job_desc',
         'status'
