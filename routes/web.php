@@ -9,3 +9,6 @@ require base_path('routes/recruiter.php');
 
 Route::get('/', [HomeController::class, 'Home'])->name('User.Home');
 Route::get('JobList', [JobController::class, 'JobList'])->name('User.JobList');
+Route::get('JobList', [JobController::class, 'JobList'])->name('User.JobList');
+
+Route::get('JobDetails', [JobController::class, 'JobDetails'])->name('User.JobDetails');

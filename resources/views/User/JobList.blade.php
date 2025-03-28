@@ -604,9 +604,13 @@
                                                 <div class="d-flex justify-content-between align-items-center gap-3">
                                                     <a href="#" id="title" class="job__title h6 mb-0">{{$data->title}}</a>
                                                 </div>
+                                                <p class="mb-0 text-muted">{{$data->com_name}}</p>
                                                 <div class="d-flex gap-3 gap-md-4 flex-wrap mb-2">
                                                     <div class="d-flex gap-2 align-items-center" id="location">
                                                         <i class="fa-light fa-location-dot"></i> {{$data->location}}
+                                                    </div>
+                                                    <div class="d-flex gap-2 align-items-center" id="">
+                                                        {{$data->currency}} {{$data->min_sal}} - {{$data->max_sal}}
                                                     </div>
                                                     <div class="d-flex gap-2 align-items-center" id="type">
                                                         <i class="fa-light rt-briefcase"></i> {{$data->type}}
