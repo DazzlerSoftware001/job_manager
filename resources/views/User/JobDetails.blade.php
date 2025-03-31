@@ -3,6 +3,8 @@
     Jobs
 @endsection
 @section('main-container')
+<script src="https://cdn.tiny.cloud/1/k73iszd3tzdamw58yk6fmdzasoe86nkkbzktvgqtvxvcrr17/tinymce/6/tinymce.min.js"
+referrerpolicy="origin"></script>
    <!-- breadcrumb area -->
    <div class="rts__section breadcrumb__background">
         <div class="container">
@@ -80,11 +82,18 @@
                             </div>
                         </nav>
                     </div>
+                    <div class="job-description">
+                        {!! html_entity_decode($job->job_desc) !!}
+
+                    </div>
+                    
+                    {{--
                     <div id="description" class="mb-30">
                         <h6 class="fw-semibold mb-20">Job Description</h6>
                         <p>We are seeking a skilled Part-Time Software Engineer to join our team, specializing in social media content creation for lead generation purposes. The ideal candidate will have a creative flair, technical proficiency, and a strong understanding of social media trends and algorithms. Must be able to work Monday-Friday during EST business hours. This role will be under the ScaledOn brand, but will be working directly with one of our partners as their dedicated Software Engineer.</p>
                     </div>
-                    <div id="responsibility" class="mb-30">
+                   
+                     <div id="responsibility" class="mb-30">
                         <h6 class="fw-semibold mb-20">Responsibility</h6>
                         <ul class="list-style-dot">
                             <li>Design and build web and enterprise application using in ReactJS/Next JS/.Net Core</li>
@@ -130,7 +139,8 @@
                             <li>early Earned Leave, Sick Leave and Casual Leave facility and many more to come soon.</li>
                             <li>Salery: $1000- $2000 Monthly</li>
                         </ul>
-                    </div>
+                    </div> --}}
+
                     <div class="d-flex flex-wrap gap-4 mt-40 mb-30">
                         
                         <div class="d-flex gap-3 align-items-center">
@@ -514,4 +524,4 @@
     </script>
 
 
-@endsection
+@endsection 

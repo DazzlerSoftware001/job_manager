@@ -64,7 +64,7 @@ class JobController extends Controller
             'max_experience' => 'required|string',
             'currency' => 'required|string',
             'min_salary' => 'required|integer',
-            'max_salary' => 'required|integer',
+            'max_salary' => 'required',
             'education' => 'required|string',
             'candidate_industry' => 'required|string',
             'vacancies' => 'required|integer',
