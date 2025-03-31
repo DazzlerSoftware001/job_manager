@@ -600,9 +600,9 @@
                                                 <img src="{{ parse_url($data->com_logo, PHP_URL_PATH) ?? '' }}"
                                                     alt="">
                                             </div>
-                                            <div class="job__meta w-100 d-flex flex-column gap-2">
+                                            <div class="job__meta w-100 d-flex flex-column gap-2" onclick="viewJob({{$data->id}})">
                                                 <div class="d-flex justify-content-between align-items-center gap-3">
-                                                    <a href="#" id="title" class="job__title h6 mb-0">{{$data->title}}</a>
+                                                    <a id="title" class="job__title h6 mb-0">{{ $data->title }}</a>
                                                 </div>
                                                 <p class="mb-0 text-muted">{{$data->com_name}}</p>
                                                 <div class="d-flex gap-3 gap-md-4 flex-wrap mb-2">
@@ -910,35 +910,54 @@
     </div>
 @endsection
 @section('script')
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    // document.addEventListener("DOMContentLoaded", function() {
-    //     const categorySelect = document.getElementById("categorySelect");
-    //     const categoryForm = document.getElementById("categoryForm");
-    //     const hiddenInput = document.getElementById("selectedCategory");
-    
-    //     document.querySelectorAll(".nice-select .option").forEach(option => {
-    //         option.addEventListener("click", function() {
-    //             const selectedValue = this.getAttribute("data-value");
-    //             hiddenInput.value = selectedValue; // Set hidden input value
-    //             categoryForm.submit(); // Auto-submit form
-    //         });
-    //     });
-    // });
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-    document.addEventListener("DOMContentLoaded", function() {
-    const categoryForm = document.getElementById("categoryForm");
-    const hiddenInput = document.getElementById("selectedCategory");
+    <script>
+        // document.addEventListener("DOMContentLoaded", function() {
+        //     const categorySelect = document.getElementById("categorySelect");
+        //     const categoryForm = document.getElementById("categoryForm");
+        //     const hiddenInput = document.getElementById("selectedCategory");
+        
+        //     document.querySelectorAll(".nice-select .option").forEach(option => {
+        //         option.addEventListener("click", function() {
+        //             const selectedValue = this.getAttribute("data-value");
+        //             hiddenInput.value = selectedValue; // Set hidden input value
+        //             categoryForm.submit(); // Auto-submit form
+        //         });
+        //     });
+        // });
 
-    document.querySelectorAll(".nice-select .option").forEach(option => {
-        option.addEventListener("click", function() {
-            const selectedValue = this.getAttribute("data-value");
-            hiddenInput.value = selectedValue; // Set the hidden input value
-            categoryForm.submit(); // Submit the form automatically
+        document.addEventListener("DOMContentLoaded", function() {
+            const categoryForm = document.getElementById("categoryForm");
+            const hiddenInput = document.getElementById("selectedCategory");
+
+            document.querySelectorAll(".nice-select .option").forEach(option => {
+                option.addEventListener("click", function() {
+                    const selectedValue = this.getAttribute("data-value");
+                    hiddenInput.value = selectedValue; // Set the hidden input value
+                    categoryForm.submit(); // Submit the form automatically
+                });
+            });
         });
-    });
-});
 
+    </script>
+
+
+    {{-- Send Job Id --}}
+    <script>
+        function viewJob(id) {
+            $.ajax({
+                url: "{{ route('User.JobDetails') }}",
+                type: 'GET',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: {
+                    id: id
+                },
+                dataType: 'json',
+            });
+        }
     </script>
     
 

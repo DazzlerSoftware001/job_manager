@@ -9,22 +9,6 @@ use App\Models\JobCategory;
 
 class JobController extends Controller
 {
-    // public function JobList(Request $request)
-    // {
-
-    //     // dd($request->all());
-    //     $query = JobPost::where('status', 1);
-    
-    //     // Filter by category if selected
-    //     if ($request->has('category') && $request->category != '') {
-    //         $query->where('category_id', $request->category);
-    //     }
-    
-    //     $jobs = $query->paginate(2); // Adjust pagination as needed
-    //     $JobCategory = JobCategory::all();
-    
-    //     return view('User.JobList', compact('jobs', 'JobCategory'));
-    // }
 
     public function JobList(Request $request)
     {
@@ -42,10 +26,18 @@ class JobController extends Controller
         return view('User.JobList', compact('jobs', 'JobCategory'));
     }
 
-    public function JobDetails()
-    {
-        return view('User.JobDetails');
+    public function JobDetails(Request $request) {
+
+        $id = $request->input('id');
+        $job = JobPost::find($id);
+
+        if (!$job) {
+            return redirect()->back()->with('error', 'Job not found!');
+        }
+
+        return view('User.JobDetails', compact('job'));
     }
+
 
     
 
