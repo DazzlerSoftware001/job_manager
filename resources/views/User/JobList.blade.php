@@ -600,7 +600,7 @@
                                                 <img src="{{ parse_url($data->com_logo, PHP_URL_PATH) ?? '' }}"
                                                     alt="">
                                             </div>
-                                            <div class="job__meta w-100 d-flex flex-column gap-2" onclick="viewJob({{$data->id}})">
+                                            {{-- <div class="job__meta w-100 d-flex flex-column gap-2" onclick="viewJob({{$data->id}})">
                                                 <div class="d-flex justify-content-between align-items-center gap-3">
                                                     <a id="title" class="job__title h6 mb-0">{{ $data->title }}</a>
                                                 </div>
@@ -626,6 +626,35 @@
                                                     @endforeach
                                                 </div>
                                                 
+                                            </div> --}}
+
+                                            <div class="job__meta w-100 d-flex flex-column gap-2 position-relative">
+                                                <!-- Clickable overlay -->
+                                                <a href="{{ route('User.JobDetails',['id' => encrypt($data->id)]) }}" class="stretched-link"></a>
+
+                                                <div class="d-flex justify-content-between align-items-center gap-3">
+                                                    <a id="title" class="job__title h6 mb-0">{{ $data->title }}</a>
+                                                </div>
+                                                <p class="mb-0 text-muted">{{$data->com_name}}</p>
+                                                <div class="d-flex gap-3 gap-md-4 flex-wrap mb-2">
+                                                    <div class="d-flex gap-2 align-items-center" id="location">
+                                                        <i class="fa-light fa-location-dot"></i> {{$data->location}}
+                                                    </div>
+                                                    <div class="d-flex gap-2 align-items-center">
+                                                        {{$data->currency}} {{$data->min_sal}} - {{$data->max_sal}}
+                                                    </div>
+                                                    <div class="d-flex gap-2 align-items-center" id="type">
+                                                        <i class="fa-light rt-briefcase"></i> {{$data->type}}
+                                                    </div>
+                                                    <div class="d-flex gap-2 align-items-center">
+                                                        <i class="fa-light fa-clock"></i> {{ $data->created_at->diffForHumans() }}
+                                                    </div>
+                                                </div>
+                                                <div class="job__tags d-flex flex-wrap gap-3" id="skills">
+                                                    @foreach(explode(',', $data->skills) as $skill)
+                                                        <a href="#">{{ trim($skill) }}</a>
+                                                    @endforeach
+                                                </div>
                                             </div>
                                         </div>
                                         <div>
@@ -941,24 +970,5 @@
         });
 
     </script>
-
-
-    {{-- Send Job Id --}}
-    <script>
-        function viewJob(id) {
-            $.ajax({
-                url: "{{ route('User.JobDetails') }}",
-                type: 'GET',
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                data: {
-                    id: id
-                },
-                dataType: 'json',
-            });
-        }
-    </script>
-    
 
 @endsection

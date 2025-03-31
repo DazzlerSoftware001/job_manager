@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\JobPost;
 use App\Models\JobCategory;
+use Illuminate\Support\Facades\Crypt;
 
 class JobController extends Controller
 {
@@ -26,17 +27,21 @@ class JobController extends Controller
         return view('User.JobList', compact('jobs', 'JobCategory'));
     }
 
-    public function JobDetails(Request $request) {
+    public function JobDetails($id) {
 
-        $id = $request->input('id');
-        $job = JobPost::find($id);
-
+        // dd($id);
+        $decryptedId = Crypt::decrypt($id);
+        $job = JobPost::find($decryptedId);
+// dd($job);
         if (!$job) {
             return redirect()->back()->with('error', 'Job not found!');
         }
 
         return view('User.JobDetails', compact('job'));
     }
+
+  
+    
 
 
     

@@ -12,36 +12,37 @@
                         <div class="rts__job__card__big bg-transparent p-0 position-relative z-1 flex-wrap justify-content-between d-flex gap-4 align-items-center">
                             <div class="d-flex gap-4 align-items-center flex-md-row flex-column mx-auto mx-md-0">
                                 <div class="company__icon rounded-2 bg-white">
-                                    <img class="" src="assets/img/home-1/company/apple.svg" alt="">
+                                    <img src="{{ parse_url($job->com_logo, PHP_URL_PATH) ?? '' }}"
+                                                    alt="">
                                 </div>
                                 <div class="job__meta w-100 d-flex text-center text-md-start flex-column gap-2">
                                     <div class="">
-                                        <h3 class="job__title h3 mb-0">Senior UI Designer, Apple</h3>
+                                        <h3 class="job__title h3 mb-0">{{$job->title}}</h3>
                                     </div>
                                     <div class="d-flex gap-3 justify-content-center justify-content-md-start flex-wrap mb-3 mt-2">
                                         <div class="d-flex gap-2 align-items-center">
-                                            <i class="fa-light fa-location-dot"></i> Newyork, USA
+                                            <i class="fa-light fa-location-dot"></i> {{$job->location}}
                                         </div>
                                         <div class="d-flex gap-2 align-items-center">
-                                            <i class="fa-light rt-briefcase"></i> Full Time
+                                            <i class="fa-light rt-briefcase"></i> {{$job->type}}
                                         </div>
                                         <div class="d-flex gap-2 align-items-center">
-                                            <i class="fa-light fa-clock"></i> 1 Years Ago
+                                            <i class="fa-light fa-clock"></i> {{ $job->created_at->diffForHumans() }}
                                         </div>
                                         <div class="d-flex gap-2 fw-medium align-items-center">
-                                            <i class="fa-light rt-price-tag"></i> $1000 - $2000 Monthly
+                                            <i class="fa-light rt-price-tag"></i> {{$job->currency}} {{$job->min_sal}} - {{$job->max_sal}}
                                         </div>
                                     </div>
                                     <div class="job__tags d-flex justify-content-center justify-content-md-start flex-wrap gap-3">
-                                        <a href="#">Creative</a>
-                                        <a href="#">user interface</a>
-                                        <a href="#">web ui</a>
+                                        @foreach(explode(',', $job->skills) as $skill)
+                                            <a href="#">{{ trim($skill) }}</a>
+                                        @endforeach
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="breadcrumb__apply max-content">
-                            <a href="#" class="rts__btn apply__btn be-1 fill__btn">Apply This Possition</a>
+                            <a href="#" class="rts__btn apply__btn be-1 fill__btn">Apply</a>
                         </div>             
                     </div>
                     <div class="breadcrumb__area__shape d-flex gap-4 justify-content-end align-items-center">
@@ -168,19 +169,19 @@
                             <ul>
                                 <li class="d-flex flex-wrap gap-3 gap-sm-0 align-items-center justify-content-between">
                                     <span class="left-text"> <i class="rt-calender"></i> Date Posted</span>
-                                    <span class="text">:  10,July, 2023</span>
+                                    <span class="text">:  {{ $job->created_at->format('j M Y') }}</span>
                                 </li>
                                 <li class="d-flex flex-wrap gap-3 gap-sm-0 align-items-center justify-content-between">
                                     <span class="left-text"> <i class="rt-user"></i> Vacancy</span>
-                                    <span class="text">: 5</span>
+                                    <span class="text">: {{$job->vacancies}}</span>
                                 </li>
                                 <li class="d-flex flex-wrap gap-3 gap-sm-0 align-items-center justify-content-between">
                                     <span class="left-text"> <i class="rt-experience"></i> Experience</span>
-                                    <span class="text">: 5 Years</span>
+                                    <span class="text">: {{$job->min_exp}} years - {{$job->max_exp}} years</span>
                                 </li>
                                 <li class="d-flex flex-wrap gap-3 gap-sm-0 align-items-center justify-content-between">
                                     <span class="left-text"> <i class="rt-price-tag"></i> Offered Salary</span>
-                                    <span class="text">: $2000-$3000</span>
+                                    <span class="text">: {{$job->currency}} {{$job->min_sal}} - {{$job->max_sal}}</span>
                                 </li>
                                 <li class="d-flex flex-wrap gap-3 gap-sm-0 align-items-center justify-content-between">
                                     <span class="left-text"> <i class="rt-loading"></i> Job Deadline</span>
@@ -188,16 +189,27 @@
                                 </li>
                                 <li class="d-flex flex-wrap gap-3 gap-sm-0 align-items-center justify-content-between">
                                     <span class="left-text"> <i class="rt-qualification"></i> Qualification</span>
-                                    <span class="text">: Bachelor Degree</span>
+                                    <span class="text">: {{$job->education}}</span>
                                 </li>
                                 <li class="d-flex flex-wrap gap-3 gap-sm-0 align-items-center justify-content-between">
                                     <span class="left-text"> <i class="fa-sharp fa-thin fa-location-dot"></i> Location</span>
-                                    <span class="text">: New York, USA</span>
+                                    <span class="text">: {{$job->location}}</span>
                                 </li>
                                 <li class="d-flex flex-wrap gap-3 gap-sm-0 align-items-center justify-content-between">
                                     <span class="left-text"> <i class="rt-user"></i> Gender</span>
-                                    <span class="text">: Both</span>
+                                    <span class="text">: 
+                                        @if($job->diversity == 'All')
+                                            All
+                                        @elseif($job->diversity == 'Male')
+                                            Male
+                                        @elseif($job->diversity == 'Female')
+                                            Female
+                                        @else
+                                            Not Specified
+                                        @endif
+                                    </span>
                                 </li>
+                                
                             </ul>
                         </div>
                     </div>
