@@ -418,8 +418,22 @@
 
 
                                         <div class="d-flex justify-content-center mt-3">
-                                            <div class="col-xl-8 text-center">
+                                            <div class="col-xl-12 text-center">
                                                 <label for="job_description">Job Description <span class="text-danger">*</span></label>
+                                                <textarea class="form-control" id="job_description" name="job_description"></textarea>
+                                            </div>
+                                        </div>
+
+                                        <div class="d-flex justify-content-center mt-3">
+                                            <div class="col-xl-12 text-center">
+                                                <label for="job_description">Responsibilities <span class="text-danger">*</span></label>
+                                                <textarea class="form-control" id="job_description" name="job_description"></textarea>
+                                            </div>
+                                        </div>
+
+                                        <div class="d-flex justify-content-center mt-3">
+                                            <div class="col-xl-12 text-center">
+                                                <label for="job_description">Requirements <span class="text-danger">*</span></label>
                                                 <textarea class="form-control" id="job_description" name="job_description"></textarea>
                                             </div>
                                         </div>

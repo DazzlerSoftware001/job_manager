@@ -188,14 +188,14 @@
                                     @csrf
                                     <div class="row mb-3">
                                         <div class="col-xl-4">
-                                            <label for="edit_job_title">Job Title</label>
+                                            <label for="edit_job_title">Job Title <span class="text-danger">*</span></label>
                                             <input type="text" class="form-control" id="edit_job_title" name="edit_job_title"
                                                 placeholder="Enter job title" value="{{$job->title}}">
                                         </div>
 
 
                                         <div class="col-xl-4">
-                                            <label for="edit_job_type">Job Type</label>
+                                            <label for="edit_job_type">Job Type <span class="text-danger">*</span></label>
                                             <select class="form-select" id="edit_job_type" name="edit_job_type">
                                                 <option value="{{$job->type}}">{{$job->type}}</option>
                                                 
@@ -204,7 +204,7 @@
 
 
                                         <div class="col-xl-4">
-                                            <label for="edit_skills">Skills</label>
+                                            <label for="edit_skills">Skills <span class="text-danger">*</span></label>
                                             <select class="form-select" id="edit_skills" name="edit_skills[]" multiple>
                                                <option value="{{$job->skills}}">{{$job->skills}}</option>
                                             </select>
@@ -212,7 +212,7 @@
 
 
                                         <div class="col-xl-4 mt-3">
-                                            <label for="edit_industry">Category</label>
+                                            <label for="edit_industry">Category <span class="text-danger">*</span></label>
                                             <select class="form-select" id="edit_industry" name="edit_industry">
                                                 <option value="{{$job->industry}}">{{$job->industry}}</option>
                                                 
@@ -223,7 +223,7 @@
 
 
                                         <div class="col-xl-4 mt-3">
-                                            <label for="edit_department">Department</label>
+                                            <label for="edit_department">Department <span class="text-danger">*</span></label>
                                             <select class="form-select" id="edit_department" name="edit_department">
                                                 <option value="{{$job->department}}">{{$job->department}}</option>
                                             </select>
@@ -231,7 +231,7 @@
 
 
                                         <div class="col-xl-4 mt-3">
-                                            <label for="edit_role">Role</label>
+                                            <label for="edit_role">Role <span class="text-danger">*</span></label>
                                             <select class="form-select" id="edit_role" name="edit_role">
                                                 <option value="{{$job->role}}">{{$job->role}}</option>
                                             </select>
@@ -239,7 +239,7 @@
 
 
                                         <div class="col-xl-4 mt-3">
-                                            <label for="edit_work_mode">Job Mode</label>
+                                            <label for="edit_work_mode">Job Mode <span class="text-danger">*</span></label>
                                             <select class="form-select" id="edit_work_mode" name="edit_work_mode">
                                                 <option value="{{$job->mode}}">{{$job->mode}}</option>
                                             </select>
@@ -247,7 +247,7 @@
 
 
                                         <div class="col-xl-4 mt-3">
-                                            <label for="edit_location">Location</label>
+                                            <label for="edit_location">Location <span class="text-danger">*</span></label>
                                             <select class="form-select" id="edit_location" name="edit_location">
                                                 <option value="{{$job->location}}">{{$job->location}}</option>
                                             </select>
@@ -255,7 +255,7 @@
 
 
                                         <div class="col-xl-4 mt-3">
-                                            <label for="edit_min_experience">Work Experience (Min - Max)</label>
+                                            <label for="edit_min_experience">Work Experience (Min - Max) <span class="text-danger">*</span></label>
                                             <div class="d-flex gap-2">
                                                 <!-- Min Experience Dropdown -->
                                                 <select class="form-select" id="edit_min_experience" name="edit_min_experience"
@@ -278,7 +278,7 @@
 
 
                                         <div class="col-xl-4 mt-3">
-                                            <label for="edit_currency">Annual Salary (Currency - Min - Max)</label>
+                                            <label for="edit_currency">Annual Salary (Currency - Min - Max) <span class="text-danger">*</span></label>
                                             <div class="d-flex gap-2">
                                                 <select class="form-select" id="edit_currency" name="edit_currency">
                                                     {{-- <option value="">Currency</option> --}}
@@ -301,7 +301,7 @@
 
 
                                         <div class="col-xl-4 mt-3">
-                                            <label for="edit_education">Educational Qualification</label>
+                                            <label for="edit_education">Educational Qualification <span class="text-danger">*</span></label>
                                             <select class="form-select" id="edit_education" name="edit_education">
                                                 {{-- <option value="">Choose Qualification</option> --}}
                                                 <option value="{{$job->education}}">{{$job->education}}</option>
@@ -335,13 +335,13 @@
                                         </div>
 
                                         <div class="col-xl-4 mt-3">
-                                            <label for="edit_vacancies">Number of Vacancies</label>
+                                            <label for="edit_vacancies">Number of Vacancies <span class="text-danger">*</span></label>
                                             <input type="number" class="form-control" name="edit_vacancies" value="{{$job->vacancies}}">
                                         </div>
 
 
                                         <div class="col-xl-4 col-lg-6 col-md-8 col-sm-12 mt-3">
-                                            <label for="edit_interview_type" class="d-block">Interview Type</label>
+                                            <label for="edit_interview_type" class="d-block">Interview Type <span class="text-danger">*</span></label>
                                             <select class="form-select" id="edit_interview_type" name="edit_interview_type">
                                                 {{-- <option value="">Select</option> --}}
                                                 <option value="{{$job->int_type}}">{{$job->int_type}}</option>
@@ -353,7 +353,7 @@
                                             <div class="row">
                                                 <!-- Company Name Selection -->
                                                 <div class="col-12 col-md-12 mt-3">
-                                                    <label for="edit_company_name">Company Name</label>
+                                                    <label for="edit_company_name">Company Name <span class="text-danger">*</span></label>
                                                     <select class="form-select" id="edit_company_name" name="edit_company_name"
                                                         onchange="updateCompanyDetails()">
                                                         <option value="{{$job->com_name}}">{{$job->com_name}}</option>
@@ -362,7 +362,7 @@
 
                                                 <!-- Company Details -->
                                                 <div class="col-12 col-md-12 mt-3">
-                                                    <label for="edit_company_details">Company Details</label>
+                                                    <label for="edit_company_details">Company Details <span class="text-danger">*</span></label>
                                                     <textarea class="form-control" id="edit_company_details" name="edit_company_details" readonly>{{$job->com_details}}</textarea>
                                                 </div>
                                             </div>
@@ -372,7 +372,7 @@
 
                                         <!-- Image Preview Section -->
                                         <div class="col-xl-6 text-center mt-3">
-                                            <label for="job_image">Job Image</label>
+                                            <label for="job_image">Job Image <span class="text-danger">*</span></label>
                                             <div class="mt-3">
                                                 <img id="imagePreview" src="{{asset($job->com_logo)}}"
                                                     alt="Image Preview"
@@ -384,9 +384,23 @@
 
 
                                         <div class="d-flex justify-content-center mt-3">
-                                            <div class="col-xl-8 text-center">
-                                                <label for="edit_job_description">Job Description</label>
+                                            <div class="col-xl-12">
+                                                <label for="edit_job_description">Job Description <span class="text-danger">*</span></label>
                                                 <textarea class="form-control" id="edit_job_description" name="edit_job_description">{{$job->job_desc}}</textarea>
+                                            </div>
+                                        </div>
+
+                                        <div class="d-flex justify-content-center mt-3">
+                                            <div class="col-xl-12">
+                                                <label for="edit_job_description">Responsibilities <span class="text-danger">*</span></label>
+                                                <textarea class="form-control" id="edit_job_description" name="edit_job_description"></textarea>
+                                            </div>
+                                        </div>
+
+                                        <div class="d-flex justify-content-center mt-3">
+                                            <div class="col-xl-12">
+                                                <label for="edit_job_description">Requirements <span class="text-danger">*</span></label>
+                                                <textarea class="form-control" id="edit_job_description" name="edit_job_description"></textarea>
                                             </div>
                                         </div>
 
