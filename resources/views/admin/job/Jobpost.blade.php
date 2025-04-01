@@ -409,7 +409,8 @@
 
         <!--edit Modal -->
         <div class="modal fade" id="EditModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
+            <div class="modal-dialog modal-xl">
+
                 <div class="modal-content">
                     <div class="modal-header">
                         <h1 class="modal-title fs-5" id="exampleModalLabel">Edit job</h1>
@@ -418,19 +419,212 @@
                     <div class="modal-body">
                         <!-- form -->
                         <form method="POST" action="javascript:void(0)" id="EditJobCategory">
+                            <div class="row mb-3">
 
-                            <div class="mb-3" id="modal-id" style="display: none;">
-                                <label for="edit-id" class="form-label">ID</label>
-                                <input type="text" name="edit-id" id="edit-id" class="form-control"
-                                    placeholder="ID" />
+                                <div class="mb-3" id="modal-id" style="display: none;">
+                                    <label for="edit-id" class="form-label">ID</label>
+                                    <input type="text" name="edit-id" id="edit-id" class="form-control"
+                                        placeholder="ID" />
+                                </div>
+
+                                <div class="col-xl-4">
+                                    <label for="job_title">Job Title</label>
+                                    <input type="text" class="form-control" id="job_title" name="job_title"
+                                        placeholder="Enter job title">
+                                </div>
+
+
+                                <div class="col-xl-4">
+                                    <label for="job_type">Job Type</label>
+                                    <select class="form-select" id="job_type" name="job_type">
+                                        <option value="">Select</option>
+                                    
+                                    </select>
+                                </div>
+
+
+                                <div class="col-xl-4">
+                                    <label for="skills">Skills</label>
+                                    <select class="form-select" id="skills" name="skills[]" multiple>
+                                        
+                                    </select>
+                                </div>
+
+
+                                <div class="col-xl-4 mt-3">
+                                    <label for="industry">Category</label>
+                                    <select class="form-select" id="industry" name="industry">
+                                        <option value="">Choose Industry</option>
+                                    
+                                    </select>
+                                </div>
+
+
+                                <div class="col-xl-4 mt-3">
+                                    <label for="department">Department</label>
+                                    <select class="form-select" id="department" name="department">
+                                        <option value="">Select</option>
+                                    </select>
+                                </div>
+
+
+                                <div class="col-xl-4 mt-3">
+                                    <label for="role">Role</label>
+                                    <select class="form-select" id="role" name="role">
+                                        <option value="">Select</option>
+                                    </select>
+                                </div>
+
+
+                                <div class="col-xl-4 mt-3">
+                                    <label for="work_mode">Job Mode</label>
+                                    <select class="form-select" id="work_mode" name="work_mode">
+                                        <option value="">Select</option>
+                                    
+                                    </select>
+                                </div>
+
+
+                                <div class="col-xl-4 mt-3">
+                                    <label for="location">Location</label>
+                                    <select class="form-select" id="location" name="location">
+                                        <option value="">Select</option>
+                                        
+                                    </select>
+                                </div>
+
+
+                                <div class="col-xl-4 mt-3">
+                                    <label for="min_experience">Work Experience (Min - Max)</label>
+                                    <div class="d-flex gap-2">
+                                        <!-- Min Experience Dropdown -->
+                                        <select class="form-select" id="min_experience" name="min_experience"
+                                            onchange="updateMaxExperience()">
+                                            <option value=0>Fresher</option>
+                                        
+                                        </select>
+
+                                        <!-- Max Experience Dropdown -->
+                                        <select class="form-select" id="max_experience" name="max_experience"
+                                            disabled>
+                                            <option value=0>Max</option>
+                                            
+                                        </select>
+                                    </div>
+                                </div>
+
+
+
+                                <div class="col-xl-4 mt-3">
+                                    <label for="currency">Annual Salary (Currency - Min - Max)</label>
+                                    <div class="d-flex gap-2">
+                                        <select class="form-select" id="currency" name="currency">
+                                            <option value="">Currency</option>
+                                        
+                                        </select>
+                                        <select class="form-select" id="min_salary" name="min_salary"
+                                            onchange="updateMaxSalary()">
+                                            <option value="0">Min Salary</option>
+                                            
+                                        </select>
+                                        <select class="form-select" id="max_salary" name="max_salary" disabled>
+                                            <option value="0">Max Salary</option>
+                                            
+                                        </select>
+                                    </div>
+                                </div>
+
+
+                                <div class="col-xl-4 mt-3">
+                                    <label for="education">Educational Qualification</label>
+                                    <select class="form-select" id="education" name="education">
+                                        <option value="">Choose Qualification</option>
+                                        
+                                    </select>
+                                </div>
+
+
+                                <div class="col-xl-4 mt-3">
+                                    <label for="candidate_industry">Condidate Industry</label>
+                                    <select class="form-select" id="candidate_industry"
+                                        name="candidate_industry">
+                                        <option value="">Choose Industry</option>
+                                    
+                                    </select>
+                                </div>
+
+
+                                <div class="col-xl-4 col-lg-6 col-md-8 col-sm-12 mt-3">
+                                    <label for="diversity" class="d-block">Diversity Hiring (Optional)</label>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" id="male"
+                                            name="diversity" value="Male">
+                                        <label class="form-check-label" for="male">Male</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" id="female"
+                                            name="diversity" value="Female">
+                                        <label class="form-check-label" for="female">Female</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-xl-4 mt-3">
+                                    <label for="vacancies">Number of Vacancies</label>
+                                    <input type="number" class="form-control" name="vacancies">
+                                </div>
+
+
+                                <div class="col-xl-4 col-lg-6 col-md-8 col-sm-12 mt-3">
+                                    <label for="interview_type" class="d-block">Interview Type</label>
+                                    <select class="form-select" id="interview_type" name="interview_type">
+                                        <option value="">Select</option>
+                                    
+                                    </select>
+                                </div>
+
+                                <div class="col-12 col-md-6">
+                                    <div class="row">
+                                        <!-- Company Name Selection -->
+                                        <div class="col-12 col-md-12 mt-3">
+                                            <label for="company_name">Company Name</label>
+                                            <select class="form-select" id="company_name" name="company_name"
+                                                onchange="updateCompanyDetails()">
+                                                <option value="">Select</option>
+                                            
+                                            </select>
+                                        </div>
+
+                                        <!-- Company Details -->
+                                        <div class="col-12 col-md-12 mt-3">
+                                            <label for="company_details">Company Details</label>
+                                            <textarea class="form-control" id="company_details" name="company_details" readonly></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+                                <!-- Image Preview Section -->
+                                <div class="col-xl-6 text-center mt-3">
+                                    <label for="job_image">Job Image</label>
+                                    <div class="mt-3">
+                                        <img id="imagePreview" src=""
+                                            alt="Image Preview"
+                                            style="width: 200px; height: 200px; object-fit: cover; border-radius: 10px;">
+                                            <input type="hidden" id="company_logo" name="company_logo" value="">
+                                    </div>
+                                </div>
+
+
+                                <div class="col-xl-6 text-center">
+                                    <label for="job_description">Job Description</label>
+                                    <textarea class="form-control" id="job_description" name="job_description"></textarea>
+                                </div>
                             </div>
-
-                            <div class="mb-3">
-                                <label for="editcategory" class="form-label">Category</label>
-                                <input type="text" class="form-control" name="editcategory" id="editcategory"
-                                    aria-describedby="countryHelp">
+                            <div class="col-12 mb-3">
+                                <button type="submit" class="btn btn-primary">Preview & Post Job</button>
                             </div>
-
+                        </form>
                     </div>
 
                     <div class="modal-footer">
