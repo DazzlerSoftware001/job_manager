@@ -19,10 +19,11 @@ use App\Models\JobIntType;
 use App\Models\JobEducation;
 use App\Models\JobPost;
 use App\Models\Companies;
+
+
+
 use Illuminate\Support\Str;
-
-
-
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Validator;
 
 class JobController extends Controller
@@ -2833,13 +2834,40 @@ class JobController extends Controller
             $dataArray[] = $record->id;
             $dataArray[] = ucfirst($record->title);
 
-            $admin_verify = $record->admin_verify == 1
-                ? '<div class="d-flex"><span onclick="changeVerifyStatus(' . $record->id . ');" class="badge bg-success text-uppercase" style="cursor: pointer;">Verified</span></div>'
-                : ($record->admin_verify == 2
-                    ? '<div class="d-flex"><span onclick="changeVerifyStatus(' . $record->id . ');" class="badge bg-warning text-uppercase" style="cursor: pointer;">Pending</span></div>'
-                    : '<div class="d-flex"><span onclick="changeVerifyStatus(' . $record->id . ');" class="badge bg-danger text-uppercase" style="cursor: pointer;">Rejected</span></div>');
-                    
+            $admin_verify = '<div class="d-flex">
+                    <span onclick="toggleVerifyOptions(' . $record->id . ');" 
+                          class="badge ' . ($record->admin_verify == 1 ? 'bg-success' : ($record->admin_verify == 0 ? 'bg-warning' : 'bg-danger')) . ' text-uppercase"  
+                          style="cursor: pointer;">
+                        ' . ($record->admin_verify == 1 ? 'Verified' : ($record->admin_verify == 0 ? 'Pending' : 'Rejected')) . '
+                    </span>
+                </div>';
+
+            if ($record->admin_verify == 0) {
+                $admin_verify .= '<div id="verify-options-' . $record->id . '" style="display: none; margin-top: 5px;">
+                                    <div class="d-flex gap-2">
+                                        <button class="badge bg-success text-uppercase" style="cursor: pointer; border: none; padding: 5px 10px;" onclick="changeVerifyStatus(' . $record->id . ', 1)">Verify</button>
+                                        <button class="badge bg-danger text-uppercase" style="cursor: pointer; border: none; padding: 5px 10px;" onclick="changeVerifyStatus(' . $record->id . ', 2)">Reject</button>
+                                    </div>
+                                </div>';
+            }
+            elseif ($record->admin_verify == 1) {
+                $admin_verify .= '<div id="verify-options-' . $record->id . '" style="display: none; margin-top: 5px;">
+                                    <div class="d-flex gap-2">
+                                        <button class="badge bg-danger text-uppercase" style="cursor: pointer; border: none; padding: 5px 10px;" onclick="changeVerifyStatus(' . $record->id . ', 2)">Reject</button>
+                                    </div>
+                                </div>';
+            }
+            else {
+                $admin_verify .= '<div id="verify-options-' . $record->id . '" style="display: none; margin-top: 5px;">
+                                    <div class="d-flex gap-2">
+                                        <button class="badge bg-success text-uppercase" style="cursor: pointer; border: none; padding: 5px 10px;" onclick="changeVerifyStatus(' . $record->id . ', 1)">Verify</button>
+                                    </div>
+                                </div>';
+            }
+
             $dataArray[] = $admin_verify;
+
+
         
 
             $status = $record->status == 1
@@ -2853,7 +2881,7 @@ class JobController extends Controller
 
             $dataArray[] = '<div class="d-flex gap-2">
                                 <div class="edit">
-                                    <a href="' . route('Recruiter.EditJobPost', ['id' => Crypt::encrypt($record->id)]) . '" class="edit-item-btn text-primary">
+                                    <a href="' . route('Admin.EditJobPost', ['id' => Crypt::encrypt($record->id)]) . '" class="edit-item-btn text-primary">
                                         <i class="far fa-edit"></i>
                                     </a>
                                 </div>
@@ -2873,6 +2901,29 @@ class JobController extends Controller
             "recordsFiltered" => $totalRecords,
             "data" => $data
         ]);
+    }
+
+    public function verifyStatus(Request $request)
+    {
+        $id = $request->input('id');
+        $status = $request->input('status'); // 1 for Verify, -1 for Reject
+
+        if (!empty($id)) {
+            // Check if the record exists
+            $JobPost = JobPost::find($id);
+
+            if ($JobPost) {
+                // Update status (1 = Verified, -1 = Rejected)
+                JobPost::where('id', $id)->update(['admin_verify' => $status]);
+
+                $message = $status == 1 ? 'Job Post verified successfully' : 'Job Post rejected successfully';
+                return response()->json(['status_code' => 1, 'message' => $message]);
+            } else {
+                return response()->json(['status_code' => 0, 'message' => 'Job Post not found']);
+            }
+        } else {
+            return response()->json(['status_code' => 2, 'message' => 'ID is required']);
+        }
     }
 
     public function changeJobPostStatus(Request $request)
@@ -2919,6 +2970,119 @@ class JobController extends Controller
         } else {
             return response()->json(['status_code' => 2, 'message' => 'Id is required']);
         }
+    }
+
+    public function verifiedJobs(Request $request)
+    {
+        // dd($request->all());
+        $draw = intval($request->input("draw"));
+        $offset = trim($request->input('start'));
+        // $limit = 10;
+        $limit = intval($request->input('length', 10));
+
+        $order = $request->input("order");
+        $search = $request->input("search");
+        $columns = array(
+            0 => 'id',
+            1 => 'title',
+            2 => 'admin_verify',
+            3 => 'status',
+            4 => 'created_at',
+            5 => 'id',
+        );
+
+        $query = JobPost::query();
+        // Count Data
+
+        if (!empty($search)) {
+            $query->where('title', 'like', '%' . $search . '%');
+        }
+    
+        if ($order) {
+            $column = $columns[$order[0]['column']];
+            $dir = $order[0]['dir'];
+            $query->orderBy($column, $dir);
+        }
+
+        $totalRecords = $query->count();
+
+        $records = $query->offset($offset)->limit($limit)->orderBy('id', 'desc')->get();
+
+
+        $data = [];
+        foreach ($records as $record) {
+            $dataArray = [];
+
+            $dataArray[] = $record->id;
+            $dataArray[] = ucfirst($record->title);
+
+            $admin_verify = '<div class="d-flex">
+                    <span onclick="toggleVerifyOptions(' . $record->id . ');" 
+                          class="badge ' . ($record->admin_verify == 1 ? 'bg-success' : ($record->admin_verify == 0 ? 'bg-warning' : 'bg-danger')) . ' text-uppercase"  
+                          style="cursor: pointer;">
+                        ' . ($record->admin_verify == 1 ? 'Verified' : ($record->admin_verify == 0 ? 'Pending' : 'Rejected')) . '
+                    </span>
+                </div>';
+
+            if ($record->admin_verify == 0) {
+                $admin_verify .= '<div id="verify-options-' . $record->id . '" style="display: none; margin-top: 5px;">
+                                    <div class="d-flex gap-2">
+                                        <button class="badge bg-success text-uppercase" style="cursor: pointer; border: none; padding: 5px 10px;" onclick="changeVerifyStatus(' . $record->id . ', 1)">Verify</button>
+                                        <button class="badge bg-danger text-uppercase" style="cursor: pointer; border: none; padding: 5px 10px;" onclick="changeVerifyStatus(' . $record->id . ', 2)">Reject</button>
+                                    </div>
+                                </div>';
+            }
+            elseif ($record->admin_verify == 1) {
+                $admin_verify .= '<div id="verify-options-' . $record->id . '" style="display: none; margin-top: 5px;">
+                                    <div class="d-flex gap-2">
+                                        <button class="badge bg-danger text-uppercase" style="cursor: pointer; border: none; padding: 5px 10px;" onclick="changeVerifyStatus(' . $record->id . ', 2)">Reject</button>
+                                    </div>
+                                </div>';
+            }
+            else {
+                $admin_verify .= '<div id="verify-options-' . $record->id . '" style="display: none; margin-top: 5px;">
+                                    <div class="d-flex gap-2">
+                                        <button class="badge bg-success text-uppercase" style="cursor: pointer; border: none; padding: 5px 10px;" onclick="changeVerifyStatus(' . $record->id . ', 1)">Verify</button>
+                                    </div>
+                                </div>';
+            }
+
+            $dataArray[] = $admin_verify;
+
+
+        
+
+            $status = $record->status == 1
+                ? '<div class="d-flex "><span onclick="changeStatus(' . $record->id . ');" class="badge bg-success text-uppercase"  style="cursor: pointer;">Active</span></div>'
+                : '<div class="d-flex "><span onclick="changeStatus(' . $record->id . ');" class="badge bg-danger text-uppercase" style="cursor: pointer;">Inactive</span></div>';
+
+            $dataArray[] = $status;
+
+
+            $dataArray[] = date('d-M-Y', strtotime($record->created_at));
+
+            $dataArray[] = '<div class="d-flex gap-2">
+                                <div class="edit">
+                                    <a href="' . route('Admin.EditJobPost', ['id' => Crypt::encrypt($record->id)]) . '" class="edit-item-btn text-primary">
+                                        <i class="far fa-edit"></i>
+                                    </a>
+                                </div>
+                                <div class="remove">
+                                    <a href="javascript:void(0);" class="remove-item-btn text-danger" onclick="deleteRecord(' . $record->id . ');">
+                                        <i class="far fa-trash-alt"></i>
+                                    </a>
+                                </div>
+                            </div>';
+
+            $data[] = $dataArray;
+        }
+
+        return response()->json([
+            "draw" => $draw,
+            "recordsTotal" => $totalRecords,
+            "recordsFiltered" => $totalRecords,
+            "data" => $data
+        ]);
     }
 
 

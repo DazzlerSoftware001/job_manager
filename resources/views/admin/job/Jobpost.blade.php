@@ -130,7 +130,6 @@
             <!-- container-fluid -->
         </div>
         <!-- End Page-content -->
-
     @endsection
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     @section('script')
@@ -247,9 +246,86 @@
             });
         </script>
 
+        {{-- To Show Verify & Reject Button --}}
+        <script>
+            function toggleVerifyOptions(id) {
+                let optionsDiv = document.getElementById("verify-options-" + id);
+                if (optionsDiv.style.display === "none") {
+                    optionsDiv.style.display = "block";
+                } else {
+                    optionsDiv.style.display = "none";
+                }
+            }
+        </script>
+
+
         {{-- Change Admin Verify Status --}}
+        <script>
+            function changeVerifyStatus(id, status) {
+                let actionText = status === 1 ? 'verify' : 'reject';
+                let confirmButtonText = status === 1 ? 'Yes, verify it!' : 'Yes, reject it!';
+                let successMessage = status === 1 ? 'User has been verified successfully!' :
+                    'User has been rejected successfully!';
+                let backgroundColor = status === 1 ? '#28a745' : '#dc3545'; // Green for verify, Red for reject
 
-
+                // Show confirmation modal
+                Swal.fire({
+                    title: `Are you sure?`,
+                    text: `Do you really want to ${actionText} this user?`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: confirmButtonText,
+                    cancelButtonText: 'No, cancel!',
+                    background: backgroundColor,
+                }).then((response) => {
+                    if (response.isConfirmed) {
+                        // Perform AJAX request
+                        $.ajax({
+                            type: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            url: "{{ route('Admin.VerifyStatus') }}", // Change this to your verification route
+                            data: {
+                                id: id,
+                                status: status
+                            },
+                            dataType: 'json',
+                            success: function(response) {
+                                if (response.status_code == 1) {
+                                    // Reload the DataTable after success
+                                    $('#myTable').DataTable().ajax.reload(null, false);
+                                    Swal.fire({
+                                        title: 'Success!',
+                                        text: successMessage,
+                                        icon: 'success',
+                                        confirmButtonText: 'Okay',
+                                        background: '#28a745'
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        title: 'Error!',
+                                        text: response.message,
+                                        icon: 'error',
+                                        confirmButtonText: 'Okay',
+                                        background: '#dc3545'
+                                    });
+                                }
+                            }
+                        });
+                    } else {
+                        // If user clicks "Cancel", show the info message
+                        Swal.fire({
+                            title: 'Cancelled',
+                            text: 'No changes were made.',
+                            icon: 'info',
+                            confirmButtonText: 'Okay',
+                            background: '#17a2b8'
+                        });
+                    }
+                });
+            }
+        </script>
 
         {{-- change Status --}}
         <script>
@@ -368,5 +444,4 @@
                 });
             }
         </script>
-
     @endsection
