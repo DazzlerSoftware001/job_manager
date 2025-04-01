@@ -34,6 +34,7 @@ class Jobpost extends Model
         'com_logo',
         'com_details',
         'job_desc',
+        'admin_verify',
         'status'
     ];
 }

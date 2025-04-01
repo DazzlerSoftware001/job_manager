@@ -32,6 +32,7 @@ class JobPostSeeder extends Seeder
             'com_logo' => 'copany/logo/image.jpg',
             'com_details' => 'We help businesses elevate their value through custom software development, product design, QA and consultancy services.',
             'job_desc' => 'Develop and maintain web applications using Laravel.',
+            'admin_verify' => 0,
             'status' => 0,
         ]);
     }

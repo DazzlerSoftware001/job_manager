@@ -35,6 +35,7 @@ return new class extends Migration
             $table->string('com_logo');
             $table->text('com_details');
             $table->text('job_desc');
+            $table->tinyInteger('admin_verify')->default(0);
             $table->tinyInteger('status')->default(0);
             $table->timestamps();
         });
