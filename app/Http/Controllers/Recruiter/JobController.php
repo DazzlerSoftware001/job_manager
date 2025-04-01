@@ -161,26 +161,9 @@ class JobController extends Controller
         $columns = array(
             0 => 'id',
             1 => 'title',
-            2 => 'type',
-            3 => 'skills',
-            4 => 'industry',
-            5 => 'department',
-            6 => 'role',
-            7 => 'mode',
-            8 => 'location',
-            9 => 'min_exp',
-            10 => 'min_sal',
-            11 => 'education',
-            12 => 'condidate_industry',
-            13 => 'diversity',
-            14 => 'vacancies',
-            15 => 'int_type',
-            16 => 'com_name',
-            17 => 'com_details',
-            18 => 'job_desc',
-            19 => 'status',
-            20 => 'created_at',
-            21 => 'id',
+            2 => 'status',
+            3 => 'created_at',
+            4 => 'id',
         );
 
         $query = JobPost::query();
@@ -207,31 +190,6 @@ class JobController extends Controller
 
             $dataArray[] = $record->id;
             $dataArray[] = ucfirst($record->title);
-            $dataArray[] = ucfirst($record->type);
-            $dataArray[] = ucfirst($record->skills);
-            $dataArray[] = ucfirst($record->industry);
-            $dataArray[] = ucfirst($record->department);
-            $dataArray[] = ucfirst($record->role);
-            $dataArray[] = ucfirst($record->mode);
-            $dataArray[] = ucfirst($record->location);
-            $dataArray[] = ucfirst($record->min_exp) . ' - ' . ucfirst($record->max_exp);
-            $dataArray[] = ucfirst($record->currency). ' - ' . ucfirst($record->min_sal) . ' - ' . ucfirst($record->max_sal);
-            $dataArray[] = ucfirst($record->education);
-            $dataArray[] = ucfirst($record->condidate_industry);
-            $dataArray[] = ucfirst($record->diversity);
-            $dataArray[] = ucfirst($record->vacancies);
-            $dataArray[] = ucfirst($record->int_type);
-            $dataArray[] = ucfirst($record->com_name);
-
-
-             // Details with "View More" Popup
-             $shortDetails = Str::limit($record->com_details, 40, '...');
-             $dataArray[] = '<span>' . $shortDetails . '</span>
-                     <a href="javascript:void(0);" class="view-more" onclick="openDetailsModal(\'' . htmlspecialchars($record->com_details, ENT_QUOTES) . '\')">View More</a>';
-
-            $shortDesc = Str::limit($record->job_desc, 40, '...');
-            $dataArray[] = '<span>' . $shortDesc . '</span>
-                     <a href="javascript:void(0);" class="view-more" onclick="openDescModal(\'' . htmlspecialchars($record->job_desc, ENT_QUOTES) . '\')">View More</a>';
 
             $status = $record->status == 1
                 ? '<div class="d-flex "><span onclick="changeStatus(' . $record->id . ');" class="badge bg-success text-uppercase"  style="cursor: pointer;">Active</span></div>'

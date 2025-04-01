@@ -113,23 +113,6 @@
                                             <tr>
                                                 <th>#</th>
                                                 <th>Title</th>
-                                                <th>Type</th>
-                                                <th>Skills</th>
-                                                <th>Industry</th>
-                                                <th>Department</th>
-                                                <th>Role</th>
-                                                <th>Mode</th>
-                                                <th>Location</th>
-                                                <th>Experience(Min - Max)</th>
-                                                <th>Salary Range</th>
-                                                <th>Qualifications</th>
-                                                <th>Condidate Industry</th>
-                                                <th>Diversity</th>
-                                                <th>No. of Vacancies</th>
-                                                <th>Interview type</th>
-                                                <th>Company Name</th>
-                                                <th>Company Details</th>
-                                                <th>Job Description</th>
                                                 <th>Status</th>
                                                 <th>Create Date</th>
                                                 <th>Action</th>
@@ -164,20 +147,7 @@
             </div>
         </div>
 
-        <!--Description Modal -->
-        <div class="modal fade" id="descModal" tabindex="-1" aria-labelledby="descModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="descModalLabel">Details</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body" id="descModalBody">
-                        <!-- Description content will be inserted here -->
-                    </div>
-                </div>
-            </div>
-        </div>
+       
     @endsection
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
@@ -220,26 +190,8 @@
             });
         </script>
 
-        {{-- For Showing Details --}}
-        <script>
-            function openDetailsModal(com_details) {
-                document.getElementById('detailsModalBody').innerHTML = com_details;
-                var myModal = new bootstrap.Modal(document.getElementById('detailsModal'));
-                myModal.show();
-            }
-        </script>
-
-        {{-- For Showing Description --}}
-        <script>
-            function openDescModal(job_desc) {
-                document.getElementById('descModalBody').innerHTML = job_desc;
-                var myModal = new bootstrap.Modal(document.getElementById('descModal'));
-                myModal.show();
-            }
-        </script>
-
         {{-- change Status --}}
-        <script>
+        {{-- <script>
             function changeStatus(id) {
                 $.ajax({
                     url: "{{ route('Recruiter.ChangeJobPostStatus') }}",
@@ -291,7 +243,63 @@
                     }
                 });
             }
+        </script> --}}
+
+        <script>
+           function changeStatus(id) {
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: 'Do you want to change the status of this record?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes, change it!',
+                    cancelButtonText: 'No, cancel!',
+                    background: '#ffc107',
+                }).then((response) => {
+                    if (response.isConfirmed) {
+                        $.ajax({
+                            url: "{{ route('Recruiter.ChangeJobPostStatus') }}",
+                            type: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            data: { id: id },
+                            dataType: 'json',
+                            success: function(result) {
+                                if (result.status_code == 1) {
+                                    $('#myTable').DataTable().ajax.reload(null, false);
+                                    Swal.fire({
+                                        title: 'Success!',
+                                        text: 'Status changed successfully!',
+                                        icon: 'success',
+                                        confirmButtonText: 'Okay',
+                                        background: '#28a745'
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        title: 'Error!',
+                                        text: result.message,
+                                        icon: 'error',
+                                        confirmButtonText: 'Okay',
+                                        background: '#dc3545'
+                                    });
+                                }
+                            }
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Cancelled',
+                            text: 'The status was not changed.',
+                            icon: 'info',
+                            confirmButtonText: 'Okay',
+                            background: '#17a2b8'
+                        });
+                    }
+                });
+            }
+
         </script>
+        
 
 
         {{-- DeleteJobCategory --}}

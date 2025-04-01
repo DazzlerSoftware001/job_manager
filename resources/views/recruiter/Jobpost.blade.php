@@ -187,15 +187,15 @@
                                 <form method="POST" action="javascript:void(0)" id="AddJobPost">
                                     @csrf
                                     <div class="row mb-3">
-                                        <div class="col-xl-4">
-                                            <label for="job_title">Job Title</label>
+                                        <div class="col-xl-12">
+                                            <label for="job_title">Job Title <span class="text-danger">*</span></label>
                                             <input type="text" class="form-control" id="job_title" name="job_title"
                                                 placeholder="Enter job title">
                                         </div>
 
 
-                                        <div class="col-xl-4">
-                                            <label for="job_type">Job Type</label>
+                                        <div class="col-xl-4 mt-2">
+                                            <label for="job_type">Job Type <span class="text-danger">*</span></label>
                                             <select class="form-select" id="job_type" name="job_type">
                                                 <option value="">Select</option>
                                                 @foreach ($jobTypes as $key => $value)
@@ -205,8 +205,8 @@
                                         </div>
 
 
-                                        <div class="col-xl-4">
-                                            <label for="skills">Skills</label>
+                                        <div class="col-xl-4 mt-2">
+                                            <label for="skills">Skills <span class="text-danger">*</span></label>
                                             <select class="form-select" id="skills" name="skills[]" multiple>
                                                 @foreach ($jobSkill as $key => $value)
                                                     <option value="{{ $value->skill }}">{{ $value->skill }}</option>
@@ -215,8 +215,8 @@
                                         </div>
 
 
-                                        <div class="col-xl-4 mt-3">
-                                            <label for="industry">Category</label>
+                                        <div class="col-xl-4 mt-2">
+                                            <label for="industry">Category <span class="text-danger">*</span></label>
                                             <select class="form-select" id="industry" name="industry">
                                                 <option value="">Choose Industry</option>
                                                 @foreach ($JobCategory as $key => $value)
@@ -227,7 +227,7 @@
 
 
                                         <div class="col-xl-4 mt-3">
-                                            <label for="department">Department</label>
+                                            <label for="department">Department <span class="text-danger">*</span></label>
                                             <select class="form-select" id="department" name="department">
                                                 <option value="">Select</option>
                                             </select>
@@ -235,7 +235,7 @@
 
 
                                         <div class="col-xl-4 mt-3">
-                                            <label for="role">Role</label>
+                                            <label for="role">Role <span class="text-danger">*</span></label>
                                             <select class="form-select" id="role" name="role">
                                                 <option value="">Select</option>
                                             </select>
@@ -243,7 +243,7 @@
 
 
                                         <div class="col-xl-4 mt-3">
-                                            <label for="work_mode">Job Mode</label>
+                                            <label for="work_mode">Job Mode <span class="text-danger">*</span></label>
                                             <select class="form-select" id="work_mode" name="work_mode">
                                                 <option value="">Select</option>
                                                 @foreach ($jobMode as $key => $value)
@@ -254,7 +254,7 @@
 
 
                                         <div class="col-xl-4 mt-3">
-                                            <label for="location">Location</label>
+                                            <label for="location">Location <span class="text-danger">*</span></label>
                                             <select class="form-select" id="location" name="location">
                                                 <option value="">Select</option>
                                                 @foreach ($JobLocation as $key => $value)
@@ -266,7 +266,7 @@
 
 
                                         <div class="col-xl-4 mt-3">
-                                            <label for="min_experience">Work Experience (Min - Max)</label>
+                                            <label for="min_experience">Work Experience (Min - Max) <span class="text-danger">*</span></label>
                                             <div class="d-flex gap-2">
                                                 <!-- Min Experience Dropdown -->
                                                 <select class="form-select" id="min_experience" name="min_experience"
@@ -293,7 +293,7 @@
 
 
                                         <div class="col-xl-4 mt-3">
-                                            <label for="currency">Annual Salary (Currency - Min - Max)</label>
+                                            <label for="currency">Annual Salary (Currency - Min - Max) <span class="text-danger">*</span></label>
                                             <div class="d-flex gap-2">
                                                 <select class="form-select" id="currency" name="currency">
                                                     <option value="">Currency</option>
@@ -322,7 +322,7 @@
 
 
                                         <div class="col-xl-4 mt-3">
-                                            <label for="education">Educational Qualification</label>
+                                            <label for="education">Educational Qualification <span class="text-danger">*</span></label>
                                             <select class="form-select" id="education" name="education">
                                                 <option value="">Choose Qualification</option>
                                                 @foreach ($JobEducation as $key => $value)
@@ -360,13 +360,13 @@
                                         </div>
 
                                         <div class="col-xl-4 mt-3">
-                                            <label for="vacancies">Number of Vacancies</label>
+                                            <label for="vacancies">Number of Vacancies <span class="text-danger">*</span></label>
                                             <input type="number" class="form-control" name="vacancies">
                                         </div>
 
 
                                         <div class="col-xl-4 col-lg-6 col-md-8 col-sm-12 mt-3">
-                                            <label for="interview_type" class="d-block">Interview Type</label>
+                                            <label for="interview_type" class="d-block">Interview Type <span class="text-danger">*</span></label>
                                             <select class="form-select" id="interview_type" name="interview_type">
                                                 <option value="">Select</option>
                                                 @foreach ($JobIntType as $key => $value)
@@ -380,7 +380,7 @@
                                             <div class="row">
                                                 <!-- Company Name Selection -->
                                                 <div class="col-12 col-md-12 mt-3">
-                                                    <label for="company_name">Company Name</label>
+                                                    <label for="company_name">Company Name <span class="text-danger">*</span></label>
                                                     <select class="form-select" id="company_name" name="company_name"
                                                         onchange="updateCompanyDetails()">
                                                         <option value="">Select</option>
@@ -396,7 +396,7 @@
 
                                                 <!-- Company Details -->
                                                 <div class="col-12 col-md-12 mt-3">
-                                                    <label for="company_details">Company Details</label>
+                                                    <label for="company_details">Company Details <span class="text-danger">*</span></label>
                                                     <textarea class="form-control" id="company_details" name="company_details" readonly></textarea>
                                                 </div>
                                             </div>
@@ -406,7 +406,7 @@
 
                                         <!-- Image Preview Section -->
                                         <div class="col-xl-6 text-center mt-3">
-                                            <label for="job_image">Job Image</label>
+                                            <label for="job_image">Job Image <span class="text-danger">*</span></label>
                                             <div class="mt-3">
                                                 <img id="imagePreview" src=""
                                                     alt="Image Preview"
@@ -419,7 +419,7 @@
 
                                         <div class="d-flex justify-content-center mt-3">
                                             <div class="col-xl-8 text-center">
-                                                <label for="job_description">Job Description</label>
+                                                <label for="job_description">Job Description <span class="text-danger">*</span></label>
                                                 <textarea class="form-control" id="job_description" name="job_description"></textarea>
                                             </div>
                                         </div>
