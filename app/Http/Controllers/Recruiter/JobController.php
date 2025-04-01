@@ -21,6 +21,7 @@ use App\Models\JobPost;
 
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Crypt;
 
 class JobController extends Controller
 {
@@ -243,7 +244,9 @@ class JobController extends Controller
 
             $dataArray[] = '<div class="d-flex gap-2">
                                 <div class="edit">
-                                    <a href="javascript:void(0);" class="edit-item-btn text-primary" data-bs-toggle="modal" data-bs-target="#EditModal" onclick="edit(' . $record->id . ');"><i class="far fa-edit"></i></a>
+                                    <a href="' . route('Recruiter.EditJobPost', ['id' => Crypt::encrypt($record->id)]) . '" class="edit-item-btn text-primary">
+                                        <i class="far fa-edit"></i>
+                                    </a>
                                 </div>
                                 <div class="remove">
                                     <a href="javascript:void(0);" class="remove-item-btn text-danger" onclick="deleteRecord(' . $record->id . ');">
@@ -306,6 +309,28 @@ class JobController extends Controller
             }
         } else {
             return response()->json(['status_code' => 2, 'message' => 'Id is required']);
+        }
+    }
+
+    // public function editJobPost($id)
+    
+    // {
+    //     $decryptedId = Crypt::decrypt($id);
+    //     $job = JobPost::find($decryptedId);
+    //     if (!$job) {
+    //         return redirect()->back()->with('error', 'Job not found!');
+    //     }
+    //     return view('recruiter.EditJob',compact('job'));
+    // }
+
+    public function editJobPost($id)
+    {
+        try {
+            $decryptedId = Crypt::decrypt($id);
+            $job = JobPost::findOrFail($decryptedId);
+            return view('recruiter.EditJob', compact('job'));
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Invalid Job ID!');
         }
     }
 }
