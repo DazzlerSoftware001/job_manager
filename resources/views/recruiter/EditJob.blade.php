@@ -203,12 +203,22 @@
                                         </div>
 
 
-                                        <div class="col-xl-4">
+                                        {{-- <div class="col-xl-4">
                                             <label for="edit_skills">Skills <span class="text-danger">*</span></label>
                                             <select class="form-select" id="edit_skills" name="edit_skills[]" multiple>
                                                <option value="{{$job->skills}}">{{$job->skills}}</option>
                                             </select>
+                                        </div> --}}
+
+                                        <div class="col-xl-4">
+                                            <label for="edit_skills">Skills <span class="text-danger">*</span></label>
+                                            <select class="form-select" id="edit_skills" name="edit_skills[]" multiple>
+                                                @foreach(explode(',', $job->skills) as $skill)
+                                                    <option value="{{ trim($skill) }}" selected>{{ trim($skill) }}</option>
+                                                @endforeach
+                                            </select>
                                         </div>
+                                        
 
 
                                         <div class="col-xl-4 mt-3">
@@ -454,16 +464,28 @@
                 }
             });
 
+            // document.addEventListener('DOMContentLoaded', function() {
+            //     var edit_skills = document.getElementById('edit_skills');
+            //     if (edit_skills) {
+            //         const edit_skills1 = new Choices(edit_skills, {
+            //             shouldSort: false,
+            //             position: 'down',
+            //             removeItemButton: true, // Enables removing selected items
+            //         });
+            //     }
+            // });
+
             document.addEventListener('DOMContentLoaded', function() {
-                var edit_skills = document.getElementById('edit_skills');
-                if (edit_skills) {
-                    const edit_skills1 = new Choices(edit_skills, {
-                        shouldSort: false,
-                        position: 'down',
-                        removeItemButton: true, // Enables removing selected items
-                    });
-                }
-            });
+    var edit_skills = document.getElementById('edit_skills');
+    if (edit_skills) {
+        new Choices(edit_skills, {
+            shouldSort: false,
+            position: 'down',
+            removeItemButton: true, // Enables removing selected items
+        });
+    }
+});
+
 
 
             document.addEventListener('DOMContentLoaded', function() {

@@ -270,17 +270,6 @@ class JobController extends Controller
         }
     }
 
-    // public function editJobPost($id)
-    
-    // {
-    //     $decryptedId = Crypt::decrypt($id);
-    //     $job = JobPost::find($decryptedId);
-    //     if (!$job) {
-    //         return redirect()->back()->with('error', 'Job not found!');
-    //     }
-    //     return view('recruiter.EditJob',compact('job'));
-    // }
-
     public function editJobPost($id)
     {
         try {
