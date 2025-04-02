@@ -36,7 +36,8 @@ class DatabaseSeeder extends Seeder
             JobCurrencySeeder::class,
             JobSalarySeeder::class,
             AdminSeeder::class,
-            
+            JobEducationSeeder::class,
+            JobPostSeeder::class,
         ]);
     }
 }
