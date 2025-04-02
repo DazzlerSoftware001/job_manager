@@ -172,9 +172,9 @@
                             <li><a href="contacts-list.html" data-key="t-user-list">User List</a></li>
                             <li><a href="contacts-profile.html" data-key="t-user-profile">Profile</a></li>
                         </ul>
-                    </li> --}}
+                    </li>
 
-                    <li class="menu-title" data-key="t-layouts">Layouts</li>
+                       <li class="menu-title" data-key="t-layouts">Layouts</li>
         
                     <li>
                         <a href="layouts-horizontal.html">
@@ -193,15 +193,15 @@
                         </a>
                         <ul class="sub-menu" aria-expanded="false">
                             <li><a href="auth-login.html" data-key="t-login">Login</a></li>
-                            {{-- <li><a href="auth-register.html" data-key="t-register">Register</a></li>
+                          <li><a href="auth-register.html" data-key="t-register">Register</a></li>
                             <li><a href="auth-recoverpw.html" data-key="t-recover-password">Recover Password</a></li>
                             <li><a href="auth-lock-screen.html" data-key="t-lock-screen">Lock Screen</a></li>
                             <li><a href="auth-logout.html" data-key="t-logout">Logout</a></li>
                             <li><a href="auth-confirm-mail.html" data-key="t-confirm-mail">Confirm Mail</a></li>
                             <li><a href="auth-email-verification.html" data-key="t-email-verification">Email Verification</a></li>
-                            <li><a href="auth-two-step-verification.html" data-key="t-two-step-verification">Two Step Verification</a></li> --}}
+                            <li><a href="auth-two-step-verification.html" data-key="t-two-step-verification">Two Step Verification</a></li>
                         </ul>
-                    </li>
+                    </li> --}}
 
                     {{-- <li>
                         <a href="javascript: void(0);" class="has-arrow">
@@ -218,7 +218,7 @@
                             <li><a href="pages-404.html" data-key="t-error-404">Error 404</a></li>
                             <li><a href="pages-500.html" data-key="t-error-500">Error 500</a></li>
                         </ul>
-                    </li> --}}
+                    </li>
 
                     <li class="menu-title" data-key="t-components">Components</li>
 
@@ -229,7 +229,7 @@
                         </a>
                         <ul class="sub-menu" aria-expanded="false">
                             <li><a href="ui-alerts.html" data-key="t-alerts">Alerts</a></li>
-                           {{--  <li><a href="ui-buttons.html" data-key="t-buttons">Buttons</a></li>
+                          <li><a href="ui-buttons.html" data-key="t-buttons">Buttons</a></li>
                             <li><a href="ui-cards.html" data-key="t-cards">Cards</a></li>
                             <li><a href="ui-carousel.html" data-key="t-carousel">Carousel</a></li>
                             <li><a href="ui-dropdowns.html" data-key="t-dropdowns">Dropdowns</a></li>
