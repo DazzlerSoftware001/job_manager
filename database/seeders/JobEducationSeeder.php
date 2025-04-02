@@ -13,8 +13,8 @@ class JobEducationSeeder extends Seeder
      */
     public function run(): void
     {
-        JobEducation::create(['education' => 'BCA', 'status' => 1]);
-        JobEducation::create(['education' => 'MCA', 'status' => 1]);
-        JobEducation::create(['education' => 'B.Tech', 'status' => 1]);
+        JobEducation::create(['education_level' => 'UG','education' => 'BCA', 'status' => 1]);
+        JobEducation::create(['education_level' => 'PG','education' => 'MCA', 'status' => 1]);
+        JobEducation::create(['education_level' => 'UG','education' => 'B.Tech', 'branch'=> 'Computer', 'status' => 1]);
     }
 }

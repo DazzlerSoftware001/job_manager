@@ -28,7 +28,9 @@
                                         <thead class="table-light">
                                             <tr>
                                                 <th>#</th>
+                                                <th>Education Level</th>
                                                 <th>Qualification</th>
+                                                <th>Branch</th>
                                                 <th>Status</th>
                                                 <th>Create Date</th>
                                                 <th>Action</th>
@@ -61,8 +63,26 @@
                 <!-- form -->
                 <form method="POST" action="javascript:void(0)" id="AddJobEducation">
                     <div class="mb-3">
-                        <label for="education" class="form-label">Qualification</label>
+                        <label for="education_level" class="form-label">Education Level <span class="text-danger">*</span></label>
+                        <select name="education_level" class="form-control" id="education_level">
+                            <option value="">Select Education Level</option>
+                            <option value="Matric">Secondary Education </option>
+                            <option value="Higher Secondary">Higher Secondary Education</option>
+                            <option value="UG">Undergraduate (UG)</option>
+                            <option value="PG">Postgraduate (PG)</option>
+                            <option value="PhD">Doctorate (PhD)</option>
+                            <option value="PostDoc">Postdoctoral Research (After PhD)</option>
+                            <option value="Diploma">Diploma & Certificate Courses</option>
+                        </select>
+                        
+                    </div>
+                    <div class="mb-3">
+                        <label for="education" class="form-label">Qualification <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" name="education" id="education" aria-describedby="countryHelp">
+                    </div>
+                    <div class="mb-3">
+                        <label for="branch" class="form-label">Branch (Optional)</label>
+                        <input type="text" class="form-control" name="branch" id="branch">
                     </div>
 
             </div>
@@ -95,8 +115,28 @@
                     </div>
 
                     <div class="mb-3">
+                        <label for="edit_education_level" class="form-label">Education Level <span class="text-danger">*</span></label>
+                        <select name="edit_education_level" class="form-control" id="edit_education_level">
+                            <option value="">Select Education Level</option>
+                            <option value="Matric">Secondary Education </option>
+                            <option value="Higher Secondary">Higher Secondary Education</option>
+                            <option value="UG">Undergraduate (UG)</option>
+                            <option value="PG">Postgraduate (PG)</option>
+                            <option value="PhD">Doctorate (PhD)</option>
+                            <option value="PostDoc">Postdoctoral Research (After PhD)</option>
+                            <option value="Diploma">Diploma & Certificate Courses</option>
+                        </select>
+                        
+                    </div>
+
+                    <div class="mb-3">
                         <label for="editeducation" class="form-label">Qualification</label>
                         <input type="text" class="form-control" name="editeducation" id="editeducation" aria-describedby="countryHelp">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="edit_branch" class="form-label">Branch (Optional)</label>
+                        <input type="text" class="form-control" name="edit_branch" id="edit_branch" aria-describedby="countryHelp">
                     </div>
 
             </div>
@@ -116,6 +156,7 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 @section('script')
 
+    {{-- Get Job Educational Information --}}
     <script>
         $(document).ready(function () {
         $('#myTable').DataTable({
@@ -150,7 +191,7 @@
         });
     </script>
 
-        {{-- AddJobEducation --}}
+    {{-- AddJobEducation --}}
     <script>
         $(document).ready(function() {
             $('#AddJobEducation').on('submit', function(event) {
@@ -226,8 +267,8 @@
         });
     </script>
 
-     {{-- change Status --}}
-     <script>
+    {{-- change Status --}}
+    <script>
         function changeStatus(id){
           $.ajax({
             url : "{{ route('Admin.ChangeJobEducationStatus') }}",
@@ -357,7 +398,9 @@
 
             var record = result.data;
             $('#edit-id').val(record.id);
+            $('#edit_education_level').val(record.education_level);
             $('#editeducation').val(record.education);
+            $('#edit_branch').val(record.branch);
 
             },
         });
@@ -366,74 +409,74 @@
 
     {{-- Update Education --}}
     <script>
-    $(document).ready(function() {
-        $('#EditJobEducation').on('submit', function(event) {
-            event.preventDefault(); // Prevent default form submission
-    
-            var url = "{{ route('Admin.UpdateJobEducation') }}";
-            $.ajax({
-                url: url,
-                type: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                data: new FormData(this),
-                contentType: false,
-                cache: false,
-                processData: false,
-                dataType: 'json',
-                success: function(result) {
-                    if (result.status_code === 1) {
-                        $('#EditModal').modal('hide');
-                        $('#EditJobEducation').trigger("reset");
-                        $('#myTable').DataTable().ajax.reload(null, false);
+        $(document).ready(function() {
+            $('#EditJobEducation').on('submit', function(event) {
+                event.preventDefault(); // Prevent default form submission
+        
+                var url = "{{ route('Admin.UpdateJobEducation') }}";
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    data: new FormData(this),
+                    contentType: false,
+                    cache: false,
+                    processData: false,
+                    dataType: 'json',
+                    success: function(result) {
+                        if (result.status_code === 1) {
+                            $('#EditModal').modal('hide');
+                            $('#EditJobEducation').trigger("reset");
+                            $('#myTable').DataTable().ajax.reload(null, false);
+                            Toastify({
+                                text: result.message,
+                                duration: 3000,
+                                gravity: "top",
+                                position: "right",
+                                style: {
+                                background: "#28a745", 
+                            },
+                            }).showToast();
+                        } else if (result.status_code === 2) {
+                            Toastify({
+                                text: result.message,
+                                duration: 3000,
+                                gravity: "top",
+                                position: "right",
+                                style:{
+                                        background:"#c7ac14",
+                                        color: "white",
+                                    }
+                            }).showToast();
+                        } else {
+                            Toastify({
+                                text: result.message,
+                                duration: 3000,
+                                gravity: "top",
+                                position: "right",
+                                style: {
+                                background: "#c7ac14",
+                            },
+                            }).showToast();
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('AJAX Error:', error);
                         Toastify({
-                            text: result.message,
+                            text: 'An error occurred. Please try again.',
                             duration: 3000,
                             gravity: "top",
                             position: "right",
                             style: {
-                            background: "#28a745", 
-                        },
-                        }).showToast();
-                    } else if (result.status_code === 2) {
-                        Toastify({
-                            text: result.message,
-                            duration: 3000,
-                            gravity: "top",
-                            position: "right",
-                            style:{
-                                    background:"#c7ac14",
-                                    color: "white",
-                                }
-                        }).showToast();
-                    } else {
-                        Toastify({
-                            text: result.message,
-                            duration: 3000,
-                            gravity: "top",
-                            position: "right",
-                            style: {
-                            background: "#c7ac14",
-                        },
+                                background: "#dc3545",
+                            },
                         }).showToast();
                     }
-                },
-                error: function(xhr, status, error) {
-                    console.error('AJAX Error:', error);
-                    Toastify({
-                        text: 'An error occurred. Please try again.',
-                        duration: 3000,
-                        gravity: "top",
-                        position: "right",
-                        style: {
-                            background: "#dc3545",
-                        },
-                    }).showToast();
-                }
+                });
             });
         });
-    });
     </script>
     
     

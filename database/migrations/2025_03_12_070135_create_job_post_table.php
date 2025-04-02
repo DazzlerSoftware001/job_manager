@@ -27,7 +27,7 @@ return new class extends Migration
             $table->string('min_sal');
             $table->string('max_sal')->nullable();
             $table->string('education');
-            $table->string('condidate_industry');
+            $table->string('condidate_industry')->nullable();
             $table->string('diversity')->default('Both');
             $table->integer('vacancies');
             $table->string('int_type');

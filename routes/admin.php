@@ -174,9 +174,12 @@ Route::prefix('Admin')->group(function () {
         Route::post('/EditJobPost',[JobController::class,'editJobPost'])->name('Admin.EditJobPost');
         Route::post('/UpdateJobPost',[JobController::class,'updateJobPost'])->name('Admin.UpdateJobPost');
 
-        Route::get('/VerifiedJobs',[JobController::class, 'verifiedJobs'])->name('Admin.VerifiedJobs');
-        Route::get('/RejectedJobs',[JobController::class, 'rejectedJobs'])->name('Admin.RejectedJobs');
-        Route::get('/PendingJobs',[JobController::class, 'pendingJobs'])->name('Admin.PendingJobs');
+        Route::get('/VerifiedJobPost',[JobController::class,'showverifiedjobs'])->name('Admin.ShowVerifiedJobs');
+        Route::post('/VerifiedJobs',[JobController::class, 'verifiedJobs'])->name('Admin.VerifiedJobs');
+        Route::get('/RejectedJobPost',[JobController::class,'showrejectedjobs'])->name('Admin.ShowRejectedJobs');
+        Route::post('/RejectedJobs',[JobController::class, 'rejectedJobs'])->name('Admin.RejectedJobs');
+        Route::get('/PendingJobPost',[JobController::class,'showpendingjobs'])->name('Admin.ShowPendingJobs');
+        Route::post('/PendingJobs',[JobController::class, 'pendingJobs'])->name('Admin.PendingJobs');
 
 
 

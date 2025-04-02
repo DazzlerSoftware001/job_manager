@@ -60,9 +60,9 @@
                         </a>
                         <ul class="sub-menu" aria-expanded="false">
                             <li><a href="{{route('Admin.JobPost')}}" data-key="t-p-grid">All Jobs</a></li>
-                            <li><a href="{{route('Admin.VerifiedJobs')}}" data-key="t-p-grid">Verified Jobs</a></li>
-                            <li><a href="{{route('Admin.RejectedJobs')}}" data-key="t-p-grid">Rejected Jobs</a></li>
-                            <li><a href="{{route('Admin.PendingJobs')}}" data-key="t-p-grid">Pending Jobs</a></li>
+                            <li><a href="{{route('Admin.ShowVerifiedJobs')}}" data-key="t-p-grid">Verified Jobs</a></li>
+                            <li><a href="{{route('Admin.ShowRejectedJobs')}}" data-key="t-p-grid">Rejected Jobs</a></li>
+                            <li><a href="{{route('Admin.ShowPendingJobs')}}" data-key="t-p-grid">Pending Jobs</a></li>
                         </ul>
                     </li>
                     <li>

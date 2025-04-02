@@ -10,5 +10,5 @@ class JobEducation extends Model
     use HasFactory;
 
     protected $table = 'education'; 
-    protected $fillable = ['education', 'status'];
+    protected $fillable = ['education_level','education','branch', 'status'];
 }

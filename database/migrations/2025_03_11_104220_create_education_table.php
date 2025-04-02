@@ -13,7 +13,9 @@ return new class extends Migration
     {
         Schema::create('education', function (Blueprint $table) {
             $table->id();
+            $table->string('education_level');
             $table->string('education');
+            $table->string('branch')->nullable();
             $table->tinyInteger('status')->default(0);
             $table->timestamps();
         });

@@ -1,80 +1,13 @@
 @extends('admin.adminlayout.main')
 @section('title')
-    Admin-Job List
+    Admin-Pending Job List
 @endsection
 @section('page-title')
-    Job List
+Pending Job List
 @endsection
 
 @section('main-container')
 
-    <style>
-        .choices {
-            border: var(--bs-border-width) solid var(--bs-border-color);
-            border-radius: var(--bs-border-radius);
-            overflow: hidden;
-            line-height: 0.8;
-            height: 38px;
-        }
-
-        .choices__inner {
-            background-color: var(--bs-secondary-bg);
-            color: var(--bs-body-color);
-        }
-
-        .choices__list--single .choices__item {
-            color: #000000;
-        }
-
-        .choices[data-type*=select-one] .choices__input {
-            display: block;
-            width: 100%;
-            border: 1px solid #a29898 !important;
-            background-color: #ffffff;
-            border-radius: 10px;
-        }
-
-        .is-focused .choices__inner,
-        .is-open .choices__inner {
-            border: var(--bs-border-width) solid var(--bs-border-color);
-            border-radius: var(--bs-border-radius);
-        }
-
-        .choices[data-type*="select-one"]::after {
-            content: "";
-            width: 12px;
-            /* Adjust based on your icon size */
-            height: 12px;
-            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%2322354e' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
-            background-repeat: no-repeat;
-            background-position: center;
-            background-size: contain;
-            position: absolute;
-            right: 15px;
-            top: 60%;
-            /* Keep it centered */
-            transform: translateY(-50%);
-            /* Ensure it remains vertically aligned */
-            pointer-events: none;
-            border: none;
-            /* Remove existing arrow */
-            transition: transform 0.3s ease;
-            /* Smooth transition */
-        }
-
-        /* When select box is open, rotate the arrow */
-        .choices[data-type*="select-one"].is-open::after {
-            transform: translateY(-90%) rotate(180deg);
-        }
-
-
-
-        .choices[data-type*="select-one"].is-open::after {
-            border-color: transparent transparent #333;
-            margin-top: 2px;
-
-        }
-    </style>
     <div class="main-content">
         <div class="page-content">
             <div class="container-fluid">
@@ -82,14 +15,7 @@
                     <div class="col-lg-12">
                         <div class="card">
                             <div class="card-header">
-                                <h4 class="card-title">Job List</h4>
-                            </div>
-
-                            <div class="px-3 mt-3 d-flex align-items-center gap-2">
-                                <input type="text" id="search" name="search"
-                                    class="form-control form-control-sm bg-light rounded w-25" placeholder="Search...">
-                                <button class="btn btn-primary btn-sm" data-bs-toggle="modal"
-                                    data-bs-target="#exampleModal">+ Create Job</button>
+                                <h4 class="card-title">Pending Job List</h4>
                             </div>
 
                             <div class="card-body">
@@ -137,7 +63,7 @@
                         [0, "desc"]
                     ],
                     "ajax": {
-                        url: "{{ route('Admin.GetJobPost') }}",
+                        url: "{{ route('Admin.PendingJobs') }}",
                         type: 'POST',
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -154,82 +80,6 @@
                 $('#search').on('keyup', function(e) {
                     e.preventDefault();
                     $('#myTable').DataTable().draw();
-                });
-            });
-        </script>
-
-        {{-- CreateJob --}}
-        <script>
-            $(document).ready(function() {
-                $('#AddJobPost').on('submit', function(event) {
-                    event.preventDefault(); // Prevent default form submission
-
-                    var url = "{{ route('Admin.AddJobPost') }}";
-                    $.ajax({
-                        url: url,
-                        type: 'POST',
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        },
-                        data: new FormData(this),
-                        contentType: false,
-                        cache: false,
-                        processData: false,
-                        dataType: 'json',
-                        success: function(result) {
-                            if (result.status_code === 1) {
-                                $('#exampleModal').modal('hide');
-                                $('#AddJobPost').trigger("reset");
-                                $('#myTable').DataTable().ajax.reload(null, false);
-                                Toastify({
-                                    text: result.message,
-                                    duration: 3000,
-                                    gravity: "top",
-                                    position: "right",
-                                    style: {
-                                        background: "green",
-                                        color: "white",
-                                    }
-                                }).showToast();
-
-                            } else if (result.status_code === 2) {
-                                Toastify({
-                                    text: result.message,
-                                    duration: 3000,
-                                    gravity: "top",
-                                    position: "right",
-                                    style: {
-                                        background: "#c7ac14",
-                                        color: "white",
-                                    }
-                                }).showToast();
-                            } else {
-                                Toastify({
-                                    text: result.message,
-                                    duration: 3000,
-                                    gravity: "top",
-                                    position: "right",
-                                    style: {
-                                        background: "red",
-                                        color: "white",
-                                    }
-                                }).showToast();
-                            }
-                        },
-                        error: function(xhr, status, error) {
-                            console.error('AJAX Error:', error);
-                            Toastify({
-                                text: 'An error occurred. Please try again.',
-                                duration: 3000,
-                                gravity: "top",
-                                position: "right",
-                                style: {
-                                    background: "red",
-                                    color: "white",
-                                }
-                            }).showToast();
-                        }
-                    });
                 });
             });
         </script>
@@ -252,14 +102,14 @@
             function changeVerifyStatus(id, status) {
                 let actionText = status === 1 ? 'verify' : 'reject';
                 let confirmButtonText = status === 1 ? 'Yes, verify it!' : 'Yes, reject it!';
-                let successMessage = status === 1 ? 'User has been verified successfully!' :
-                    'User has been rejected successfully!';
+                let successMessage = status === 1 ? 'Job has been verified successfully!' :
+                    'Job has been rejected successfully!';
                 let backgroundColor = status === 1 ? '#28a745' : '#dc3545'; // Green for verify, Red for reject
 
                 // Show confirmation modal
                 Swal.fire({
                     title: `Are you sure?`,
-                    text: `Do you really want to ${actionText} this user?`,
+                    text: `Do you really want to ${actionText} this Job?`,
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonText: confirmButtonText,
