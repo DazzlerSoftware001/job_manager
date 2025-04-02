@@ -35,6 +35,7 @@ class DatabaseSeeder extends Seeder
             JobIntTypeSeeder::class,
             JobCurrencySeeder::class,
             JobSalarySeeder::class,
+            AdminSeeder::class,
             
         ]);
     }
