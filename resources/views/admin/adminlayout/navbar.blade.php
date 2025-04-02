@@ -286,6 +286,7 @@
          <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
          <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
+         {{-- To logout --}}
          <script type="text/javascript">
              $('#logoutButton').on('click', function() {
                  var url = "{{ route('Admin.logout') }}";

@@ -442,18 +442,65 @@ Dashboard
     
                                     <div class="mt-n5 position-relative">
                                         <div class="text-center">
-                                            <img src="assets/images/users/avatar-1.jpg" alt=""
-                                                class="avatar-xl rounded-circle img-thumbnail">
-    
+                                            <!-- Profile Image with Camera Icon -->
+                                            <div class="position-relative d-inline-block">
+                                                <img id="profileImage" src="{{url('recruiter/assets/images/users/avatar-1.jpg')}}" onerror="this.onerror=null; this.src='{{ url('recruiter/assets/images/users/avatar-1.jpg') }}';"
+                                                    alt="" class="avatar-xl rounded-circle img-thumbnail">
+                                                <button
+                                                    class="btn btn-sm btn-primary position-absolute bottom-0 end-0 rounded-circle"
+                                                    style="width: 32px; height: 32px;" id="editImageButton">
+                                                    <i class="fa fa-camera"></i>
+                                                </button>
+                                                <input type="file" id="imageInput" class="d-none" accept="image/*">
+                                            </div>
+
                                             <div class="mt-3">
-                                                <h5 class="mb-1">Jennifer Bennett</h5>
+                                                <!-- Editable Name with Pencil Icon -->
+                                                <h5 class="mb-1 d-inline-block position-relative" id="nameDisplay">
+                                                    Jennifer Bennett</h5>
+                                                <input type="text" id="nameInput" class="form-control d-none"
+                                                    value="Jennifer Bennett">
+                                                <button class="btn btn-sm btn-outline-secondary ms-2 p-1"
+                                                    id="editNameButton" data-bs-toggle="modal"
+                                                    data-bs-target="#editNameModal">
+                                                    <i class="fa fa-pencil-alt"></i>
+                                                </button>
                                                 <p class="text-muted">Product Designer</p>
+                                            </div>
+                                            <button class="btn btn-success mt-3 d-none" id="saveChangesButton">Save
+                                                Changes</button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Edit Name Modal -->
+                                    <div class="modal fade" id="editNameModal" tabindex="-1"
+                                        aria-labelledby="editNameModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="editNameModalLabel">Edit Name</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <form id="editNameForm">
+                                                        <div class="mb-3">
+                                                            <label for="userNameInput" class="form-label">Enter New
+                                                                Name</label>
+                                                            <input type="text" class="form-control" id="userNameInput"
+                                                                placeholder="Enter your name">
+                                                        </div>
+                                                        <button type="submit" class="btn btn-primary">Update
+                                                            Name</button>
+                                                    </form>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
+                                    <!-- Edit Name Modal End -->
     
-                                    <div class="p-3">
-                                        <div class="row text-center pb-3">
+                                    <div class="px-3 py-2">
+                                        {{-- <div class="row text-center pb-3">
                                             <div class="col-6 border-end">
                                                 <div class="p-1">
                                                     <h5 class="mb-1">1,269</h5>
@@ -466,13 +513,13 @@ Dashboard
                                                     <p class="text-muted mb-0">Followers</p>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div> --}}
     
                                         <hr class="mb-4">
     
                                         
                                         <div class="mb-4">
-                                            <div class="d-flex align-items-start">
+                                            {{-- <div class="d-flex align-items-start">
                                                 <div class="flex-grow-1">
                                                     <h5 class="card-title mb-3">Earning</h5>
                                                 </div>
@@ -481,7 +528,7 @@ Dashboard
                                                         <i data-eva="info-outline" class="fill-muted" data-eva-height="20" data-eva-width="20"></i>
                                                     </button>
                                                 </div>
-                                            </div>
+                                            </div> --}}
     
                                             <div id="chart-radialBar" class="apex-charts" data-colors='["#3b76e1"]'></div>
     
@@ -497,8 +544,8 @@ Dashboard
                                             </div>
                                         </div>
     
-                                        <hr class="mb-4">
-                                        <div class="px-4 mx-n3" data-simplebar style="height: 258px;">
+                                        {{-- <hr class="mb-4"> --}}
+                                        {{-- <div class="px-4 mx-n3" data-simplebar style="height: 258px;">
     
                                             <div>
                                                 <h5 class="card-title mb-3">Recent Activity</h5>
@@ -556,7 +603,7 @@ Dashboard
                                                     </li>
                                                 </ul>
                                             </div>
-                                        </div>
+                                        </div> --}}
                                     </div>
                                 </div>
                                 <!-- end card body -->
@@ -1136,4 +1183,184 @@ Dashboard
         </div>
         <!-- End Page-content -->
 @endsection
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    @section('script')
+        {{-- To get details --}}
+        <script>
+            $(document).ready(function() {
+                var defaultImage = "{{ url('recruiter/assets/images/users/avatar-1.jpg') }}";
+                
+                $.ajax({
+                    url: "{{ route('Recruiter.dashboardData') }}",
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(data) {
+                        $('#userCount').text(data.userCount);
+                        $('#jobCount').text(data.jobCount);
+
+                        // Check if logo exists and update the profile image
+                        if (data.logo) {
+                            $('#profileImage').attr('src', "{{ url('recruiter') }}/" + data.logo);
+                        } else {
+                            $('#profileImage').attr('src', defaultImage);
+                        }
+
+                        $('#nameDisplay').text(data.name);
+                    },
+                    error: function() {
+                        alert('Failed to fetch data!');
+                    }
+                });
+            });
+        </script>
+
+        {{-- Update Profile Image --}}
+        <script>
+            $(document).ready(function() {
+
+                // Trigger file input when camera icon is clicked
+                $('#editImageButton').click(function() {
+                    $('#imageInput').click();
+                });
+
+                // Preview Image and Upload
+                $('#imageInput').change(function(e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            $('#profileImage').attr('src', e.target.result); // Image preview
+                        }
+                        reader.readAsDataURL(file);
+
+                        // Upload Image using AJAX
+                        const formData = new FormData();
+                        formData.append('image', file);
+
+                        $.ajax({
+                            url: "{{ route('Recruiter.UpdateProfileImage') }}",
+                            type: 'POST',
+                            data: formData,
+                            processData: false,
+                            contentType: false,
+                            headers: {
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            },
+                            dataType: 'json',
+                            success: function(result) {
+                                if (result.status_code === 1) {
+                                    $('#EditModal').modal('hide');
+                                    $('#EditCompany').trigger("reset");
+                                    $('#myTable').DataTable().ajax.reload(null, false);
+                                    Toastify({
+                                        text: result.message,
+                                        duration: 3000,
+                                        gravity: "top",
+                                        position: "right",
+                                        style: {
+                                            background: "#28a745",
+                                        },
+                                    }).showToast();
+                                } else if (result.status_code === 2) {
+                                    Toastify({
+                                        text: result.message,
+                                        duration: 3000,
+                                        gravity: "top",
+                                        position: "right",
+                                        style: {
+                                            background: "#c7ac14",
+                                        },
+                                    }).showToast();
+                                } else {
+                                    Toastify({
+                                        text: result.message,
+                                        duration: 3000,
+                                        gravity: "top",
+                                        position: "right",
+                                        style: {
+                                            background: "#c7ac14",
+                                        },
+                                    }).showToast();
+                                }
+                            },
+                            error: function(xhr, status, error) {
+                                console.error('AJAX Error:', error);
+                                Toastify({
+                                    text: 'An error occurred. Please try again.',
+                                    duration: 3000,
+                                    gravity: "top",
+                                    position: "right",
+                                    style: {
+                                        background: "#dc3545",
+                                    },
+                                }).showToast();
+                            }
+                        });
+                    }
+                });
+            });
+        </script>
+
+        {{-- Update Profile Nmae --}}
+        <script>
+            $(document).ready(function() {
+                // When the edit button is clicked
+                $('#editNameButton').click(function() {
+                    const currentName = $('#nameDisplay').text(); // Get the current name
+                    $('#userNameInput').val(currentName); // Set it in the input field
+                });
+
+                // Handle Form Submission
+                $('#editNameForm').submit(function(e) {
+                    e.preventDefault();
+                    const newName = $('#userNameInput').val();
+
+                    if (!newName.trim()) {
+                        alert('Please enter a valid name.');
+                        return;
+                    }
+
+                    $.ajax({
+                        url: "{{ route('Recruiter.UpdateProfileName') }}",
+                        type: 'POST',
+                        data: {
+                            name: newName,
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            if (response.success) {
+                                // Update the displayed name
+                                $('#nameDisplay').text(response.name);
+
+                                // Close the modal
+                                $('#editNameModal').modal('hide');
+
+                                // Show success toast
+                                Toastify({
+                                    text: "Name updated successfully!",
+                                    duration: 3000,
+                                    gravity: "top",
+                                    position: "right",
+                                    backgroundColor: "#4CAF50"
+                                }).showToast();
+
+                                // Rleoad data
+                                location.reload();
+                            }
+                        },
+                        error: function() {
+                            Toastify({
+                                text: "Failed to update name.",
+                                duration: 3000,
+                                gravity: "top",
+                                position: "right",
+                                backgroundColor: "#F44336"
+                            }).showToast();
+                        }
+                    });
+                });
+            });
+        </script>
+    @endsection
               

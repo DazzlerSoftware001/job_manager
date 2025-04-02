@@ -12,6 +12,9 @@ Route::prefix('Recruiter')->group(function () {
     // Protected Routes with Middleware
     Route::middleware('recruiter')->group(function () {
         Route::get('/Dashboard', [DashboardController::class, 'dashboard'])->name('Recruiter.dashboard');
+        Route::get('/dashboard-data', [DashboardController::class, 'getDashboardData'])->name('Recruiter.dashboardData');
+        Route::post('/updateProfileImage', [DashboardController::class, 'updateProfileImage'])->name('Recruiter.UpdateProfileImage');
+        Route::post('/updateProfileName', [DashboardController::class, 'updateProfileName'])->name('Recruiter.UpdateProfileName');
 
         // Job Post
         Route::get('/jobpost', [JobController::class, 'jobpost'])->name('Recruiter.jobpost');

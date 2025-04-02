@@ -286,16 +286,15 @@
                      </div>
 
                      <div class="dropdown d-inline-block">
-                         <button type="button" class="btn header-item user text-start d-flex align-items-center"
-                             id="page-header-user-dropdown-v" data-bs-toggle="dropdown" aria-haspopup="true"
-                             aria-expanded="false">
-                             <img class="rounded-circle header-profile-user"
-                                 src="{{ url('recruiter/assets/images/users/avatar-1.jpg') }}" alt="Header Avatar">
-                         </button>
+                        <button type="button" class="btn header-item user text-start d-flex align-items-center" id="page-header-user-dropdown-v"
+                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <img class="rounded-circle header-profile-user" id="profileImage1" src="{{ url('recruiter/assets/images/users/avatar-1.jpg') }}" onerror="this.onerror=null; this.src='{{ url('recruiter/assets/images/users/avatar-1.jpg') }}';"
+                            alt="Header Avatar">
+                        </button>
                          <div class="dropdown-menu dropdown-menu-end pt-0">
                              <div class="p-3 border-bottom">
-                                 <h6 class="mb-0">Jennifer Bennett</h6>
-                                 <p class="mb-0 font-size-11 text-muted">jennifer.bennett@email.com</p>
+                                 <h6 class="mb-0" id="nameDisplay1">Jennifer Bennett</h6>
+                                 <p class="mb-0 font-size-11 text-muted" id="emailDisplay1">jennifer.bennett@email.com</p>
                              </div>
                              <a class="dropdown-item" href="contacts-profile.html"><i
                                      class="mdi mdi-account-circle text-muted font-size-16 align-middle me-1"></i>
@@ -382,3 +381,30 @@
                  });
              });
          </script>
+
+         {{-- To get details --}}
+        <script>
+            $(document).ready(function() {
+                $.ajax({
+                    url: "{{ route('Recruiter.dashboardData') }}",
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(data) {
+
+                        // Check if logo exists and update the profile image
+                        if (data.logo) {
+                            $('#profileImage1').attr('src', "{{ url('recruiter') }}/" + data.logo);
+                        } else {
+                            $('#profileImage1').attr('src',
+                                "{{ url('recruiter/assets/images/users/avatar-1.jpg') }}");
+                        }
+
+                        $('#nameDisplay1').text(data.name);
+                        $('#emailDisplay1').text(data.email);
+                    },
+                    error: function() {
+                        alert('Failed to fetch data!');
+                    }
+                });
+            });
+        </script>
