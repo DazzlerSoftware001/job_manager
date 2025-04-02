@@ -67,7 +67,7 @@ class JobController extends Controller
             'min_salary' => 'required|integer',
             'max_salary' => 'required',
             'education' => 'required|string',
-            'candidate_industry' => 'required|string',
+            'candidate_industry' => 'nullable|string',
             'vacancies' => 'required|integer',
             'interview_type' => 'required|string',
             'company_name' => 'required|string',
@@ -201,11 +201,19 @@ class JobController extends Controller
             $dataArray[] = date('d-M-Y', strtotime($record->created_at));
 
             $dataArray[] = '<div class="d-flex gap-2">
+
+                                <div class="edit">
+                                    <a href="' . route('Recruiter.ViewJobPost', ['id' => Crypt::encrypt($record->id)]) . '" class="edit-item-btn text-primary">
+                                        <i class="far fa-eye"></i>
+                                    </a>
+                                </div>
+
                                 <div class="edit">
                                     <a href="' . route('Recruiter.EditJobPost', ['id' => Crypt::encrypt($record->id)]) . '" class="edit-item-btn text-primary">
                                         <i class="far fa-edit"></i>
                                     </a>
                                 </div>
+
                                 <div class="remove">
                                     <a href="javascript:void(0);" class="remove-item-btn text-danger" onclick="deleteRecord(' . $record->id . ');">
                                         <i class="far fa-trash-alt"></i>
@@ -267,6 +275,17 @@ class JobController extends Controller
             }
         } else {
             return response()->json(['status_code' => 2, 'message' => 'Id is required']);
+        }
+    }
+
+    public function viewJobPost($id)
+    {
+        try {
+            $decryptedId = Crypt::decrypt($id);
+            $job = JobPost::findOrFail($decryptedId);
+            return view('recruiter.job.ViewJob', compact('job'));
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Invalid Job ID!');
         }
     }
 

@@ -23,6 +23,7 @@ Route::prefix('Recruiter')->group(function () {
         Route::post('/GetJobPost', [JobController::class, 'getJobPost'])->name('Recruiter.GetJobPost');
         Route::post('/ChangeJobPostStatus', [JobController::class, 'changeJobPostStatus'])->name('Recruiter.ChangeJobPostStatus');
         Route::post('/DeleteJobPost', [JobController::class, 'deleteJobPost'])->name('Recruiter.DeleteJobPost');
+        Route::get('/ViewJobPost/{id}', [JobController::class, 'viewJobPost'])->name('Recruiter.ViewJobPost');
         Route::get('/EditJobPost/{id}', [JobController::class, 'editJobPost'])->name('Recruiter.EditJobPost');
         Route::post('/UpdateJobPost', [JobController::class, 'updateJobPost'])->name('Recruiter.UpdateJobPost');
 

@@ -226,7 +226,7 @@
                                         </div>
 
 
-                                        <div class="col-xl-4 mt-3">
+                                        <div class="col-xl-4 mt-3" id="department-container" style="display: none;">
                                             <label for="department">Department <span class="text-danger">*</span></label>
                                             <select class="form-select" id="department" name="department">
                                                 <option value="">Select</option>
@@ -234,7 +234,7 @@
                                         </div>
 
 
-                                        <div class="col-xl-4 mt-3">
+                                        <div class="col-xl-4 mt-3" id="role-container" style="display: none;">
                                             <label for="role">Role <span class="text-danger">*</span></label>
                                             <select class="form-select" id="role" name="role">
                                                 <option value="">Select</option>
@@ -426,15 +426,15 @@
 
                                         <div class="d-flex justify-content-center mt-3">
                                             <div class="col-xl-12 text-center">
-                                                <label for="job_description">Responsibilities <span class="text-danger">*</span></label>
-                                                <textarea class="form-control" id="job_description" name="job_description"></textarea>
+                                                <label for="">Responsibilities <span class="text-danger">*</span></label>
+                                                <textarea class="form-control" id="job_description" name=""></textarea>
                                             </div>
                                         </div>
 
                                         <div class="d-flex justify-content-center mt-3">
                                             <div class="col-xl-12 text-center">
-                                                <label for="job_description">Requirements <span class="text-danger">*</span></label>
-                                                <textarea class="form-control" id="job_description" name="job_description"></textarea>
+                                                <label for="">Requirements <span class="text-danger">*</span></label>
+                                                <textarea class="form-control" id="job_description" name=""></textarea>
                                             </div>
                                         </div>
 
@@ -701,71 +701,65 @@
                     var category_name = $(this).val();
                     $('#department').html('<option value="">Loading...</option>');
                     $('#role').html('<option value="">Select</option>'); // Reset role dropdown
-
+                    $('#role-container').hide(); // Hide role container initially
+        
                     if (category_name) {
                         $.ajax({
                             url: "{{ route('Recruiter.getDepartment') }}",
                             type: "GET",
-                            data: {
-                                category_name: category_name
-                            },
+                            data: { category_name: category_name },
                             success: function(data) {
-                                // console.log("Departments Response:", data);
-                                $('#department').html(
-                                    '<option value="">Select Department</option>');
-
+                                $('#department').html('<option value="">Select Department</option>');
                                 if (data.length > 0) {
                                     $.each(data, function(index, item) {
-                                        $('#department').append('<option value="' + item
-                                            .department + '">' + item.department +
-                                            '</option>');
+                                        $('#department').append('<option value="' + item.department + '">' + item.department + '</option>');
                                     });
+                                    $('#department-container').show(); // Show department container
                                 } else {
-                                    $('#department').html(
-                                        '<option value="">No Departments Found</option>');
+                                    $('#department').html('<option value="">No Departments Found</option>');
+                                    $('#department-container').hide();
                                 }
                             },
                             error: function() {
-                                $('#department').html(
-                                    '<option value="">Error loading data</option>');
+                                $('#department').html('<option value="">Error loading data</option>');
+                                $('#department-container').hide();
                             }
                         });
                     } else {
-                        $('#department').html('<option value="">Select Department</option>');
+                        $('#department-container').hide();
+                        $('#role-container').hide();
                     }
                 });
-
+        
                 // When department changes, load roles
                 $('#department').change(function() {
                     var department_name = $(this).val();
                     $('#role').html('<option value="">Loading...</option>');
-
+        
                     if (department_name) {
                         $.ajax({
-                            url: "{{ route('Recruiter.getRole') }}", // Create this route
+                            url: "{{ route('Recruiter.getRole') }}",
                             type: "GET",
-                            data: {
-                                department_name: department_name
-                            },
+                            data: { department_name: department_name },
                             success: function(data) {
-                                // console.log("Roles Response:", data);
                                 $('#role').html('<option value="">Select Role</option>');
-
                                 if (data.length > 0) {
                                     $.each(data, function(index, item) {
-                                        $('#role').append('<option value="' + item.role +
-                                            '">' + item.role + '</option>');
+                                        $('#role').append('<option value="' + item.role + '">' + item.role + '</option>');
                                     });
+                                    $('#role-container').show(); // Show role container
                                 } else {
                                     $('#role').html('<option value="">No Roles Found</option>');
+                                    $('#role-container').hide();
                                 }
                             },
                             error: function() {
                                 $('#role').html('<option value="">Error loading data</option>');
+                                $('#role-container').hide();
                             }
                         });
                     } else {
-                        $('#role').html('<option value="">Select Role</option>');
+                        $('#role-container').hide();
                     }
                 });
             });
@@ -793,7 +787,7 @@
                         success: function(result) {
                             if (result.status_code === 1) {
                                 $('#AddJobPost').trigger("reset");
-                                $('#myTable').DataTable().ajax.reload(null, false);
+                                // $('#myTable').DataTable().ajax.reload(null, false);  
 
                                 Toastify({
                                     text: result.message,
