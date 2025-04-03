@@ -25,7 +25,10 @@ class Jobpost extends Model
         'currency',
         'min_sal',
         'max_sal',
+        'sal_status',
+        'education_level',
         'education',
+        'branch',
         'condidate_industry',
         'diversity',
         'vacancies',
@@ -34,6 +37,8 @@ class Jobpost extends Model
         'com_logo',
         'com_details',
         'job_desc',
+        'job_resp',
+        'job_req',
         'admin_verify',
         'status'
     ];

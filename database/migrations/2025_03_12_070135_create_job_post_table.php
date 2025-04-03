@@ -26,7 +26,10 @@ return new class extends Migration
             $table->string('currency');
             $table->string('min_sal');
             $table->string('max_sal')->nullable();
+            $table->tinyInteger('sal_status')->default(0);
+            $table->string('education_level');
             $table->string('education');
+            $table->string('branch')->nullable();
             $table->string('condidate_industry')->nullable();
             $table->string('diversity')->default('Both');
             $table->integer('vacancies');
@@ -35,6 +38,8 @@ return new class extends Migration
             $table->string('com_logo');
             $table->text('com_details');
             $table->text('job_desc');
+            $table->text('job_resp');
+            $table->text('job_req');
             $table->tinyInteger('admin_verify')->default(0);
             $table->tinyInteger('status')->default(0);
             $table->timestamps();

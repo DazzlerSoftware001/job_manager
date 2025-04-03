@@ -266,11 +266,13 @@
 
 
                                         <div class="col-xl-4 mt-3">
-                                            <label for="min_experience">Work Experience (Min - Max) <span class="text-danger">*</span></label>
+                                            <label for="min_experience">Work Experience (Min - Max) <span
+                                                    class="text-danger">*</span></label>
                                             <div class="d-flex gap-2">
                                                 <!-- Min Experience Dropdown -->
                                                 <select class="form-select" id="min_experience" name="min_experience"
                                                     onchange="updateMaxExperience()">
+                                                    <option value="">Min</option>
                                                     <option value=0>Fresher</option>
                                                     @foreach ($JobExperience as $value)
                                                         <option value="{{ $value->experience }}">{{ $value->experience }}
@@ -293,7 +295,8 @@
 
 
                                         <div class="col-xl-4 mt-3">
-                                            <label for="currency">Annual Salary (Currency - Min - Max) <span class="text-danger">*</span></label>
+                                            <label for="currency">Annual Salary (Currency - Min - Max) <span
+                                                    class="text-danger">*</span></label>
                                             <div class="d-flex gap-2">
                                                 <select class="form-select" id="currency" name="currency">
                                                     <option value="">Currency</option>
@@ -318,15 +321,47 @@
                                                     @endforeach
                                                 </select>
                                             </div>
+                                            <div class="mt-3">
+                                                <input type="checkbox" name="sal_status" id="sal_status" checked>
+                                                <label for="">Do you want to show the Salary to User</label>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-xl-4 mt-3">
+                                            <label for="education_level" class="form-label">Education Level <span
+                                                    class="text-danger">*</span></label>
+                                            <select name="education_level" class="form-control" id="education_level">
+                                                <option value="">Select Education Level</option>
+                                                <option value="Matric">Secondary Education </option>
+                                                <option value="Higher Secondary">Higher Secondary Education</option>
+                                                <option value="UG">Undergraduate (UG)</option>
+                                                <option value="PG">Postgraduate (PG)</option>
+                                                <option value="PhD">Doctorate (PhD)</option>
+                                                <option value="PostDoc">Postdoctoral Research (After PhD)</option>
+                                                <option value="Diploma">Diploma & Certificate Courses</option>
+                                            </select>
                                         </div>
 
 
                                         <div class="col-xl-4 mt-3">
-                                            <label for="education">Educational Qualification <span class="text-danger">*</span></label>
+                                            <label for="education">Educational Qualification <span
+                                                    class="text-danger">*</span></label>
                                             <select class="form-select" id="education" name="education">
                                                 <option value="">Choose Qualification</option>
                                                 @foreach ($JobEducation as $key => $value)
                                                     <option value="{{ $value->education }}">{{ $value->education }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+
+                                        <div class="col-xl-4 mt-3">
+                                            <label for="branch">Education Branch<span
+                                                    class="text-danger">*</span></label>
+                                            <select class="form-select" id="branch" name="branch">
+                                                <option value="">Choose Branch</option>
+                                                @foreach ($JobEducation as $key => $value)
+                                                    <option value="{{ $value->branch }}">{{ $value->branch }}
                                                     </option>
                                                 @endforeach
                                             </select>
@@ -360,13 +395,15 @@
                                         </div>
 
                                         <div class="col-xl-4 mt-3">
-                                            <label for="vacancies">Number of Vacancies <span class="text-danger">*</span></label>
+                                            <label for="vacancies">Number of Vacancies <span
+                                                    class="text-danger">*</span></label>
                                             <input type="number" class="form-control" name="vacancies">
                                         </div>
 
 
                                         <div class="col-xl-4 col-lg-6 col-md-8 col-sm-12 mt-3">
-                                            <label for="interview_type" class="d-block">Interview Type <span class="text-danger">*</span></label>
+                                            <label for="interview_type" class="d-block">Interview Type <span
+                                                    class="text-danger">*</span></label>
                                             <select class="form-select" id="interview_type" name="interview_type">
                                                 <option value="">Select</option>
                                                 @foreach ($JobIntType as $key => $value)
@@ -380,7 +417,8 @@
                                             <div class="row">
                                                 <!-- Company Name Selection -->
                                                 <div class="col-12 col-md-12 mt-3">
-                                                    <label for="company_name">Company Name <span class="text-danger">*</span></label>
+                                                    <label for="company_name">Company Name <span
+                                                            class="text-danger">*</span></label>
                                                     <select class="form-select" id="company_name" name="company_name"
                                                         onchange="updateCompanyDetails()">
                                                         <option value="">Select</option>
@@ -396,7 +434,8 @@
 
                                                 <!-- Company Details -->
                                                 <div class="col-12 col-md-12 mt-3">
-                                                    <label for="company_details">Company Details <span class="text-danger">*</span></label>
+                                                    <label for="company_details">Company Details <span
+                                                            class="text-danger">*</span></label>
                                                     <textarea class="form-control" id="company_details" name="company_details" readonly></textarea>
                                                 </div>
                                             </div>
@@ -408,10 +447,10 @@
                                         <div class="col-xl-6 text-center mt-3">
                                             <label for="job_image">Job Image <span class="text-danger">*</span></label>
                                             <div class="mt-3">
-                                                <img id="imagePreview" src=""
-                                                    alt="Image Preview"
+                                                <img id="imagePreview" src="" alt="Image Preview"
                                                     style="width: 200px; height: 200px; object-fit: cover; border-radius: 10px;">
-                                                    <input type="hidden" id="company_logo" name="company_logo" value="">
+                                                <input type="hidden" id="company_logo" name="company_logo"
+                                                    value="">
                                             </div>
                                         </div>
 
@@ -419,21 +458,24 @@
 
                                         <div class="d-flex justify-content-center mt-3">
                                             <div class="col-xl-12 text-center">
-                                                <label for="job_description">Job Description <span class="text-danger">*</span></label>
+                                                <label for="job_description">Job Description <span
+                                                        class="text-danger">*</span></label>
                                                 <textarea class="form-control" id="job_description" name="job_description"></textarea>
                                             </div>
                                         </div>
 
                                         <div class="d-flex justify-content-center mt-3">
                                             <div class="col-xl-12 text-center">
-                                                <label for="">Responsibilities <span class="text-danger">*</span></label>
+                                                <label for="">Responsibilities <span
+                                                        class="text-danger">*</span></label>
                                                 <textarea class="form-control" id="job_description" name=""></textarea>
                                             </div>
                                         </div>
 
                                         <div class="d-flex justify-content-center mt-3">
                                             <div class="col-xl-12 text-center">
-                                                <label for="">Requirements <span class="text-danger">*</span></label>
+                                                <label for="">Requirements <span
+                                                        class="text-danger">*</span></label>
                                                 <textarea class="form-control" id="job_description" name=""></textarea>
                                             </div>
                                         </div>
@@ -523,9 +565,31 @@
             });
 
             document.addEventListener('DOMContentLoaded', function() {
+                var education_level = document.getElementById('education_level');
+                if (education_level) {
+                    const education_level1 = new Choices(education_level, {
+                        shouldSort: false,
+                        position: 'down',
+                        removeItemButton: true,
+                    });
+                }
+            });
+
+            document.addEventListener('DOMContentLoaded', function() {
                 var education = document.getElementById('education');
                 if (education) {
                     const education1 = new Choices(education, {
+                        shouldSort: false,
+                        position: 'down',
+                        removeItemButton: true,
+                    });
+                }
+            });
+
+            document.addEventListener('DOMContentLoaded', function() {
+                var branch = document.getElementById('branch');
+                if (branch) {
+                    const branch1 = new Choices(branch, {
                         shouldSort: false,
                         position: 'down',
                         removeItemButton: true,
@@ -702,26 +766,33 @@
                     $('#department').html('<option value="">Loading...</option>');
                     $('#role').html('<option value="">Select</option>'); // Reset role dropdown
                     $('#role-container').hide(); // Hide role container initially
-        
+
                     if (category_name) {
                         $.ajax({
                             url: "{{ route('Recruiter.getDepartment') }}",
                             type: "GET",
-                            data: { category_name: category_name },
+                            data: {
+                                category_name: category_name
+                            },
                             success: function(data) {
-                                $('#department').html('<option value="">Select Department</option>');
+                                $('#department').html(
+                                    '<option value="">Select Department</option>');
                                 if (data.length > 0) {
                                     $.each(data, function(index, item) {
-                                        $('#department').append('<option value="' + item.department + '">' + item.department + '</option>');
+                                        $('#department').append('<option value="' + item
+                                            .department + '">' + item.department +
+                                            '</option>');
                                     });
                                     $('#department-container').show(); // Show department container
                                 } else {
-                                    $('#department').html('<option value="">No Departments Found</option>');
+                                    $('#department').html(
+                                        '<option value="">No Departments Found</option>');
                                     $('#department-container').hide();
                                 }
                             },
                             error: function() {
-                                $('#department').html('<option value="">Error loading data</option>');
+                                $('#department').html(
+                                    '<option value="">Error loading data</option>');
                                 $('#department-container').hide();
                             }
                         });
@@ -730,22 +801,25 @@
                         $('#role-container').hide();
                     }
                 });
-        
+
                 // When department changes, load roles
                 $('#department').change(function() {
                     var department_name = $(this).val();
                     $('#role').html('<option value="">Loading...</option>');
-        
+
                     if (department_name) {
                         $.ajax({
                             url: "{{ route('Recruiter.getRole') }}",
                             type: "GET",
-                            data: { department_name: department_name },
+                            data: {
+                                department_name: department_name
+                            },
                             success: function(data) {
                                 $('#role').html('<option value="">Select Role</option>');
                                 if (data.length > 0) {
                                     $.each(data, function(index, item) {
-                                        $('#role').append('<option value="' + item.role + '">' + item.role + '</option>');
+                                        $('#role').append('<option value="' + item.role +
+                                            '">' + item.role + '</option>');
                                     });
                                     $('#role-container').show(); // Show role container
                                 } else {
