@@ -168,53 +168,75 @@ Pending Job List
         {{-- change Status --}}
         <script>
             function changeStatus(id) {
-                $.ajax({
-                    url: "{{ route('Admin.ChangeJobPostStatus') }}",
-                    type: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    data: {
-                        id: id
-                    },
-                    dataType: 'json',
-                    success: function(result) {
-                        if (result.status_code == 1) {
-                            $('#myTable').DataTable().ajax.reload(null, false);
-                            Toastify({
-                                text: result.message,
-                                duration: 3000,
-                                gravity: "top",
-                                position: "right",
-                                style: {
-                                    background: "green",
-                                    color: "white",
-                                }
-                            }).showToast();
-                        } else if (result.status_code == 2) {
-                            Toastify({
-                                text: result.message,
-                                duration: 3000,
-                                gravity: "top",
-                                position: "right",
-                                style: {
-                                    background: "#c7ac14",
-                                    color: "white",
-                                }
-                            }).showToast();
+                
+                Swal.fire({
+                title: 'Are you sure?',
+                text: 'Do you want to change the status of this record?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, change it!',
+                cancelButtonText: 'No, cancel!',
+                background: '#ffc107',
+                }).then((response) => {
+                    if (response.isConfirmed) {
 
-                        } else {
-                            Toastify({
-                                text: result.message,
-                                duration: 3000,
-                                gravity: "top",
-                                position: "right",
-                                style: {
-                                    background: "red",
-                                    color: "white",
+                        $.ajax({
+                            url: "{{ route('Admin.ChangeJobPostStatus') }}",
+                            type: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            data: {
+                                id: id
+                            },
+                            dataType: 'json',
+                            success: function(result) {
+                                if (result.status_code == 1) {
+                                    $('#myTable').DataTable().ajax.reload(null, false);
+                                    Toastify({
+                                        text: result.message,
+                                        duration: 3000,
+                                        gravity: "top",
+                                        position: "right",
+                                        style: {
+                                            background: "green",
+                                            color: "white",
+                                        }
+                                    }).showToast();
+                                } else if (result.status_code == 2) {
+                                    Toastify({
+                                        text: result.message,
+                                        duration: 3000,
+                                        gravity: "top",
+                                        position: "right",
+                                        style: {
+                                            background: "#c7ac14",
+                                            color: "white",
+                                        }
+                                    }).showToast();
+
+                                } else {
+                                    Toastify({
+                                        text: result.message,
+                                        duration: 3000,
+                                        gravity: "top",
+                                        position: "right",
+                                        style: {
+                                            background: "red",
+                                            color: "white",
+                                        }
+                                    }).showToast();
                                 }
-                            }).showToast();
-                        }
+                            }
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Cancelled',
+                            text: 'The status was not changed.',
+                            icon: 'info',
+                            confirmButtonText: 'Okay',
+                            background: '#17a2b8'
+                        });
                     }
                 });
             }

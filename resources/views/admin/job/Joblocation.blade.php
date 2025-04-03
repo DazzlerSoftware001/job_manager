@@ -136,14 +136,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {{-- <tr>
-                                                <th scope="row">1</th>
-                                                <td>Table cell</td>
-                                                <td>Table cell</td>
-                                                <td>Table cell</td>
-                                                <td>Table cell</td>
-                                                <td>Table cell</td>
-                                            </tr> --}}
+                                            
                                         </tbody>
                                     </table>
                                 </div>
@@ -347,55 +340,77 @@
 
     {{-- change Status --}}
     <script>
-        function changeStatus(id){
-          $.ajax({
-            url : "{{ route('Admin.ChangeJobLocationStatus') }}",
-            type: 'POST',
-            headers: {
-              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            data:  { id:id },
-            dataType:'json',
-            success : function (result) {
-              if (result.status_code == 1) {
-                $('#myTable').DataTable().ajax.reload(null, false);
-                Toastify({
-                  text: result.message,
-                  duration: 3000,
-                  gravity: "top",
-                  position: "right",
-                  style:{
-                    background: "green",
-                    color: "white",
-                  }
-                }).showToast();
-              } else if (result.status_code == 2) {
-                Toastify({
-                  text: result.message,
-                  duration: 3000,
-                  gravity: "top",
-                  position: "right",
-                  style:{
-                    background: "yellow",
-                    color: "white",
-                  }
-                }).showToast();
+        function changeStatus(id) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'Do you want to change the status of this job location?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, change it!',
+                cancelButtonText: 'No, cancel!',
+                background: '#ffc107',
+                customClass: {
+                    title: 'text-dark',
+                    content: 'text-dark'
+                }
+            }).then((response) => {
+                if (response.isConfirmed) {
+                    Swal.fire({
+                        title: 'Processing...',
+                        text: 'Please wait while we update the status.',
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
 
-              } else {
-                Toastify({
-                  text: result.message,
-                  duration: 3000,
-                  gravity: "top",
-                  position: "right",
-                  style:{
-                    background: "red",
-                    color: "white",
-                  }
-                }).showToast();
-              }
-            }
-          });
+                    $.ajax({
+                        url: "{{ route('Admin.ChangeJobLocationStatus') }}",
+                        type: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        data: { id: id },
+                        dataType: 'json',
+                        success: function(result) {
+                            Swal.close(); // Close loading alert
+
+                            let bgColor;
+                            if (result.status_code == 1) {
+                                bgColor = "green";
+                                $('#myTable').DataTable().ajax.reload(null, false);
+                            } else if (result.status_code == 2) {
+                                bgColor = "yellow"; // Yellowish for warnings
+                            } else {
+                                bgColor = "red";
+                            }
+
+                            Toastify({
+                                text: result.message,
+                                duration: 3000,
+                                gravity: "top",
+                                position: "right",
+                                style: {
+                                    background: bgColor,
+                                    color: "white",
+                                }
+                            }).showToast();
+                        }
+                    });
+
+                } else {
+                    Swal.fire({
+                        title: 'Cancelled',
+                        text: 'The job location status was not changed.',
+                        icon: 'info',
+                        confirmButtonText: 'Okay',
+                        background: '#17a2b8'
+                    });
+                }
+            });
         }
+
     </script>
 
     

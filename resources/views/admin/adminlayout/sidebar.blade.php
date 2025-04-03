@@ -39,16 +39,16 @@
                     <li class="menu-title" data-key="t-menu">Menu</li>
 
                     <li>
-                        <a href="javascript: void(0);">
+                        <a href="{{route("Admin.dashboard")}}">
                             <i class="icon nav-icon" data-eva="grid-outline"></i>
                             <span class="menu-item" data-key="t-dashboards">Dashboards</span>
-                            <span class="badge rounded-pill bg-primary">3</span>
+                            {{-- <span class="badge rounded-pill bg-primary">3</span> --}}
                         </a>
-                        <ul class="sub-menu" aria-expanded="false">
+                        {{-- <ul class="sub-menu" aria-expanded="false">
                             <li><a href="{{route("Admin.dashboard")}}" data-key="t-ecommerce">Ecommerce</a></li>
                             <li><a href="dashboard-saas.html" data-key="t-saas">Saas</a></li>
                             <li><a href="dashboard-crypto.html" data-key="t-crypto">Crypto</a></li>
-                        </ul>
+                        </ul> --}}
                     </li>
 
                     <li class="menu-title" data-key="t-applications">Applications</li>
@@ -59,7 +59,8 @@
                             <span class="menu-item" data-key="t-projects">Jobs Manager</span>
                         </a>
                         <ul class="sub-menu" aria-expanded="false">
-                            <li><a href="{{route('Admin.JobPost')}}" data-key="t-p-grid">All Jobs</a></li>
+                            <li><a href="{{route('Admin.CreateJob')}}" data-key="t-p-grid">Create Job</a></li>
+                            <li><a href="{{route('Admin.JobList')}}" data-key="t-p-grid">All Jobs</a></li>
                             <li><a href="{{route('Admin.ShowVerifiedJobs')}}" data-key="t-p-grid">Verified Jobs</a></li>
                             <li><a href="{{route('Admin.ShowRejectedJobs')}}" data-key="t-p-grid">Rejected Jobs</a></li>
                             <li><a href="{{route('Admin.ShowPendingJobs')}}" data-key="t-p-grid">Pending Jobs</a></li>
@@ -101,7 +102,7 @@
                         </a>
                     </li>
 
-                    <li>
+                    {{-- <li>
                         <a href="apps-calendar.html">
                             <i class="icon nav-icon" data-eva="calendar-outline"></i>
                             <span class="menu-item" data-key="t-calendar">Calendar</span>
@@ -373,7 +374,7 @@
                                 </ul>
                             </li>
                         </ul>
-                    </li>
+                    </li> --}}
 
                 </ul>
             </div>

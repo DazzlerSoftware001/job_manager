@@ -226,7 +226,7 @@
     </script>
 
      {{-- change Status --}}
-     <script>
+     {{-- <script>
         function changeStatus(id){
           $.ajax({
             url : "{{ route('Admin.ChangeJobSkillStatus') }}",
@@ -276,7 +276,81 @@
             }
           });
         }
+    </script> --}}
+    <script>
+        function changeStatus(id) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'Do you want to change the status of this skill?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, change it!',
+                cancelButtonText: 'No, cancel!',
+                background: '#ffc107',
+                customClass: {
+                    title: 'text-dark',
+                    content: 'text-dark'
+                }
+            }).then((response) => {
+                if (response.isConfirmed) {
+        
+                    Swal.fire({
+                        title: 'Processing...',
+                        text: 'Please wait while we update the status.',
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+        
+                    $.ajax({
+                        url: "{{ route('Admin.ChangeJobSkillStatus') }}",
+                        type: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        data: { id: id },
+                        dataType: 'json',
+                        success: function(result) {
+                            Swal.close(); // Close loading alert
+        
+                            let bgColor;
+                            if (result.status_code == 1) {
+                                bgColor = "green";
+                                $('#myTable').DataTable().ajax.reload(null, false);
+                            } else if (result.status_code == 2) {
+                                bgColor = "yellow";
+                            } else {
+                                bgColor = "red";
+                            }
+        
+                            Toastify({
+                                text: result.message,
+                                duration: 3000,
+                                gravity: "top",
+                                position: "right",
+                                style: {
+                                    background: bgColor,
+                                    color: "white",
+                                }
+                            }).showToast();
+                        }
+                    });
+        
+                } else {
+                    Swal.fire({
+                        title: 'Cancelled',
+                        text: 'The skill status was not changed.',
+                        icon: 'info',
+                        confirmButtonText: 'Okay',
+                        background: '#17a2b8'
+                    });
+                }
+            });
+        }
     </script>
+    
 
     
     {{-- DeleteJobSkill --}}

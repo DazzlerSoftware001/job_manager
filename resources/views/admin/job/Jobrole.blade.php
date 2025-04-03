@@ -252,58 +252,79 @@
         {{-- change Status --}}
         <script>
             function changeStatus(id) {
-                $.ajax({
-                    url: "{{ route('Admin.ChangeJobRoleStatus') }}",
-                    type: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    data: {
-                        id: id
-                    },
-                    dataType: 'json',
-                    success: function(result) {
-                        if (result.status_code == 1) {
-                            $('#myTable').DataTable().ajax.reload(null, false);
-                            Toastify({
-                                text: result.message,
-                                duration: 3000,
-                                gravity: "top",
-                                position: "right",
-                                style: {
-                                    background: "green",
-                                    color: "white",
-                                }
-                            }).showToast();
-                        } else if (result.status_code == 2) {
-                            Toastify({
-                                text: result.message,
-                                duration: 3000,
-                                gravity: "top",
-                                position: "right",
-                                style: {
-                                    background: "#c7ac14",
-                                    color: "white",
-                                }
-                            }).showToast();
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: 'Do you want to change the status of this job role?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes, change it!',
+                    cancelButtonText: 'No, cancel!',
+                    background: '#ffc107',
+                    customClass: {
+                        title: 'text-dark',
+                        content: 'text-dark'
+                    }
+                }).then((response) => {
+                    if (response.isConfirmed) {
+                        Swal.fire({
+                            title: 'Processing...',
+                            text: 'Please wait while we update the status.',
+                            allowOutsideClick: false,
+                            allowEscapeKey: false,
+                            didOpen: () => {
+                                Swal.showLoading();
+                            }
+                        });
 
-                        } else {
-                            Toastify({
-                                text: result.message,
-                                duration: 3000,
-                                gravity: "top",
-                                position: "right",
-                                style: {
-                                    background: "red",
-                                    color: "white",
+                        $.ajax({
+                            url: "{{ route('Admin.ChangeJobRoleStatus') }}",
+                            type: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            data: { id: id },
+                            dataType: 'json',
+                            success: function(result) {
+                                Swal.close(); // Close loading alert
+
+                                let bgColor;
+                                if (result.status_code == 1) {
+                                    bgColor = "green";
+                                    $('#myTable').DataTable().ajax.reload(null, false);
+                                } else if (result.status_code == 2) {
+                                    bgColor = "#c7ac14"; // Yellowish for warnings
+                                } else {
+                                    bgColor = "red";
                                 }
-                            }).showToast();
-                        }
+
+                                Toastify({
+                                    text: result.message,
+                                    duration: 3000,
+                                    gravity: "top",
+                                    position: "right",
+                                    style: {
+                                        background: bgColor,
+                                        color: "white",
+                                    }
+                                }).showToast();
+                            }
+                        });
+
+                    } else {
+                        Swal.fire({
+                            title: 'Cancelled',
+                            text: 'The job role status was not changed.',
+                            icon: 'info',
+                            confirmButtonText: 'Okay',
+                            background: '#17a2b8'
+                        });
                     }
                 });
             }
+
         </script>
 
+            
 
         {{-- DeleteJobRole --}}
         <script>

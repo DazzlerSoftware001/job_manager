@@ -158,81 +158,6 @@
             });
         </script>
 
-        {{-- CreateJob --}}
-        <script>
-            $(document).ready(function() {
-                $('#AddJobPost').on('submit', function(event) {
-                    event.preventDefault(); // Prevent default form submission
-
-                    var url = "{{ route('Admin.AddJobPost') }}";
-                    $.ajax({
-                        url: url,
-                        type: 'POST',
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        },
-                        data: new FormData(this),
-                        contentType: false,
-                        cache: false,
-                        processData: false,
-                        dataType: 'json',
-                        success: function(result) {
-                            if (result.status_code === 1) {
-                                $('#exampleModal').modal('hide');
-                                $('#AddJobPost').trigger("reset");
-                                $('#myTable').DataTable().ajax.reload(null, false);
-                                Toastify({
-                                    text: result.message,
-                                    duration: 3000,
-                                    gravity: "top",
-                                    position: "right",
-                                    style: {
-                                        background: "green",
-                                        color: "white",
-                                    }
-                                }).showToast();
-
-                            } else if (result.status_code === 2) {
-                                Toastify({
-                                    text: result.message,
-                                    duration: 3000,
-                                    gravity: "top",
-                                    position: "right",
-                                    style: {
-                                        background: "#c7ac14",
-                                        color: "white",
-                                    }
-                                }).showToast();
-                            } else {
-                                Toastify({
-                                    text: result.message,
-                                    duration: 3000,
-                                    gravity: "top",
-                                    position: "right",
-                                    style: {
-                                        background: "red",
-                                        color: "white",
-                                    }
-                                }).showToast();
-                            }
-                        },
-                        error: function(xhr, status, error) {
-                            console.error('AJAX Error:', error);
-                            Toastify({
-                                text: 'An error occurred. Please try again.',
-                                duration: 3000,
-                                gravity: "top",
-                                position: "right",
-                                style: {
-                                    background: "red",
-                                    color: "white",
-                                }
-                            }).showToast();
-                        }
-                    });
-                });
-            });
-        </script>
 
         {{-- To Show Verify & Reject Button --}}
         <script>
@@ -318,53 +243,75 @@
         {{-- change Status --}}
         <script>
             function changeStatus(id) {
-                $.ajax({
-                    url: "{{ route('Admin.ChangeJobPostStatus') }}",
-                    type: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    data: {
-                        id: id
-                    },
-                    dataType: 'json',
-                    success: function(result) {
-                        if (result.status_code == 1) {
-                            $('#myTable').DataTable().ajax.reload(null, false);
-                            Toastify({
-                                text: result.message,
-                                duration: 3000,
-                                gravity: "top",
-                                position: "right",
-                                style: {
-                                    background: "green",
-                                    color: "white",
-                                }
-                            }).showToast();
-                        } else if (result.status_code == 2) {
-                            Toastify({
-                                text: result.message,
-                                duration: 3000,
-                                gravity: "top",
-                                position: "right",
-                                style: {
-                                    background: "#c7ac14",
-                                    color: "white",
-                                }
-                            }).showToast();
+                
+                Swal.fire({
+                title: 'Are you sure?',
+                text: 'Do you want to change the status of this record?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, change it!',
+                cancelButtonText: 'No, cancel!',
+                background: '#ffc107',
+                }).then((response) => {
+                    if (response.isConfirmed) {
 
-                        } else {
-                            Toastify({
-                                text: result.message,
-                                duration: 3000,
-                                gravity: "top",
-                                position: "right",
-                                style: {
-                                    background: "red",
-                                    color: "white",
+                        $.ajax({
+                            url: "{{ route('Admin.ChangeJobPostStatus') }}",
+                            type: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            data: {
+                                id: id
+                            },
+                            dataType: 'json',
+                            success: function(result) {
+                                if (result.status_code == 1) {
+                                    $('#myTable').DataTable().ajax.reload(null, false);
+                                    Toastify({
+                                        text: result.message,
+                                        duration: 3000,
+                                        gravity: "top",
+                                        position: "right",
+                                        style: {
+                                            background: "green",
+                                            color: "white",
+                                        }
+                                    }).showToast();
+                                } else if (result.status_code == 2) {
+                                    Toastify({
+                                        text: result.message,
+                                        duration: 3000,
+                                        gravity: "top",
+                                        position: "right",
+                                        style: {
+                                            background: "#c7ac14",
+                                            color: "white",
+                                        }
+                                    }).showToast();
+
+                                } else {
+                                    Toastify({
+                                        text: result.message,
+                                        duration: 3000,
+                                        gravity: "top",
+                                        position: "right",
+                                        style: {
+                                            background: "red",
+                                            color: "white",
+                                        }
+                                    }).showToast();
                                 }
-                            }).showToast();
-                        }
+                            }
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Cancelled',
+                            text: 'The status was not changed.',
+                            icon: 'info',
+                            confirmButtonText: 'Okay',
+                            background: '#17a2b8'
+                        });
                     }
                 });
             }

@@ -2605,7 +2605,8 @@ class JobController extends Controller
             $dataArray[] = $record->id;
             $dataArray[] = ucfirst($record->education_level);
             $dataArray[] = ucfirst($record->education);
-            $dataArray[] = ucfirst($record->branch);
+            $dataArray[] = $record->branch ? ucfirst($record->branch) : '-';
+
 
             $status = $record->status == 1
                 ? '<div class="d-flex "><span onclick="changeStatus(' . $record->id . ');" class="badge bg-success text-uppercase"  style="cursor: pointer;">Active</span></div>'
@@ -2776,9 +2777,20 @@ class JobController extends Controller
         }
     }
 
+    public function createJob()
+    {
+        return view('admin.job.CreateJob');
+    }
 
+    
+    public function submitJob()
+    {
+        dd('dd');
+    }
+    
+    
     // Job Post
-    public function jobPost()
+    public function jobList()
     {
         $data['jobTypes'] = JobTypes::where('status', 1)->select('type','status')->get(); 
         $data['jobMode'] = JobMode::where('status', 1)->select('mode','status')->get(); 
@@ -2797,7 +2809,7 @@ class JobController extends Controller
         $data['JobSalary'] = JobSalary::where('status', 1)
         ->orderByRaw('CAST(salary AS UNSIGNED) ASC') // Ensures numeric sorting
         ->get();
-        return view('admin.job.Jobpost',$data);
+        return view('admin.job.JobList',$data);
     }
 
     public function getJobPost(Request $request)
