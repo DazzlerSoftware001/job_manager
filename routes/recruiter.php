@@ -21,7 +21,7 @@ Route::prefix('Recruiter')->group(function () {
         Route::get('/getDepartment', [JobController::class, 'getDepartment'])->name('Recruiter.getDepartment');
         Route::get('/getRole', [JobController::class, 'getRole'])->name('Recruiter.getRole');
         Route::post('/PostJobData', [JobController::class, 'PostJobData'])->name('Recruiter.PostJobData');
-
+        
         Route::get('/JobList', [JobController::class, 'JobList'])->name('Recruiter.JobList');
         Route::post('/GetJobPost', [JobController::class, 'getJobPost'])->name('Recruiter.GetJobPost');
         Route::post('/ChangeJobPostStatus', [JobController::class, 'changeJobPostStatus'])->name('Recruiter.ChangeJobPostStatus');
@@ -29,7 +29,9 @@ Route::prefix('Recruiter')->group(function () {
         Route::get('/ViewJobPost/{id}', [JobController::class, 'viewJobPost'])->name('Recruiter.ViewJobPost');
         Route::get('/EditJobPost/{id}', [JobController::class, 'editJobPost'])->name('Recruiter.EditJobPost');
         Route::post('/UpdateJobPost', [JobController::class, 'updateJobPost'])->name('Recruiter.UpdateJobPost');
-
+        
+        Route::get('/getEducation', [JobController::class, 'getEducation'])->name('Recruiter.getEducation');
+        Route::get('/getBranch', [JobController::class, 'getBranch'])->name('Recruiter.getBranch');
 
         Route::post('/logout', [AuthController::class, 'logout'])->name('Recruiter.logout');
 

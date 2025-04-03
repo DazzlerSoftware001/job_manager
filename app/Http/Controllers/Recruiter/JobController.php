@@ -145,6 +145,34 @@ class JobController extends Controller
         return response()->json($JobRole);
     }
 
+    public function getEducation(Request $request) {
+        if (!$request->has('education_level')) {
+            return response()->json(['error' => 'Education Level is missing'], 400);
+        }
+
+        $JobEducation = JobEducation::where('education_level', $request->education_level)
+                                    ->select('education')
+                                    ->distinct()
+                                    ->get();
+
+        return response()->json($JobEducation);
+    }
+
+    // Fetch Branches based on Selected Qualification
+    public function getBranch(Request $request) {
+        if (!$request->has('education')) {
+            return response()->json(['error' => 'Education Name is missing'], 400);
+        }
+
+        $JobEducation = JobEducation::where('education', $request->education)
+                                    ->select('branch')
+                                    ->distinct()
+                                    ->get();
+
+        return response()->json($JobEducation);
+    }
+    
+
     public function JobList() {
         return view('recruiter.JobList');
     }
