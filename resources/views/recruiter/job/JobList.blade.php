@@ -113,6 +113,7 @@
                                             <tr>
                                                 <th>#</th>
                                                 <th>Title</th>
+                                                <th>Admin Verify</th>
                                                 <th>Status</th>
                                                 <th>Create Date</th>
                                                 <th>Action</th>

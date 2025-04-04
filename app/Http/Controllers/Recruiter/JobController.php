@@ -45,7 +45,7 @@ class JobController extends Controller
         ->get();
         // dd($data['JobEducation']);
 
-        return view('recruiter.Jobpost',$data);
+        return view('recruiter.job.Jobpost',$data);
     }
 
     public function PostJobData(Request $request)
@@ -67,14 +67,17 @@ class JobController extends Controller
             'currency' => 'required|string',
             'min_salary' => 'required|integer',
             'max_salary' => 'required',
+            'education_level' => 'required|string',
             'education' => 'required|string',
+            'branch' => 'nullable',
             'candidate_industry' => 'nullable|string',
             'vacancies' => 'required|integer',
             'interview_type' => 'required|string',
             'company_name' => 'required|string',
             'company_details' => 'required|string',
             'job_description'=> 'required|string',
-
+            'job_resp' => 'required|string',
+            'job_req' => 'required|string',
         ];
 
         // Validate the request
@@ -97,7 +100,11 @@ class JobController extends Controller
                 $JobPost->currency = $request->input('currency');
                 $JobPost->min_sal = $request->input('min_salary');
                 $JobPost->max_sal = $request->input('max_salary');
+                $JobPost->sal_status = $request->input('sal_status') ?? 'off';
+                $JobPost->education_level = $request->input('education_level');
                 $JobPost->education = $request->input('education');
+                // $JobPost->branch = implode(',', $request->input('branch',[]));
+                $JobPost->branch = implode(',', (array) $request->input('branch'));
                 $JobPost->condidate_industry = $request->input('candidate_industry');
                 $JobPost->diversity = $request->input('diversity') ?? 'All';
                 $JobPost->vacancies = $request->input('vacancies');
@@ -106,8 +113,13 @@ class JobController extends Controller
                 $JobPost->com_logo = $request->input('company_logo');
                 $JobPost->com_details = $request->input('company_details');
                 $JobPost->job_desc = $request->input('job_description');
+                $JobPost->job_resp = $request->input('job_resp');
+                $JobPost->job_req = $request->input('job_req');
                 $JobPost->status = 0;
+                $JobPost->admin_verify = 0;
                 $JobPost->created_at = now();
+
+                // dd($JobPost);
 
                 $JobPost->save();
 
@@ -174,7 +186,7 @@ class JobController extends Controller
     
 
     public function JobList() {
-        return view('recruiter.JobList');
+        return view('recruiter.job.JobList');
     }
 
     public function getJobPost(Request $request)
@@ -190,6 +202,7 @@ class JobController extends Controller
         $columns = array(
             0 => 'id',
             1 => 'title',
+            2 => 'admin_verify',
             2 => 'status',
             3 => 'created_at',
             4 => 'id',
@@ -219,6 +232,14 @@ class JobController extends Controller
 
             $dataArray[] = $record->id;
             $dataArray[] = ucfirst($record->title);
+
+            $admin_verify = '<div class="d-flex">
+                    <span 
+                        class="badge ' . ($record->admin_verify == 1 ? 'bg-success' : ($record->admin_verify == 0 ? 'bg-warning' : 'bg-danger')) . ' text-uppercase">
+                        ' . ($record->admin_verify == 1 ? 'Verified' : ($record->admin_verify == 0 ? 'Pending' : 'Rejected')) . '
+                    </span>
+                </div>';
+            $dataArray[] = $admin_verify;
 
             $status = $record->status == 1
                 ? '<div class="d-flex "><span onclick="changeStatus(' . $record->id . ');" class="badge bg-success text-uppercase"  style="cursor: pointer;">Active</span></div>'
@@ -323,7 +344,7 @@ class JobController extends Controller
         try {
             $decryptedId = Crypt::decrypt($id);
             $job = JobPost::findOrFail($decryptedId);
-            return view('recruiter.EditJob', compact('job'));
+            return view('recruiter.job.EditJob', compact('job'));
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Invalid Job ID!');
         }

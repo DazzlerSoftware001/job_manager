@@ -26,12 +26,12 @@ return new class extends Migration
             $table->string('currency');
             $table->string('min_sal');
             $table->string('max_sal')->nullable();
-            $table->tinyInteger('sal_status')->default(0);
+            $table->string('sal_status')->default('off');
             $table->string('education_level');
             $table->string('education');
             $table->string('branch')->nullable();
             $table->string('condidate_industry')->nullable();
-            $table->string('diversity')->default('Both');
+            $table->string('diversity')->default('All');
             $table->integer('vacancies');
             $table->string('int_type');
             $table->string('com_name');

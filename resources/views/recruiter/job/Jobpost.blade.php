@@ -13,7 +13,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             tinymce.init({
-                selector: '#job_description',
+                selector: '#job_description,#job_resp,#job_req',
                 height: 400,
                 plugins: 'advlist autolink lists link image charmap preview',
                 toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | bullist numlist outdent indent | link image',
@@ -184,7 +184,8 @@
 
                         <div class="card">
                             <div class="card-body pb-0">
-                                <form method="POST" action="javascript:void(0)" id="AddJobPost">
+                                <form method="POST" action="javascript:void(0)" id="AddJobPost"
+                                    enctype="multipart/form-data">
                                     @csrf
                                     <div class="row mb-3">
                                         <div class="col-xl-12">
@@ -322,13 +323,14 @@
                                                 </select>
                                             </div>
                                             <div class="mt-3">
-                                                <input type="checkbox" name="sal_status" id="sal_status" checked>
+                                                <input type="checkbox" name="sal_status" id="sal_status">
                                                 <label for="">Do you want to show the Salary to User</label>
                                             </div>
                                         </div>
 
                                         <div class="col-xl-4 mt-3">
-                                            <label for="education_level" class="form-label">Education Level <span class="text-danger">*</span></label>
+                                            <label for="education_level" class="form-label">Education Level <span
+                                                    class="text-danger">*</span></label>
                                             <select name="education_level" class="form-control" id="education_level">
                                                 <option value="">Select Education Level</option>
                                                 <option value="Matric">Secondary Education</option>
@@ -340,21 +342,24 @@
                                                 <option value="Diploma">Diploma & Certificate Courses</option>
                                             </select>
                                         </div>
-                                        
+
                                         <div class="col-xl-4 mt-3" id="education-container" style="display: none;">
-                                            <label for="education">Educational Qualification <span class="text-danger">*</span></label>
+                                            <label for="education">Educational Qualification <span
+                                                    class="text-danger">*</span></label>
                                             <select class="form-select" id="education" name="education">
                                                 <option value="">Choose Qualification</option>
                                             </select>
                                         </div>
-                                        
-                                        <div class="col-xl-4 mt-3" id="branch-container" style="display: none;">
-                                            <label for="branch">Education Branch<span class="text-danger">*</span></label>
-                                            <select class="form-select" id="branch" name="branch">
-                                                <option value="">Choose Branch</option>
+
+                                        <div class="col-xl-4 mt-2" id="branch-container" style="display: none;">
+                                            <label for="branch">Education Branch <span
+                                                    class="text-danger">*</span></label>
+                                            <select class="form-select" id="branch" name="branch[]" multiple>
+                                                {{-- <option value="">Choose Branch</option> --}}
                                             </select>
                                         </div>
-                                        
+
+
 
                                         <div class="col-xl-4 mt-3">
                                             <label for="candidate_industry">Condidate Industry</label>
@@ -435,8 +440,8 @@
                                         <div class="col-xl-6 text-center mt-3">
                                             <label for="job_image">Job Image <span class="text-danger">*</span></label>
                                             <div class="mt-3">
-                                                <img id="imagePreview" src="" alt="Image Preview"
-                                                    style="width: 200px; height: 200px; object-fit: cover; border-radius: 10px;">
+                                                <img id="imagePreview" src="{{url('recruiter/logo/default.png')}}" onerror="this.onerror=null; this.src='{{ url('recruiter/logo/default.png') }}';" alt="Image Preview"
+                                                    style="width: 150px; height: 150px; object-fit: cover; border-radius: 10px;">
                                                 <input type="hidden" id="company_logo" name="company_logo"
                                                     value="">
                                             </div>
@@ -454,17 +459,17 @@
 
                                         <div class="d-flex justify-content-center mt-3">
                                             <div class="col-xl-12 text-center">
-                                                <label for="">Responsibilities <span
+                                                <label for="job_resp">Responsibilities <span
                                                         class="text-danger">*</span></label>
-                                                <textarea class="form-control" id="job_description" name=""></textarea>
+                                                <textarea class="form-control" id="job_resp" name="job_resp"></textarea>
                                             </div>
                                         </div>
 
                                         <div class="d-flex justify-content-center mt-3">
                                             <div class="col-xl-12 text-center">
-                                                <label for="">Requirements <span
+                                                <label for="job_req">Requirements <span
                                                         class="text-danger">*</span></label>
-                                                <textarea class="form-control" id="job_description" name=""></textarea>
+                                                <textarea class="form-control" id="job_req" name="job_req"></textarea>
                                             </div>
                                         </div>
 
@@ -805,79 +810,162 @@
             });
         </script>
 
-    <script>
-        $(document).ready(function() {
-            // When education level changes, load qualifications
-            $('#education_level').change(function() {
-                var education_level = $(this).val();
-                $('#education').html('<option value="">Loading...</option>'); // Show loading text
-                $('#branch').html('<option value="">Choose Branch</option>'); // Reset branch dropdown
-                $('#branch-container').hide(); // Hide branch container initially
-        
-                if (education_level) {
-                    $.ajax({
-                        url: "{{ route('Recruiter.getEducation') }}",
-                        type: "GET",
-                        data: { education_level: education_level },
-                        success: function(data) {
-                            console.log("Education Data:", data); // Debugging
-                            $('#education').html('<option value="">Choose Qualification</option>');
-        
-                            if (data.length > 0) {
-                                $.each(data, function(index, item) {
-                                    $('#education').append('<option value="' + item.education + '">' + item.education + '</option>');
-                                });
-                                $('#education-container').show(); // Show education container
-                            } else {
-                                $('#education').html('<option value="">No Qualifications Found</option>');
+        {{-- For selecting education according to education_level & branch according to education --}}
+        <script>
+            $(document).ready(function() {
+                // When education level changes, load qualifications
+                $('#education_level').change(function() {
+                    var education_level = $(this).val();
+                    $('#education').html('<option value="">Loading...</option>'); // Show loading text
+                    $('#branch').html('<option value="">Choose Branch</option>'); // Reset branch dropdown
+                    $('#branch-container').hide(); // Hide branch container initially
+
+                    if (education_level) {
+                        $.ajax({
+                            url: "{{ route('Recruiter.getEducation') }}",
+                            type: "GET",
+                            data: {
+                                education_level: education_level
+                            },
+                            success: function(data) {
+                                // console.log("Education Data:", data); // Debugging
+                                $('#education').html(
+                                    '<option value="">Choose Qualification</option>');
+
+                                if (data.length > 0) {
+                                    $.each(data, function(index, item) {
+                                        $('#education').append('<option value="' + item
+                                            .education + '">' + item.education +
+                                            '</option>');
+                                    });
+                                    $('#education-container').show(); // Show education container
+                                } else {
+                                    $('#education').html(
+                                        '<option value="">No Qualifications Found</option>');
+                                    $('#education-container').hide();
+                                }
+                            },
+                            error: function() {
+                                $('#education').html(
+                                    '<option value="">Error loading data</option>');
                                 $('#education-container').hide();
                             }
-                        },
-                        error: function() {
-                            $('#education').html('<option value="">Error loading data</option>');
-                            $('#education-container').hide();
-                        }
-                    });
-                } else {
-                    $('#education-container').hide();
-                    $('#branch-container').hide();
-                }
+                        });
+                    } else {
+                        $('#education-container').hide();
+                        $('#branch-container').hide();
+                    }
+                });
+
+                // When education qualification changes, load branches
+                // $('#education').change(function() {
+                //     var education = $(this).val();
+                //     $('#branch').html('<option value="">Loading...</option>');
+
+                //     if (education) {
+                //         $.ajax({
+                //             url: "{{ route('Recruiter.getBranch') }}",
+                //             type: "GET",
+                //             data: {
+                //                 education: education
+                //             },
+                //             success: function(data) {
+                //                 // console.log("Branch Data:", data);
+                //                 $('#branch').empty(); // Clear previous options
+                //                 if (data.length > 0) {
+                //                     $('#branch').append('<option value="">Choose Branch</option>');
+                //                     $.each(data, function(index, item) {
+                //                         $('#branch').append('<option value="' + item
+                //                             .branch + '">' + item.branch + '</option>');
+                //                     });
+                //                     $('#branch-container').show();
+                //                 } else {
+                //                     $('#branch').append(
+                //                         '<option value="">No Branches Found</option>');
+                //                     $('#branch-container').hide();
+                //                 }
+                //             },
+                //             error: function() {
+                //                 $('#branch').html('<option value="">Error loading data</option>');
+                //                 $('#branch-container').hide();
+                //             }
+                //         });
+                //     } else {
+                //         $('#branch-container').hide();
+                //     }
+                // });
+
             });
-        
-            // When education qualification changes, load branches
-            $('#education').change(function() {
-                var education = $(this).val();
-                $('#branch').html('<option value="">Loading...</option>'); // Show loading text
-        
-                if (education) {
-                    $.ajax({
-                        url: "{{ route('Recruiter.getBranch') }}",
-                        type: "GET",
-                        data: { education: education },
-                        success: function(data) {
-                            console.log("Branch Data:", data); // Debugging
-                            $('#branch').html('<option value="">Choose Branch</option>');
-        
-                            if (data.length > 0) {
-                                $.each(data, function(index, item) {
-                                    $('#branch').append('<option value="' + item.branch + '">' + item.branch + '</option>');
+        </script>
+
+        <script>
+            $(document).ready(function() {
+                var branchSelect = document.getElementById('branch');
+                var branchChoices;
+
+                // Initialize Choices.js if #branch exists
+                if (branchSelect) {
+                    branchChoices = new Choices(branchSelect, {
+                        shouldSort: false,
+                        position: 'down',
+                        removeItemButton: true,
+                    });
+                }
+
+                // Populate branch dropdown with existing JobEducation options
+                var jobEducationOptions = `@foreach ($JobEducation as $key => $value)
+                                    <option value="{{ $value->branch }}">{{ $value->branch }}</option>
+                                @endforeach`;
+                $('#branch').append(jobEducationOptions);
+
+                // Handle education change event
+                $('#education').change(function() {
+                    var education = $(this).val();
+                    $('#branch').html('<option value="">Loading...</option>');
+
+                    if (education) {
+                        $.ajax({
+                            url: "{{ route('Recruiter.getBranch') }}",
+                            type: "GET",
+                            data: {
+                                education: education
+                            },
+                            success: function(data) {
+                                $('#branch').empty(); // Clear previous options
+
+                                if (data.length > 0) {
+                                    $('#branch').append('<option value="">Choose Branch</option>');
+                                    $.each(data, function(index, item) {
+                                        $('#branch').append('<option value="' + item
+                                            .branch + '">' + item.branch + '</option>');
+                                    });
+                                    $('#branch-container').show();
+                                } else {
+                                    $('#branch').append(
+                                        '<option value="">No Branches Found</option>');
+                                    $('#branch-container').hide();
+                                }
+
+                                // Destroy and Reinitialize Choices.js
+                                if (branchChoices) {
+                                    branchChoices.destroy();
+                                }
+                                branchChoices = new Choices(branchSelect, {
+                                    shouldSort: false,
+                                    position: 'down',
+                                    removeItemButton: true,
                                 });
-                                $('#branch-container').show(); // Show branch container
-                            } else {
-                                $('#branch').html('<option value="">No Branches Found</option>');
+                            },
+                            error: function() {
+                                $('#branch').html('<option value="">Error loading data</option>');
                                 $('#branch-container').hide();
                             }
-                        },
-                        error: function() {
-                            $('#branch').html('<option value="">Error loading data</option>');
-                            $('#branch-container').hide();
-                        }
-                    });
-                } else {
-                    $('#branch-container').hide();
-                }
+                        });
+                    } else {
+                        $('#branch-container').hide();
+                    }
+                });
             });
-        });
         </script>
 
 
@@ -946,7 +1034,7 @@
                             }
                         },
                         error: function(xhr, status, error) {
-                            console.error('AJAX Error:', error);
+                            // console.error('AJAX Error:', error);
                             Toastify({
                                 text: 'An error occurred. Please try again.',
                                 duration: 3000,
