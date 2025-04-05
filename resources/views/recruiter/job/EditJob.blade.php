@@ -13,7 +13,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             tinymce.init({
-                selector: '#edit_job_description',
+                selector: '#job_description,#job_resp,#job_req',
                 height: 400,
                 plugins: 'advlist autolink lists link image charmap preview',
                 toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | bullist numlist outdent indent | link image',
@@ -94,193 +94,133 @@
 
                 <div class="row">
                     <div class="col-xxl-12">
-                        <div class="row">
-                            <div class="col-xl-4 col-lg-6">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <div class="d-flex align-items-center">
-                                            <div class="flex-shrink-0 me-3">
-                                                <div class="avatar">
-                                                    <div class="avatar-title rounded bg-primary bg-gradient">
-                                                        <i data-eva="pie-chart-2" class="fill-white"></i>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="flex-grow-1">
-                                                <p class="text-muted mb-1">Revenue</p>
-                                                <h4 class="mb-0">$21,456</h4>
-                                            </div>
-
-                                            <div class="flex-shrink-0 align-self-end ms-2">
-                                                <div
-                                                    class="badge rounded-pill font-size-13 bg-success-subtle text-success ">
-                                                    + 2.65%
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- end card body -->
-                                </div>
-                                <!-- end card -->
-                            </div>
-                            <!-- end col -->
-                            <div class="col-xl-4 col-lg-6">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <div class="d-flex align-items-center">
-                                            <div class="flex-shrink-0 me-3">
-                                                <div class="avatar">
-                                                    <div class="avatar-title rounded bg-primary bg-gradient">
-                                                        <i data-eva="shopping-bag" class="fill-white"></i>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="flex-grow-1">
-                                                <p class="text-muted mb-1">Orders</p>
-                                                <h4 class="mb-0">5,643</h4>
-                                            </div>
-                                            <div class="flex-shrink-0 align-self-end ms-2">
-                                                <div
-                                                    class="badge rounded-pill font-size-13  bg-danger-subtle  text-danger ">
-                                                    - 0.82%
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- end card body -->
-                                </div>
-                                <!-- end card -->
-                            </div>
-                            <!-- end col -->
-                            <div class="col-xl-4">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <div class="d-flex align-items-center">
-                                            <div class="flex-shrink-0 me-3">
-                                                <div class="avatar">
-                                                    <div class="avatar-title rounded bg-primary bg-gradient">
-                                                        <i data-eva="people" class="fill-white"></i>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="flex-grow-1">
-                                                <p class="text-muted mb-1">Customers</p>
-                                                <h4 class="mb-0">45,254</h4>
-                                            </div>
-                                            <div class="flex-shrink-0 align-self-end ms-2">
-                                                <div class="badge rounded-pill font-size-13 bg-danger-subtle text-danger">-
-                                                    1.04%
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- end card body -->
-                                </div>
-                                <!-- end card -->
-                            </div>
-                            <!-- end col -->
-                        </div>
-                        <!-- end row -->
 
                         <div class="card">
                             <div class="card-body pb-0">
-                                <form method="POST" action="javascript:void(0)" id="AddJobPost">
+                                <form method="POST" action="javascript:void(0)" id="AddJobPost"
+                                    enctype="multipart/form-data">
                                     @csrf
                                     <div class="row mb-3">
-                                        <div class="col-xl-4">
-                                            <label for="edit_job_title">Job Title <span class="text-danger">*</span></label>
-                                            <input type="text" class="form-control" id="edit_job_title" name="edit_job_title"
-                                                placeholder="Enter job title" value="{{$job->title}}">
+                                        <div class="col-xl-12">
+                                            <label for="job_title">Job Title <span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control" id="job_title" name="job_title"
+                                                value="{{ $jobPost->title ?? '' }}" placeholder="Enter job title">
                                         </div>
 
 
-                                        <div class="col-xl-4">
-                                            <label for="edit_job_type">Job Type <span class="text-danger">*</span></label>
-                                            <select class="form-select" id="edit_job_type" name="edit_job_type">
-                                                <option value="{{$job->type}}">{{$job->type}}</option>
-                                                
-                                            </select>
-                                        </div>
-
-
-                                        {{-- <div class="col-xl-4">
-                                            <label for="edit_skills">Skills <span class="text-danger">*</span></label>
-                                            <select class="form-select" id="edit_skills" name="edit_skills[]" multiple>
-                                               <option value="{{$job->skills}}">{{$job->skills}}</option>
-                                            </select>
-                                        </div> --}}
-
-                                        <div class="col-xl-4">
-                                            <label for="edit_skills">Skills <span class="text-danger">*</span></label>
-                                            <select class="form-select" id="edit_skills" name="edit_skills[]" multiple>
-                                                @foreach(explode(',', $job->skills) as $skill)
-                                                    <option value="{{ trim($skill) }}" selected>{{ trim($skill) }}</option>
+                                        <div class="col-xl-4 mt-2">
+                                            <label for="job_type">Job Type <span class="text-danger">*</span></label>
+                                            <select class="form-select" id="job_type" name="job_type">
+                                                <option value="">Select</option>
+                                                @foreach ($jobTypes as $key => $value)
+                                                    {{-- <option value="{{ $value->type }}">{{ $value->type }}</option> --}}
+                                                    <option value="{{ $value->type }}"
+                                                        {{ isset($jobPost) && $jobPost->type == $value->type ? 'selected' : '' }}>
+                                                        {{ $value->type }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
-                                        
 
 
-                                        <div class="col-xl-4 mt-3">
-                                            <label for="edit_industry">Category <span class="text-danger">*</span></label>
-                                            <select class="form-select" id="edit_industry" name="edit_industry">
-                                                <option value="{{$job->industry}}">{{$job->industry}}</option>
-                                                
-                                                    <option ></option>
-                                               
+                                        <div class="col-xl-4 mt-2">
+                                            <label for="skills">Skills <span class="text-danger">*</span></label>
+                                            <select class="form-select" id="skills" name="skills[]" multiple>
+                                                @foreach ($jobSkill as $key => $value)
+                                                    {{-- <option value="{{ $value->skill }}">{{ $value->skill }}</option> --}}
+                                                    <option value="{{ $value->skill }}"
+                                                        {{ isset($jobPost) && $jobPost->skills == $value->skill ? 'selected' : '' }}>
+                                                        {{ $value->skill }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+
+
+                                        <div class="col-xl-4 mt-2">
+                                            <label for="industry">Category <span class="text-danger">*</span></label>
+                                            <select class="form-select" id="industry" name="industry">
+                                                <option value="">Choose Industry</option>
+                                                @foreach ($JobCategory as $key => $value)
+                                                    {{-- <option value="{{ $value->name }}">{{ $value->name }}</option> --}}
+                                                    <option value="{{ $value->name }}"
+                                                        {{ isset($jobPost) && $jobPost->industry == $value->name ? 'selected' : '' }}>
+                                                        {{ $value->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+
+
+                                        <div class="col-xl-4 mt-3" id="department-container" style="display: none;">
+                                            <label for="department">Department <span class="text-danger">*</span></label>
+                                            <select class="form-select" id="department" name="department">
+                                                <option value="">Select</option>
+                                            </select>
+                                        </div>
+
+
+                                        <div class="col-xl-4 mt-3" id="role-container" style="display: none;">
+                                            <label for="role">Role <span class="text-danger">*</span></label>
+                                            <select class="form-select" id="role" name="role">
+                                                <option value="">Select</option>
                                             </select>
                                         </div>
 
 
                                         <div class="col-xl-4 mt-3">
-                                            <label for="edit_department">Department <span class="text-danger">*</span></label>
-                                            <select class="form-select" id="edit_department" name="edit_department">
-                                                <option value="{{$job->department}}">{{$job->department}}</option>
+                                            <label for="work_mode">Job Mode <span class="text-danger">*</span></label>
+                                            <select class="form-select" id="work_mode" name="work_mode">
+                                                <option value="">Select</option>
+                                                @foreach ($jobMode as $key => $value)
+                                                    {{-- <option value="{{ $value->mode }}">{{ $value->mode }}</option> --}}
+                                                    <option value="{{ $value->mode }}"
+                                                        {{ isset($jobPost) && $jobPost->mode == $value->mode ? 'selected' : '' }}>
+                                                        {{ $value->mode }}</option>
+                                                @endforeach
                                             </select>
                                         </div>
 
 
                                         <div class="col-xl-4 mt-3">
-                                            <label for="edit_role">Role <span class="text-danger">*</span></label>
-                                            <select class="form-select" id="edit_role" name="edit_role">
-                                                <option value="{{$job->role}}">{{$job->role}}</option>
+                                            <label for="location">Location <span class="text-danger">*</span></label>
+                                            <select class="form-select" id="location" name="location">
+                                                <option value="">Select</option>
+                                                @foreach ($JobLocation as $key => $value)
+                                                    {{-- <option value="{{ $value->country . ' - ' . $value->city }}">
+                                                        {{ $value->country . ' - ' . $value->city }}</option> --}}
+                                                    <option value="{{ $value->country . ' - ' . $value->city }}"
+                                                        {{ isset($jobPost) && $jobPost->location == $value->country . ' - ' . $value->city ? 'selected' : '' }}>
+                                                        {{ $value->country . ' - ' . $value->city }}
+                                                    </option>
+                                                @endforeach
                                             </select>
                                         </div>
 
 
                                         <div class="col-xl-4 mt-3">
-                                            <label for="edit_work_mode">Job Mode <span class="text-danger">*</span></label>
-                                            <select class="form-select" id="edit_work_mode" name="edit_work_mode">
-                                                <option value="{{$job->mode}}">{{$job->mode}}</option>
-                                            </select>
-                                        </div>
-
-
-                                        <div class="col-xl-4 mt-3">
-                                            <label for="edit_location">Location <span class="text-danger">*</span></label>
-                                            <select class="form-select" id="edit_location" name="edit_location">
-                                                <option value="{{$job->location}}">{{$job->location}}</option>
-                                            </select>
-                                        </div>
-
-
-                                        <div class="col-xl-4 mt-3">
-                                            <label for="edit_min_experience">Work Experience (Min - Max) <span class="text-danger">*</span></label>
+                                            <label for="min_experience">Work Experience (Min - Max) <span
+                                                    class="text-danger">*</span></label>
                                             <div class="d-flex gap-2">
                                                 <!-- Min Experience Dropdown -->
-                                                <select class="form-select" id="edit_min_experience" name="edit_min_experience"
+                                                <select class="form-select" id="min_experience" name="min_experience"
                                                     onchange="updateMaxExperience()">
-                                                    {{-- <option value=0>Fresher</option> --}}
-                                                <option value="{{$job->min_exp}}">{{$job->min_exp}}</option>
-
+                                                    {{-- <option value="">Min</option> --}}
+                                                    <option value=0>Fresher</option>
+                                                    @foreach ($JobExperience as $value)
+                                                        {{-- <option value="{{ $value->experience }}">{{ $value->experience }} </option> --}}
+                                                        <option value="{{ $value->experience }}"
+                                                            {{ isset($jobPost) && $jobPost->min_exp == $value->experience ? 'selected' : '' }}>
+                                                            {{ $value->experience }}</option>
+                                                    @endforeach
                                                 </select>
 
                                                 <!-- Max Experience Dropdown -->
-                                                <select class="form-select" id="edit_max_experience" name="edit_max_experience"
+                                                <select class="form-select" id="max_experience" name="max_experience"
                                                     disabled>
-                                                    {{-- <option value=0>Max</option> --}}
-                                                <option value="{{$job->max_exp}}">{{$job->max_exp}}</option>
-
+                                                    <option value=0>Max</option>
+                                                    @foreach ($JobExperience as $value)
+                                                        <option value="{{ $value->experience }}"
+                                                            {{ isset($jobPost) && $jobPost->max_exp == $value->experience ? 'selected' : '' }}>
+                                                            {{ $value->experience }}</option>
+                                                    @endforeach
                                                 </select>
                                             </div>
                                         </div>
@@ -288,74 +228,149 @@
 
 
                                         <div class="col-xl-4 mt-3">
-                                            <label for="edit_currency">Annual Salary (Currency - Min - Max) <span class="text-danger">*</span></label>
+                                            <label for="currency">Annual Salary (Currency - Min - Max) <span
+                                                    class="text-danger">*</span></label>
                                             <div class="d-flex gap-2">
-                                                <select class="form-select" id="edit_currency" name="edit_currency">
-                                                    {{-- <option value="">Currency</option> --}}
-                                                    <option value="{{$job->currency}}">{{$job->currency}}</option>
-
+                                                <select class="form-select" id="currency" name="currency">
+                                                    <option value="">Currency</option>
+                                                    @foreach ($JobCurrency as $value)
+                                                        {{-- <option value="{{ $value->currency }}">{{ $value->currency }}
+                                                        </option> --}}
+                                                        <option value="{{ $value->currency }}"
+                                                            {{ isset($jobPost) && $jobPost->currency == $value->currency ? 'selected' : '' }}>
+                                                            {{ $value->currency }}</option>
+                                                    @endforeach
                                                 </select>
-                                                <select class="form-select" id="edit_min_salary" name="edit_min_salary"
+                                                <select class="form-select" id="min_salary" name="min_salary"
                                                     onchange="updateMaxSalary()">
-                                                    {{-- <option value="0">Min Salary</option> --}}
-                                                <option value="{{$job->min_sal}}">{{$job->min_sal}}</option>
-
+                                                    <option value="0">Min Salary</option>
+                                                    @foreach ($JobSalary as $value)
+                                                        {{-- <option value="{{ $value->salary }}">{{ $value->salary }}
+                                                        </option> --}}
+                                                        <option value="{{ $value->salary }}"
+                                                            {{ isset($jobPost) && $jobPost->min_sal == $value->salary ? 'selected' : '' }}>
+                                                            {{ $value->salary }}</option>
+                                                    @endforeach
                                                 </select>
-                                                <select class="form-select" id="edit_max_salary" name="edit_max_salary" disabled>
-                                                    {{-- <option value="0">Max Salary</option> --}}
-                                                <option value="{{$job->max_sal}}">{{$job->max_sal}}</option>
-
+                                                <select class="form-select" id="max_salary" name="max_salary" disabled>
+                                                    <option value="0">Max Salary</option>
+                                                    @foreach ($JobSalary as $value)
+                                                        <option value="{{ $value->salary }}"
+                                                            {{ isset($jobPost) && $jobPost->max_sal == $value->salary ? 'selected' : '' }}>
+                                                            {{ $value->salary }}</option>
+                                                    @endforeach
                                                 </select>
+                                            </div>
+                                            <div class="mt-3">
+                                                <input type="checkbox" name="sal_status" id="sal_status"
+                                                    {{ isset($jobPost) && $jobPost->sal_status == 'on' ? 'checked' : '' }}>
+                                                <label for="sal_status">Do you want to show the Salary to User</label>
                                             </div>
                                         </div>
 
-
                                         <div class="col-xl-4 mt-3">
-                                            <label for="edit_education">Educational Qualification <span class="text-danger">*</span></label>
-                                            <select class="form-select" id="edit_education" name="edit_education">
-                                                {{-- <option value="">Choose Qualification</option> --}}
-                                                <option value="{{$job->education}}">{{$job->education}}</option>
+                                            <label for="education_level" class="form-label">Education Level <span
+                                                    class="text-danger">*</span></label>
+                                            <select name="education_level" class="form-control" id="education_level">
+                                                <option value="">Select Education Level</option>
+                                                <option value="Matric"
+                                                    {{ isset($jobPost) && $jobPost->education_level == 'Matric' ? 'selected' : '' }}>
+                                                    Secondary Education</option>
+                                                <option value="Higher Secondary"
+                                                    {{ isset($jobPost) && $jobPost->education_level == 'Higher Secondary' ? 'selected' : '' }}>
+                                                    Higher Secondary Education</option>
+                                                <option value="UG"
+                                                    {{ isset($jobPost) && $jobPost->education_level == 'UG' ? 'selected' : '' }}>
+                                                    Undergraduate (UG)</option>
+                                                <option value="PG"
+                                                    {{ isset($jobPost) && $jobPost->education_level == 'PG' ? 'selected' : '' }}>
+                                                    Postgraduate (PG)</option>
+                                                <option value="PhD"
+                                                    {{ isset($jobPost) && $jobPost->education_level == 'PhD' ? 'selected' : '' }}>
+                                                    Doctorate (PhD)</option>
+                                                <option value="PostDoc"
+                                                    {{ isset($jobPost) && $jobPost->education_level == 'PostDoc' ? 'selected' : '' }}>
+                                                    Postdoctoral Research (After PhD)</option>
+                                                <option value="Diploma"
+                                                    {{ isset($jobPost) && $jobPost->education_level == 'Diploma' ? 'selected' : '' }}>
+                                                    Diploma & Certificate Courses</option>
                                             </select>
                                         </div>
 
 
-                                        <div class="col-xl-4 mt-3">
-                                            <label for="edit_candidate_industry">Condidate Industry</label>
-                                            <select class="form-select" id="edit_candidate_industry"
-                                                name="edit_candidate_industry">
-                                                {{-- <option value="">Choose Industry</option> --}}
-                                                <option value="{{$job->condidate_industry}}">{{$job->condidate_industry}}</option>
-
+                                        <div class="col-xl-4 mt-3" id="education-container" style="display: none;">
+                                            <label for="education">Educational Qualification <span
+                                                    class="text-danger">*</span></label>
+                                            <select class="form-select" id="education" name="education">
+                                                <option value="">Choose Qualification</option>
                                             </select>
                                         </div>
 
+                                        <div class="col-xl-4 mt-2" id="branch-container" style="display: none;">
+                                            <label for="branch">Education Branch <span
+                                                    class="text-danger">*</span></label>
+                                            <select class="form-select" id="branch" name="branch[]" multiple>
+                                                {{-- <option value="">Choose Branch</option> --}}
+                                            </select>
+                                        </div>
+
+
+
+                                        <div class="col-xl-4 mt-3">
+                                            <label for="candidate_industry">Condidate Industry</label>
+                                            <select class="form-select" id="candidate_industry"
+                                                name="candidate_industry">
+                                                <option value="">Choose Industry</option>
+                                                @foreach ($JobCategory as $key => $value)
+                                                    <option value="{{ $value->name }}"
+                                                        {{ isset($jobPost) && $jobPost->condidate_industry == $value->name ? 'selected' : '' }}>
+                                                        {{ $value->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+
+
+                                        @php
+                                            $selectedDiversities = isset($jobPost)
+                                                ? (is_array($jobPost->diversity)
+                                                    ? $jobPost->diversity
+                                                    : explode(',', $jobPost->diversity))
+                                                : [];
+                                        @endphp
 
                                         <div class="col-xl-4 col-lg-6 col-md-8 col-sm-12 mt-3">
-                                            <label for="edit_diversity" class="d-block">Diversity Hiring (Optional)</label>
+                                            <label for="diversity" class="d-block">Diversity Hiring (Optional)</label>
                                             <div class="form-check form-check-inline">
                                                 <input class="form-check-input" type="checkbox" id="male"
-                                                    name="edit_diversity" value="Male">
+                                                    name="diversity[]" value="Male"
+                                                    {{ in_array('Male', $selectedDiversities) ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="male">Male</label>
                                             </div>
                                             <div class="form-check form-check-inline">
                                                 <input class="form-check-input" type="checkbox" id="female"
-                                                    name="edit_diversity" value="Female">
+                                                    name="diversity[]" value="Female"
+                                                    {{ in_array('Female', $selectedDiversities) ? 'checked' : '' }}>
                                                 <label class="form-check-label" for="female">Female</label>
                                             </div>
                                         </div>
 
                                         <div class="col-xl-4 mt-3">
-                                            <label for="edit_vacancies">Number of Vacancies <span class="text-danger">*</span></label>
-                                            <input type="number" class="form-control" name="edit_vacancies" value="{{$job->vacancies}}">
+                                            <label for="vacancies">Number of Vacancies <span
+                                                    class="text-danger">*</span></label>
+                                            <input type="number" class="form-control" name="vacancies" value="{{$jobPost->vacancies}}">
                                         </div>
 
 
                                         <div class="col-xl-4 col-lg-6 col-md-8 col-sm-12 mt-3">
-                                            <label for="edit_interview_type" class="d-block">Interview Type <span class="text-danger">*</span></label>
-                                            <select class="form-select" id="edit_interview_type" name="edit_interview_type">
-                                                {{-- <option value="">Select</option> --}}
-                                                <option value="{{$job->int_type}}">{{$job->int_type}}</option>
-
+                                            <label for="interview_type" class="d-block">Interview Type <span
+                                                    class="text-danger">*</span></label>
+                                            <select class="form-select" id="interview_type" name="interview_type">
+                                                <option value="">Select</option>
+                                                @foreach ($JobIntType as $key => $value)
+                                                    {{-- <option value="{{ $value->int_type }}">{{ $value->int_type }}
+                                                    </option> --}}
+                                                    <option value="{{ $value->int_type }}" {{ isset($jobPost) && $jobPost->int_type == $value->int_type ? 'selected' : '' }}>{{ $value->int_type }}</option>
+                                                @endforeach
                                             </select>
                                         </div>
 
@@ -363,17 +378,26 @@
                                             <div class="row">
                                                 <!-- Company Name Selection -->
                                                 <div class="col-12 col-md-12 mt-3">
-                                                    <label for="edit_company_name">Company Name <span class="text-danger">*</span></label>
-                                                    <select class="form-select" id="edit_company_name" name="edit_company_name"
-                                                        onchange="updateCompanyDetails()">
-                                                        <option value="{{$job->com_name}}">{{$job->com_name}}</option>
+                                                    <label for="company_name">Company Name <span class="text-danger">*</span></label>
+                                                    <select class="form-select" id="company_name" name="company_name" onchange="updateCompanyDetails()">
+                                                        <option value="">Select</option>
+                                                        @foreach ($Companies as $company)
+                                                            <option value="{{ $company->name }}"
+                                                                data-details="{{ $company->details }}"
+                                                                data-logo="{{ asset($company->logo) }}"
+                                                                {{ isset($jobPost) && $jobPost->com_name == $company->name ? 'selected' : '' }}>
+                                                                {{ $company->name }}
+                                                            </option>
+                                                        @endforeach
                                                     </select>
                                                 </div>
+                                                
 
                                                 <!-- Company Details -->
                                                 <div class="col-12 col-md-12 mt-3">
-                                                    <label for="edit_company_details">Company Details <span class="text-danger">*</span></label>
-                                                    <textarea class="form-control" id="edit_company_details" name="edit_company_details" readonly>{{$job->com_details}}</textarea>
+                                                    <label for="company_details">Company Details <span
+                                                            class="text-danger">*</span></label>
+                                                    <textarea class="form-control" id="company_details" name="company_details" readonly>{{$jobPost->com_details}}</textarea>
                                                 </div>
                                             </div>
                                         </div>
@@ -384,33 +408,38 @@
                                         <div class="col-xl-6 text-center mt-3">
                                             <label for="job_image">Job Image <span class="text-danger">*</span></label>
                                             <div class="mt-3">
-                                                <img id="imagePreview" src="{{asset($job->com_logo)}}"
+                                                <img id="imagePreview" src="{{ url('recruiter/logo/default.png') }}"
+                                                    onerror="this.onerror=null; this.src='{{ url('recruiter/logo/default.png') }}';"
                                                     alt="Image Preview"
-                                                    style="width: 200px; height: 200px; object-fit: cover; border-radius: 10px;">
-                                                    <input type="hidden" id="edit_company_logo" name="edit_company_logo" value="">
+                                                    style="width: 150px; height: 150px; object-fit: cover; border-radius: 10px;">
+                                                <input type="hidden" id="company_logo" name="company_logo"
+                                                    value="">
                                             </div>
                                         </div>
 
 
 
                                         <div class="d-flex justify-content-center mt-3">
-                                            <div class="col-xl-12">
-                                                <label for="edit_job_description">Job Description <span class="text-danger">*</span></label>
-                                                <textarea class="form-control" id="edit_job_description" name="edit_job_description">{{$job->job_desc}}</textarea>
+                                            <div class="col-xl-12 text-center">
+                                                <label for="job_description">Job Description <span
+                                                        class="text-danger">*</span></label>
+                                                <textarea class="form-control" id="job_description" name="job_description"></textarea>
                                             </div>
                                         </div>
 
                                         <div class="d-flex justify-content-center mt-3">
-                                            <div class="col-xl-12">
-                                                <label for="edit_job_description">Responsibilities <span class="text-danger">*</span></label>
-                                                <textarea class="form-control" id="edit_job_description" name="edit_job_description"></textarea>
+                                            <div class="col-xl-12 text-center">
+                                                <label for="job_resp">Responsibilities <span
+                                                        class="text-danger">*</span></label>
+                                                <textarea class="form-control" id="job_resp" name="job_resp"></textarea>
                                             </div>
                                         </div>
 
                                         <div class="d-flex justify-content-center mt-3">
-                                            <div class="col-xl-12">
-                                                <label for="edit_job_description">Requirements <span class="text-danger">*</span></label>
-                                                <textarea class="form-control" id="edit_job_description" name="edit_job_description"></textarea>
+                                            <div class="col-xl-12 text-center">
+                                                <label for="job_req">Requirements <span
+                                                        class="text-danger">*</span></label>
+                                                <textarea class="form-control" id="job_req" name="job_req"></textarea>
                                             </div>
                                         </div>
 
@@ -426,6 +455,8 @@
 
                             <!-- end card body -->
                         </div>
+
+
                         <!-- end card -->
                         <!-- end row -->
                     </div>
@@ -443,7 +474,7 @@
 
         <script type="text/javascript">
             document.addEventListener('DOMContentLoaded', function() {
-                var element1 = document.getElementById('edit_work_mode');
+                var element1 = document.getElementById('work_mode');
                 if (element1) {
                     const choices1 = new Choices(element1, {
                         shouldSort: false,
@@ -454,44 +485,9 @@
             });
 
             document.addEventListener('DOMContentLoaded', function() {
-                var edit_job_type = document.getElementById('edit_job_type');
-                if (edit_job_type) {
-                    const edit_job_type1 = new Choices(edit_job_type, {
-                        shouldSort: false,
-                        position: 'down',
-                        resetScrollPosition: true,
-                    });
-                }
-            });
-
-            // document.addEventListener('DOMContentLoaded', function() {
-            //     var edit_skills = document.getElementById('edit_skills');
-            //     if (edit_skills) {
-            //         const edit_skills1 = new Choices(edit_skills, {
-            //             shouldSort: false,
-            //             position: 'down',
-            //             removeItemButton: true, // Enables removing selected items
-            //         });
-            //     }
-            // });
-
-            document.addEventListener('DOMContentLoaded', function() {
-    var edit_skills = document.getElementById('edit_skills');
-    if (edit_skills) {
-        new Choices(edit_skills, {
-            shouldSort: false,
-            position: 'down',
-            removeItemButton: true, // Enables removing selected items
-        });
-    }
-});
-
-
-
-            document.addEventListener('DOMContentLoaded', function() {
-                var edit_location = document.getElementById('edit_location');
-                if (edit_location) {
-                    const edit_location1 = new Choices(edit_location, {
+                var job_type = document.getElementById('job_type');
+                if (job_type) {
+                    const job_type1 = new Choices(job_type, {
                         shouldSort: false,
                         position: 'down',
                         resetScrollPosition: true,
@@ -500,9 +496,21 @@
             });
 
             document.addEventListener('DOMContentLoaded', function() {
-                var edit_industry = document.getElementById('edit_industry');
-                if (edit_industry) {
-                    const edit_industry1 = new Choices(edit_industry, {
+                var skills = document.getElementById('skills');
+                if (skills) {
+                    const skills1 = new Choices(skills, {
+                        shouldSort: false,
+                        position: 'down',
+                        removeItemButton: true, // Enables removing selected items
+                    });
+                }
+            });
+
+
+            document.addEventListener('DOMContentLoaded', function() {
+                var location = document.getElementById('location');
+                if (location) {
+                    const location1 = new Choices(location, {
                         shouldSort: false,
                         position: 'down',
                         resetScrollPosition: true,
@@ -511,9 +519,20 @@
             });
 
             document.addEventListener('DOMContentLoaded', function() {
-                var edit_education = document.getElementById('edit_education');
-                if (edit_education) {
-                    const edit_education1 = new Choices(edit_education, {
+                var industry = document.getElementById('industry');
+                if (industry) {
+                    const industry1 = new Choices(industry, {
+                        shouldSort: false,
+                        position: 'down',
+                        resetScrollPosition: true,
+                    });
+                }
+            });
+
+            document.addEventListener('DOMContentLoaded', function() {
+                var education_level = document.getElementById('education_level');
+                if (education_level) {
+                    const education_level1 = new Choices(education_level, {
                         shouldSort: false,
                         position: 'down',
                         removeItemButton: true,
@@ -522,9 +541,9 @@
             });
 
             document.addEventListener('DOMContentLoaded', function() {
-                var edit_interview_type = document.getElementById('edit_interview_type');
-                if (edit_interview_type) {
-                    const edit_interview_type1 = new Choices(edit_interview_type, {
+                var interview_type = document.getElementById('interview_type');
+                if (interview_type) {
+                    const interview_type1 = new Choices(interview_type, {
                         shouldSort: false,
                         position: 'down',
                         resetScrollPosition: true,
@@ -533,9 +552,9 @@
             });
 
             document.addEventListener('DOMContentLoaded', function() {
-                var edit_company_name = document.getElementById('edit_company_name');
-                if (edit_company_name) {
-                    const edit_company_name1 = new Choices(edit_company_name, {
+                var company_name = document.getElementById('company_name');
+                if (company_name) {
+                    const company_name1 = new Choices(company_name, {
                         shouldSort: false,
                         position: 'down',
                         resetScrollPosition: true,
@@ -547,8 +566,8 @@
         <!-- For Company Details -->
         <script>
             function updateCompanyDetails() {
-                var select = document.getElementById("edit_company_name");
-                var detailsTextarea = document.getElementById("edit_company_details");
+                var select = document.getElementById("company_name");
+                var detailsTextarea = document.getElementById("company_details");
 
                 // Get the selected option
                 var selectedOption = select.options[select.selectedIndex];
@@ -561,7 +580,7 @@
                     // Get and update the logo URL
                     const logoUrl = selectedOption.getAttribute('data-logo');
                     const imgElement = document.getElementById('imagePreview');
-                    var hiddenLogoInput = document.getElementById("edit_company_logo");
+                    var hiddenLogoInput = document.getElementById("company_logo");
                     if (logoUrl) {
                         const logoPath = new URL(logoUrl).pathname.replace(/^\/+/, '');
                         imgElement.src = logoUrl;
@@ -591,8 +610,8 @@
         {{-- Showing min & max Experience --}}
         <script>
             function updateMaxExperience() {
-                var minSelect = document.getElementById("edit_min_experience");
-                var maxSelect = document.getElementById("edit_max_experience");
+                var minSelect = document.getElementById("min_experience");
+                var maxSelect = document.getElementById("max_experience");
 
                 var minValue = parseInt(minSelect.value) || 0;
 
@@ -638,8 +657,8 @@
         {{-- Showing min & max Salary --}}
         <script>
             function updateMaxSalary() {
-                var minSelect = document.getElementById("edit_min_salary");
-                var maxSelect = document.getElementById("edit_max_salary");
+                var minSelect = document.getElementById("min_salary");
+                var maxSelect = document.getElementById("max_salary");
 
                 // // If no value is selected, set both minValue and maxValue to "N/A"
                 // if (!minSelect.value) {
@@ -681,14 +700,15 @@
             }
         </script>
 
-        {{-- For selecting edit_department according to category & Role according to edit_department --}}
+        {{-- For selecting department according to category & Role according to department --}}
         <script>
             $(document).ready(function() {
-                // When category changes, load edit_departments
-                $('#edit_industry').change(function() {
+                // When category changes, load departments
+                $('#industry').change(function() {
                     var category_name = $(this).val();
-                    $('#edit_department').html('<option value="">Loading...</option>');
-                    $('#edit_role').html('<option value="">Select</option>'); // Reset role dropdown
+                    $('#department').html('<option value="">Loading...</option>');
+                    $('#role').html('<option value="">Select</option>'); // Reset role dropdown
+                    $('#role-container').hide(); // Hide role container initially
 
                     if (category_name) {
                         $.ajax({
@@ -698,66 +718,191 @@
                                 category_name: category_name
                             },
                             success: function(data) {
-                                // console.log("edit_departments Response:", data);
-                                $('#edit_department').html(
+                                $('#department').html(
                                     '<option value="">Select Department</option>');
-
                                 if (data.length > 0) {
                                     $.each(data, function(index, item) {
-                                        $('#edit_department').append('<option value="' + item
+                                        $('#department').append('<option value="' + item
                                             .department + '">' + item.department +
                                             '</option>');
                                     });
+                                    $('#department-container').show(); // Show department container
                                 } else {
-                                    $('#edit_department').html(
+                                    $('#department').html(
                                         '<option value="">No Departments Found</option>');
+                                    $('#department-container').hide();
                                 }
                             },
                             error: function() {
-                                $('#edit_department').html(
+                                $('#department').html(
                                     '<option value="">Error loading data</option>');
+                                $('#department-container').hide();
                             }
                         });
                     } else {
-                        $('#edit_department').html('<option value="">Select Department</option>');
+                        $('#department-container').hide();
+                        $('#role-container').hide();
                     }
                 });
 
                 // When department changes, load roles
-                $('#edit_department').change(function() {
-                    var edit_department_name = $(this).val();
-                    $('#edit_role').html('<option value="">Loading...</option>');
+                $('#department').change(function() {
+                    var department_name = $(this).val();
+                    $('#role').html('<option value="">Loading...</option>');
 
-                    if (edit_department_name) {
+                    if (department_name) {
                         $.ajax({
-                            url: "{{ route('Recruiter.getRole') }}", // Create this route
+                            url: "{{ route('Recruiter.getRole') }}",
                             type: "GET",
                             data: {
-                                edit_department_name: edit_department_name
+                                department_name: department_name
                             },
                             success: function(data) {
-                                // console.log("Roles Response:", data);
-                                $('#edit_role').html('<option value="">Select Role</option>');
-
+                                $('#role').html('<option value="">Select Role</option>');
                                 if (data.length > 0) {
                                     $.each(data, function(index, item) {
-                                        $('#edit_role').append('<option value="' + item.role +
+                                        $('#role').append('<option value="' + item.role +
                                             '">' + item.role + '</option>');
                                     });
+                                    $('#role-container').show(); // Show role container
                                 } else {
-                                    $('#edit_role').html('<option value="">No Roles Found</option>');
+                                    $('#role').html('<option value="">No Roles Found</option>');
+                                    $('#role-container').hide();
                                 }
                             },
                             error: function() {
-                                $('#edit_role').html('<option value="">Error loading data</option>');
+                                $('#role').html('<option value="">Error loading data</option>');
+                                $('#role-container').hide();
                             }
                         });
                     } else {
-                        $('#edit_role').html('<option value="">Select Role</option>');
+                        $('#role-container').hide();
                     }
                 });
             });
         </script>
+
+        {{-- For selecting education according to education_level --}}
+        <script>
+            $(document).ready(function() {
+                // When education level changes, load qualifications
+                $('#education_level').change(function() {
+                    var education_level = $(this).val();
+                    $('#education').html('<option value="">Loading...</option>'); // Show loading text
+                    $('#branch').html('<option value="">Choose Branch</option>'); // Reset branch dropdown
+                    $('#branch-container').hide(); // Hide branch container initially
+
+                    if (education_level) {
+                        $.ajax({
+                            url: "{{ route('Recruiter.getEducation') }}",
+                            type: "GET",
+                            data: {
+                                education_level: education_level
+                            },
+                            success: function(data) {
+                                // console.log("Education Data:", data); // Debugging
+                                $('#education').html(
+                                    '<option value="">Choose Qualification</option>');
+
+                                if (data.length > 0) {
+                                    $.each(data, function(index, item) {
+                                        $('#education').append('<option value="' + item
+                                            .education + '">' + item.education +
+                                            '</option>');
+                                    });
+                                    $('#education-container').show(); // Show education container
+                                } else {
+                                    $('#education').html(
+                                        '<option value="">No Qualifications Found</option>');
+                                    $('#education-container').hide();
+                                }
+                            },
+                            error: function() {
+                                $('#education').html(
+                                    '<option value="">Error loading data</option>');
+                                $('#education-container').hide();
+                            }
+                        });
+                    } else {
+                        $('#education-container').hide();
+                        $('#branch-container').hide();
+                    }
+                });
+
+            });
+        </script>
+
+        {{-- For selecting branch according to education --}}
+        <script>
+            $(document).ready(function() {
+                var branchSelect = document.getElementById('branch');
+                var branchChoices;
+
+                // Initialize Choices.js if #branch exists
+                if (branchSelect) {
+                    branchChoices = new Choices(branchSelect, {
+                        shouldSort: false,
+                        position: 'down',
+                        removeItemButton: true,
+                    });
+                }
+
+                // Populate branch dropdown with existing JobEducation options
+                var jobEducationOptions = `@foreach ($JobEducation as $key => $value)
+                                    <option value="{{ $value->branch }}">{{ $value->branch }}</option>
+                                @endforeach`;
+                $('#branch').append(jobEducationOptions);
+
+                // Handle education change event
+                $('#education').change(function() {
+                    var education = $(this).val();
+                    $('#branch').html('<option value="">Loading...</option>');
+
+                    if (education) {
+                        $.ajax({
+                            url: "{{ route('Recruiter.getBranch') }}",
+                            type: "GET",
+                            data: {
+                                education: education
+                            },
+                            success: function(data) {
+                                $('#branch').empty(); // Clear previous options
+
+                                if (data.length > 0) {
+                                    $('#branch').append('<option value="">Choose Branch</option>');
+                                    $.each(data, function(index, item) {
+                                        $('#branch').append('<option value="' + item
+                                            .branch + '">' + item.branch + '</option>');
+                                    });
+                                    $('#branch-container').show();
+                                } else {
+                                    $('#branch').append(
+                                        '<option value="">No Branches Found</option>');
+                                    $('#branch-container').hide();
+                                }
+
+                                // Destroy and Reinitialize Choices.js
+                                if (branchChoices) {
+                                    branchChoices.destroy();
+                                }
+                                branchChoices = new Choices(branchSelect, {
+                                    shouldSort: false,
+                                    position: 'down',
+                                    removeItemButton: true,
+                                });
+                            },
+                            error: function() {
+                                $('#branch').html('<option value="">Error loading data</option>');
+                                $('#branch-container').hide();
+                            }
+                        });
+                    } else {
+                        $('#branch-container').hide();
+                    }
+                });
+            });
+        </script>
+
 
 
         {{-- AddJobPost --}}
@@ -781,7 +926,7 @@
                         success: function(result) {
                             if (result.status_code === 1) {
                                 $('#AddJobPost').trigger("reset");
-                                $('#myTable').DataTable().ajax.reload(null, false);
+                                // $('#myTable').DataTable().ajax.reload(null, false);  
 
                                 Toastify({
                                     text: result.message,
@@ -824,7 +969,7 @@
                             }
                         },
                         error: function(xhr, status, error) {
-                            console.error('AJAX Error:', error);
+                            // console.error('AJAX Error:', error);
                             Toastify({
                                 text: 'An error occurred. Please try again.',
                                 duration: 3000,

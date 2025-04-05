@@ -10,6 +10,7 @@ class JobPostSeeder extends Seeder
     public function run()
     {
         JobPost::create([
+            'recruiter_id' => '2',
             'title' => 'Software Engineer',
             'type' => 'Full Time',
             'skills' => 'PHP, Laravel, JavaScript, MySQL',

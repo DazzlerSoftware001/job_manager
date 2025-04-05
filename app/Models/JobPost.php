@@ -12,6 +12,7 @@ class Jobpost extends Model
     protected $table = 'job_post';
 
     protected $fillable = [
+        'recruiter_id',
         'title',
         'type',
         'skills',

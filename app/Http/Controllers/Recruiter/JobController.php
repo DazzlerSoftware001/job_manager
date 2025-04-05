@@ -85,7 +85,10 @@ class JobController extends Controller
 
         if (!$validator->fails()) {
             // try {
+                $recruiter_id = Auth::user()->id;
                 $JobPost = new JobPost();
+
+                $JobPost->recruiter_id = $recruiter_id;
                 $JobPost->title = $request->input('job_title');
                 $JobPost->type = $request->input('job_type');
                 // $JobPost->skills = $request->input('skills');
@@ -342,9 +345,27 @@ class JobController extends Controller
     public function editJobPost($id)
     {
         try {
+
+            $data['jobTypes'] = JobTypes::where('status', 1)->select('type','status')->get(); 
+            $data['jobMode'] = JobMode::where('status', 1)->select('mode','status')->get(); 
+            $data['jobSkill'] = JobSkill::where('status', 1)->select('skill','status')->get(); 
+            $data['JobDepartment'] = JobDepartment::where('status', 1)->select('department','status')->get(); 
+            $data['JobRole'] = JobRole::where('status', 1)->select('role','status')->get(); 
+            $data['JobExperience'] = JobExperience::where('status', 1)->select('experience','status')->get(); 
+            $data['JobLocation'] = JobLocation::where('status', 1)->select('country','city','status')->get(); 
+            $data['JobCategory'] = JobCategory::where('status', 1)->select('name','status')->get(); 
+            $data['Companies'] = Companies::where('status', 1)->select('id', 'name', 'details','logo', 'status')->get(); 
+            $data['JobIntType'] = JobIntType::where('status', 1)->select('id', 'int_type','status')->get();
+            $data['JobCurrency'] = JobCurrency::where('status', 1)->select('id', 'currency', 'status')->get();
+            $data['JobEducation'] = JobEducation::where('status', 1)->select('education_level','education', 'branch', 'status')->get();
+            // $data['JobSalary'] = JobSalary::where('status', 1)->select('id', 'salary', 'status')->orderBy('salary', 'ASC')->get();
+
+            $data['JobSalary'] = JobSalary::where('status', 1)
+            ->orderByRaw('CAST(salary AS UNSIGNED) ASC') // Ensures numeric sorting
+            ->get();
             $decryptedId = Crypt::decrypt($id);
-            $job = JobPost::findOrFail($decryptedId);
-            return view('recruiter.job.EditJob', compact('job'));
+            $jobPost = JobPost::findOrFail($decryptedId);
+            return view('recruiter.job.EditJob', compact('jobPost') + $data);
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Invalid Job ID!');
         }
