@@ -381,8 +381,8 @@
             <!-- Sidebar -->
 
             <div class="p-3 px-4 sidebar-footer">
-                <p class="mb-1 main-title"><script>document.write(new Date().getFullYear())</script> &copy; Borex.</p>
-                <p class="mb-0">Design & Develop by Themesbrand</p>
+                <p class="mb-1 main-title"><script>document.write(new Date().getFullYear())</script> &copy; CareerNest</p>
+                <p class="mb-0">Design & Develop by Dazzler Software</p>
             </div>
         </div>
     </div>

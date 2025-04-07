@@ -2,7 +2,7 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-sm-12">
-                <script>document.write(new Date().getFullYear())</script> &copy; Borex. Design & Develop by Themesbrand
+                <script>document.write(new Date().getFullYear())</script> &copy; CareerNest. Design & Develop by Dazzler Software
             </div>
         </div>
     </div>

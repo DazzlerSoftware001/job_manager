@@ -2,16 +2,15 @@
 <html lang="en">
 
     
-<!-- Mirrored from themesbrand.com/borex/layouts/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 28 Jan 2025 14:09:12 GMT -->
     <head>
 
         <meta charset="utf-8" />
-        <title>Job Portal -
+        <title>CareerNest -
             @yield('title')
         </title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
-        <meta content="Themesbrand" name="author" />
+        <meta content="Dazzler Software" name="author" />
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <!-- App favicon -->
         <link rel="shortcut icon" href="{{url('admin/assets/images/favicon.ico')}}">
