@@ -810,7 +810,7 @@
             });
         </script>
 
-        {{-- For selecting education according to education_level & branch according to education --}}
+        {{-- For selecting education according to education_level --}}
         <script>
             $(document).ready(function() {
                 // When education level changes, load qualifications
@@ -898,6 +898,7 @@
             });
         </script>
 
+        {{-- For selecting branch according to education --}}
         <script>
             $(document).ready(function() {
                 var branchSelect = document.getElementById('branch');
