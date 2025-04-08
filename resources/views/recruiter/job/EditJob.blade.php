@@ -884,7 +884,7 @@
         </script> --}}
         
         {{-- For selecting branch according to education --}}
-        {{-- <script>
+        <script>
             $(document).ready(function() {
                 var branchSelect = document.getElementById('branch');
                 var branchChoices;
@@ -957,112 +957,36 @@
             });
         </script>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const educationSelect = document.getElementById('education');
-        const branchSelect = document.getElementById('branch');
-        const allBranchOptions = Array.from(branchSelect.options);
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const educationSelect = document.getElementById('education');
+                const branchSelect = document.getElementById('branch');
+                const allBranchOptions = Array.from(branchSelect.options);
 
-        function filterBranches() {
-            const selectedEducation = educationSelect.value;
+                function filterBranches() {
+                    const selectedEducation = educationSelect.value;
 
-            // Clear all current options
-            branchSelect.innerHTML = '';
+                    // Clear all current options
+                    branchSelect.innerHTML = '';
 
-            // Filter and add relevant options
-            const filtered = allBranchOptions.filter(option => option.dataset.education === selectedEducation);
+                    // Filter and add relevant options
+                    const filtered = allBranchOptions.filter(option => option.dataset.education === selectedEducation);
 
-            if (filtered.length > 0) {
-                filtered.forEach(option => branchSelect.appendChild(option));
-                branchSelect.closest('#branch-container').style.display = 'block';
-            } else {
-                branchSelect.closest('#branch-container').style.display = 'none';
-            }
-        }
-
-        // Run on change
-        educationSelect.addEventListener('change', filterBranches);
-
-        // Run on page load if editing
-        filterBranches();
-    });
-</script> --}}
-
-
-<script>
-    $(document).ready(function () {
-        var branchSelect = document.getElementById('branch');
-        var branchChoices;
-
-        // Initialize Choices.js if #branch exists
-        if (branchSelect) {
-            branchChoices = new Choices(branchSelect, {
-                shouldSort: false,
-                position: 'down',
-                removeItemButton: true,
-            });
-        }
-
-        // Handle education change event
-        $('#education').change(function () {
-            var education = $(this).val();
-            $('#branch').html('<option value="">Loading...</option>');
-
-            if (education) {
-                $.ajax({
-                    url: "{{ route('Recruiter.getBranch') }}",
-                    type: "GET",
-                    data: {
-                        education: education
-                    },
-                    success: function (data) {
-                        $('#branch').empty(); // Clear previous options
-
-                        if (data.length > 0) {
-                            $.each(data, function (index, item) {
-                                $('#branch').append('<option value="' + item.branch + '">' + item.branch + '</option>');
-                            });
-                            $('#branch-container').show();
-                        } else {
-                            $('#branch').append('<option value="">No Branches Found</option>');
-                            $('#branch-container').hide();
-                        }
-
-                        // Destroy and Reinitialize Choices.js
-                        if (branchChoices) {
-                            branchChoices.destroy();
-                        }
-                        branchChoices = new Choices(branchSelect, {
-                            shouldSort: false,
-                            position: 'down',
-                            removeItemButton: true,
-                        });
-                    },
-                    error: function () {
-                        $('#branch').html('<option value="">Error loading data</option>');
-                        $('#branch-container').hide();
+                    if (filtered.length > 0) {
+                        filtered.forEach(option => branchSelect.appendChild(option));
+                        branchSelect.closest('#branch-container').style.display = 'block';
+                    } else {
+                        branchSelect.closest('#branch-container').style.display = 'none';
                     }
-                });
-            } else {
-                $('#branch-container').hide();
-
-                // Optional: reset Choices if needed
-                if (branchChoices) {
-                    branchChoices.destroy();
-                    branchChoices = new Choices(branchSelect, {
-                        shouldSort: false,
-                        position: 'down',
-                        removeItemButton: true,
-                    });
                 }
-            }
-        });
 
-        // Trigger change on page load (for edit case)
-        $('#education').trigger('change');
-    });
-</script>
+                // Run on change
+                educationSelect.addEventListener('change', filterBranches);
 
+                // Run on page load if editing
+                filterBranches();
+            });
+        </script>
 
 
 

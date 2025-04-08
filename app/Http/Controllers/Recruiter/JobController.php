@@ -85,7 +85,7 @@ class JobController extends Controller
         $validator = Validator::make($request->all(), $rules);
 
         if (!$validator->fails()) {
-            // try {
+            try {
                 $recruiter_id = Auth::user()->id;
                 $JobPost = new JobPost();
 
@@ -128,10 +128,10 @@ class JobController extends Controller
                 $JobPost->save();
 
                 return response()->json(['status_code' => 1, 'message' => 'Job Post added successfully']);
-            // } catch (\Exception $e) {
-            //     // Handle any exception that occurs during saving
-            //     return response()->json(['status_code' => 0, 'message' => 'Unable to add Experience']);
-            // }
+            } catch (\Exception $e) {
+                // Handle any exception that occurs during saving
+                return response()->json(['status_code' => 0, 'message' => 'Unable to add Experience']);
+            }
         } else {
             // Return validation errors
             return response()->json(['status_code' => 2, 'message' => $validator->errors()->first()]);

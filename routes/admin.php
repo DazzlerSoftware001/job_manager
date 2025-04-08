@@ -166,15 +166,21 @@ Route::prefix('Admin')->group(function () {
 
         // Job Post 
         Route::get('/CreateJob', [JobController::class, 'createJob'])->name('Admin.CreateJob');
+        Route::get('/getDepartment', [JobController::class, 'getDepartment'])->name('Admin.getDepartment');
+        Route::get('/getRole', [JobController::class, 'getRole'])->name('Admin.getRole');
+        Route::get('/getEducation', [JobController::class, 'getEducation'])->name('Admin.getEducation');
+        Route::get('/getBranch', [JobController::class, 'getBranch'])->name('Admin.getBranch');       
+
         Route::post('/SubmitJob', [JobController::class, 'submitJob'])->name('Admin.SubmitJob');
 
         Route::get('/JobList', [JobController::class, 'jobList'])->name('Admin.JobList');
         Route::post('/GetJobPost', [JobController::class, 'getJobPost'])->name('Admin.GetJobPost');
         Route::post('/VerifyStatus', [JobController::class, 'verifyStatus'])->name('Admin.VerifyStatus');
         Route::post('/ChangeJobPostStatus',[JobController::class,'changeJobPostStatus'])->name('Admin.ChangeJobPostStatus');
-        Route::post('/DeleteJobPost',[JobController::class,'deleteJobPost'])->name('Admin.DeleteJobPost');
-        Route::post('/EditJobPost',[JobController::class,'editJobPost'])->name('Admin.EditJobPost');
+        Route::get('/ViewJobPost/{id}', [JobController::class, 'viewJobPost'])->name('Admin.ViewJobPost');
+        Route::get('/EditJobPost/{id}',[JobController::class,'editJobPost'])->name('Admin.EditJobPost');
         Route::post('/UpdateJobPost',[JobController::class,'updateJobPost'])->name('Admin.UpdateJobPost');
+        Route::post('/DeleteJobPost',[JobController::class,'deleteJobPost'])->name('Admin.DeleteJobPost');
 
         Route::get('/VerifiedJobPost',[JobController::class,'showverifiedjobs'])->name('Admin.ShowVerifiedJobs');
         Route::post('/VerifiedJobs',[JobController::class, 'verifiedJobs'])->name('Admin.VerifiedJobs');

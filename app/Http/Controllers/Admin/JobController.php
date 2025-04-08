@@ -19,6 +19,7 @@ use App\Models\JobIntType;
 use App\Models\JobEducation;
 use App\Models\JobPost;
 use App\Models\Companies;
+use App\Models\Recruiter;
 
 
 
@@ -2779,19 +2780,6 @@ class JobController extends Controller
 
     public function createJob()
     {
-        return view('admin.job.CreateJob');
-    }
-
-    
-    public function submitJob()
-    {
-        dd('dd');
-    }
-    
-    
-    // Job Post
-    public function jobList()
-    {
         $data['jobTypes'] = JobTypes::where('status', 1)->select('type','status')->get(); 
         $data['jobMode'] = JobMode::where('status', 1)->select('mode','status')->get(); 
         $data['jobSkill'] = JobSkill::where('status', 1)->select('skill','status')->get(); 
@@ -2800,16 +2788,163 @@ class JobController extends Controller
         $data['JobExperience'] = JobExperience::where('status', 1)->select('experience','status')->get(); 
         $data['JobLocation'] = JobLocation::where('status', 1)->select('country','city','status')->get(); 
         $data['JobCategory'] = JobCategory::where('status', 1)->select('name','status')->get(); 
-        $data['Companies'] = Companies::where('status', 1)->select('id', 'name', 'details', 'status')->get(); 
+        $data['Companies'] = Companies::where('status', 1)->select('id', 'name', 'details','logo', 'status')->get(); 
         $data['JobIntType'] = JobIntType::where('status', 1)->select('id', 'int_type','status')->get();
         $data['JobCurrency'] = JobCurrency::where('status', 1)->select('id', 'currency', 'status')->get();
-        $data['JobEducation'] = JobEducation::where('status', 1)->select('education', 'status')->get();
-        // $data['JobSalary'] = JobSalary::where('status', 1)->select('id', 'salary', 'status')->orderBy('salary', 'ASC')->get();
-
+        $data['JobEducation'] = JobEducation::where('status', 1)->select('education_level','education', 'branch', 'status')->get();
         $data['JobSalary'] = JobSalary::where('status', 1)
         ->orderByRaw('CAST(salary AS UNSIGNED) ASC') // Ensures numeric sorting
         ->get();
-        return view('admin.job.JobList',$data);
+        $data['Recruiter'] = Recruiter::where('user_type',2)->where('status',1)->get();
+        return view('admin.job.CreateJob', $data);
+    }
+
+    public function getDepartment(Request $request) {
+
+        if (!$request->has('category_name')) {
+            return response()->json(['error' => 'Category Name is missing'], 400);
+        }
+        $JobDepartment = JobDepartment::where('category_name', $request->category_name)->select('department')->get();
+    
+        return response()->json($JobDepartment);
+
+    }
+
+    public function getRole(Request $request) {
+        if (!$request->has('department_name')) {
+            return response()->json(['error' => 'Department Name is missing'], 400);
+        }
+    
+        $JobRole = JobRole::where('department_name', $request->department_name)
+                            ->select('role')
+                            ->get();
+    
+        return response()->json($JobRole);
+    }
+
+    public function getEducation(Request $request) {
+        if (!$request->has('education_level')) {
+            return response()->json(['error' => 'Education Level is missing'], 400);
+        }
+
+        $JobEducation = JobEducation::where('education_level', $request->education_level)
+                                    ->select('education')
+                                    ->distinct()
+                                    ->get();
+
+        return response()->json($JobEducation);
+    }
+
+    // Fetch Branches based on Selected Qualification
+    public function getBranch(Request $request) {
+        if (!$request->has('education')) {
+            return response()->json(['error' => 'Education Name is missing'], 400);
+        }
+
+        $JobEducation = JobEducation::where('education', $request->education)
+                                    ->select('branch')
+                                    ->distinct()
+                                    ->get();
+
+        return response()->json($JobEducation);
+    }
+
+    
+    public function submitJob(Request $request)
+    {
+        dd($request->all());
+        // Define validation rules
+        $rules = [
+            'recruiter_id' => 'required',
+            'job_title' => 'required|string|max:100|',
+            'job_type' => 'required|string',
+            'skills' => 'required',
+            'industry' => 'required|string',
+            'department' => 'required|string',
+            'role' => 'required|string',
+            'work_mode' => 'required|string',
+            'location' => 'required|string',
+            'min_experience' => 'required|integer',
+            'max_experience' => 'required|string',
+            'currency' => 'required|string',
+            'min_salary' => 'required|integer',
+            'max_salary' => 'required',
+            'education_level' => 'required|string',
+            'education' => 'required|string',
+            'branch' => 'nullable',
+            'candidate_industry' => 'nullable|string',
+            'vacancies' => 'required|integer',
+            'interview_type' => 'required|string',
+            'company_name' => 'required|string',
+            'company_details' => 'required|string',
+            'job_description'=> 'required|string',
+            'job_resp' => 'required|string',
+            'job_req' => 'required|string',
+        ];
+
+        // Validate the request
+        $validator = Validator::make($request->all(), $rules);
+
+        if (!$validator->fails()) {
+            // try {
+                $JobPost = new JobPost();
+
+                $JobPost->recruiter_id = $request->input('recruiter_id');
+                $JobPost->title = $request->input('job_title');
+                $JobPost->type = $request->input('job_type');
+                // $JobPost->skills = $request->input('skills');
+                $JobPost->skills = implode(',', $request->input('skills'));
+                $JobPost->industry = $request->input('industry');
+                $JobPost->department = $request->input('department');
+                $JobPost->role = $request->input('role');
+                $JobPost->mode = $request->input('work_mode');
+                $JobPost->location = $request->input('location');
+                $JobPost->min_exp = $request->input('min_experience');
+                $JobPost->max_exp = $request->input('max_experience');
+                $JobPost->currency = $request->input('currency');
+                $JobPost->min_sal = $request->input('min_salary');
+                $JobPost->max_sal = $request->input('max_salary');
+                $JobPost->sal_status = $request->input('sal_status') ?? 'off';
+                $JobPost->education_level = $request->input('education_level');
+                $JobPost->education = $request->input('education');
+                // $JobPost->branch = implode(',', $request->input('branch',[]));
+                $JobPost->branch = implode(',', (array) $request->input('branch'));
+                $JobPost->condidate_industry = $request->input('candidate_industry');
+                $JobPost->diversity = $request->input('diversity') ?? 'All';
+                $JobPost->vacancies = $request->input('vacancies');
+                $JobPost->int_type = $request->input('interview_type');
+                $JobPost->com_name = $request->input('company_name');
+                $JobPost->com_logo = $request->input('company_logo');
+                $JobPost->com_details = $request->input('company_details');
+                $JobPost->job_desc = $request->input('job_description');
+                $JobPost->job_resp = $request->input('job_resp');
+                $JobPost->job_req = $request->input('job_req');
+                $JobPost->status = 0;
+                $JobPost->admin_verify = 0;
+                $JobPost->created_at = now();
+
+                // dd($JobPost);
+
+                $JobPost->save();
+
+                return response()->json(['status_code' => 1, 'message' => 'Job Post added successfully']);
+            // } catch (\Exception $e) {
+            //     // Handle any exception that occurs during saving
+            //     return response()->json(['status_code' => 0, 'message' => 'Unable to add Experience']);
+            // }
+        } else {
+            // Return validation errors
+            return response()->json(['status_code' => 2, 'message' => $validator->errors()->first()]);
+        }
+    }
+
+
+    
+    
+    // Job Post
+    public function jobList()
+    {
+        return view('admin.job.JobList');
     }
 
     public function getJobPost(Request $request)
@@ -2902,6 +3037,12 @@ class JobController extends Controller
             $dataArray[] = date('d-M-Y', strtotime($record->created_at));
 
             $dataArray[] = '<div class="d-flex gap-2">
+
+                                <div class="edit">
+                                    <a href="' . route('Admin.ViewJobPost', ['id' => Crypt::encrypt($record->id)]) . '" class="edit-item-btn text-primary">
+                                        <i class="far fa-eye"></i>
+                                    </a>
+                                </div>
                                 <div class="edit">
                                     <a href="' . route('Admin.EditJobPost', ['id' => Crypt::encrypt($record->id)]) . '" class="edit-item-btn text-primary">
                                         <i class="far fa-edit"></i>
@@ -2992,6 +3133,137 @@ class JobController extends Controller
         } else {
             return response()->json(['status_code' => 2, 'message' => 'Id is required']);
         }
+    }
+
+    public function viewJobPost($id)
+    {
+        try {
+            $decryptedId = Crypt::decrypt($id);
+            $job = JobPost::findOrFail($decryptedId);
+            return view('admin.job.ViewJob', compact('job'));
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Invalid Job ID!');
+        }
+    }
+
+    public function editJobPost($id)
+    {
+        try {
+
+            $data['jobTypes'] = JobTypes::where('status', 1)->select('type','status')->get(); 
+            $data['jobMode'] = JobMode::where('status', 1)->select('mode','status')->get(); 
+            $data['jobSkill'] = JobSkill::where('status', 1)->select('skill','status')->get(); 
+            $data['JobDepartment'] = JobDepartment::where('status', 1)->select('department','status')->get(); 
+            $data['JobRole'] = JobRole::where('status', 1)->select('role','status')->get(); 
+            $data['JobExperience'] = JobExperience::where('status', 1)->select('experience','status')->get(); 
+            $data['JobLocation'] = JobLocation::where('status', 1)->select('country','city','status')->get(); 
+            $data['JobCategory'] = JobCategory::where('status', 1)->select('name','status')->get(); 
+            $data['Companies'] = Companies::where('status', 1)->select('id', 'name', 'details','logo', 'status')->get(); 
+            $data['JobIntType'] = JobIntType::where('status', 1)->select('id', 'int_type','status')->get();
+            $data['JobCurrency'] = JobCurrency::where('status', 1)->select('id', 'currency', 'status')->get();
+            $data['JobEducation'] = JobEducation::where('status', 1)->select('education_level','education', 'branch', 'status')->get();
+            $data['JobSalary'] = JobSalary::where('status', 1)
+            ->orderByRaw('CAST(salary AS UNSIGNED) ASC') // Ensures numeric sorting
+            ->get();
+            $data['Recruiter'] = Recruiter::where('user_type',2)->where('status',1)->get();
+            $decryptedId = Crypt::decrypt($id);
+            $jobPost = JobPost::findOrFail($decryptedId);
+            return view('admin.job.EditJob', compact('jobPost') + $data);
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Invalid Job ID!');
+        }
+    }
+
+    public function updateJobPost(Request $request) {
+        // dd($request->input('edit-id'));
+
+        // Validate request
+        $rules = [
+            'job_title' => 'required|string|max:100|',
+            'job_type' => 'required|string',
+            'skills' => 'required',
+            // 'industry' => 'required|string',
+            // 'department' => 'required|string',
+            // 'role' => 'required|string',
+            'work_mode' => 'required|string',
+            'location' => 'required|string',
+            'min_experience' => 'required|integer',
+            'max_experience' => 'required|string',
+            'currency' => 'required|string',
+            'min_salary' => 'required|integer',
+            'max_salary' => 'required',
+            'education_level' => 'required|string',
+            'education' => 'required|string',
+            'branch' => 'nullable',
+            'candidate_industry' => 'nullable|string',
+            'vacancies' => 'required|integer',
+            'interview_type' => 'required|string',
+            // 'company_name' => 'required|string',
+            'company_details' => 'required|string',
+            // 'job_description'=> 'required|string',
+            // 'job_resp' => 'required|string',
+            // 'job_req' => 'required|string',
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if (!$validator->fails()) {
+
+            $id = $request->input('edit-id');
+
+            // Find the record by ID
+            $JobPost = JobPost::find($id);
+
+            if ($JobPost) {
+                $JobPost->recruiter_id = $request->input('recruiter_id');
+                $JobPost->title = $request->input('job_title');
+                $JobPost->type = $request->input('job_type');
+                // $JobPost->skills = $request->input('skills');
+                $JobPost->skills = implode(',', $request->input('skills'));
+                // $JobPost->industry = $request->input('industry');
+                // $JobPost->department = $request->input('department');
+                // $JobPost->role = $request->input('role');
+                $JobPost->mode = $request->input('work_mode');
+                $JobPost->location = $request->input('location');
+                $JobPost->min_exp = $request->input('min_experience');
+                $JobPost->max_exp = $request->input('max_experience');
+                $JobPost->currency = $request->input('currency');
+                $JobPost->min_sal = $request->input('min_salary');
+                $JobPost->max_sal = $request->input('max_salary');
+                $JobPost->sal_status = $request->input('sal_status') ?? 'off';
+                $JobPost->education_level = $request->input('education_level');
+                $JobPost->education = $request->input('education');
+                // $JobPost->branch = implode(',', $request->input('branch',[]));
+                $JobPost->branch = implode(',', (array) $request->input('branch'));
+                $JobPost->condidate_industry = $request->input('candidate_industry');
+                $JobPost->diversity = $request->input('diversity') ?? 'All';
+                $JobPost->vacancies = $request->input('vacancies');
+                $JobPost->int_type = $request->input('interview_type');
+                // $JobPost->com_name = $request->input('company_name');
+                // $JobPost->com_logo = $request->input('company_logo');
+                $JobPost->com_details = $request->input('company_details');
+                $JobPost->job_desc = $request->input('job_description');
+                $JobPost->job_resp = $request->input('job_resp');
+                $JobPost->job_req = $request->input('job_req');
+                $JobPost->status = 0;
+                $JobPost->admin_verify = 0;        
+                $JobPost->updated_at = now();
+
+                $JobPost->save();
+
+                if ($JobPost->save()) {
+                    return response()->json(['status_code' => 1, 'message' => 'JobPost updated successfully']);
+                } else {
+                    return response()->json(['status_code' => 0, 'message' => 'Unable to update data']);
+                }
+            } else {
+                return response()->json(['status_code' => 0, 'message' => 'Invalid id found']);
+            }
+        } else {
+            return response()->json(['status_code' => 2, 'message' => $validator->errors()->first()]);
+        }
+        
+
     }
 
     public function showverifiedjobs() {
