@@ -33,25 +33,37 @@ class AuthController extends Controller
     
         if (Auth::attempt($credentials)) {
             $user = Auth::user(); 
-            
+        
             if ($user->user_type == 2) {
-                return response()->json([
-                    'status_code' => 1,
-                    'message' => 'Login Successful As Recruiter',
-                    'redirect_url' => route('Recruiter.dashboard')
-                ]);
-            }            
-            else
-            {
+        
+                if ($user->status == 1) {
+                    return response()->json([
+                        'status_code' => 1,
+                        'message' => 'Login Successful As Recruiter',
+                        'redirect_url' => route('Recruiter.dashboard')
+                    ]);
+                } else {
+                    Auth::logout(); // Logout the inactive user
+                    return response()->json([
+                        'status_code' => 3,
+                        'message' => 'Your account is inactive. Please contact admin.'
+                    ]);
+                }
+        
+            } else {
+                Auth::logout(); // Not a recruiter
                 return response()->json([
                     'status_code' => 2,
-                    'message' => 'Somethis went Wrong',
-                   
+                    'message' => 'Unauthorized access. Recruiter only.'
                 ]);
             }
         } else {
-            return response()->json(['status_code' => 2, 'message' => 'Invalid credentials']);
+            return response()->json([
+                'status_code' => 2,
+                'message' => 'Invalid credentials'
+            ]);
         }
+        
     }
 
     public function logout(Request $request) {

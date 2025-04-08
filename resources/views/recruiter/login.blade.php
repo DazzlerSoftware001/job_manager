@@ -4,10 +4,10 @@
 <head>
 
     <meta charset="utf-8" />
-    <title>Login | Borex - Recruiter & Dashboard Template</title>
+    <title>CareerNest | Recruiter Login</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta content="Premium Multipurpose Recruiter & Dashboard Template" name="description" />
-    <meta content="Themesbrand" name="author" />
+    <meta content="CareerNest | Recruiter Login" name="description" />
+    <meta content="Dazzler Software" name="author" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- App favicon -->
     <link rel="shortcut icon" href="assets/images/favicon.ico">
@@ -50,6 +50,14 @@
                                                             <h5 class="mb-0">Welcome Back !</h5>
                                                             <p class="text-muted mt-2">Sign in to continue to Borex.</p>
                                                         </div>
+
+                                                        @if(session('error'))
+                                                            <div class="alert alert-danger">
+                                                                {{ session('error') }}
+                                                            </div>
+                                                        @endif
+
+
                                                         <form class="mt-4 pt-2" method="POST"
                                                             action="javascript:void(0)" id="Login">
                                                             {{--  --}}
@@ -102,8 +110,8 @@
                                                         <p class="mb-0">©
                                                             <script>
                                                                 document.write(new Date().getFullYear())
-                                                            </script> Borex . Crafted with <i
-                                                                class="mdi mdi-heart text-danger"></i> by Themesbrand
+                                                            </script> CareerNest . Crafted with <i
+                                                                class="mdi mdi-heart text-danger"></i> by Dazzler Software
                                                         </p>
                                                     </div>
                                                 </div>

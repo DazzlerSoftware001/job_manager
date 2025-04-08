@@ -429,7 +429,7 @@
                                                 <div class="col-12 col-md-12 mt-3">
                                                     <label for="company_details">Company Details <span
                                                             class="text-danger">*</span></label>
-                                                    <textarea class="form-control" id="company_details" name="company_details" readonly></textarea>
+                                                    <textarea class="form-control" id="company_details" name="company_details" ></textarea>
                                                 </div>
                                             </div>
                                         </div>
