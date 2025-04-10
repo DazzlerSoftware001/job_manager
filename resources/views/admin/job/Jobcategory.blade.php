@@ -61,7 +61,7 @@
                 <!-- form -->
                 <form method="POST" action="javascript:void(0)" id="AddJobCategory">
                     <div class="mb-3">
-                        <label for="category" class="form-label">Category</label>
+                        <label for="category" class="form-label">Category<span class="text-danger">*</span></label>
                         <input type="text" class="form-control" name="category" id="category" aria-describedby="countryHelp">
                     </div>
 
@@ -95,7 +95,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="editcategory" class="form-label">Category</label>
+                        <label for="editcategory" class="form-label">Category<span class="text-danger">*</span></label>
                         <input type="text" class="form-control" name="editcategory" id="editcategory" aria-describedby="countryHelp">
                     </div>
 

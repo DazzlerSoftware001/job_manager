@@ -61,7 +61,7 @@
                 <!-- form -->
                 <form method="POST" action="javascript:void(0)" id="AddJobExperience">
                     <div class="mb-3">
-                        <label for="experience" class="form-label">Experience</label>
+                        <label for="experience" class="form-label">Experience<span class="text-danger">*</span></label>
                         <input type="number" class="form-control" name="experience" id="experience" aria-describedby="countryHelp">
                     </div>
             </div>
@@ -94,7 +94,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="editExp" class="form-label">Experience</label>
+                        <label for="editExp" class="form-label">Experience<span class="text-danger">*</span></label>
                         <input type="number" class="form-control" name="editExp" id="editExp" aria-describedby="countryHelp">
                     </div>
 

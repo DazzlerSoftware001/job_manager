@@ -81,27 +81,27 @@
                 <form method="POST" action="javascript:void(0)" id="AddRecruiter">
 
                     <div class="mb-3">
-                        <label for="name" class="form-label">Name</label>
+                        <label for="name" class="form-label">Name<span class="text-danger">*</span></label>
                         <input type="text" class="form-control" name="name" id="name" required>
                     </div>
 
                     <div class="mb-3">
-                        <label for="email" class="form-label">Email</label>
+                        <label for="email" class="form-label">Email<span class="text-danger">*</span></label>
                         <input type="email" class="form-control" name="email" id="email" required>
                     </div>
 
                     <div class="mb-3">
-                        <label for="phone" class="form-label">Phone</label>
+                        <label for="phone" class="form-label">Phone<span class="text-danger">*</span></label>
                         <input type="number" class="form-control" name="phone" id="phone" required>
                     </div>
 
                     <div class="mb-3">
-                        <label for="logo" class="form-label">Logo</label>
+                        <label for="logo" class="form-label">Logo<span class="text-danger">*</span></label>
                         <input type="file" class="form-control" name="logo" id="logo" accept="image/*" required>
                     </div>
 
                     <div class="mb-3 position-relative">
-                        <label for="password" class="form-label">Password</label>
+                        <label for="password" class="form-label">Password<span class="text-danger">*</span></label>
                         <div class="position-relative">
                             <input type="password" class="form-control pe-5" name="password" id="password" required>
                             <span class="position-absolute end-0 top-50 translate-middle-y me-3" onclick="togglePassword('password', 'toggleIcon1')" style="cursor: pointer;">
@@ -111,7 +111,7 @@
                     </div>
                     
                     <div class="mb-3 position-relative">
-                        <label for="password_confirmation" class="form-label">Confirm Password</label>
+                        <label for="password_confirmation" class="form-label">Confirm Password<span class="text-danger">*</span></label>
                         <div class="position-relative">
                             <input type="password" class="form-control pe-5" name="password_confirmation" id="password_confirmation" required>
                             <span class="position-absolute end-0 top-50 translate-middle-y me-3" onclick="togglePassword('password_confirmation', 'toggleIcon2')" style="cursor: pointer;">
@@ -151,27 +151,27 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="editname" class="form-label">Name</label>
+                        <label for="editname" class="form-label">Name<span class="text-danger">*</span></label>
                         <input type="text" class="form-control" name="editname" id="editname" required>
                     </div>
 
                     <div class="mb-3">
-                        <label for="editemail" class="form-label">Email</label>
+                        <label for="editemail" class="form-label">Email<span class="text-danger">*</span></label>
                         <input type="email" class="form-control" name="editemail" id="editemail" required>
                     </div>
 
                     <div class="mb-3">
-                        <label for="editphone" class="form-label">Phone</label>
+                        <label for="editphone" class="form-label">Phone<span class="text-danger">*</span></label>
                         <input type="number" class="form-control" name="editphone" id="editphone" required>
                     </div>
 
                     <div class="mb-3">
-                        <label for="editlogo" class="form-label">Logo</label>
+                        <label for="editlogo" class="form-label">Logo<span class="text-danger">*</span></label>
                         <input type="file" class="form-control" name="editlogo" id="editlogo" accept="image/*">
                     </div>
 
                     <div class="mb-3 position-relative">
-                        <label for="password" class="form-label">Password</label>
+                        <label for="password" class="form-label">Password<span class="text-danger">*</span></label>
                         <div class="position-relative">
                             <input type="password" class="form-control pe-5" name="password" id="password" >
                             <span class="position-absolute end-0 top-50 translate-middle-y me-3" onclick="togglePassword('password', 'toggleIcon1')" style="cursor: pointer;">
@@ -181,7 +181,7 @@
                     </div>
                     
                     <div class="mb-3 position-relative">
-                        <label for="password_confirmation" class="form-label">Confirm Password</label>
+                        <label for="password_confirmation" class="form-label">Confirm Password<span class="text-danger">*</span></label>
                         <div class="position-relative">
                             <input type="password" class="form-control pe-5" name="password_confirmation" id="password_confirmation" >
                             <span class="position-absolute end-0 top-50 translate-middle-y me-3" onclick="togglePassword('password_confirmation', 'toggleIcon2')" style="cursor: pointer;">

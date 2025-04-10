@@ -61,7 +61,7 @@
                 <!-- form -->
                 <form method="POST" action="javascript:void(0)" id="AddJobSalary">
                     <div class="mb-3">
-                        <label for="salary" class="form-label">Salary</label>
+                        <label for="salary" class="form-label">Salary<span class="text-danger">*</span></label>
                         <input type="number" class="form-control" name="salary" id="salary" aria-describedby="countryHelp">
                     </div>
             </div>
@@ -94,7 +94,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="editsalary" class="form-label">Salary</label>
+                        <label for="editsalary" class="form-label">Salary<span class="text-danger">*</span></label>
                         <input type="text" class="form-control" name="editsalary" id="editsalary" aria-describedby="countryHelp">
                     </div>
 

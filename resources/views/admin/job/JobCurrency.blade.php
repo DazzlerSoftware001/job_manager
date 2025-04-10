@@ -61,7 +61,7 @@
                 <!-- form -->
                 <form method="POST" action="javascript:void(0)" id="AddJobCurrency">
                     <div class="mb-3">
-                        <label for="currency" class="form-label">Currency</label>
+                        <label for="currency" class="form-label">Currency<span class="text-danger">*</span></label>
                         <input type="text" class="form-control" name="currency" id="currency" aria-describedby="countryHelp">
                     </div>
             </div>
@@ -94,7 +94,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="editcurrency" class="form-label">Currency</label>
+                        <label for="editcurrency" class="form-label">Currency<span class="text-danger">*</span></label>
                         <input type="text" class="form-control" name="editcurrency" id="editcurrency" aria-describedby="countryHelp">
                     </div>
 

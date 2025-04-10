@@ -62,7 +62,7 @@
                 <!-- form -->
                 <form method="POST" action="javascript:void(0)" id="AddJobDepartment">
                     <div class="mb-3">
-                        <label for="category" class="form-label">Category</label>
+                        <label for="category" class="form-label">Category<span class="text-danger">*</span></label>
                         <select class="form-select" id="category" name="category">
                             <option value="">Choose Industry</option>
                             @foreach ($JobCategory as $key => $value)
@@ -71,7 +71,7 @@
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label for="department" class="form-label">Department</label>
+                        <label for="department" class="form-label">Department<span class="text-danger">*</span></label>
                         <input type="text" class="form-control" name="department" id="department" aria-describedby="countryHelp">
                     </div>
 
@@ -105,7 +105,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="editcategory" class="form-label">Category Name</label>
+                        <label for="editcategory" class="form-label">Category Name<span class="text-danger">*</span></label>
                         <select class="form-select" id="editcategory" name="editcategory">
                             <option value="">Choose Industry</option>
                             @foreach ($JobCategory as $key => $value)
@@ -115,7 +115,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="editdepartment" class="form-label">Department</label>
+                        <label for="editdepartment" class="form-label">Department<span class="text-danger">*</span></label>
                         <input type="text" class="form-control" name="editdepartment" id="editdepartment" aria-describedby="countryHelp">
                     </div>
 

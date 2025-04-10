@@ -61,7 +61,7 @@
                 <!-- form -->
                 <form method="POST" action="javascript:void(0)" id="AddJobShift">
                     <div class="mb-3">
-                        <label for="shift" class="form-label">Shift</label>
+                        <label for="shift" class="form-label">Shift<span class="text-danger">*</span></label>
                         <input type="text" class="form-control" name="shift" id="shift" aria-describedby="countryHelp">
                     </div>
             </div>
@@ -94,7 +94,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="editShift" class="form-label">Type</label>
+                        <label for="editShift" class="form-label">Type<span class="text-danger">*</span></label>
                         <input type="text" class="form-control" name="editShift" id="editShift" aria-describedby="countryHelp">
                     </div>
 

@@ -64,7 +64,7 @@
                         <!-- form -->
                         <form method="POST" action="javascript:void(0)" id="AddJobRole">
                             <div class="mb-3">
-                                <label for="department" class="form-label">Department Name</label>
+                                <label for="department" class="form-label">Department Name<span class="text-danger">*</span></label>
                                 <select class="form-select" id="department" name="department">
                                     <option value="">Select</option>
                                     @foreach ($JobDepartment as $key => $value)
@@ -73,7 +73,7 @@
                                 </select>
                             </div>
                             <div class="mb-3">
-                                <label for="role" class="form-label">Role</label>
+                                <label for="role" class="form-label">Role<span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" name="role" id="role"
                                     aria-describedby="countryHelp">
                             </div>
@@ -108,7 +108,7 @@
                             </div>
 
                             <div class="mb-3">
-                                <label for="editdepartment" class="form-label">Department Name</label>
+                                <label for="editdepartment" class="form-label">Department Name<span class="text-danger">*</span></label>
                                 <select class="form-select" id="editdepartment" name="editdepartment">
                                     <option value="">Select</option>
                                     @foreach ($JobDepartment as $key => $value)
@@ -118,7 +118,7 @@
                             </div>
 
                             <div class="mb-3">
-                                <label for="editrole" class="form-label">Role</label>
+                                <label for="editrole" class="form-label">Role<span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" name="editrole" id="editrole"
                                     aria-describedby="countryHelp">
                             </div>

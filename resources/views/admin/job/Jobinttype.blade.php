@@ -61,7 +61,7 @@
                 <!-- form -->
                 <form method="POST" action="javascript:void(0)" id="AddJobIntType">
                     <div class="mb-3">
-                        <label for="IntType" class="form-label">Interview Type</label>
+                        <label for="IntType" class="form-label">Interview Type<span class="text-danger">*</span></label>
                         <input type="text" class="form-control" name="IntType" id="IntType" aria-describedby="countryHelp">
                     </div>
 
@@ -95,7 +95,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="editIntType" class="form-label">Interview Type</label>
+                        <label for="editIntType" class="form-label">Interview Type<span class="text-danger">*</span></label>
                         <input type="text" class="form-control" name="editIntType" id="editIntType" aria-describedby="countryHelp">
                     </div>
 

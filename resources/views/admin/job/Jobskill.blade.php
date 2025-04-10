@@ -61,7 +61,7 @@
                 <!-- form -->
                 <form method="POST" action="javascript:void(0)" id="AddJobSkill">
                     <div class="mb-3">
-                        <label for="skill" class="form-label">Skill</label>
+                        <label for="skill" class="form-label">Skill<span class="text-danger">*</span></label>
                         <input type="text" class="form-control" name="skill" id="skill" aria-describedby="countryHelp">
                     </div>
             </div>
@@ -94,7 +94,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="EditSkill" class="form-label">Skill</label>
+                        <label for="EditSkill" class="form-label">Skill<span class="text-danger">*</span></label>
                         <input type="text" class="form-control" name="EditSkill" id="EditSkill" aria-describedby="countryHelp">
                     </div>
 

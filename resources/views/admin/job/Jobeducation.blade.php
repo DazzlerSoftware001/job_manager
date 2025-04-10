@@ -130,7 +130,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="editeducation" class="form-label">Qualification</label>
+                        <label for="editeducation" class="form-label">Qualification<span class="text-danger">*</span></label>
                         <input type="text" class="form-control" name="editeducation" id="editeducation" aria-describedby="countryHelp">
                     </div>
 

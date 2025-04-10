@@ -61,7 +61,7 @@
                 <!-- form -->
                 <form method="POST" action="javascript:void(0)" id="AddJobTypes">
                     <div class="mb-3">
-                        <label for="types" class="form-label">Types</label>
+                        <label for="types" class="form-label">Types<span class="text-danger">*</span></label>
                         <input type="text" class="form-control" name="types" id="types" aria-describedby="countryHelp">
                     </div>
             </div>
@@ -94,7 +94,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="editType" class="form-label">Type</label>
+                        <label for="editType" class="form-label">Type<span class="text-danger">*</span></label>
                         <input type="text" class="form-control" name="editType" id="editType" aria-describedby="countryHelp">
                     </div>
 

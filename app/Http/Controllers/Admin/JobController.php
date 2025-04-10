@@ -1770,7 +1770,7 @@ class JobController extends Controller
             $dataArray = [];
 
             $dataArray[] = $record->id;
-            $dataArray[] = ucfirst($record->experience);
+            $dataArray[] = ucfirst($record->experience). ' ' . ($record->experience == 1 ? 'year' : 'years');
 
             $status = $record->status == 1
                 ? '<div class="d-flex justify-content-center"><span onclick="changeStatus(' . $record->id . ');" class="badge bg-success text-uppercase"  style="cursor: pointer;">Active</span></div>'

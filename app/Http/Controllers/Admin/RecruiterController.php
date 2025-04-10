@@ -128,6 +128,7 @@ class RecruiterController extends Controller
                 }
 
                 $Recruiter = new Recruiter();
+                $Recruiter->user_type = 2;
                 $Recruiter->name = $request->input('name');
                 $Recruiter->email = $request->input('email');
                 $Recruiter->phone = $request->input('phone');
