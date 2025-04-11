@@ -88,7 +88,7 @@
                             <!-- job location -->
                             <div class="search__item">
                                 <h6 class="mb-3 font-20 fw-medium text-dark text-capitalize">Search Location</h6>
-                                <div class="position-relative">
+                                {{-- <div class="position-relative">
                                     <div class="nice-select" tabindex="0">
                                         <span class="current">Search Location</span>
                                         <ul class="list">
@@ -101,8 +101,28 @@
                                         </ul>
                                     </div>
                                     <i class="fa-light fa-location-dot"></i>
-                                </div>
+                                </div> --}}
+                                <form action="{{ route('User.JobList') }}" method="GET" class="location-select" id="locationForm">
+                                    <input type="hidden" name="location" id="selectedLocation" value="{{ request('location') }}">
+                                
+                                    <div class="position-relative">
+                                        <div class="nice-select" tabindex="0">
+                                            <span class="current">
+                                                {{ request('location') ?? 'Industry' }}
+                                            </span>
+                                            <ul class="list">
+                                                @foreach ($JobLocation as $location)
+                                                    <li data-value="{{ $location->country .'-'. $location->city }}" class="option {{ request('location') == $location->country .'-'. $location->city ? 'selected focus' : '' }}">
+                                                        {{ $location->country .'-'. $location->city }}
+                                                    </li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
+                                        <i class="fa-light fa-location-dot"></i>
+                                    </div>
+                                </form>
                             </div>
+                            
                             <!-- job category -->
                             <div class="search__item">
                                 <h6 class="mb-3 font-20 fw-medium text-dark text-capitalize">Search By Job category</h6>
@@ -293,25 +313,28 @@
 
 
                         <div class="d-flex flex-wrap align-items-center gap-4">
-                            <form action="{{ route('User.JobList') }}" method="GET" class="category-select"
-                                id="categoryForm">
-                                <input type="hidden" name="category" id="selectedCategory" value="">
-
+                            <form action="{{ route('User.JobList') }}" method="GET" class="category-select" id="categoryForm">
+                                <input type="hidden" name="category" id="selectedCategory" value="{{ request('category') }}">
+                            
                                 <div class="position-relative">
                                     <div class="nice-select" tabindex="0">
-                                        <span class="current">Industry</span>
+                                        <span class="current">
+                                            {{ request('category') ?? 'Industry' }}
+                                        </span>
                                         <ul class="list">
-                                            <li data-value="" data-display="All Category" class="option selected focus">
+                                            <li data-value="" class="option {{ request('category') == '' ? 'selected focus' : '' }}">
                                                 All Category
                                             </li>
                                             @foreach ($JobCategory as $industry)
-                                                <li data-value="{{ $industry->name }}" class="option">
-                                                    {{ $industry->name }}</li>
+                                                <li data-value="{{ $industry->name }}" class="option {{ request('category') == $industry->name ? 'selected focus' : '' }}">
+                                                    {{ $industry->name }}
+                                                </li>
                                             @endforeach
                                         </ul>
                                     </div>
                                 </div>
                             </form>
+                            
 
                             {{-- <div class="d-flex align-items-center gap-3" id="nav-tab" role="tablist">
                                 <button class="rts__btn no__fill__btn grid-style nav-link active" data-bs-toggle="tab" data-bs-target="#grid"> <i class="rt-hamburger"></i> Grid</button>
