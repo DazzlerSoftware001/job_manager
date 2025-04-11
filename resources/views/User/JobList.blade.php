@@ -146,9 +146,9 @@
                                         <div class="d-flex align-items-center justify-content-between list">
                                             <div class="d-flex gap-2 align-items-center checkbox">
                                                 <input type="checkbox" name="fulltime" id="fulltime">
-                                                <label for="fulltime">{{$type}}</label>
+                                                <label for="fulltime">{{$t->type}}</label>
                                             </div>
-                                            <span>(130)</span>
+                                            <span>({{$t->count}})</span>
                                         </div>
                                     @endforeach
                                     {{-- <div class="d-flex align-items-center justify-content-between list">
@@ -179,35 +179,15 @@
                             <div class="search__item">
                                 <div class="mb-3 font-20 fw-medium text-dark text-capitalize">experience Label</div>
                                 <div class="search__item__list">
-
-                                    <div class="d-flex align-items-center justify-content-between list">
-                                        <div class="d-flex gap-2 align-items-center checkbox">
-                                            <input type="checkbox" name="5year" id="5year">
-                                            <label for="5year">5 year</label>
+                                    @foreach ($experience as $exp)                                        
+                                        <div class="d-flex align-items-center justify-content-between list">
+                                            <div class="d-flex gap-2 align-items-center checkbox">
+                                                <input type="checkbox" name="5year" id="5year">
+                                                <label for="5year">{{$exp->max_exp}} year</label>
+                                            </div>
+                                            <span>({{$exp->count}})</span>
                                         </div>
-                                        <span>(10)</span>
-                                    </div>
-                                    <div class="d-flex align-items-center justify-content-between list">
-                                        <div class="d-flex gap-2 align-items-center checkbox">
-                                            <input type="checkbox" name="4year" id="4year">
-                                            <label for="4year">4 year</label>
-                                        </div>
-                                        <span>(15)</span>
-                                    </div>
-                                    <div class="d-flex align-items-center justify-content-between list">
-                                        <div class="d-flex gap-2 align-items-center checkbox">
-                                            <input type="checkbox" name="3year" id="3year">
-                                            <label for="3year">3 year</label>
-                                        </div>
-                                        <span>(50)</span>
-                                    </div>
-                                    <div class="d-flex align-items-center justify-content-between list">
-                                        <div class="d-flex gap-2 align-items-center checkbox">
-                                            <input type="checkbox" name="fresher" id="fresher">
-                                            <label for="fresher">fresher</label>
-                                        </div>
-                                        <span>(130)</span>
-                                    </div>
+                                    @endforeach
                                 </div>
                             </div>
 

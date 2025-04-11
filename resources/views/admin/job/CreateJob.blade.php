@@ -677,8 +677,8 @@
                 // If minValue is the maximum experience, set max_experience to "N/A" and disable it
                 if (minValue === maxValue) {
                     var naOption = document.createElement("option");
-                    naOption.value = "N/A";
-                    naOption.textContent = "N/A";
+                    naOption.value = maxValue;
+                    naOption.textContent = maxValue;
                     maxSelect.appendChild(naOption);
                 }
 
@@ -715,8 +715,8 @@
                 // If minValue is the maximum salary, set max_salary to "N/A" and disable it
                 if (minValue === maxValue) {
                     var naOption = document.createElement("option");
-                    naOption.value = "N/A";
-                    naOption.textContent = "N/A";
+                    naOption.value = maxValue;
+                    naOption.textContent = maxValue;
                     maxSelect.appendChild(naOption);
                 }
 
