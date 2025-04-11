@@ -455,7 +455,7 @@
                                         <div class="text-center">
                                             <!-- Profile Image with Camera Icon -->
                                             <div class="position-relative d-inline-block">
-                                                <img id="profileImage" src="{{url('admin/assets/images/users/avatar-1.jpg')}}" onerror="this.onerror=null; this.src='{{ url('admin/assets/images/users/avatar-1.jpg') }}';"
+                                                <img id="profileImage" src="{{url('admin/logo/default.png')}}" onerror="this.onerror=null; this.src='{{ url('admin/logo/default.png') }}';"
                                                     alt="" class="avatar-xl rounded-circle img-thumbnail">
                                                 <button
                                                     class="btn btn-sm btn-primary position-absolute bottom-0 end-0 rounded-circle"
@@ -468,9 +468,9 @@
                                             <div class="mt-3">
                                                 <!-- Editable Name with Pencil Icon -->
                                                 <h5 class="mb-1 d-inline-block position-relative" id="nameDisplay">
-                                                    Jennifer Bennett</h5>
+                                                    </h5>
                                                 <input type="text" id="nameInput" class="form-control d-none"
-                                                    value="Jennifer Bennett">
+                                                    value="">
                                                 <button class="btn btn-sm btn-outline-secondary ms-2 p-1"
                                                     id="editNameButton" data-bs-toggle="modal"
                                                     data-bs-target="#editNameModal">
