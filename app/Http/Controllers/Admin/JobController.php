@@ -2852,7 +2852,7 @@ class JobController extends Controller
     
     public function submitJob(Request $request)
     {
-        dd($request->all());
+        // dd($request->all());
         // Define validation rules
         $rules = [
             'recruiter_id' => 'required',
@@ -2877,9 +2877,9 @@ class JobController extends Controller
             'interview_type' => 'required|string',
             'company_name' => 'required|string',
             'company_details' => 'required|string',
-            'job_description'=> 'required|string',
-            'job_resp' => 'required|string',
-            'job_req' => 'required|string',
+            // 'job_description'=> 'required|string',
+            // 'job_resp' => 'required|string',
+            // 'job_req' => 'required|string',
         ];
 
         // Validate the request
@@ -3360,6 +3360,13 @@ class JobController extends Controller
             $dataArray[] = date('d-M-Y', strtotime($record->created_at));
 
             $dataArray[] = '<div class="d-flex gap-2">
+
+                                <div class="edit">
+                                    <a href="' . route('Admin.ViewJobPost', ['id' => Crypt::encrypt($record->id)]) . '" class="edit-item-btn text-primary">
+                                        <i class="far fa-eye"></i>
+                                    </a>
+                                </div>
+
                                 <div class="edit">
                                     <a href="' . route('Admin.EditJobPost', ['id' => Crypt::encrypt($record->id)]) . '" class="edit-item-btn text-primary">
                                         <i class="far fa-edit"></i>
@@ -3477,6 +3484,13 @@ class JobController extends Controller
             $dataArray[] = date('d-M-Y', strtotime($record->created_at));
 
             $dataArray[] = '<div class="d-flex gap-2">
+
+                                <div class="edit">
+                                    <a href="' . route('Admin.ViewJobPost', ['id' => Crypt::encrypt($record->id)]) . '" class="edit-item-btn text-primary">
+                                        <i class="far fa-eye"></i>
+                                    </a>
+                                </div>
+
                                 <div class="edit">
                                     <a href="' . route('Admin.EditJobPost', ['id' => Crypt::encrypt($record->id)]) . '" class="edit-item-btn text-primary">
                                         <i class="far fa-edit"></i>
@@ -3594,6 +3608,13 @@ class JobController extends Controller
             $dataArray[] = date('d-M-Y', strtotime($record->created_at));
 
             $dataArray[] = '<div class="d-flex gap-2">
+
+                                <div class="edit">
+                                    <a href="' . route('Admin.ViewJobPost', ['id' => Crypt::encrypt($record->id)]) . '" class="edit-item-btn text-primary">
+                                        <i class="far fa-eye"></i>
+                                    </a>
+                                </div>
+
                                 <div class="edit">
                                     <a href="' . route('Admin.EditJobPost', ['id' => Crypt::encrypt($record->id)]) . '" class="edit-item-btn text-primary">
                                         <i class="far fa-edit"></i>
