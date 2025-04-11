@@ -4,40 +4,40 @@
 @endsection
 <style>
     .rts__pagination ul {
-    list-style: none;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-}
+        list-style: none;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+    }
 
-.rts__pagination ul li {
-    display: inline-block;
-}
+    .rts__pagination ul li {
+        display: inline-block;
+    }
 
-.rts__pagination ul li a, 
-.rts__pagination ul li span {
-    padding: 10px 15px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    text-decoration: none;
-    color: #555;
-    transition: background 0.3s ease;
-}
+    .rts__pagination ul li a,
+    .rts__pagination ul li span {
+        padding: 10px 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        text-decoration: none;
+        color: #555;
+        transition: background 0.3s ease;
+    }
 
-.rts__pagination ul li a:hover {
-    background: #f0f0f0;
-}
+    .rts__pagination ul li a:hover {
+        background: #f0f0f0;
+    }
 
-.rts__pagination ul li a.active {
-    background: #007bff;
-    color: white;
-    border-color: #007bff;
-}
+    .rts__pagination ul li a.active {
+        background: #007bff;
+        color: white;
+        border-color: #007bff;
+    }
 
-.rts__pagination ul li .inactive {
-    color: #bbb;
-    cursor: not-allowed;
-}
+    .rts__pagination ul li .inactive {
+        color: #bbb;
+        cursor: not-allowed;
+    }
 </style>
 @section('main-container')
     <div class="rts__section breadcrumb__background">
@@ -290,12 +290,13 @@
                         <span class="text-dark font-20 fw-medium">
                             Showing {{ $jobs->firstItem() }}-{{ $jobs->lastItem() }} of {{ $jobs->total() }} results
                         </span>
-                        
-                       
+
+
                         <div class="d-flex flex-wrap align-items-center gap-4">
-                            <form action="{{ route('User.JobList') }}" method="GET" class="category-select" id="categoryForm">
+                            <form action="{{ route('User.JobList') }}" method="GET" class="category-select"
+                                id="categoryForm">
                                 <input type="hidden" name="category" id="selectedCategory" value="">
-                            
+
                                 <div class="position-relative">
                                     <div class="nice-select" tabindex="0">
                                         <span class="current">Industry</span>
@@ -304,13 +305,14 @@
                                                 All Category
                                             </li>
                                             @foreach ($JobCategory as $industry)
-                                                <li data-value="{{ $industry->name }}" class="option">{{ $industry->name }}</li>
+                                                <li data-value="{{ $industry->name }}" class="option">
+                                                    {{ $industry->name }}</li>
                                             @endforeach
                                         </ul>
                                     </div>
                                 </div>
                             </form>
-                            
+
                             {{-- <div class="d-flex align-items-center gap-3" id="nav-tab" role="tablist">
                                 <button class="rts__btn no__fill__btn grid-style nav-link active" data-bs-toggle="tab" data-bs-target="#grid"> <i class="rt-hamburger"></i> Grid</button>
                                 <button class="rts__btn no__fill__btn list-style nav-link active" data-bs-toggle="tab" data-bs-target="#list"> <i class="rt-list"></i> List</button>
@@ -591,80 +593,73 @@
                             <div class="row g-30">
                                 <!-- single item -->
                                 @foreach ($jobs as $data)
-                                <div class="col-lg-12">
-                                    <div
-                                        class="rts__job__card__big style__gradient flex-wrap justify-content-between d-flex gap-4 align-items-center">
-                                        <div
-                                            class="d-flex flex-wrap flex-md-nowrap flex-lg-wrap flex-xl-nowrap gap-4 align-items-center">
-                                            <div class="company__icon rounded-2">
-                                                <img src="{{ parse_url($data->com_logo, PHP_URL_PATH) ?? '' }}"
-                                                    alt="">
-                                            </div>
-                                            {{-- <div class="job__meta w-100 d-flex flex-column gap-2" onclick="viewJob({{$data->id}})">
-                                                <div class="d-flex justify-content-between align-items-center gap-3">
-                                                    <a id="title" class="job__title h6 mb-0">{{ $data->title }}</a>
-                                                </div>
-                                                <p class="mb-0 text-muted">{{$data->com_name}}</p>
-                                                <div class="d-flex gap-3 gap-md-4 flex-wrap mb-2">
-                                                    <div class="d-flex gap-2 align-items-center" id="location">
-                                                        <i class="fa-light fa-location-dot"></i> {{$data->location}}
-                                                    </div>
-                                                    <div class="d-flex gap-2 align-items-center" id="">
-                                                        {{$data->currency}} {{$data->min_sal}} - {{$data->max_sal}}
-                                                    </div>
-                                                    <div class="d-flex gap-2 align-items-center" id="type">
-                                                        <i class="fa-light rt-briefcase"></i> {{$data->type}}
-                                                    </div>
-                                                    <div class="d-flex gap-2 align-items-center">
-                                                        <i class="fa-light fa-clock"></i> {{ $data->created_at->diffForHumans() }}
-                                                    </div>
-                                                    
-                                                </div>
-                                                <div class="job__tags d-flex flex-wrap gap-3" id="skills">
-                                                    @foreach(explode(',', $data->skills) as $skill)
-                                                        <a href="#">{{ trim($skill) }}</a>
-                                                    @endforeach
-                                                </div>
-                                                
-                                            </div> --}}
-
-                                            <div class="job__meta w-100 d-flex flex-column gap-2 position-relative">
-                                                <!-- Clickable overlay -->
-                                                <a href="{{ route('User.JobDetails',['id' => encrypt($data->id)]) }}" class="stretched-link"></a>
-
-                                                <div class="d-flex justify-content-between align-items-center gap-3">
-                                                    <a id="title" class="job__title h6 mb-0">{{ $data->title }}</a>
-                                                </div>
-                                                <p class="mb-0 text-muted">{{$data->com_name}}</p>
-                                                <div class="d-flex gap-3 gap-md-4 flex-wrap mb-2">
-                                                    <div class="d-flex gap-2 align-items-center" id="location">
-                                                        <i class="fa-light fa-location-dot"></i> {{$data->location}}
-                                                    </div>
-                                                    <div class="d-flex gap-2 align-items-center">
-                                                        {{$data->currency}} {{$data->min_sal}} - {{$data->max_sal}}
-                                                    </div>
-                                                    <div class="d-flex gap-2 align-items-center" id="type">
-                                                        <i class="fa-light rt-briefcase"></i> {{$data->type}}
-                                                    </div>
-                                                    <div class="d-flex gap-2 align-items-center">
-                                                        <i class="fa-light fa-clock"></i> {{ $data->created_at->diffForHumans() }}
-                                                    </div>
-                                                </div>
-                                                <div class="job__tags d-flex flex-wrap gap-3" id="skills">
-                                                    @foreach(explode(',', $data->skills) as $skill)
-                                                        <a href="#">{{ trim($skill) }}</a>
-                                                    @endforeach
-                                                </div>
-                                            </div>
+                                    <div class="col-lg-12 position-relative style__gradient rts__job__card__big">
+                                        <div class="position-absolute top-0 end-0 m-2 z-100">
+                                            <button type="button" class="bookmark__btn"
+                                                onclick="handleBookmarkClick(event)">
+                                                <i class="rt-bookmark"></i>
+                                            </button>
                                         </div>
-                                        <div>
-                                            <button type="button" class="bookmark__btn"><i
-                                                    class="rt-bookmark"></i></button>
+                                        <div
+                                            class="flex-wrap justify-content-between d-flex gap-4 align-items-center">
+                                            <div
+                                                class="d-flex flex-wrap flex-md-nowrap flex-lg-wrap flex-xl-nowrap gap-4 align-items-center w-100 position-relative">
+
+                                                <!-- Company Logo -->
+                                                <div class="company__icon rounded-2">
+                                                    <img src="{{ parse_url($data->com_logo, PHP_URL_PATH) ?? '' }}"
+                                                        onerror="this.onerror=null; this.src='{{ url('recruiter/logo/default.png') }}';"
+                                                        alt="">
+                                                </div>
+
+
+                                                <!-- Job Meta -->
+                                                <div class="job__meta w-100 d-flex flex-column gap-2 position-relative">
+
+                                                    <!-- Bookmark Button (Top Right) -->
+
+
+                                                    <!-- Clickable Overlay -->
+                                                    <a href="{{ route('User.JobDetails', ['id' => encrypt($data->id)]) }}"
+                                                        class="stretched-link"></a>
+
+                                                    <!-- Title & Info -->
+                                                    <div class="d-flex justify-content-between align-items-center gap-3">
+                                                        <a id="title"
+                                                            class="job__title h6 mb-0">{{ $data->title }}</a>
+                                                    </div>
+                                                    <p class="mb-0 text-muted">{{ $data->com_name }}</p>
+
+                                                    <!-- Meta Info Row -->
+                                                    <div class="d-flex gap-3 gap-md-4 flex-wrap mb-2">
+                                                        <div class="d-flex gap-2 align-items-center" id="location">
+                                                            <i class="fa-light fa-location-dot"></i> {{ $data->location }}
+                                                        </div>
+                                                        <div class="d-flex gap-2 align-items-center">
+                                                            {{ $data->currency }} {{ $data->min_sal }} -
+                                                            {{ $data->max_sal }}
+                                                        </div>
+                                                        <div class="d-flex gap-2 align-items-center" id="type">
+                                                            <i class="fa-light rt-briefcase"></i> {{ $data->type }}
+                                                        </div>
+                                                        <div class="d-flex gap-2 align-items-center">
+                                                            <i class="fa-light fa-clock"></i>
+                                                            {{ $data->created_at->diffForHumans() }}
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Skills -->
+                                                    <div class="job__tags d-flex flex-wrap gap-3" id="skills">
+                                                        @foreach (explode(',', $data->skills) as $skill)
+                                                            <a href="#">{{ trim($skill) }}</a>
+                                                        @endforeach
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
                                 @endforeach
-                                
+
                                 <!-- single item end -->
 
                             </div>
@@ -693,16 +688,17 @@
                             @else
                                 <li><a href="{{ $jobs->previousPageUrl() }}"><i class="rt-chevron-left"></i></a></li>
                             @endif
-                    
+
                             {{-- Pagination Numbers --}}
                             @for ($page = 1; $page <= $jobs->lastPage(); $page++)
                                 <li>
-                                    <a href="{{ $jobs->url($page) }}" class="{{ $page == $jobs->currentPage() ? 'active' : '' }}">
+                                    <a href="{{ $jobs->url($page) }}"
+                                        class="{{ $page == $jobs->currentPage() ? 'active' : '' }}">
                                         {{ $page }}
                                     </a>
                                 </li>
                             @endfor
-                    
+
                             {{-- Next Page Link --}}
                             @if ($jobs->hasMorePages())
                                 <li><a href="{{ $jobs->nextPageUrl() }}"><i class="rt-chevron-right"></i></a></li>
@@ -711,8 +707,8 @@
                             @endif
                         </ul>
                     </div>
-                    
-                    
+
+
                 </div>
             </div>
         </div>
@@ -946,7 +942,7 @@
         //     const categorySelect = document.getElementById("categorySelect");
         //     const categoryForm = document.getElementById("categoryForm");
         //     const hiddenInput = document.getElementById("selectedCategory");
-        
+
         //     document.querySelectorAll(".nice-select .option").forEach(option => {
         //         option.addEventListener("click", function() {
         //             const selectedValue = this.getAttribute("data-value");
@@ -968,7 +964,13 @@
                 });
             });
         });
-
     </script>
 
+    <script>
+        function handleBookmarkClick(event) {
+            event.preventDefault(); // Prevent the anchor tag's default behavior
+            event.stopPropagation(); // Stop it from bubbling to the stretched link
+            // Optionally handle bookmark logic here (like AJAX call or toggle class)
+        }
+    </script>
 @endsection
