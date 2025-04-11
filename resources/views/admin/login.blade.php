@@ -7,7 +7,7 @@
     <title>CareerNest| Admin Login</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
-    <meta content="Themesbrand" name="author" />
+    <meta content="Dazzler Software" name="author" />
     <meta name="csrf-token" content="{{ csrf_token()}}">
     <!-- App favicon -->
     <link rel="shortcut icon" href="assets/images/favicon.ico">
@@ -87,7 +87,7 @@
                                                             <script>
                                                                 document.write(new Date().getFullYear())
                                                             </script> Borex . Crafted with <i
-                                                                class="mdi mdi-heart text-danger"></i> by Themesbrand
+                                                                class="mdi mdi-heart text-danger"></i> by Dazzler Software
                                                         </p>
                                                     </div>
                                                 </div>

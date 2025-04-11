@@ -69,7 +69,7 @@
                         <div class="row mt-4">
                             <div class="col-md-6">
                                 <p class="info-box"><strong>Type:</strong> {{ $job->type }}</p>
-                                <p class="info-box"><strong>Industry:</strong> {{ $job->industry }}</p>
+                                <p class="info-box"><strong>Category:</strong> {{ $job->industry }}</p>
                                 <p class="info-box"><strong>Department:</strong> {{ $job->department }}</p>
                                 <p class="info-box"><strong>Role:</strong> {{ $job->role }}</p>
                             </div>
@@ -77,7 +77,16 @@
                                 <p class="info-box"><strong>Mode:</strong> {{ $job->mode }}</p>
                                 <p class="info-box"><strong>Location:</strong> {{ $job->location }}</p>
                                 <p class="info-box"><strong>Experience:</strong> {{ $job->min_exp }} - {{ $job->max_exp }} years</p>
-                                <p class="info-box"><strong>Salary:</strong> {{ $job->currency }} {{ $job->min_sal }} - {{ $job->max_sal }}</p>
+                                <p class="info-box"><strong>Salary:</strong> {{ $job->currency }} {{ $job->min_sal }} - {{ $job->max_sal }}
+                                    @if($job->sal_status == 'off')
+                                        <br>
+                                        <small class="text-success">Salary is showing to Candidate</small>
+                                    @else
+                                        <br>
+                                        <small class="text-danger">Salary is not showing to Candidate</small>
+                                    @endif
+                                </p>
+                                
                             </div>
                         </div>
 
