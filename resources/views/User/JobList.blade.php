@@ -88,7 +88,7 @@
                             <!-- job location -->
                             <div class="search__item">
                                 <h6 class="mb-3 font-20 fw-medium text-dark text-capitalize">Search Location</h6>
-                                {{-- <div class="position-relative">
+                                <div class="position-relative">
                                     <div class="nice-select" tabindex="0">
                                         <span class="current">Search Location</span>
                                         <ul class="list">
@@ -101,28 +101,8 @@
                                         </ul>
                                     </div>
                                     <i class="fa-light fa-location-dot"></i>
-                                </div> --}}
-                                <form action="{{ route('User.JobList') }}" method="GET" class="location-select" id="locationForm">
-                                    <input type="hidden" name="location" id="selectedLocation" value="{{ request('location') }}">
-                                
-                                    <div class="position-relative">
-                                        <div class="nice-select" tabindex="0">
-                                            <span class="current">
-                                                {{ request('location') ?? 'Industry' }}
-                                            </span>
-                                            <ul class="list">
-                                                @foreach ($JobLocation as $location)
-                                                    <li data-value="{{ $location->country .'-'. $location->city }}" class="option {{ request('location') == $location->country .'-'. $location->city ? 'selected focus' : '' }}">
-                                                        {{ $location->country .'-'. $location->city }}
-                                                    </li>
-                                                @endforeach
-                                            </ul>
-                                        </div>
-                                        <i class="fa-light fa-location-dot"></i>
-                                    </div>
-                                </form>
+                                </div>
                             </div>
-                            
                             <!-- job category -->
                             <div class="search__item">
                                 <h6 class="mb-3 font-20 fw-medium text-dark text-capitalize">Search By Job category</h6>
@@ -162,14 +142,16 @@
                             <div class="search__item">
                                 <div class="mb-3 font-20 fw-medium text-dark text-capitalize">job type</div>
                                 <div class="search__item__list">
-                                    <div class="d-flex align-items-center justify-content-between list">
-                                        <div class="d-flex gap-2 align-items-center checkbox">
-                                            <input type="checkbox" name="fulltime" id="fulltime">
-                                            <label for="fulltime">Full Time</label>
+                                    @foreach ($type as $t)
+                                        <div class="d-flex align-items-center justify-content-between list">
+                                            <div class="d-flex gap-2 align-items-center checkbox">
+                                                <input type="checkbox" name="fulltime" id="fulltime">
+                                                <label for="fulltime">{{$type}}</label>
+                                            </div>
+                                            <span>(130)</span>
                                         </div>
-                                        <span>(130)</span>
-                                    </div>
-                                    <div class="d-flex align-items-center justify-content-between list">
+                                    @endforeach
+                                    {{-- <div class="d-flex align-items-center justify-content-between list">
                                         <div class="d-flex gap-2 align-items-center checkbox">
                                             <input type="checkbox" name="part" id="part">
                                             <label for="part">Part Time</label>
@@ -189,7 +171,7 @@
                                             <label for="freelance">freelance</label>
                                         </div>
                                         <span>(130)</span>
-                                    </div>
+                                    </div> --}}
                                 </div>
                             </div>
 
@@ -313,28 +295,27 @@
 
 
                         <div class="d-flex flex-wrap align-items-center gap-4">
-                            <form action="{{ route('User.JobList') }}" method="GET" class="category-select" id="categoryForm">
-                                <input type="hidden" name="category" id="selectedCategory" value="{{ request('category') }}">
-                            
+                            <form action="{{ route('User.JobList') }}" method="GET" class="category-select"
+                                id="categoryForm">
+                                <input type="hidden" name="category" id="selectedCategory" value="">
+
                                 <div class="position-relative">
                                     <div class="nice-select" tabindex="0">
-                                        <span class="current">
-                                            {{ request('category') ?? 'Industry' }}
-                                        </span>
+                                        <span class="current">Industry</span>
                                         <ul class="list">
-                                            <li data-value="" class="option {{ request('category') == '' ? 'selected focus' : '' }}">
+                                            <li data-value="" data-display="All Category" class="option selected focus">
                                                 All Category
                                             </li>
-                                            @foreach ($JobCategory as $industry)
-                                                <li data-value="{{ $industry->name }}" class="option {{ request('category') == $industry->name ? 'selected focus' : '' }}">
-                                                    {{ $industry->name }}
+
+                                            @foreach ($industries as $industry)
+                                                <li data-value="{{ $industry }}" class="option">
+                                                    {{ $industry }}
                                                 </li>
                                             @endforeach
                                         </ul>
                                     </div>
                                 </div>
                             </form>
-                            
 
                             {{-- <div class="d-flex align-items-center gap-3" id="nav-tab" role="tablist">
                                 <button class="rts__btn no__fill__btn grid-style nav-link active" data-bs-toggle="tab" data-bs-target="#grid"> <i class="rt-hamburger"></i> Grid</button>
@@ -343,275 +324,7 @@
                         </div>
                     </div>
                     <div class="tab-content" id="myTabContent">
-                        {{-- <div class="tab-pane grid__style fade show active" role="tabpanel" id="grid">
-                            <div class="row g-30">
-                                <div class="col-xl-6 col-md-6 col-lg-12">
-                                    <div class="rts__job__card">
-                                        <div class="d-flex align-items-center justify-content-between">
-                                            <div class="company__icon">
-                                                <img src="{{url('user/assets/img/home-1/company/google.svg')}}" alt="">
-                                            </div>
-                                            <div class="featured__option">
-                                              
-                                            </div>
-                                        </div>
-                                        <div class="d-flex gap-3 flex-wrap mt-4">
-                                            <div class="d-flex gap-1 align-items-center">
-                                                <i class="fa-light fa-location-dot"></i> Newyork, UsssSA
-                                            </div>
-                                            <div class="d-flex gap-1 align-items-center">
-                                                <i class="fa-light fa-briefcase"></i> Full Time
-                                            </div>
-                                        </div>
-                                        <div class="h6 job__title my-3">
-                                            <a href="#" aria-label="job">
-                                                Senior UX Designer, Google
-                                            </a>
-                                        </div>
-                                        <p>Consectetur adipisicing elit. Possimus 
-                                            aut mollitia eum ipsum fugiat odio officiis odit mollitia eum ipsum.
-                                        </p>
-                                        <div class="job__tags d-flex flex-wrap gap-2 mt-4">
-                                            <a href="#">Creative</a>
-                                            <a href="#">user interface</a>
-                                            <a href="#">web ui</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xl-6 col-md-6 col-lg-12">
-                                    <div class="rts__job__card">
-                                        <div class="d-flex align-items-center justify-content-between">
-                                            <div class="company__icon">
-                                                <img src="{{url('user/assets/img/home-1/company/microsoft.svg')}}" alt="">
-                                            </div>
-                                            <div class="featured__option">
-                                              
-                                            </div>
-                                        </div>
-                                        <div class="d-flex gap-3 flex-wrap mt-4">
-                                            <div class="d-flex gap-1 align-items-center">
-                                                <i class="fa-light fa-location-dot"></i> Newyork, USA
-                                            </div>
-                                            <div class="d-flex gap-1 align-items-center">
-                                                <i class="fa-light fa-briefcase"></i> Full Time
-                                            </div>
-                                        </div>
-                                        <div class="h6 job__title my-3">
-                                            <a href="#" aria-label="job">
-                                                Software Engineer, Bing
-                                            </a>
-                                        </div>
-                                        <p>Consectetur adipisicing elit. Possimus 
-                                            aut mollitia eum ipsum fugiat odio officiis odit mollitia eum ipsum.
-                                        </p>
-                                        <div class="job__tags d-flex flex-wrap gap-2 mt-4">
-                                            <a href="#">React</a>
-                                            <a href="#">javascript</a>
-                                            <a href="#">web ui</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xl-6 col-md-6 col-lg-12">
-                                    <div class="rts__job__card">
-                                        <div class="d-flex align-items-center justify-content-between">
-                                            <div class="company__icon">
-                                                <img src="{{url('user/assets/img/home-1/company/apple.svg')}}" alt="">
-                                            </div>
-                                            <div class="featured__option">
-                                              
-                                            </div>
-                                        </div>
-                                        <div class="d-flex gap-3 flex-wrap mt-4">
-                                            <div class="d-flex gap-1 align-items-center">
-                                                <i class="fa-light fa-location-dot"></i> Newyork, USA
-                                            </div>
-                                            <div class="d-flex gap-1 align-items-center">
-                                                <i class="fa-light fa-briefcase"></i> Full Time
-                                            </div>
-                                        </div>
-                                        <div class="h6 job__title my-3">
-                                            <a href="#" aria-label="job">
-                                                Senior UX Designer, Apple
-                                            </a>
-                                        </div>
-                                        <p>Consectetur adipisicing elit. Possimus 
-                                            aut mollitia eum ipsum fugiat odio officiis odit mollitia eum ipsum.
-                                        </p>
-                                        <div class="job__tags d-flex flex-wrap gap-2 mt-4">
-                                            <a href="#">Creative</a>
-                                            <a href="#">user interface</a>
-                                            <a href="#">web ui</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xl-6 col-md-6 col-lg-12">
-                                    <div class="rts__job__card">
-                                        <div class="d-flex align-items-center justify-content-between">
-                                            <div class="company__icon">
-                                                <img src="{{url('user/assets/img/home-1/company/upwork.svg')}}" alt="">
-                                            </div>
-                                            <div class="featured__option">
-                                              
-                                            </div>
-                                        </div>
-                                        <div class="d-flex gap-3 flex-wrap mt-4">
-                                            <div class="d-flex gap-1 align-items-center">
-                                                <i class="fa-light fa-location-dot"></i> Newyork, USA
-                                            </div>
-                                            <div class="d-flex gap-1 align-items-center">
-                                                <i class="fa-light fa-briefcase"></i> Full Time
-                                            </div>
-                                        </div>
-                                        <div class="h6 job__title my-3">
-                                            <a href="#" aria-label="job">
-                                            Web Developer, Upwork
-                                            </a>
-                                        </div>
-                                        <p>Consectetur adipisicing elit. Possimus 
-                                            aut mollitia eum ipsum fugiat odio officiis odit mollitia eum ipsum.
-                                        </p>
-                                        <div class="job__tags d-flex flex-wrap gap-2 mt-4">
-                                            <a href="#">HTML</a>
-                                            <a href="#">CSS</a>
-                                            <a href="#">SCSS</a>
-                                            <a href="#">Figma</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xl-6 col-md-6 col-lg-12">
-                                    <div class="rts__job__card">
-                                        <div class="d-flex align-items-center justify-content-between">
-                                            <div class="company__icon">
-                                                <img src="{{url('user/assets/img/home-1/company/facebook.svg')}}" alt="">
-                                            </div>
-                                            <div class="featured__option">
-                                              
-                                            </div>
-                                        </div>
-                                        <div class="d-flex gap-3 flex-wrap mt-4">
-                                            <div class="d-flex gap-1 align-items-center">
-                                                <i class="fa-light fa-location-dot"></i> Newyork, USA
-                                            </div>
-                                            <div class="d-flex gap-1 align-items-center">
-                                                <i class="fa-light fa-briefcase"></i> Full Time
-                                            </div>
-                                        </div>
-                                        <div class="h6 job__title my-3">
-                                            <a href="#" aria-label="job">
-                                                Digital Marketing, Facebook
-                                            </a>
-                                        </div>
-                                        <p>Consectetur adipisicing elit. Possimus 
-                                            aut mollitia eum ipsum fugiat odio officiis odit mollitia eum ipsum.
-                                        </p>
-                                        <div class="job__tags d-flex flex-wrap gap-2 mt-4">
-                                            <a href="#">Blog Post</a>
-                                            <a href="#">web ui</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xl-6 col-md-6 col-lg-12">
-                                    <div class="rts__job__card">
-                                        <div class="d-flex align-items-center justify-content-between">
-                                            <div class="company__icon">
-                                                <img src="{{url('user/assets/img/home-1/company/in.svg')}}" alt="">
-                                            </div>
-                                            <div class="featured__option">
-                                              
-                                            </div>
-                                        </div>
-                                        <div class="d-flex gap-3 flex-wrap mt-4">
-                                            <div class="d-flex gap-1 align-items-center">
-                                                <i class="fa-light fa-location-dot"></i> Newyork, USA
-                                            </div>
-                                            <div class="d-flex gap-1 align-items-center">
-                                                <i class="fa-light fa-briefcase"></i> Full Time
-                                            </div>
-                                        </div>
-                                        <div class="h6 job__title my-3">
-                                            <a href="#" aria-label="job">
-                                                Graphic Designer, Linkedin
-                                            </a>
-                                        </div>
-                                        <p>Consectetur adipisicing elit. Possimus 
-                                            aut mollitia eum ipsum fugiat odio officiis odit mollitia eum ipsum.
-                                        </p>
-                                        <div class="job__tags d-flex flex-wrap gap-2 mt-4">
-                                            <a href="#">Creative</a>
-                                            <a href="#">user interface</a>
-                                            <a href="#">web ui</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xl-6 col-md-6 col-lg-12">
-                                    <div class="rts__job__card">
-                                        <div class="d-flex align-items-center justify-content-between">
-                                            <div class="company__icon">
-                                                <img src="{{url('user/assets/img/home-1/company/udemy.svg')}}" alt="">
-                                            </div>
-                                            <div class="featured__option">
-                                              
-                                            </div>
-                                        </div>
-                                        <div class="d-flex gap-3 flex-wrap mt-4">
-                                            <div class="d-flex gap-1 align-items-center">
-                                                <i class="fa-light fa-location-dot"></i> Newyork, USA
-                                            </div>
-                                            <div class="d-flex gap-1 align-items-center">
-                                                <i class="fa-light fa-briefcase"></i> Full Time
-                                            </div>
-                                        </div>
-                                        <div class="h6 job__title my-3">
-                                            <a href="#" aria-label="job">
-                                                Online Trainer, Udemy
-                                            </a>
-                                        </div>
-                                        <p>Consectetur adipisicing elit. Possimus 
-                                            aut mollitia eum ipsum fugiat odio officiis odit mollitia eum ipsum.
-                                        </p>
-                                        <div class="job__tags d-flex flex-wrap gap-2 mt-4">
-                                            <a href="#">Creative</a>
-                                            <a href="#">user interface</a>
-                                            <a href="#">web ui</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xl-6 col-md-6 col-lg-12">
-                                    <div class="rts__job__card">
-                                        <div class="d-flex align-items-center justify-content-between">
-                                            <div class="company__icon">
-                                                <img src="{{url('user/assets/img/home-1/company/figma.svg')}}" alt="">
-                                            </div>
-                                            <div class="featured__option">
-                                              
-                                            </div>
-                                        </div>
-                                        <div class="d-flex gap-3 flex-wrap mt-4">
-                                            <div class="d-flex gap-1 align-items-center">
-                                                <i class="fa-light fa-location-dot"></i> Newyork, USA
-                                            </div>
-                                            <div class="d-flex gap-1 align-items-center">
-                                                <i class="fa-light fa-briefcase"></i> Full Time
-                                            </div>
-                                        </div>
-                                        <div class="h6 job__title my-3">
-                                            <a href="#" aria-label="job">
-                                                Product Designer, Figma
-                                            </a>
-                                        </div>
-                                        <p>Consectetur adipisicing elit. Possimus 
-                                            aut mollitia eum ipsum fugiat odio officiis odit mollitia eum ipsum.
-                                        </p>
-                                        <div class="job__tags d-flex flex-wrap gap-2 mt-4">
-                                            <a href="#">Skill</a>
-                                            <a href="#">user interface</a>
-                                            <a href="#">Problem Solving</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                            </div>
-                        </div> --}}
+                      
                         <div class="tab-pane fade list__style show active" role="tabpanel" id="list">
                             <div class="row g-30">
                                 <!-- single item -->

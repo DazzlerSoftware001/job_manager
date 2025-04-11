@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\JobPost;
 use App\Models\JobCategory;
-use App\Models\JobLocation;
 use Illuminate\Support\Facades\Crypt;
 
 class JobController extends Controller
@@ -21,17 +20,14 @@ class JobController extends Controller
             $query->where('industry', $request->category);
         }
 
-        if($request->has('location') && $request->location !== '') { 
-            $query->where('location', $request->location);
-        }
+        $jobs = $query->paginate(2); // Adjust pagination as needed
+        // $JobCategory = JobCategory::all();
+        $industries = JobPost::distinct()->pluck('industry');
+        $type = JobPost::distinct()->pluck('type');
+        // $data = JobPost::all();
+        // dd($type);
 
-        $jobs = $query->paginate(2)->withQueryString(); // Adjust pagination as needed
-        $JobCategory = JobCategory::all();
-        // dd($jobs);
-
-        $JobLocation = JobLocation::all(); 
-
-        return view('User.JobList', compact('jobs', 'JobCategory', 'JobLocation'));
+        return view('User.JobList', compact('jobs','industries','type'));
     }
 
     public function JobDetails($id) {
