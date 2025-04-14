@@ -37,5 +37,8 @@
     <link rel="stylesheet" href="{{url('user/assets/css/plugins.min.css')}}">
     <link rel="stylesheet" href="{{url('user/assets/css/style.css')}}">
 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css">
+
+
 </head>
 <body>

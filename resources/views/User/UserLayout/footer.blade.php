@@ -133,6 +133,7 @@
 <!-- all plugin js -->
 <script src="{{url('user/assets/js/plugins.min.js')}}"></script>
 <script src="{{url('user/assets/js/main.js')}}"></script>
+<script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
 
 @yield('script')
 </body>
