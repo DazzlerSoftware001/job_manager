@@ -14,8 +14,9 @@ referrerpolicy="origin"></script>
                         <div class="rts__job__card__big bg-transparent p-0 position-relative z-1 flex-wrap justify-content-between d-flex gap-4 align-items-center">
                             <div class="d-flex gap-4 align-items-center flex-md-row flex-column mx-auto mx-md-0">
                                 <div class="company__icon rounded-2 bg-white">
-                                    <img src="{{ parse_url($job->com_logo, PHP_URL_PATH) ?? '' }}"
-                                                    alt="">
+                                    {{-- <img src="{{ parse_url($job->com_logo, PHP_URL_PATH) ?? url('admin/logo/default.png')  }}"
+                                                    alt=""> --}}
+                                                    <img src="{{ $job->com_logo ? parse_url($job->com_logo, PHP_URL_PATH) : url('admin/logo/default.png') }}" alt="">
                                 </div>
                                 <div class="job__meta w-100 d-flex text-center text-md-start flex-column gap-2">
                                     <div class="">

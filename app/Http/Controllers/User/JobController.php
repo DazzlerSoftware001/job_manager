@@ -14,12 +14,16 @@ class JobController extends Controller
     {
         $query = JobPost::where('status', 1);
 
+        if($request->has('title') && $request->title !== '') {
+            $query->where('title', $request->title);
+        }
+
         // Filter by category if selected
         if ($request->has('category') && $request->category !== '') {
             $query->where('industry', $request->category);
         }
 
-        $jobs = $query->paginate(2); // Adjust pagination as needed
+        $jobs = $query->paginate(1)->withQueryString(); // Adjust pagination as needed
                                      // $JobCategory = JobCategory::all();
         $industries = JobPost::distinct()->pluck('industry');
         $type       = JobPost::select('type', DB::raw('count(*) as count'))
@@ -30,10 +34,12 @@ class JobController extends Controller
         ->groupBy('max_exp')
         ->get();
 
+        $location = JobPost::select('location')->distinct()->get();
+
         // $data = JobPost::all();
         // dd($type);
 
-        return view('User.JobList', compact('jobs', 'industries', 'type', 'experience'));
+        return view('User.JobList', compact('jobs', 'industries', 'type', 'experience', 'location'));
     }
 
     public function JobDetails($id)
@@ -42,7 +48,7 @@ class JobController extends Controller
         // dd($id);
         $decryptedId = Crypt::decrypt($id);
         $job         = JobPost::find($decryptedId);
-// dd($job);
+        // dd($job);
         if (! $job) {
             return redirect()->back()->with('error', 'Job not found!');
         }

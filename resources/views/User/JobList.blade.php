@@ -76,14 +76,19 @@
             <div class="row g-30">
                 <div class="col-lg-5 col-xl-4">
                     <div class="job__search__section mb-40">
-                        <form action="#" class="d-flex flex-column row-30">
+                        <form action="{{ route('User.JobList') }}" class="d-flex flex-column row-30">
                             <div class="search__item">
                                 <label for="search" class="mb-3 font-20 fw-medium text-dark text-capitalize">Search By Job
                                     Title</label>
                                 <div class="position-relative">
-                                    <input type="text" id="search" placeholder="Enter Type Of job" required>
+                                    <input type="text" id="title" name="title" placeholder="Enter Type Of job"
+                                        required style="padding-right: 80px;">
                                     <i class="fa-light fa-magnifying-glass"></i>
                                 </div>
+                                <button class="btn btn-sm btn-primary"
+                                    style="position: absolute; top: 73%; right: 10px; transform: translateY(-50%); border: none;">
+                                    Submit
+                                </button>
                             </div>
                             <!-- job location -->
                             <div class="search__item">
@@ -91,13 +96,13 @@
                                 <div class="position-relative">
                                     <div class="nice-select" tabindex="0">
                                         <span class="current">Search Location</span>
-                                        <ul class="list">
+                                        <ul class="list" id="location" name="location">
                                             <li data-value="Nothing" data-display="Search Location"
                                                 class="option selected focus">Search Location</li>
-                                            <li data-value="1" class="option">Dhaka</li>
-                                            <li data-value="2" class="option">Barisal</li>
-                                            <li data-value="3" class="option">Chittagong</li>
-                                            <li data-value="4" class="option">Rajshahi</li>
+                                            @foreach ($location as $value)
+                                                <li data-value="{{ $value->location }}" class="option">
+                                                    {{ $value->location }}</li>
+                                            @endforeach
                                         </ul>
                                     </div>
                                     <i class="fa-light fa-location-dot"></i>
@@ -146,9 +151,9 @@
                                         <div class="d-flex align-items-center justify-content-between list">
                                             <div class="d-flex gap-2 align-items-center checkbox">
                                                 <input type="checkbox" name="fulltime" id="fulltime">
-                                                <label for="fulltime">{{$t->type}}</label>
+                                                <label for="fulltime">{{ $t->type }}</label>
                                             </div>
-                                            <span>({{$t->count}})</span>
+                                            <span>({{ $t->count }})</span>
                                         </div>
                                     @endforeach
                                     {{-- <div class="d-flex align-items-center justify-content-between list">
@@ -179,13 +184,13 @@
                             <div class="search__item">
                                 <div class="mb-3 font-20 fw-medium text-dark text-capitalize">experience Label</div>
                                 <div class="search__item__list">
-                                    @foreach ($experience as $exp)                                        
+                                    @foreach ($experience as $exp)
                                         <div class="d-flex align-items-center justify-content-between list">
                                             <div class="d-flex gap-2 align-items-center checkbox">
                                                 <input type="checkbox" name="5year" id="5year">
-                                                <label for="5year">{{$exp->max_exp}} year</label>
+                                                <label for="5year">{{ $exp->max_exp }} year</label>
                                             </div>
-                                            <span>({{$exp->count}})</span>
+                                            <span>({{ $exp->count }})</span>
                                         </div>
                                     @endforeach
                                 </div>
@@ -304,7 +309,7 @@
                         </div>
                     </div>
                     <div class="tab-content" id="myTabContent">
-                      
+
                         <div class="tab-pane fade list__style show active" role="tabpanel" id="list">
                             <div class="row g-30">
                                 <!-- single item -->
@@ -316,8 +321,7 @@
                                                 <i class="rt-bookmark"></i>
                                             </button>
                                         </div>
-                                        <div
-                                            class="flex-wrap justify-content-between d-flex gap-4 align-items-center">
+                                        <div class="flex-wrap justify-content-between d-flex gap-4 align-items-center">
                                             <div
                                                 class="d-flex flex-wrap flex-md-nowrap flex-lg-wrap flex-xl-nowrap gap-4 align-items-center w-100 position-relative">
 
@@ -652,6 +656,21 @@
 @endsection
 @section('script')
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', function() {
+            var location = document.getElementById('location');
+            if (location) {
+                const location1 = new Choices(location, {
+                    shouldSort: false,
+                    position: 'down',
+                    resetScrollPosition: true,
+                });
+            }
+        });
+    </script>
+
+
 
     <script>
         // document.addEventListener("DOMContentLoaded", function() {
