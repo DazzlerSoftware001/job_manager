@@ -444,7 +444,7 @@ Dashboard
                                         <div class="text-center">
                                             <!-- Profile Image with Camera Icon -->
                                             <div class="position-relative d-inline-block">
-                                                <img id="profileImage" src="{{url('recruiter/assets/images/users/avatar-1.jpg')}}" onerror="this.onerror=null; this.src='{{ url('recruiter/assets/images/users/avatar-1.jpg') }}';"
+                                                <img id="profileImage" src="{{url('recruiter/assets/images/profile/default.png')}}" onerror="this.onerror=null; this.src='{{ url('recruiter/assets/images/profile/default.png') }}';"
                                                     alt="" class="avatar-xl rounded-circle img-thumbnail">
                                                 <button
                                                     class="btn btn-sm btn-primary position-absolute bottom-0 end-0 rounded-circle"
@@ -457,18 +457,20 @@ Dashboard
                                             <div class="mt-3">
                                                 <!-- Editable Name with Pencil Icon -->
                                                 <h5 class="mb-1 d-inline-block position-relative" id="nameDisplay">
-                                                    Jennifer Bennett</h5>
+                                                    </h5>
                                                 <input type="text" id="nameInput" class="form-control d-none"
-                                                    value="Jennifer Bennett">
+                                                    value="Enter your name">
+
                                                 <button class="btn btn-sm btn-outline-secondary ms-2 p-1"
                                                     id="editNameButton" data-bs-toggle="modal"
                                                     data-bs-target="#editNameModal">
                                                     <i class="fa fa-pencil-alt"></i>
                                                 </button>
-                                                <p class="text-muted">Product Designer</p>
+
+                                                {{-- <p class="text-muted">Product Designer</p> --}}
                                             </div>
-                                            <button class="btn btn-success mt-3 d-none" id="saveChangesButton">Save
-                                                Changes</button>
+                                            {{-- <button class="btn btn-success mt-3 d-none" id="saveChangesButton">Save
+                                                Changes</button> --}}
                                         </div>
                                     </div>
 
@@ -1189,7 +1191,7 @@ Dashboard
         {{-- To get details --}}
         <script>
             $(document).ready(function() {
-                var defaultImage = "{{ url('recruiter/assets/images/users/avatar-1.jpg') }}";
+                var defaultImage = "{{ url('recruiter/assets/images/profile/default.png') }}";
                 
                 $.ajax({
                     url: "{{ route('Recruiter.dashboardData') }}",
