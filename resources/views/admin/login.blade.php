@@ -4,7 +4,7 @@
 <head>
 
     <meta charset="utf-8" />
-    <title>CareerNest| Admin Login</title>
+    <title>CareerNext| Admin Login</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
     <meta content="Dazzler Software" name="author" />
@@ -37,7 +37,7 @@
                                                 <div class="d-flex flex-column h-100">
                                                     <div class="mb-4 mb-md-5">
                                                         <a href="index.html" class="d-block auth-logo">
-                                                            <img src="{{url('admin/assets/images/logo-dark.png')}}" alt=""
+                                                            <img src="{{url('admin/assets/images/careerNext.png')}}" alt=""
                                                                 height="22" class="auth-logo-dark me-start">
                                                             <img src="{{url('admin/assets/images/logo-light.png')}}" alt=""
                                                                 height="22" class="auth-logo-light me-start">
@@ -46,7 +46,7 @@
                                                     <div class="auth-content my-auto">
                                                         <div class="text-center">
                                                             <h5 class="mb-0">Welcome Back !</h5>
-                                                            <p class="text-muted mt-2">Sign in to continue to Borex.</p>
+                                                            <p class="text-muted mt-2">Sign in to continue to CareerNext.</p>
                                                         </div>
                                                         <form class="mt-4 pt-2" method="POST" action="javascript:void(0)" id="Login"> {{--  --}}
                                                             <div class="form-floating form-floating-custom mb-4">
@@ -86,7 +86,7 @@
                                                         <p class="mb-0">©
                                                             <script>
                                                                 document.write(new Date().getFullYear())
-                                                            </script> Borex . Crafted with <i
+                                                            </script> CareerNext . Crafted with <i
                                                                 class="mdi mdi-heart text-danger"></i> by Dazzler Software
                                                         </p>
                                                     </div>
@@ -125,7 +125,7 @@
                                         </div>
 
                                         <!-- end carouselIndicators -->
-                                        <div class="carousel-inner w-75 mx-auto">
+                                        {{-- <div class="carousel-inner w-75 mx-auto">
                                             <div class="carousel-item active">
                                                 <div class="testi-contain text-center">
                                                     <h5 class="font-size-20 mt-4">“I feel confident
@@ -166,7 +166,46 @@
                                                     </p>
                                                 </div>
                                             </div>
+                                        </div> --}}
+
+                                        <div class="carousel-inner w-75 mx-auto">
+                                            <div class="carousel-item active">
+                                                <div class="testi-contain text-center">
+                                                    <h5 class="font-size-20 mt-4">“Great recruiters don’t find talent, they attract it.”</h5>
+                                                    <p class="font-size-15 text-muted mt-3 mb-0">
+                                                        The power of recruiting lies not in searching endlessly, but in creating an environment that draws the best talent to you. Build value, and talent will follow.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        
+                                            <div class="carousel-item">
+                                                <div class="testi-contain text-center">
+                                                    <h5 class="font-size-20 mt-4">“Behind every great company is a recruiter who found the right fit.”</h5>
+                                                    <p class="font-size-15 text-muted mt-3 mb-0">
+                                                        Talent acquisition is more than hiring—it's the foundation of growth. A visionary recruiter doesn't just fill roles—they build futures.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        
+                                            <div class="carousel-item">
+                                                <div class="testi-contain text-center">
+                                                    <h5 class="font-size-20 mt-4">“Recruitment is not about filling jobs, it's about changing lives.”</h5>
+                                                    <p class="font-size-15 text-muted mt-3 mb-0">
+                                                        Every candidate is a story, and every role is a new chapter. As a recruiter, you write success with every placement you make.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        
+                                            <div class="carousel-item">
+                                                <div class="testi-contain text-center">
+                                                    <h5 class="font-size-20 mt-4">“The right hire can transform a team, a project, and a future.”</h5>
+                                                    <p class="font-size-15 text-muted mt-3 mb-0">
+                                                        When vision meets opportunity, magic happens. Be the bridge between potential and purpose.
+                                                    </p>
+                                                </div>
+                                            </div>
                                         </div>
+                                        
                                         <!-- end carousel-inner -->
                                     </div>
                                     <!-- end review carousel -->
