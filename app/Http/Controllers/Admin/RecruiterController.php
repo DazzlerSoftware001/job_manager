@@ -107,7 +107,7 @@ class RecruiterController extends Controller
   
         // Define validation rules
         $rules = [
-            'name' => 'required|string|max:255|unique:users,name',
+            'name' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:users,email',
             'phone' => 'required|digits_between:10,15|unique:users,phone',
             'logo' => 'required|image|max:2048',
@@ -129,6 +129,8 @@ class RecruiterController extends Controller
 
                 $Recruiter = new Recruiter();
                 $Recruiter->user_type = 2;
+                $Recruiter->user_details ='Recruiter';
+
                 $Recruiter->name = $request->input('name');
                 $Recruiter->email = $request->input('email');
                 $Recruiter->phone = $request->input('phone');
@@ -218,7 +220,7 @@ class RecruiterController extends Controller
     public function updateRecruiter(Request $request)
     {
         $rules = [
-            'edit-id' => 'required|exists:companies,id',
+            'edit-id' => 'required|exists:users,id',
             'editname' => 'required|string|max:255',
             'editemail' => 'required|email|max:255',
             'editphone' => 'required|digits_between:10,15',

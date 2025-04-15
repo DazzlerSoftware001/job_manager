@@ -125,7 +125,7 @@ class CompanyController extends Controller
             'email' => 'required|email|max:255|unique:companies,email',
             'phone' => 'required|digits_between:10,15|unique:companies,phone',
             'website' => 'required|url|max:255|unique:companies,website',
-            'details' => 'required|string|max:255|unique:companies,website',
+            'details' => 'required|string|min:10|max:255|unique:companies,website',
             'address' => 'required|string|min:10|max:255',
             'logo' => 'required|image|max:2048',
         ];

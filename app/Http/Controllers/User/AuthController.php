@@ -9,6 +9,16 @@ use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
+    public function register()
+    {
+        return view('User.Auth.register');
+    }
+
+    public function login()
+    {
+        return view('User.Auth.login');
+    }
+
     public function loginInsert(Request $request)
     {
         // Define validation rules

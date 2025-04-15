@@ -19,7 +19,7 @@ class RecruitersSeeder extends Seeder
             'name'=>'Akash',
             'email'=>'akash@gmail.com',
             'phone'=>'0000000000',
-            'logo'=>null,
+            'logo'=>'Recruiter/logo/default.png',
             'status'=>0,
             'password'=>'$2y$10$gJ7S2l4i/iMKD8gzulW/ku4DZWMgNYz1v4pqhWXznDPucPB.FLn7S',
             'created_at'=>now(),

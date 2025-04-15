@@ -73,9 +73,9 @@
                                         </ul>
                                     </li>
 
-                                    <li class="navigation__menu--item has-child has-arrow">
-                                        <a href="#" class="navigation__menu--item__link">Candidates</a>
-                                        <ul class="submenu sub__style" role="menu">
+                                    <li class="navigation__menu--item has-child">
+                                        <a href="{{route('User.Dashboard')}}" class="navigation__menu--item__link">Candidates</a>
+                                        {{-- <ul class="submenu sub__style" role="menu">
                                             <li role="menuitem" class="has-child has-arrow">
                                                 <a href="candidate-1.html">Candidate Style</a>
                                                 <ul class="sub__style" role="menu">
@@ -94,7 +94,7 @@
                                                 </ul>
                                             </li>
                                             <li role="menuitem"><a href="candidate-dashboard.html">Candidate Dashboard</a></li>
-                                        </ul>
+                                        </ul> --}}
                                     </li>
 
                                     <li class="navigation__menu--item has-child has-arrow">

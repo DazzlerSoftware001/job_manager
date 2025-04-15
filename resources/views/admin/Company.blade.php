@@ -87,38 +87,38 @@
                 <form method="POST" action="javascript:void(0)" id="AddCompany">
 
                     <div class="mb-3">
-                        <label for="name" class="form-label">Name</label>
+                        <label for="name" class="form-label">Name<span class="text-danger">*</span></label>
                         <input type="text" class="form-control" name="name" id="name" required>
                     </div>
 
                     <div class="mb-3">
-                        <label for="email" class="form-label">Email</label>
+                        <label for="email" class="form-label">Email<span class="text-danger">*</span></label>
                         <input type="email" class="form-control" name="email" id="email" required>
                     </div>
 
                     <div class="mb-3">
-                        <label for="phone" class="form-label">Phone</label>
+                        <label for="phone" class="form-label">Phone<span class="text-danger">*</span></label>
                         <input type="number" class="form-control" name="phone" id="phone" required>
                     </div>
 
                     <div class="mb-3">
-                        <label for="website" class="form-label">Website</label>
+                        <label for="website" class="form-label">Website<span class="text-danger">*</span></label>
                         <input type="url" class="form-control" name="website" id="website" required>
                         <small id="websiteHelp" class="form-text text-muted">Enter a valid website URL (e.g., https://example.com).</small>
                     </div>
 
                     <div class="mb-3">
-                        <label for="details" class="form-label">Details</label>
+                        <label for="details" class="form-label">Details<span class="text-danger">*</span></label>
                         <input type="text" class="form-control" name="details" id="details" required>
                     </div>
 
                     <div class="mb-3">
-                        <label for="address" class="form-label">Address</label>
+                        <label for="address" class="form-label">Address<span class="text-danger">*</span></label>
                         <input type="text" class="form-control" name="address" id="address" required>
                     </div>
 
                     <div class="mb-3">
-                        <label for="logo" class="form-label">Logo</label>
+                        <label for="logo" class="form-label">Logo<span class="text-danger">*</span></label>
                         <input type="file" class="form-control" name="logo" id="logo" accept="image/*" required>
                     </div>
 
@@ -173,38 +173,38 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="editname" class="form-label">Name</label>
+                        <label for="editname" class="form-label">Name<span class="text-danger">*</span></label>
                         <input type="text" class="form-control" name="editname" id="editname" required>
                     </div>
 
                     <div class="mb-3">
-                        <label for="editemail" class="form-label">Email</label>
+                        <label for="editemail" class="form-label">Email<span class="text-danger">*</span></label>
                         <input type="email" class="form-control" name="editemail" id="editemail" required>
                     </div>
 
                     <div class="mb-3">
-                        <label for="editphone" class="form-label">Phone</label>
+                        <label for="editphone" class="form-label">Phone<span class="text-danger">*</span></label>
                         <input type="number" class="form-control" name="editphone" id="editphone" required>
                     </div>
 
                     <div class="mb-3">
-                        <label for="editwebsite" class="form-label">Website</label>
+                        <label for="editwebsite" class="form-label">Website<span class="text-danger">*</span></label>
                         <input type="url" class="form-control" name="editwebsite" id="editwebsite" required>
                         <small id="websiteHelp" class="form-text text-muted">Enter a valid website URL (e.g., https://example.com).</small>
                     </div>
 
                     <div class="mb-3">
-                        <label for="editdetails" class="form-label">Details</label>
+                        <label for="editdetails" class="form-label">Details<span class="text-danger">*</span></label>
                         <input type="text" class="form-control" name="editdetails" id="editdetails" required>
                     </div>
 
                     <div class="mb-3">
-                        <label for="editaddress" class="form-label">Address</label>
+                        <label for="editaddress" class="form-label">Address<span class="text-danger">*</span></label>
                         <input type="text" class="form-control" name="editaddress" id="editaddress" required>
                     </div>
 
                     <div class="mb-3">
-                        <label for="editlogo" class="form-label">Logo</label>
+                        <label for="editlogo" class="form-label">Logo<span class="text-danger">*</span></label>
                         <input type="file" class="form-control" name="editlogo" id="editlogo" accept="image/*">
                     </div>
 

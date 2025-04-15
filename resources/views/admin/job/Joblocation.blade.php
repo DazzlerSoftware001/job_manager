@@ -204,15 +204,15 @@
                             
                         } else if (result.status_code === 2) {
                             Toastify({
-                                text: result.message,
-                                duration: 3000,
-                                gravity: "top",
-                                position: "right",
-                                style:{
-                                    background:"yellow",
-                                    color: "white",
-                                }
-                            }).showToast();
+                            text: result.message,
+                            duration: 3000,
+                            gravity: "top",
+                            position: "right",
+                            style:{
+                                background:"#c7ac14",
+                                color: "white",
+                            }
+                        }).showToast();
                         } else {
                             Toastify({
                                 text: result.message,
@@ -439,14 +439,15 @@
                             }).showToast();
                         } else if (result.status_code === 2) {
                             Toastify({
-                                text: result.message,
-                                duration: 3000,
-                                gravity: "top",
-                                position: "right",
-                                style: {
-                                    background: "#c7ac14",
-                                },
-                            }).showToast();
+                            text: result.message,
+                            duration: 3000,
+                            gravity: "top",
+                            position: "right",
+                            style:{
+                                background:"#c7ac14",
+                                color: "white",
+                            }
+                        }).showToast();
                         } else {
                             Toastify({
                                 text: result.message,
