@@ -51,7 +51,7 @@ class JobController extends Controller
 
     public function PostJobData(Request $request)
     {
-        // dd($request->all());
+        // dd($request->input('company_logo'));
   
         // Define validation rules
         $rules = [
@@ -85,7 +85,7 @@ class JobController extends Controller
         $validator = Validator::make($request->all(), $rules);
 
         if (!$validator->fails()) {
-            try {
+            // try {
                 $recruiter_id = Auth::user()->id;
                 $JobPost = new JobPost();
 
@@ -116,6 +116,7 @@ class JobController extends Controller
                 $JobPost->com_name = $request->input('company_name');
                 $JobPost->com_logo = $request->input('company_logo');
                 $JobPost->com_details = $request->input('company_details');
+                $JobPost->jobexpiry = $request->input('jobExp');
                 $JobPost->job_desc = $request->input('job_description');
                 $JobPost->job_resp = $request->input('job_resp');
                 $JobPost->job_req = $request->input('job_req');
@@ -127,11 +128,11 @@ class JobController extends Controller
 
                 $JobPost->save();
 
-                return response()->json(['status_code' => 1, 'message' => 'Job Post added successfully']);
-            } catch (\Exception $e) {
+                return response()->json(['status_code' => 1, 'message' => 'Job Posted successfully wait for admin action']);
+            // } catch (\Exception $e) {
                 // Handle any exception that occurs during saving
-                return response()->json(['status_code' => 0, 'message' => 'Unable to add Experience']);
-            }
+                return response()->json(['status_code' => 0, 'message' => 'Unable to post job']);
+            // }
         } else {
             // Return validation errors
             return response()->json(['status_code' => 2, 'message' => $validator->errors()->first()]);

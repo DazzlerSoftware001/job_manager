@@ -38,6 +38,7 @@ return new class extends Migration
             $table->string('com_name');
             $table->string('com_logo');
             $table->text('com_details');
+            $table->date('jobexpiry');
             $table->text('job_desc');
             $table->text('job_resp');
             $table->text('job_req');

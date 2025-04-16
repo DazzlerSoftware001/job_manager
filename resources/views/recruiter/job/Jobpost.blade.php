@@ -8,7 +8,7 @@
     Job Post
 @endsection
 @section('main-container')
-    <script src="https://cdn.tiny.cloud/1/k73iszd3tzdamw58yk6fmdzasoe86nkkbzktvgqtvxvcrr17/tinymce/6/tinymce.min.js"
+    {{-- <script src="https://cdn.tiny.cloud/1/k73iszd3tzdamw58yk6fmdzasoe86nkkbzktvgqtvxvcrr17/tinymce/6/tinymce.min.js"
         referrerpolicy="origin"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -19,7 +19,10 @@
                 toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | bullist numlist outdent indent | link image',
             });
         });
-    </script>
+    </script> --}}
+
+  
+
 
     <style>
         .choices {
@@ -447,6 +450,11 @@
                                             </div>
                                         </div>
 
+                                        <div class="col-6 mt-3">
+                                            <label for="jobExp">Job Expiry<span class="text-danger">*</span></label>
+                                            <input type="Date" class="form-control" id="jobExp" name="jobExp" ></input>
+                                        </div>
+
 
 
                                         <div class="d-flex justify-content-center mt-3">
@@ -499,6 +507,36 @@
 
     @section('script')
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+        <script src="https://cdn.ckeditor.com/ckeditor5/41.1.0/classic/ckeditor.js"></script>
+     
+        <script>
+        ClassicEditor
+            .create(document.querySelector('#job_description'))
+            .catch(error => {
+                console.error(error);
+            });
+
+            ClassicEditor
+            .create(document.querySelector('#job_resp'))
+            .catch(error => {
+                console.error(error);
+            });
+
+            ClassicEditor
+            .create(document.querySelector('#job_req'))
+            .catch(error => {
+                console.error(error);
+            });
+        </script>
+
+        <script>
+            // Set tomorrow's date as the minimum
+            const today = new Date();
+            today.setDate(today.getDate() + 1); // Add 1 day for tomorrow
+            const minDate = today.toISOString().split('T')[0];
+            document.getElementById("jobExp").setAttribute("min", minDate);
+        </script>
 
         <script type="text/javascript">
             document.addEventListener('DOMContentLoaded', function() {
@@ -857,43 +895,7 @@
                     }
                 });
 
-                // When education qualification changes, load branches
-                // $('#education').change(function() {
-                //     var education = $(this).val();
-                //     $('#branch').html('<option value="">Loading...</option>');
-
-                //     if (education) {
-                //         $.ajax({
-                //             url: "{{ route('Recruiter.getBranch') }}",
-                //             type: "GET",
-                //             data: {
-                //                 education: education
-                //             },
-                //             success: function(data) {
-                //                 // console.log("Branch Data:", data);
-                //                 $('#branch').empty(); // Clear previous options
-                //                 if (data.length > 0) {
-                //                     $('#branch').append('<option value="">Choose Branch</option>');
-                //                     $.each(data, function(index, item) {
-                //                         $('#branch').append('<option value="' + item
-                //                             .branch + '">' + item.branch + '</option>');
-                //                     });
-                //                     $('#branch-container').show();
-                //                 } else {
-                //                     $('#branch').append(
-                //                         '<option value="">No Branches Found</option>');
-                //                     $('#branch-container').hide();
-                //                 }
-                //             },
-                //             error: function() {
-                //                 $('#branch').html('<option value="">Error loading data</option>');
-                //                 $('#branch-container').hide();
-                //             }
-                //         });
-                //     } else {
-                //         $('#branch-container').hide();
-                //     }
-                // });
+               
 
             });
         </script>
@@ -1051,4 +1053,6 @@
                 });
             });
         </script>
+
+
     @endsection

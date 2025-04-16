@@ -37,6 +37,7 @@ class Jobpost extends Model
         'com_name',
         'com_logo',
         'com_details',
+        'jobexpiry',
         'job_desc',
         'job_resp',
         'job_req',
