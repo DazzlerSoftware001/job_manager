@@ -76,6 +76,7 @@ class JobController extends Controller
             'interview_type' => 'required|string',
             'company_name' => 'required|string',
             'company_details' => 'required|string',
+            'jobExp'=> 'required|date',
             'job_description'=> 'required|string',
             'job_resp' => 'required|string',
             'job_req' => 'required|string',

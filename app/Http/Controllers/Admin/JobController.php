@@ -2877,16 +2877,17 @@ class JobController extends Controller
             'interview_type' => 'required|string',
             'company_name' => 'required|string',
             'company_details' => 'required|string',
-            // 'job_description'=> 'required|string',
-            // 'job_resp' => 'required|string',
-            // 'job_req' => 'required|string',
+            'jobExp'=> 'required|date',
+            'job_description'=> 'required|string',
+            'job_resp' => 'required|string',
+            'job_req' => 'required|string',
         ];
 
         // Validate the request
         $validator = Validator::make($request->all(), $rules);
 
         if (!$validator->fails()) {
-            // try {
+            try {
                 $JobPost = new JobPost();
 
                 $JobPost->recruiter_id = $request->input('recruiter_id');
@@ -2916,6 +2917,7 @@ class JobController extends Controller
                 $JobPost->com_name = $request->input('company_name');
                 $JobPost->com_logo = $request->input('company_logo');
                 $JobPost->com_details = $request->input('company_details');
+                $JobPost->jobexpiry = $request->input('jobExp');
                 $JobPost->job_desc = $request->input('job_description');
                 $JobPost->job_resp = $request->input('job_resp');
                 $JobPost->job_req = $request->input('job_req');
@@ -2928,10 +2930,10 @@ class JobController extends Controller
                 $JobPost->save();
 
                 return response()->json(['status_code' => 1, 'message' => 'Job Post added successfully']);
-            // } catch (\Exception $e) {
-            //     // Handle any exception that occurs during saving
-            //     return response()->json(['status_code' => 0, 'message' => 'Unable to add Experience']);
-            // }
+            } catch (\Exception $e) {
+                // Handle any exception that occurs during saving
+                return response()->json(['status_code' => 0, 'message' => 'Unable to add Experience']);
+            }
         } else {
             // Return validation errors
             return response()->json(['status_code' => 2, 'message' => $validator->errors()->first()]);

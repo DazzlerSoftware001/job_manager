@@ -82,9 +82,8 @@ class CompanyController extends Controller
 
             $dataArray[] = $record->address;
             // $dataArray[] = $record->logo;
-            // $dataArray[] = '<img src="' . asset( $record->logo) . '" alt="Logo" style="height: 100px; width: 100px;">';
+            // $dataArray[] = '<img src="{{url($record->logo)}}" alt="Logo" style="height: 100px; width: 100px;" onclick="openImageModal(\'' . asset($record->logo) . '\')">';
             $dataArray[] = '<img src="' . asset($record->logo) . '" alt="Logo" style="height: 100px; width: 100px;" onclick="openImageModal(\'' . asset($record->logo) . '\')">';
-
             $status = $record->status == 1
                 ? '<div class="d-flex"><span onclick="changeStatus(' . $record->id . ');" class="badge bg-success text-uppercase"  style="cursor: pointer;">Active</span></div>'
                 : '<div class="d-flex"><span onclick="changeStatus(' . $record->id . ');" class="badge bg-danger text-uppercase" style="cursor: pointer;">Inactive</span></div>';

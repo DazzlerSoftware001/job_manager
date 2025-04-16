@@ -6,18 +6,6 @@
     Create Job
 @endsection
 @section('main-container')
-    <script src="https://cdn.tiny.cloud/1/k73iszd3tzdamw58yk6fmdzasoe86nkkbzktvgqtvxvcrr17/tinymce/6/tinymce.min.js"
-        referrerpolicy="origin"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            tinymce.init({
-                selector: '#job_description,#job_resp,#job_req',
-                height: 400,
-                plugins: 'advlist autolink lists link image charmap preview',
-                toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | bullist numlist outdent indent | link image',
-            });
-        });
-    </script>
 
     <style>
         .choices {
@@ -459,7 +447,10 @@
                                             </div>
                                         </div>
 
-
+                                        <div class="col-6 mt-3">
+                                            <label for="jobExp">Job Expiry<span class="text-danger">*</span></label>
+                                            <input type="Date" class="form-control" id="jobExp" name="jobExp" ></input>
+                                        </div>
 
                                         <div class="d-flex justify-content-center mt-3">
                                             <div class="col-xl-12 text-center">
@@ -511,6 +502,36 @@
 
     @section('script')
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+        <script src="https://cdn.ckeditor.com/ckeditor5/41.1.0/classic/ckeditor.js"></script>
+     
+        <script>
+        ClassicEditor
+            .create(document.querySelector('#job_description'))
+            .catch(error => {
+                console.error(error);
+            });
+
+            ClassicEditor
+            .create(document.querySelector('#job_resp'))
+            .catch(error => {
+                console.error(error);
+            });
+
+            ClassicEditor
+            .create(document.querySelector('#job_req'))
+            .catch(error => {
+                console.error(error);
+            });
+        </script>
+
+        <script>
+            // Set tomorrow's date as the minimum
+            const today = new Date();
+            today.setDate(today.getDate() + 1); // Add 1 day for tomorrow
+            const minDate = today.toISOString().split('T')[0];
+            document.getElementById("jobExp").setAttribute("min", minDate);
+        </script>
 
         <script type="text/javascript">
             document.addEventListener('DOMContentLoaded', function() {
