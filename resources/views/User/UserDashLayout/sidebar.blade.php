@@ -5,7 +5,7 @@
              <div class="dash__menu">
                  <ul>
                      <li class="nav-item">
-                         <a href="candidate-dashboard.html" class="nav-link active">
+                         <a href="{{route('User.Dashboard')}}" class="nav-link active">
                              <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
                                  xmlns="http://www.w3.org/2000/svg">
                                  <path fill-rule="evenodd" clip-rule="evenodd"
@@ -14,7 +14,7 @@
                              </svg> Dashboard </a>
                      </li>
                      <li class="nav-item">
-                         <a class="nav-link" href="candidate-profile.html">
+                         <a class="nav-link" href="{{route('User.Profile')}}">
                              <svg width="21" height="26" viewBox="0 0 21 26" fill="none"
                                  xmlns="http://www.w3.org/2000/svg">
                                  <path

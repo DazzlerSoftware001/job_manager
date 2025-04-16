@@ -16,6 +16,7 @@ return new class extends Migration
             $table->tinyInteger('user_type')->default(0)->comment('0 = User, 1 = Admin, 2 = Recruiter');
             $table->string('user_details')->default('User');
             $table->string('name');
+            $table->string('lname')->nullable();
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('phone')->unique();
@@ -24,6 +25,19 @@ return new class extends Migration
             $table->string('logo')->nullable();
             $table->string('status')->nullable();
             $table->string('password');
+            $table->date('date_of_birth')->nullable();
+            $table->string('gender')->nullable();
+            $table->string('education_level')->nullable();
+            $table->string('qualification')->nullable();
+            $table->string('branch')->nullable();
+            $table->string('language')->nullable();
+            $table->integer('experience')->nullable();
+            $table->boolean('look_job')->default(false);
+            $table->text('description')->nullable();
+            $table->json('social_links')->nullable();
+            $table->string('country')->nullable();
+            $table->string('state')->nullable();
+            $table->integer('postal_code')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

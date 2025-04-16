@@ -21,4 +21,6 @@ Route::get('JobDetails/{id}', [JobController::class, 'JobDetails'])->name('User.
 // Candidate Dashboard
 Route::prefix('User')->group(function () {
     Route::get('Dashboard', [DashboardController::class, 'Dashboard'])->name('User.Dashboard');
+    Route::get('Profile', [DashboardController::class, 'Profile'])->name('User.Profile');
+    Route::post('/ProfileInsert', [DashboardController::class, 'ProfileInsert'])->name('User.ProfileInsert');
 });
