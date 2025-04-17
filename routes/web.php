@@ -29,6 +29,7 @@ Route::prefix('User')->group(function () {
 
     Route::post('/ApplyForJOb/{job_id}', [UserJobController::class, 'applyjob'])->name('User.ApplyForJOb');
     Route::get('/AppliedJob', [UserJobController::class, 'appliedjob'])->name('User.AplliedJob');
+    Route::get('/ShortList', [UserJobController::class, 'ShortList'])->name('User.ShortList');
 
     Route::post('/logout', [AuthController::class, 'logout'])->name('User.logout');
 

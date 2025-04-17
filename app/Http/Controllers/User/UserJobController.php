@@ -79,4 +79,12 @@ class UserJobController extends Controller
     public function appliedjob() {
         return view('User.UserDash.AppliedJob');
     }
+
+    public function ShortList()
+    {   $user_id = Auth::user()->id;
+        $ShortList=JobApplication::where('user_id', $user_id)
+            ->where('status','shortlisted')
+            ->get();
+        
+    }
 }
