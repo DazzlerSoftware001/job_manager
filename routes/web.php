@@ -14,6 +14,7 @@ require base_path('routes/recruiter.php');
 Route::get('/', [HomeController::class, 'Home'])->name('User.Home');
 
 Route::get('Register', [AuthController::class, 'register'])->name('User.register');
+Route::post('RegisterUser', [AuthController::class, 'RegisterUser'])->name('User.RegisterUser');
 Route::get('login', [AuthController::class, 'login'])->name('User.login');
 Route::post('loginInsert', [AuthController::class, 'loginInsert'])->name('User.loginInsert');
 
