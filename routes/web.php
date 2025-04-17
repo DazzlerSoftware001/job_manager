@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\User\HomeController;
 use App\Http\Controllers\User\AuthController;
 use App\Http\Controllers\User\JobController;
+use App\Http\Controllers\User\UserJobController;
 use App\Http\Controllers\User\DashboardController;
 
 
@@ -23,4 +24,6 @@ Route::prefix('User')->group(function () {
     Route::get('Dashboard', [DashboardController::class, 'Dashboard'])->name('User.Dashboard');
     Route::get('Profile', [DashboardController::class, 'Profile'])->name('User.Profile');
     Route::post('/ProfileInsert', [DashboardController::class, 'ProfileInsert'])->name('User.ProfileInsert');
+
+    Route::get('/AppliedJob', [UserJobController::class, 'appliedjob'])->name('User.AplliedJob');
 });
