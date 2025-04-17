@@ -27,6 +27,7 @@ Route::prefix('User')->group(function () {
     Route::post('/updateProfileImage', [DashboardController::class, 'updateProfileImage'])->name('User.UpdateProfileImage');
     Route::post('/UpdateProfile', [DashboardController::class, 'updateProfile'])->name('User.UpdateProfile');
 
+    Route::post('/ApplyForJOb/{job_id}', [UserJobController::class, 'applyjob'])->name('User.ApplyForJOb');
     Route::get('/AppliedJob', [UserJobController::class, 'appliedjob'])->name('User.AplliedJob');
 
     Route::post('/logout', [AuthController::class, 'logout'])->name('User.logout');
