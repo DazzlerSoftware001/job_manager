@@ -18,6 +18,7 @@ use App\Models\Companies;
 use App\Models\JobIntType;
 use App\Models\JobEducation;
 use App\Models\JobPost;
+use App\Models\Recruiter;
 
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -339,7 +340,8 @@ class JobController extends Controller
         try {
             $decryptedId = Crypt::decrypt($id);
             $job = JobPost::findOrFail($decryptedId);
-            return view('recruiter.job.ViewJob', compact('job'));
+            $Recruiter = Recruiter::where('id',$job->recruiter_id)->first();
+            return view('recruiter.job.ViewJob', compact('job','Recruiter'));
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Invalid Job ID!');
         }

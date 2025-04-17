@@ -361,12 +361,12 @@
                                         <div class="col-xl-4 col-lg-6 col-md-8 col-sm-12 mt-3">
                                             <label for="diversity" class="d-block">Diversity Hiring (Optional)</label>
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="checkbox" id="male"
+                                                <input class="form-check-input" type="radio" id="male"
                                                     name="diversity" value="Male">
                                                 <label class="form-check-label" for="male">Male</label>
                                             </div>
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="checkbox" id="female"
+                                                <input class="form-check-input" type="radio" id="female"
                                                     name="diversity" value="Female">
                                                 <label class="form-check-label" for="female">Female</label>
                                             </div>
@@ -436,7 +436,7 @@
 
                                         <!-- Image Preview Section -->
                                         <div class="col-xl-6 text-center mt-3">
-                                            <label for="job_image">Job Image <span class="text-danger">*</span></label>
+                                            <label for="job_image">Company Logo <span class="text-danger">*</span></label>
                                             <div class="mt-3">
                                                 <img id="imagePreview" src="{{ url('recruiter/logo/default.png') }}"
                                                     onerror="this.onerror=null; this.src='{{ url('recruiter/logo/default.png') }}';"
@@ -481,7 +481,7 @@
 
 
                                     <div class="col-12 mb-3">
-                                        <button type="submit" class="btn btn-primary">Preview & Post Job</button>
+                                        <button type="submit" class="btn btn-primary">Post Job</button>
                                     </div>
                                 </form>
                             </div>
@@ -506,7 +506,7 @@
         <script src="https://cdn.ckeditor.com/ckeditor5/41.1.0/classic/ckeditor.js"></script>
      
         <script>
-        ClassicEditor
+            ClassicEditor
             .create(document.querySelector('#job_description'))
             .catch(error => {
                 console.error(error);
@@ -996,10 +996,10 @@
                                 }).showToast();
 
                                 // Redirect to another route after successful submission
-                                // setTimeout(function() {
-                                //     window.location.href =
-                                //         "{{ route('Admin.JobList') }}"; // Change this to your desired route
-                                // }, 1500);
+                                setTimeout(function() {
+                                    window.location.href =
+                                        "{{ route('Admin.JobList') }}"; // Change this to your desired route
+                                }, 1500);
                             } else if (result.status_code === 2) {
                                 Toastify({
                                     text: result.message,

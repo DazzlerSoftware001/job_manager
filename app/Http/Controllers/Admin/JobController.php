@@ -2873,6 +2873,7 @@ class JobController extends Controller
             'education' => 'required|string',
             'branch' => 'nullable',
             'candidate_industry' => 'nullable|string',
+            'diversity' => 'nullable|in:Male,Female',
             'vacancies' => 'required|integer',
             'interview_type' => 'required|string',
             'company_name' => 'required|string',
@@ -3142,7 +3143,11 @@ class JobController extends Controller
         try {
             $decryptedId = Crypt::decrypt($id);
             $job = JobPost::findOrFail($decryptedId);
-            return view('admin.job.ViewJob', compact('job'));
+            // dd($job);
+            $Recruiter = Recruiter::where('id',$job->recruiter_id)->first();
+            // dd($Recruiter);
+
+            return view('admin.job.ViewJob', compact('job','Recruiter'));
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Invalid Job ID!');
         }
@@ -3184,9 +3189,9 @@ class JobController extends Controller
             'job_title' => 'required|string|max:100|',
             'job_type' => 'required|string',
             'skills' => 'required',
-            // 'industry' => 'required|string',
-            // 'department' => 'required|string',
-            // 'role' => 'required|string',
+            'industry' => 'required|string',
+            'department' => 'required|string',
+            'role' => 'required|string',
             'work_mode' => 'required|string',
             'location' => 'required|string',
             'min_experience' => 'required|integer',
@@ -3198,13 +3203,15 @@ class JobController extends Controller
             'education' => 'required|string',
             'branch' => 'nullable',
             'candidate_industry' => 'nullable|string',
+            'diversity' => 'nullable|in:Male,Female',
             'vacancies' => 'required|integer',
             'interview_type' => 'required|string',
-            // 'company_name' => 'required|string',
+            'company_name' => 'required|string',
             'company_details' => 'required|string',
-            // 'job_description'=> 'required|string',
-            // 'job_resp' => 'required|string',
-            // 'job_req' => 'required|string',
+            'jobExp'=> 'required|date',
+            'job_description'=> 'required|string',
+            'job_resp' => 'required|string',
+            'job_req' => 'required|string',
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -3244,6 +3251,7 @@ class JobController extends Controller
                 // $JobPost->com_name = $request->input('company_name');
                 // $JobPost->com_logo = $request->input('company_logo');
                 $JobPost->com_details = $request->input('company_details');
+                $JobPost->jobexpiry = $request->input('jobExp');
                 $JobPost->job_desc = $request->input('job_description');
                 $JobPost->job_resp = $request->input('job_resp');
                 $JobPost->job_req = $request->input('job_req');

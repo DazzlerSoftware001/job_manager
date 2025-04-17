@@ -111,37 +111,48 @@
 
                         <!-- Company Details -->
                         <div class="row mt-4">
-                            <div class="col-md-6">
+                            <div class="col-md-12">
                                 <p class="info-box"><strong>Company Name:</strong> {{ $job->com_name }}</p>
                                 <p class="info-box"><strong>Company Details:</strong> {{ $job->com_details }}</p>
                             </div>
-                            <div class="col-md-6 text-center">
+                            <div class="col-md-4 text-center">
+                                <p class="info-box"><strong>Company Logo:</strong>
                                 <img id="imagePreview" src="{{ asset($job->com_logo) }}" 
                                      onerror="this.onerror=null; this.src='{{ url('recruiter/logo/default.png') }}';"
-                                     alt="Company Logo" class="company-logo">
+                                     alt="Company Logo" class="company-logo"></p>
+                            </div>
+                            <div class="col-md-8 text-center">
+                            </div>
+
+                            <div class="col-md-4">
+                                <p class="info-box text-danger"><strong>Job Expiry: </strong>{{ $job->jobexpiry }}</p>
                             </div>
                         </div>
 
                         <!-- Job Description -->
                         <div class="mt-4">
                             <p class="section-header text-danger">Job Description</p>
-                            <p>{{ $job->job_desc }}</p>
+                            <p>{!! $job->job_desc !!}</p>
                         </div>
 
                         <div class="mt-4">
                             <p class="section-header text-success">Responsibilities</p>
-                            <p>{{ $job->job_resp }}</p>
+                            <p>{!! $job->job_resp !!}</p>
                         </div>
 
                         <div class="mt-4">
                             <p class="section-header text-info">Requirements</p>
-                            <p>{{ $job->job_req }}</p>
+                            <p>{!! $job->job_req !!}</p>
                         </div>
 
-                        <!-- Action Button -->
-                        <div class="text-center mt-4">
-                            <button class="btn btn-primary px-4 py-2 fw-bold">Edit Job Post</button>
+                        <div class="mt-4">
+                            <p class="info-box"><strong>Recruter Name:</strong> {{ $Recruiter->name }} - {{ $Recruiter->email }}</p>
                         </div>
+                        
+                        <!-- Action Button -->
+                        {{-- <div class="text-center mt-4">
+                            <button class="btn btn-primary px-4 py-2 fw-bold">Edit Job Post</button>
+                        </div> --}}
                     </div> <!-- End Card -->
                 </div> <!-- End Col -->
             </div> <!-- End Row -->

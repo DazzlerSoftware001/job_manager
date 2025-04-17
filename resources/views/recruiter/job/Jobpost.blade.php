@@ -486,7 +486,7 @@
 
 
                                     <div class="col-12 mb-3">
-                                        <button type="submit" class="btn btn-primary">Preview & Post Job</button>
+                                        <button type="submit" class="btn btn-primary">Post Job</button>
                                     </div>
                                 </form>
                             </div>

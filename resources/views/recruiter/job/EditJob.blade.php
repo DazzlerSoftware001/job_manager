@@ -8,18 +8,6 @@
     Job Post
 @endsection
 @section('main-container')
-    <script src="https://cdn.tiny.cloud/1/k73iszd3tzdamw58yk6fmdzasoe86nkkbzktvgqtvxvcrr17/tinymce/6/tinymce.min.js"
-        referrerpolicy="origin"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            tinymce.init({
-                selector: '#job_description,#job_resp,#job_req',
-                height: 400,
-                plugins: 'advlist autolink lists link image charmap preview',
-                toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | bullist numlist outdent indent | link image',
-            });
-        });
-    </script>
 
     <style>
         .choices {
@@ -414,7 +402,7 @@
 
                                         <!-- Image Preview Section -->
                                         <div class="col-xl-6 text-center mt-3">
-                                            <label for="job_image">Job Image <span class="text-danger">*</span></label>
+                                            <label for="job_image">Company Logo <span class="text-danger">*</span></label>
                                             <div class="mt-3">
                                                 <img id="imagePreview" src="{{ url('recruiter/logo/default.png') }}"
                                                     onerror="this.onerror=null; this.src='{{ url('recruiter/logo/default.png') }}';"
@@ -425,6 +413,10 @@
                                             </div>
                                         </div>
 
+                                        <div class="col-6 mt-3">
+                                            <label for="jobExp">Job Expiry<span class="text-danger">*</span></label>
+                                            <input type="Date" class="form-control" id="jobExp" name="jobExp"  value="{{ old('jobExp', $jobPost->jobexpiry ?? '') }}">
+                                        </div>
 
 
                                         <div class="d-flex justify-content-center mt-3">
@@ -456,7 +448,7 @@
 
 
                                     <div class="col-12 mb-3">
-                                        <button type="submit" class="btn btn-primary">Preview & Post Job</button>
+                                        <button type="submit" class="btn btn-primary">Post Job</button>
                                     </div>
                                 </form>
                             </div>
@@ -479,6 +471,38 @@
 
     @section('script')
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+        <script src="https://cdn.ckeditor.com/ckeditor5/41.1.0/classic/ckeditor.js"></script>
+     
+        <script>
+        ClassicEditor
+            .create(document.querySelector('#job_description'))
+            .catch(error => {
+                console.error(error);
+            });
+
+            ClassicEditor
+            .create(document.querySelector('#job_resp'))
+            .catch(error => {
+                console.error(error);
+            });
+
+            ClassicEditor
+            .create(document.querySelector('#job_req'))
+            .catch(error => {
+                console.error(error);
+            });
+        </script>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const jobExpInput = document.getElementById("jobExp");
+                const today = new Date();
+                today.setDate(today.getDate() + 1); // Set to tomorrow
+                const minDate = today.toISOString().split('T')[0];
+                jobExpInput.setAttribute("min", minDate);
+            });
+        </script>
 
         <script type="text/javascript">
             document.addEventListener('DOMContentLoaded', function() {
