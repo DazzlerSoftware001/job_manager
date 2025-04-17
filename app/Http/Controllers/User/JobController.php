@@ -6,13 +6,15 @@ use App\Models\JobPost;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Carbon;
 
 class JobController extends Controller
 {
 
     public function JobList(Request $request)
     {
-        $query = JobPost::where('status', 1);
+        $today = Carbon::today();
+        $query = JobPost::where('status', 1)->whereDate('jobexpiry', '>=', $today);
 
         if($request->has('title') && $request->title !== '') {
             $query->where('title', $request->title);
@@ -37,7 +39,7 @@ class JobController extends Controller
         $location = JobPost::select('location')->distinct()->get();
 
         // $data = JobPost::all();
-        // dd($type);
+        // dd($jobs);
 
         return view('User.JobList', compact('jobs', 'industries', 'type', 'experience', 'location'));
     }

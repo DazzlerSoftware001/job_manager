@@ -353,10 +353,17 @@
                                                         <div class="d-flex gap-2 align-items-center" id="location">
                                                             <i class="fa-light fa-location-dot"></i> {{ $data->location }}
                                                         </div>
-                                                        <div class="d-flex gap-2 align-items-center">
-                                                            {{ $data->currency }} {{ $data->min_sal }} -
-                                                            {{ $data->max_sal }}
-                                                        </div>
+                                                        @if ($data->sal_status=='off')
+                                                            <div class="d-flex gap-2 align-items-center">
+                                                                <p> {{ $data->currency }} - Not disclosed</p>
+                                                            </div>
+                                                        @else
+                                                            <div class="d-flex gap-2 align-items-center">
+                                                                {{ $data->currency }} {{ $data->min_sal }} -
+                                                                {{ $data->max_sal }}
+                                                            </div>
+                                                        @endif
+                                                           
                                                         <div class="d-flex gap-2 align-items-center" id="type">
                                                             <i class="fa-light rt-briefcase"></i> {{ $data->type }}
                                                         </div>

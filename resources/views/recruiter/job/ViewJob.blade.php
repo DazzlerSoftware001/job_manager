@@ -77,7 +77,15 @@
                                 <p class="info-box"><strong>Mode:</strong> {{ $job->mode }}</p>
                                 <p class="info-box"><strong>Location:</strong> {{ $job->location }}</p>
                                 <p class="info-box"><strong>Experience:</strong> {{ $job->min_exp }} - {{ $job->max_exp }} years</p>
-                                <p class="info-box"><strong>Salary:</strong> {{ $job->currency }} {{ $job->min_sal }} - {{ $job->max_sal }}</p>
+                                <p class="info-box"><strong>Salary:</strong> {{ $job->currency }} {{ $job->min_sal }} - {{ $job->max_sal }}
+                                    @if($job->sal_status == 'off')
+                                        <br>
+                                        <small class="text-danger">Salary is not showing to Candidate</small>
+                                    @else
+                                        <br>
+                                        <small class="text-success">Salary is showing to Candidate</small>
+                                    @endif
+                                </p>
                             </div>
                         </div>
 
