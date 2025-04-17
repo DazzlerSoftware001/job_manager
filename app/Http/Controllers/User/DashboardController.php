@@ -13,7 +13,7 @@ class DashboardController extends Controller
     }
 
     public function Profile() {
-        return view('User.Profile');
+        return view('User.UserDash.Profile');
     }
 
     public function ProfileInsert(Request $request)

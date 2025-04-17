@@ -1,6 +1,6 @@
 @extends('User.UserDashLayout.main')
 @section('title')
-    Dashboard
+    Profile
 @endsection
 @section('main-container')
     <div class="my__profile__tab radius-16 bg-white">
