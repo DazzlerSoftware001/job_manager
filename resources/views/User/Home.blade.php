@@ -979,7 +979,7 @@ Home
             <div class="tab-content" id="">
                 
             </div>
-            <form action="#" method="post" class="d-flex flex-column gap-3">
+            {{-- <form action="#" method="post" class="d-flex flex-column gap-3">
                 <div class="form-group">
                     <label for="email" class="fw-medium text-dark mb-2">Your Email</label>
                     <div class="position-relative">
@@ -1006,7 +1006,7 @@ Home
                 <div class="form-group my-3">
                     <button class="rts__btn w-100 fill__btn">Login</button>
                 </div>
-            </form>
+            </form> --}}
             {{-- <div class="d-block has__line text-center"><p>Or</p></div>
             <div class="d-flex gap-4 flex-wrap justify-content-center mt-20 mb-20">
                 <div class="is__social google">
@@ -1016,7 +1016,7 @@ Home
                     <button><img src="{{url('user/assets/img/icon/facebook-small.svg')}}" alt="">Continue with Facebook</button>
                 </div>
             </div> --}}
-            <span class="d-block text-center fw-medium">Don`t have an account? <a href="#" data-bs-target="#signupModal" data-bs-toggle="modal" class="text-primary">Sign Up</a> </span>
+            {{-- <span class="d-block text-center fw-medium">Don`t have an account? <a href="#" data-bs-target="#signupModal" data-bs-toggle="modal" class="text-primary">Sign Up</a> </span> --}}
         </div>
       </div>
     </div>

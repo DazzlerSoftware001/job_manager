@@ -130,8 +130,7 @@
                         </div>
 
                         <div class="header__right__btn d-flex gap-3">
-                            <a href="#" class="small__btn d-none d-sm-flex no__fill__btn border-6 font-xs" aria-label="Login Button" data-bs-toggle="modal" data-bs-target="#loginModal"> <i class="rt-login"></i>Sign In</a>
-                            <a href="employer-dash-jobpost.html" class="small__btn d-none d-sm-flex d-xl-flex fill__btn border-6 font-xs" aria-label="Job Posting Button">Add Job</a>
+                            <a href="{{route('User.login')}}" class="small__btn d-none d-sm-flex no__fill__btn border-6 font-xs" aria-label="Login Button"> <i class="rt-login"></i>Sign In</a>
                             <button class="d-md-block d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvas" aria-controls="offcanvas"><i class="fa-sharp fa-regular fa-bars"></i></button>
                         </div>
                     </div>

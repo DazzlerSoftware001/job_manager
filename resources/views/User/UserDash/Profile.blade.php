@@ -15,14 +15,11 @@
         <div class="my__details" id="info">
             <div class="info__top">
                 <div class="author__image">
-                    <img id="profileImage" src="{{ url('user/assets/img/profile/default.png') }}" onerror="this.onerror=null; this.src='{{ url('user/assets/img/profile/default.png') }}';" alt="">
+                    <img id="profileImage" src="{{ url('user/assets/img/'.$user->logo) }}" onerror="this.onerror=null; this.src='{{ url('user/assets/img/profile/default.png') }}';" alt="">
                 </div>
                 <div class="select__image">
                     <button for="imageInput" id="editImageButton" class="file-upload__label">Upload New Photo</button>
                     <input type="file" id="imageInput" class="d-none" accept="image/*">
-                </div>
-                <div class="delete__data">
-                    <i class="fa-light fa-trash-can"></i>
                 </div>
             </div>
         </div>
@@ -31,15 +28,15 @@
                 <div class="row row-cols-sm-2 row-cols-1 g-3">
                     <div class="rt-input-group">
                         <label for="name">First Name</label>
-                        <input type="text" id="name" name="name" placeholder="First Name" required>
+                        <input type="text" id="name" name="name" value="{{$user->name}}" placeholder="First Name" required>
                     </div>
                     <div class="rt-input-group">
                         <label for="name">Last Name</label>
-                        <input type="text" id="lname" name="lname" placeholder="Last Name" required>
+                        <input type="text" id="lname" name="lname" value="{{$user->lname}}"  placeholder="Last Name" required>
                     </div>
                     <div class="rt-input-group">
                         <label for="email">Email</label>
-                        <input type="email" id="email" name="email" placeholder="careernext@gmqail.com" required>
+                        <input type="email" id="email" name="email" value="{{$user->email}}"  placeholder="careernext@gmqail.com" required>
                     </div>
                     <div class="rt-input-group">
                         <label for="phone">Phone</label>

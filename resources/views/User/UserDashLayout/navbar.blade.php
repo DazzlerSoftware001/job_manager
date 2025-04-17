@@ -217,17 +217,16 @@
                                     </div>
                                 </div>
                                 <ul class="rts__dropdown dropdown-menu top-25">
-                                    <li><a class="dropdown-item" href="candidate-dashboard.html">Dashboard</a></li>
-                                    <li><a class="dropdown-item" href="candidate-profile.html">Profile</a></li>
+                                    <li><a class="dropdown-item" href="{{route('User.Dashboard')}}">Dashboard</a></li>
+                                    <li><a class="dropdown-item" href="{{route('User.Profile')}}">Profile</a></li>
                                     <li><a class="dropdown-item" href="candidate-resume.html">Resume</a></li>
                                     <li><a class="dropdown-item" href="candidate-shortlist.html">Shortlist Job</a></li>
                                     <li><a class="dropdown-item" href="candidate-message.html">Message</a></li>
                                     <li><a class="dropdown-item" href="candidate-passwordchange.html">Change Password</a></li>
-                                    <li><a class="dropdown-item" href="#">Log Out</a></li>
+                                    <li><a class="dropdown-item" href="javascript:void(0);" id="logoutButton">Log Out</a></li>
                                     <li><a class="dropdown-item" href="candidate-deleteprofile.html">Delete Account</a></li>
                                 </ul>  
                             </div>
-                            <a href="employer-dash-jobpost.html" class="small__btn d-none d-sm-flex d-xl-flex fill__btn border-6 font-xs" aria-label="Job Posting Button">Add A Job</a>
                             <button class="d-md-block d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvas" aria-controls="offcanvas"><i class="fa-sharp fa-regular fa-bars"></i></button>
                         </div>
                     </div>
@@ -237,3 +236,59 @@
     </div>
 </header>
 <!-- header area end -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+{{-- To logout --}}
+<script type="text/javascript">
+    $('#logoutButton').on('click', function() {
+        var url = "{{ route('User.logout') }}";
+
+        $.ajax({
+            url: url,
+            type: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            dataType: 'json',
+
+            success: function(result) {
+                if (result.status_code == 1) {
+                    Toastify({
+                        text: result.message,
+                        duration: 3000,
+                        gravity: "top",
+                        position: "right",
+                        className: "bg-success",
+                        style: "style",
+                    }).showToast();
+
+                   // Redirect to login or home page & Reload after 0.7 seconds (750 ms)
+                   setTimeout(function() {
+                       window.location.href = result.redirect_url;
+                   }, 750);
+                } else {
+                    Toastify({
+                        text: result.message,
+                        duration: 3000,
+                        gravity: "top",
+                        position: "right",
+                        className: "bg-danger",
+                        style: "style",
+                    }).showToast();
+                }
+            },
+            error: function() {
+                Toastify({
+                    text: 'Logout failed. Please try again.',
+                    duration: 3000,
+                    gravity: "top",
+                    position: "right",
+                    className: "bg-danger",
+                    style: "style",
+                }).showToast();
+            }
+        });
+    });
+</script>

@@ -15,7 +15,7 @@ Route::get('/', [HomeController::class, 'Home'])->name('User.Home');
 
 Route::get('Register', [AuthController::class, 'register'])->name('User.register');
 Route::get('login', [AuthController::class, 'login'])->name('User.login');
-Route::get('loginInsert', [AuthController::class, 'loginInsert'])->name('User.loginInsert');
+Route::post('loginInsert', [AuthController::class, 'loginInsert'])->name('User.loginInsert');
 
 Route::get('JobList', [JobController::class, 'JobList'])->name('User.JobList');
 Route::get('JobDetails/{id}', [JobController::class, 'JobDetails'])->name('User.JobDetails');
@@ -28,4 +28,7 @@ Route::prefix('User')->group(function () {
     Route::post('/ProfileInsert', [DashboardController::class, 'ProfileInsert'])->name('User.ProfileInsert');
 
     Route::get('/AppliedJob', [UserJobController::class, 'appliedjob'])->name('User.AplliedJob');
+
+    Route::post('/logout', [AuthController::class, 'logout'])->name('User.logout');
+
 });

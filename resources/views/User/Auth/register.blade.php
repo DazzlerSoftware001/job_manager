@@ -49,10 +49,23 @@
                 <form action="#" method="post" class="d-flex flex-column gap-3">
                     @csrf
                     <div class="form-group">
+                        <label for="sname" class="fw-medium text-dark mb-3">First Name</label>
+                        <div class="position-relative">
+                            <input type="text" name="sname" id="sname" class="form-control" placeholder="First Name" required>
+                            <i class="fa-light fa-user icon position-absolute end-0 top-50 translate-middle-y me-3"></i>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="lname" class="fw-medium text-dark mb-3">Last Name</label>
+                        <div class="position-relative">
+                            <input type="text" name="lname" id="lname" class="form-control" placeholder="Last Name" required>
+                            <i class="fa-light fa-user icon position-absolute end-0 top-50 translate-middle-y me-3"></i>
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label for="email" class="fw-medium text-dark mb-2">Your Email</label>
                         <div class="position-relative">
                             <input type="email" name="email" id="email" class="form-control" placeholder="Enter your email" required>
-                            <i class="fa-light fa-user icon position-absolute end-0 top-50 translate-middle-y me-3"></i>
                         </div>
                     </div>
     
@@ -73,7 +86,7 @@
                     </div>
     
                     <div class="form-group my-3">
-                        <button class="rts__btn w-100 fill__btn">Login</button>
+                        <button class="rts__btn w-100 fill__btn">Register</button>
                     </div>
                 </form>
     
@@ -89,8 +102,8 @@
                 </div> --}}
     
                 <span class="d-block text-center fw-medium">
-                    Don’t have an account?
-                    <a href="#" class="text-primary">Sign Up</a>
+                    Already have an account?
+                    <a href="{{route('User.login')}}" class="text-primary">Sign In</a>
                 </span>
             </div>
         </div>

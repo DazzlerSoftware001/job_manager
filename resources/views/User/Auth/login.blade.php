@@ -8,6 +8,7 @@
     <meta name="description" content="Your Ultimate Job HTML Template">
     <meta name="keywords" content="Job, Resume, Employer, Agency">
     <meta name="robots" content="index, follow">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta property="og:title" content="Your Ultimate Job HTML Template">
     <meta property="og:description" content="Your Ultimate Job HTML Template">
     <meta property="og:image" content="../../../www.example.com/image.html">
@@ -46,12 +47,12 @@
                     <button class="rts__btn nav-link"><i class="rt-briefcase"></i> Employer</button>
                 </div> --}}
     
-                <form action="#" method="post" class="d-flex flex-column gap-3">
-                    @csrf
+                <form action="javascript:void(0)" method="post" class="d-flex flex-column gap-3" id="Login">
+                    {{-- @csrf --}}
                     <div class="form-group">
                         <label for="email" class="fw-medium text-dark mb-2">Your Email</label>
                         <div class="position-relative">
-                            <input type="email" name="email" id="email" class="form-control" placeholder="Enter your email" required>
+                            <input type="email" name="email" value="ankit@gmail.com" id="email" class="form-control" placeholder="Enter your email" required>
                             <i class="fa-light fa-user icon position-absolute end-0 top-50 translate-middle-y me-3"></i>
                         </div>
                     </div>
@@ -59,7 +60,7 @@
                     <div class="form-group">
                         <label for="password" class="fw-medium text-dark mb-2">Password</label>
                         <div class="position-relative">
-                            <input type="password" name="password" id="password" class="form-control" placeholder="Enter your password" required>
+                            <input type="password" name="password" value="12345678" id="password" class="form-control" placeholder="Enter your password" required>
                             <i class="fa-light fa-lock icon position-absolute end-0 top-50 translate-middle-y me-3"></i>
                         </div>
                     </div>
@@ -73,7 +74,7 @@
                     </div>
     
                     <div class="form-group my-3">
-                        <button class="rts__btn w-100 fill__btn">Login</button>
+                        <button type="submit" class="rts__btn w-100 fill__btn">Login</button>
                     </div>
                 </form>
     
@@ -90,7 +91,7 @@
     
                 <span class="d-block text-center fw-medium">
                     Don’t have an account?
-                    <a href="#" class="text-primary">Sign Up</a>
+                    <a href="{{route('User.register')}}" class="text-primary">Sign Up</a>
                 </span>
             </div>
         </div>
@@ -99,6 +100,74 @@
 
     <script src="{{url('user/assets/js/plugins.min.js')}}"></script>
     <script src="{{url('user/assets/js/main.js')}}"></script>
+
+     {{-- Login User --}}
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+    <script type="text/javascript">
+        // Add or Update
+        $('#Login').on('submit', function() {
+
+            var url = "{{ route('User.loginInsert') }}";
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: new FormData(this),
+                contentType: false,
+                cache: false,
+                processData: false,
+                dataType: 'json',
+
+
+
+                success: function(result) {
+                    if (result.status_code == 1) {
+                        Toastify({
+                            text: result.message,
+                            duration: 3000,
+                            gravity: "top",
+                            position: "right",
+                            className: "bg-success",
+                            style: "style",
+                        }).showToast();
+                        
+                        // Redirect to login or home page & Reload after 0.7 seconds (750 ms)
+                        setTimeout(function() {
+                            window.location.href = result.redirect_url;
+                        }, 750);
+
+                    } else if (result.status_code == 2) {
+                        Toastify({
+                            text: result.message,
+                            duration: 3000,
+                            gravity: "top",
+                            position: "right",
+                            className: "bg-warning",
+                            style: "style",
+                        }).showToast();
+
+                    } else {
+                        Toastify({
+                            text: result.message,
+                            duration: 3000,
+                            gravity: "top",
+                            position: "right",
+                            className: "bg-danger",
+                            style: "style",
+                        }).showToast();
+                    }
+                }
+            });
+        });
+    </script>
+
 </body>
 
 </html>

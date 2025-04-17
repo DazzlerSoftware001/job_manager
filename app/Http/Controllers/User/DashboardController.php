@@ -15,42 +15,34 @@ class DashboardController extends Controller
 
     public function Profile()
     {
-        return view('User.UserDash.Profile');
+        $user = UserProfile::find(Auth::user()->id);
+
+        return view('User.UserDash.Profile', compact('user'));
     }
 
     public function updateProfileImage(Request $request)
     {
-        // dd('dcs');
         $user = Auth::user();
 
-        if ($request->hasFile('image')) {
-            $file = $request->file('image');
+        // Validate the image input
+        $request->validate([
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048', // max 2MB
+        ]);
 
-            // Optional: delete old image if not default
-            if ($user->logo && $user->logo != 'profile/default.png') {
-                $oldImage = public_path('user/assets/img/' . $user->logo);
-                if (File::exists($oldImage)) {
-                    File::delete($oldImage);
-                }
+        if ($request->hasFile('image')) {
+            if ($user->logo && file_exists(public_path('user/assets/img/' . $user->logo))) {
+                unlink(public_path('user/assets/img/' . $user->logo));
             }
 
-            $imageName = time() . '.' . $file->getClientOriginalExtension();
-            $file->move(public_path('user/assets/img/profile/'), $imageName);
-
+            $imageName = time() . '.' . $request->image->extension();
+            $request->image->move(public_path('user/assets/img/profile/'), $imageName);
             $user->logo = 'profile/' . $imageName;
             $user->save();
-
-            return response()->json([
-                'status_code' => 1,
-                'message'     => 'Image updated successfully',
-                'image'       => $user->logo,
-            ]);
+            return response()->json(['status_code' => 1, 'message' => 'Image updated successfully', 'image' => $user->logo]);
         }
 
-        return response()->json([
-            'status_code' => 2,
-            'message'     => 'No image file received',
-        ], 400);
+        return response()->json(['status_code' => 2,
+            'message'                              => 'Failed to update image'], 400);
     }
 
     public function ProfileInsert(Request $request)
