@@ -118,19 +118,19 @@
                     <div class="rt-input-group">
                         <label for="experience">experience</label>
                         <select name="experience" id="experience" class="form-select">
-                            <option value="1">Experience</option>
-                            <option value="2">1 Year</option>
-                            <option value="3">2 Year</option>
-                            <option value="4">3 Year</option>
-                            <option value="5">4 Year</option>
+                            <option value="1" {{ $user->experience == '1' ? 'selected' : '' }}>Experience</option>
+                            <option value="2" {{ $user->experience == '2' ? 'selected' : '' }}>1 Year</option>
+                            <option value="3" {{ $user->experience == '3' ? 'selected' : '' }}>2 Year</option>
+                            <option value="4" {{ $user->experience == '4' ? 'selected' : '' }}>3 Year</option>
+                            <option value="5" {{ $user->experience == '5' ? 'selected' : '' }}>4 Year</option>
                         </select>
                     </div>
                     <div class="rt-input-group">
                         <label for="show">Looking for a job ? </label>
                         <select name="show" id="show" class="form-select">
                             <option value="">Select</option>
-                            <option value="1">Yes</option>
-                            <option value="2">No</option>
+                            <option value="1" {{ $user->look_job == '1' ? 'selected' : '' }}>Yes</option>
+                            <option value="2" {{ $user->look_job == '1' ? 'selected' : '' }}>No</option>
                         </select>
                     </div>
 
@@ -140,7 +140,7 @@
                 <div class="rt-input-group">
                     <label for="description">Candidate Description</label>
                     <textarea name="description" id="description" class="form-control" placeholder="Enter Description" cols="10"
-                        rows="5"></textarea>
+                        rows="5">{{$user->description}}</textarea>
                 </div>
                 <!-- editor area end -->
             </div>
@@ -176,18 +176,18 @@
                             <label for="Country">Country</label>
                             <select name="Country" id="Country" class="form-select">
                                 <option value="1">Select Country</option>
-                                <option value="2">Bangladesh</option>
-                                <option value="3">India</option>
-                                <option value="4">Pakistan</option>
-                                <option value="5">Nepal</option>
-                                <option value="6">Srilanka</option>
-                                <option value="7">China</option>
-                                <option value="8">USA</option>
+                                <option value="2" {{ $user->country == '2' ? 'selected' : '' }}>Bangladesh</option>
+                                <option value="3" {{ $user->country == '3' ? 'selected' : '' }}>India</option>
+                                <option value="4" {{ $user->country == '4' ? 'selected' : '' }}>Pakistan</option>
+                                <option value="5" {{ $user->country == '5' ? 'selected' : '' }}>Nepal</option>
+                                <option value="6" {{ $user->country == '6' ? 'selected' : '' }}>Srilanka</option>
+                                <option value="7" {{ $user->country == '7' ? 'selected' : '' }}>China</option>
+                                <option value="8" {{ $user->country == '8' ? 'selected' : '' }}>USA</option>
                             </select>
                         </div>
                         <div class="rt-input-group">
                             <label for="pr">Present Address</label>
-                            <input type="text" id="pr" name="address" placeholder="2715 Ash Dr. San Jose,USA"
+                            <input type="text" id="pr" name="address" value="{{$user->address}}" placeholder="2715 Ash Dr. San Jose,USA"
                                 required>
                         </div>
                     </div>
@@ -197,18 +197,18 @@
                                 <label for="State">State</label>
                                 <select name="State" id="State" class="form-select">
                                     <option value="1">Select State</option>
-                                    <option value="2">Dhaka</option>
-                                    <option value="3">Chittagong</option>
-                                    <option value="4">Sylhet</option>
-                                    <option value="5">Rajshahi</option>
-                                    <option value="6">Khulna</option>
-                                    <option value="7">Barishal</option>
-                                    <option value="8">Mymensingh</option>
+                                    <option value="2" {{ $user->state == '2' ? 'selected' : '' }}>Dhaka</option>
+                                    <option value="3" {{ $user->state == '3' ? 'selected' : '' }}>Chittagong</option>
+                                    <option value="4" {{ $user->state == '4' ? 'selected' : '' }}>Sylhet</option>
+                                    <option value="5" {{ $user->state == '5' ? 'selected' : '' }}>Rajshahi</option>
+                                    <option value="6" {{ $user->state == '6' ? 'selected' : '' }}>Khulna</option>
+                                    <option value="7" {{ $user->state == '7' ? 'selected' : '' }}>Barishal</option>
+                                    <option value="8" {{ $user->state == '8' ? 'selected' : '' }}>Mymensingh</option>
                                 </select>
                             </div>
                             <div class="rt-input-group">
                                 <label for="ps">Postal Code</label>
-                                <input type="text" id="ps" name="ps" placeholder="8340" required>
+                                <input type="text" id="ps" name="ps" value="{{$user->postal_code}}" placeholder="8340" required>
                             </div>
                         </div>
                     </div>

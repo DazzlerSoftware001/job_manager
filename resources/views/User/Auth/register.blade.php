@@ -8,6 +8,7 @@
     <meta name="description" content="Your Ultimate Job HTML Template">
     <meta name="keywords" content="Job, Resume, Employer, Agency">
     <meta name="robots" content="index, follow">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta property="og:title" content="Your Ultimate Job HTML Template">
     <meta property="og:description" content="Your Ultimate Job HTML Template">
     <meta property="og:image" content="../../../www.example.com/image.html">
@@ -46,7 +47,7 @@
                     <button class="rts__btn nav-link"><i class="rt-briefcase"></i> Employer</button>
                 </div> --}}
     
-                <form action="#" method="post" class="d-flex flex-column gap-3">
+                <form action="javascript:void(0)" method="post" id="Register" class="d-flex flex-column gap-3">
                     @csrf
                     <div class="form-group">
                         <label for="sname" class="fw-medium text-dark mb-3">First Name</label>
@@ -86,7 +87,7 @@
                     </div>
     
                     <div class="form-group my-3">
-                        <button class="rts__btn w-100 fill__btn">Register</button>
+                        <button type="submit" class="rts__btn w-100 fill__btn">Register</button>
                     </div>
                 </form>
     
@@ -112,6 +113,74 @@
 
     <script src="{{url('user/assets/js/plugins.min.js')}}"></script>
     <script src="{{url('user/assets/js/main.js')}}"></script>
+
+    {{-- Register User --}}
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+    <script type="text/javascript">
+        // Add or Update
+        $('#Register').on('submit', function() {
+
+            var url = "{{ route('User.RegisterUser') }}";
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: new FormData(this),
+                contentType: false,
+                cache: false,
+                processData: false,
+                dataType: 'json',
+
+
+
+                success: function(result) {
+                    if (result.status_code == 1) {
+                        Toastify({
+                            text: result.message,
+                            duration: 3000,
+                            gravity: "top",
+                            position: "right",
+                            className: "bg-success",
+                            style: "style",
+                        }).showToast();
+                        
+                        // Redirect to login or home page & Reload after 0.7 seconds (750 ms)
+                        setTimeout(function() {
+                            window.location.href = result.redirect_url;
+                        }, 750);
+
+                    } else if (result.status_code == 2) {
+                        Toastify({
+                            text: result.message,
+                            duration: 3000,
+                            gravity: "top",
+                            position: "right",
+                            className: "bg-warning",
+                            style: "style",
+                        }).showToast();
+
+                    } else {
+                        Toastify({
+                            text: result.message,
+                            duration: 3000,
+                            gravity: "top",
+                            position: "right",
+                            className: "bg-danger",
+                            style: "style",
+                        }).showToast();
+                    }
+                }
+            });
+        });
+    </script>
+
 </body>
 
 </html>

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use App\Models\UserProfile;
 
 class AuthController extends Controller
 {
@@ -13,6 +14,52 @@ class AuthController extends Controller
     {
         return view('User.Auth.register');
     }
+
+    public function RegisterUser(Request $request)
+{
+    // Define validation rules
+    $rules = [
+        'sname'    => 'required|string|max:100',
+        'lname'    => 'required|string|max:100',
+        'email'    => 'required|email|unique:users,email',
+        'password' => 'required|min:6',
+    ];
+
+    // Validate the input
+    $validator = Validator::make($request->all(), $rules);
+    if ($validator->fails()) {
+        return response()->json([
+            'status_code' => 2,
+            'message'     => $validator->errors()->first()
+        ]);
+    }
+
+    try {
+        // Save the user
+        $user = new UserProfile();
+        $user->user_type = 0;
+        $user->user_details = 'User';
+        $user->name     = $request->sname;
+        $user->lname    = $request->lname;
+        $user->email    = $request->email;
+        $user->password = bcrypt($request->password); // Hash the password
+        $user->created_at = now();
+        $user->save();
+
+        return response()->json([
+            'status_code' => 1,
+            'message'     => 'Registration successful',
+            'redirect_url' => route('User.login')
+
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'status_code' => 0,
+            'message'     => 'Something went wrong while registering.'
+        ]);
+    }
+}
+
 
     public function login()
     {

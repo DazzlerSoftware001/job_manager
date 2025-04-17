@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('lname')->nullable();
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('phone')->unique();
+            $table->string('phone')->unique()->nullable();
             $table->string('website')->nullable();
             $table->text('address')->nullable();
             $table->string('logo')->nullable();
@@ -32,7 +32,7 @@ return new class extends Migration
             $table->string('branch')->nullable();
             $table->json('language')->nullable()->change();
             $table->integer('experience')->nullable();
-            $table->boolean('look_job')->default(false);
+            $table->boolean('look_job')->nullable();
             $table->text('description')->nullable();
             $table->json('social_links')->nullable();
             $table->string('country')->nullable();
