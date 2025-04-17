@@ -60,6 +60,8 @@
 <!-- all plugin js -->
 <script src="assets/js/plugins.min.js"></script>
 <script src="assets/js/main.js"></script>
+
+@yield('script')
 </body>
 
 <!--  candidate-dashboard.html   11:19:05 GMT -->

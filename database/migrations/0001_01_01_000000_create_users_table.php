@@ -30,7 +30,7 @@ return new class extends Migration
             $table->string('education_level')->nullable();
             $table->string('qualification')->nullable();
             $table->string('branch')->nullable();
-            $table->string('language')->nullable();
+            $table->json('language')->nullable()->change();
             $table->integer('experience')->nullable();
             $table->boolean('look_job')->default(false);
             $table->text('description')->nullable();

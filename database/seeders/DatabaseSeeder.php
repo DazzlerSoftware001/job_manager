@@ -38,6 +38,7 @@ class DatabaseSeeder extends Seeder
             AdminSeeder::class,
             JobEducationSeeder::class,
             JobPostSeeder::class,
+            UserProfileSeeder::class,
         ]);
     }
 }
