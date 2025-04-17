@@ -15,7 +15,9 @@
         <div class="my__details" id="info">
             <div class="info__top">
                 <div class="author__image">
-                    <img id="profileImage" src="{{ url('user/assets/img/'.$user->logo) }}" onerror="this.onerror=null; this.src='{{ url('user/assets/img/profile/default.png') }}';" alt="">
+                    <img id="profileImage" src="{{ url('user/assets/img/' . $user->logo) }}"
+                        onerror="this.onerror=null; this.src='{{ url('user/assets/img/profile/default.png') }}';"
+                        alt="">
                 </div>
                 <div class="select__image">
                     <button for="imageInput" id="editImageButton" class="file-upload__label">Upload New Photo</button>
@@ -28,30 +30,34 @@
                 <div class="row row-cols-sm-2 row-cols-1 g-3">
                     <div class="rt-input-group">
                         <label for="name">First Name</label>
-                        <input type="text" id="name" name="name" value="{{$user->name}}" placeholder="First Name" required>
+                        <input type="text" id="name" name="name" value="{{ $user->name }}"
+                            placeholder="First Name" required>
                     </div>
                     <div class="rt-input-group">
                         <label for="name">Last Name</label>
-                        <input type="text" id="lname" name="lname" value="{{$user->lname}}"  placeholder="Last Name" required>
+                        <input type="text" id="lname" name="lname" value="{{ $user->lname }}"
+                            placeholder="Last Name" required>
                     </div>
                     <div class="rt-input-group">
                         <label for="email">Email</label>
-                        <input type="email" id="email" name="email" value="{{$user->email}}"  placeholder="careernext@gmqail.com" required>
+                        <input type="email" id="email" name="email" value="{{ $user->email }}"
+                            placeholder="careernext@gmqail.com" required>
                     </div>
                     <div class="rt-input-group">
                         <label for="phone">Phone</label>
-                        <input type="text" id="phone" name="phone" placeholder="+880171234567" required>
+                        <input type="text" id="phone" name="phone" value="{{ $user->phone }}"
+                            placeholder="+880171234567" required>
                     </div>
                     <div class="rt-input-group">
                         <label for="dob">Date of Birth</label>
-                        <input type="date" id="dob" name="dob" required>
+                        <input type="date" id="dob" name="dob" value="{{ $user->date_of_birth }}" required>
                     </div>
                     <div class="rt-input-group">
                         <label for="gender">Gender</label>
                         <select name="gender" id="gender" class="form-select">
-                            <option value="Male">Male</option>
-                            <option value="Female">Female</option>
-                            <option value="All">Other</option>
+                            <option value="Male" {{ $user->gender == 'Male' ? 'selected' : '' }}>Male</option>
+                            <option value="Female" {{ $user->gender == 'Female' ? 'selected' : '' }}>Female</option>
+                            <option value="All" {{ $user->gender == 'All' ? 'selected' : '' }}>Other</option>
                         </select>
                     </div>
                 </div>
@@ -61,12 +67,14 @@
                     <div class="rt-input-group">
                         <label for="education_level">Education Level</label>
                         <select name="education_level" id="education_level" class="form-select">
-                            <option value="1">Select Qualification</option>
-                            <option value="2">SSC</option>
-                            <option value="3">HSC</option>
-                            <option value="4">Diploma</option>
-                            <option value="5">Graduation</option>
-                            <option value="6">Post Graduation</option>
+                            <option value="">Select Education Level</option>
+                            <option value="Matric" {{ $user->education_level == 'Matric' ? 'selected' : '' }}>Secondary Education</option>
+                            <option value="Higher Secondary" {{ $user->education_level == 'Higher Secondary' ? 'selected' : '' }}>Higher Secondary Education</option>
+                            <option value="UG" {{ $user->education_level == 'UG' ? 'selected' : '' }}>Undergraduate (UG)</option>
+                            <option value="PG" {{ $user->education_level == 'PG' ? 'selected' : '' }}>Postgraduate (PG)</option>
+                            <option value="PhD" {{ $user->education_level == 'PhD' ? 'selected' : '' }}>Doctorate (PhD)</option>
+                            <option value="PostDoc" {{ $user->education_level == 'PostDoc' ? 'selected' : '' }}>Postdoctoral Research (After PhD)</option>
+                            <option value="Diploma" {{ $user->education_level == 'Diploma' ? 'selected' : '' }}>Diploma & Certificate Courses</option>
                         </select>
                     </div>
                     <div class="rt-input-group">
@@ -94,12 +102,12 @@
                     <div class="rt-input-group">
                         <label for="lang">Language</label>
                         <select name="lang[]" id="lang" class="form-select">
-                            <option value="1">Select Language</option>
-                            <option value="2">English</option>
-                            <option value="3">Hindi</option>
-                            <option value="4">French</option>
-                            <option value="5">Spanish</option>
-                            <option value="6">Chinese</option>
+                            <option value="1" {{ $user->lang == '1' ? 'selected' : '' }}>Select Language</option>
+                            <option value="2" {{ $user->lang == '2' ? 'selected' : '' }}>English</option>
+                            <option value="3" {{ $user->lang == '3' ? 'selected' : '' }}>Hindi</option>
+                            <option value="4" {{ $user->lang == '4' ? 'selected' : '' }}>French</option>
+                            <option value="5" {{ $user->lang == '5' ? 'selected' : '' }}>Spanish</option>
+                            <option value="6" {{ $user->lang == '6' ? 'selected' : '' }}>Chinese</option>
                         </select>
                     </div>
                 </div>
@@ -179,7 +187,8 @@
                         </div>
                         <div class="rt-input-group">
                             <label for="pr">Present Address</label>
-                            <input type="text" id="pr" name="address" placeholder="2715 Ash Dr. San Jose,USA" required>
+                            <input type="text" id="pr" name="address" placeholder="2715 Ash Dr. San Jose,USA"
+                                required>
                         </div>
                     </div>
                     <div>
@@ -305,11 +314,11 @@
 
 
     <script type="text/javascript">
-        $('#Profile').on('submit', function (e) {
+        $('#Profile').on('submit', function(e) {
             e.preventDefault(); // prevent form from reloading
-    
+
             var url = "{{ route('User.UpdateProfile') }}";
-    
+
             $.ajax({
                 url: url,
                 type: 'POST',
@@ -321,7 +330,7 @@
                 cache: false,
                 processData: false,
                 dataType: 'json',
-                success: function (result) {
+                success: function(result) {
                     if (result.status_code == 1) {
                         Toastify({
                             text: result.message,
@@ -330,15 +339,15 @@
                             position: "right",
                             className: "bg-success"
                         }).showToast();
-    
-                        setTimeout(function () {
+
+                        setTimeout(function() {
                             if (result.redirect_url) {
                                 window.location.href = result.redirect_url;
                             } else {
                                 location.reload();
                             }
                         }, 750);
-    
+
                     } else if (result.status_code == 2) {
                         Toastify({
                             text: result.message,
@@ -357,7 +366,7 @@
                         }).showToast();
                     }
                 },
-                error: function (xhr) {
+                error: function(xhr) {
                     Toastify({
                         text: "Something went wrong!",
                         duration: 3000,
@@ -369,5 +378,4 @@
             });
         });
     </script>
-    
 @endsection
