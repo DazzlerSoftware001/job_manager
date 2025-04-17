@@ -49,9 +49,9 @@
                     <div class="rt-input-group">
                         <label for="gender">Gender</label>
                         <select name="gender" id="gender" class="form-select">
-                            <option value="male">Male</option>
-                            <option value="female">Female</option>
-                            <option value="other">Other</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="All">Other</option>
                         </select>
                     </div>
                 </div>
@@ -308,7 +308,7 @@
         $('#Profile').on('submit', function (e) {
             e.preventDefault(); // prevent form from reloading
     
-            var url = "{{ route('User.ProfileInsert') }}";
+            var url = "{{ route('User.UpdateProfile') }}";
     
             $.ajax({
                 url: url,

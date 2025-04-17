@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 use App\Models\UserProfile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class DashboardController extends Controller
 {
@@ -45,13 +46,13 @@ class DashboardController extends Controller
             'message'                              => 'Failed to update image'], 400);
     }
 
-    public function ProfileInsert(Request $request)
+    public function updateProfile(Request $request)
     {
         $rules = [
             'name'            => 'required|string|max:255',
             'lname'           => 'required|string|max:255',
-            'email'           => 'required|email|max:255|unique:users,email',
-            'phone'           => 'required|digits_between:10,15|unique:users,phone',
+            'email'           => 'required|email|max:255|unique:users,email,' . Auth::id(),
+            'phone'           => 'required|digits_between:10,15|unique:users,phone,' . Auth::id(),
             'dob'             => 'required|date',
             'gender'          => 'required',
             'education_level' => 'required',
@@ -74,33 +75,40 @@ class DashboardController extends Controller
             return response()->json(['status_code' => 2, 'message' => $validator->errors()->first()]);
         }
 
-        try {
-            $profile                = new UserProfile();
+        // try {
+            $profile = UserProfile::where('id', Auth::id())->first();
+
+            if (! $profile) {
+                $profile     = new UserProfile();
+                $profile->id = Auth::id(); // Set user ID if primary key
+            }
+
             $profile->name          = $request->input('name');
             $profile->lname         = $request->input('lname');
             $profile->email         = $request->input('email');
             $profile->phone         = $request->input('phone');
-            $profile->dob           = $request->input('dob');
+            $profile->date_of_birth           = $request->input('dob');
             $profile->gender        = $request->input('gender');
-            $profile->education     = $request->input('education_level');
+            $profile->education_level     = $request->input('education_level');
             $profile->qualification = $request->input('qualification');
             $profile->branch        = $request->input('branch');
-            $profile->languages     = json_encode($request->input('lang'));
+            $profile->language     = json_encode($request->input('lang'));
             $profile->experience    = $request->input('experience');
-            $profile->job_ready     = $request->input('show');
+            $profile->look_job     = $request->input('show');
             $profile->description   = $request->input('description');
-            $profile->social        = json_encode($request->input('social_link'));
+            $profile->social_links        = json_encode($request->input('social_link'));
             $profile->country       = $request->input('Country');
             $profile->state         = $request->input('State');
-            $profile->address       = $request->input('address');
+            $profile->address       = $request->input('address');   
             $profile->postal_code   = $request->input('ps');
-            $profile->created_at    = now();
+            $profile->updated_at    = now(); // update timestamp
+
             $profile->save();
 
-            return response()->json(['status_code' => 1, 'message' => 'Profile created successfully']);
-        } catch (\Exception $e) {
-            return response()->json(['status_code' => 0, 'message' => 'Unable to add data']);
-        }
+            return response()->json(['status_code' => 1, 'message' => 'Profile updated successfully']);
+        // } catch (\Exception $e) {
+        //     return response()->json(['status_code' => 0, 'message' => 'Unable to update profile']);
+        // }
     }
 
 }

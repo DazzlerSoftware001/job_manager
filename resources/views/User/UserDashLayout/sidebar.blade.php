@@ -80,7 +80,7 @@
                              </svg>
                              Jobs shortlist </a>
                      </li>
-                     <li class="nav-item">
+                     {{-- <li class="nav-item">
                          <a href="candidate-message.html" class="nav-link"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"
                                  xmlns="http://www.w3.org/2000/svg">
                                  <path
@@ -89,7 +89,7 @@
                              </svg>
  
                              Message </a>
-                     </li>
+                     </li> 
                      <li class="nav-item">
                          <a href="candidate-alerts.html" class="nav-link"><svg width="20" height="23" viewBox="0 0 20 23" fill="none"
                                  xmlns="http://www.w3.org/2000/svg">
@@ -99,7 +99,7 @@
                              </svg>
                              Job Alerts </a>
                      </li>
-                     <li class="nav-item">
+                      <li class="nav-item">
                          <a href="candidate-follow.html" class="nav-link"><svg width="23" height="22" viewBox="0 0 23 22" fill="none"
                                  xmlns="http://www.w3.org/2000/svg">
                                  <path
@@ -138,7 +138,7 @@
                              </svg>
  
                              Meeting </a>
-                     </li>
+                     </li> --}}
                      <li class="nav-item">
                          <a href="candidate-passwordchange.html" class="nav-link"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"
                                  xmlns="http://www.w3.org/2000/svg">
@@ -151,7 +151,7 @@
                              </svg>
                              Change Password </a>
                      </li>
-                     <li class="nav-item">
+                     {{-- <li class="nav-item">
                          <a href="candidate-deleteprofile.html" class="nav-link"><svg width="20" height="21" viewBox="0 0 20 21" fill="none"
                                  xmlns="http://www.w3.org/2000/svg">
                                  <path
@@ -159,7 +159,7 @@
                                      fill="#595959" />
                              </svg>
                              Delete Profile </a>
-                     </li>
+                     </li> --}}
                  </ul>
              </div>
              <div class="dash__logout">

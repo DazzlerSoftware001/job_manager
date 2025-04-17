@@ -25,7 +25,7 @@ Route::prefix('User')->group(function () {
     Route::get('Dashboard', [DashboardController::class, 'Dashboard'])->name('User.Dashboard');
     Route::get('Profile', [DashboardController::class, 'Profile'])->name('User.Profile');
     Route::post('/updateProfileImage', [DashboardController::class, 'updateProfileImage'])->name('User.UpdateProfileImage');
-    Route::post('/ProfileInsert', [DashboardController::class, 'ProfileInsert'])->name('User.ProfileInsert');
+    Route::post('/UpdateProfile', [DashboardController::class, 'updateProfile'])->name('User.UpdateProfile');
 
     Route::get('/AppliedJob', [UserJobController::class, 'appliedjob'])->name('User.AplliedJob');
 
