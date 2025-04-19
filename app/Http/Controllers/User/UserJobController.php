@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\JobPost;
 use App\Models\JobApplication;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 class UserJobController extends Controller
 {
 
@@ -77,6 +78,10 @@ class UserJobController extends Controller
     }
 
     public function appliedjob() {
+
+        $userId = Auth::user()->id;
+        $appliedjob = JobApplication::where('user_id',$userId)->where('status','pending')->get();
+        // dd($userId,$appliedjob);
         return view('User.UserDash.AppliedJob');
     }
 

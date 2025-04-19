@@ -23,15 +23,16 @@ Route::get('JobDetails/{id}', [JobController::class, 'JobDetails'])->name('User.
 
 // Candidate Dashboard
 Route::prefix('User')->group(function () {
-    Route::get('Dashboard', [DashboardController::class, 'Dashboard'])->name('User.Dashboard');
-    Route::get('Profile', [DashboardController::class, 'Profile'])->name('User.Profile');
-    Route::post('/updateProfileImage', [DashboardController::class, 'updateProfileImage'])->name('User.UpdateProfileImage');
-    Route::post('/UpdateProfile', [DashboardController::class, 'updateProfile'])->name('User.UpdateProfile');
+    Route::middleware('user')->group(function () {
+        Route::get('Dashboard', [DashboardController::class, 'Dashboard'])->name('User.Dashboard');
+        Route::get('Profile', [DashboardController::class, 'Profile'])->name('User.Profile');
+        Route::post('/updateProfileImage', [DashboardController::class, 'updateProfileImage'])->name('User.UpdateProfileImage');
+        Route::post('/UpdateProfile', [DashboardController::class, 'updateProfile'])->name('User.UpdateProfile');
 
-    Route::post('/ApplyForJOb/{job_id}', [UserJobController::class, 'applyjob'])->name('User.ApplyForJOb');
-    Route::get('/AppliedJob', [UserJobController::class, 'appliedjob'])->name('User.AplliedJob');
-    Route::get('/ShortList', [UserJobController::class, 'ShortList'])->name('User.ShortList');
+        Route::post('/ApplyForJOb/{job_id}', [UserJobController::class, 'applyjob'])->name('User.ApplyForJOb');
+        Route::get('/AppliedJob', [UserJobController::class, 'appliedjob'])->name('User.AplliedJob');
+        Route::get('/ShortList', [UserJobController::class, 'ShortList'])->name('User.ShortList');
 
-    Route::post('/logout', [AuthController::class, 'logout'])->name('User.logout');
-
+        Route::post('/logout', [AuthController::class, 'logout'])->name('User.logout');
+    });
 });
