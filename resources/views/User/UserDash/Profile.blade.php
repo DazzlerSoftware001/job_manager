@@ -45,9 +45,20 @@
                     </div>
                     <div class="rt-input-group">
                         <label for="phone">Phone</label>
-                        <input type="text" id="phone" name="phone" value="{{ $user->phone }}"
-                            placeholder="+880171234567" required>
+                        <div style="display: flex; gap: 10px;">
+                            <select name="country_code" id="country_code" class="form-select" style="width:30%;" required>
+                                <option value="+880" {{ $user->country_code == '+880' ? 'selected' : '' }}>🇧🇩 +880 (BD)</option>
+                                <option value="+91" {{ $user->country_code == '+91' ? 'selected' : '' }}>🇮🇳 +91 (IN)</option>
+                                <option value="+1" {{ $user->country_code == '+1' ? 'selected' : '' }}>🇺🇸 +1 (US)</option>
+                                <option value="+44" {{ $user->country_code == '+44' ? 'selected' : '' }}>🇬🇧 +44 (UK)</option>
+                                <option value="+61" {{ $user->country_code == '+61' ? 'selected' : '' }}>🇦🇺 +61 (AU)</option>
+                            </select>
+                    
+                            <input type="text" id="phone" name="phone" value="{{ $user->phone ?? '' }}"
+                                placeholder="1234567890" required>
+                        </div>
                     </div>
+                    
                     <div class="rt-input-group">
                         <label for="dob">Date of Birth</label>
                         <input type="date" id="dob" name="dob" value="{{ $user->date_of_birth }}" required>
@@ -118,15 +129,27 @@
                 <!-- experience -->
                 <div class="row row-cols-sm-2 row-cols-1 g-3">
                     <div class="rt-input-group">
-                        <label for="experience">experience</label>
-                        <select name="experience" id="experience" class="form-select">
-                            <option value="1" {{ $user->experience == '1' ? 'selected' : '' }}>Experience</option>
-                            <option value="2" {{ $user->experience == '2' ? 'selected' : '' }}>1 Year</option>
-                            <option value="3" {{ $user->experience == '3' ? 'selected' : '' }}>2 Year</option>
-                            <option value="4" {{ $user->experience == '4' ? 'selected' : '' }}>3 Year</option>
-                            <option value="5" {{ $user->experience == '5' ? 'selected' : '' }}>4 Year</option>
-                        </select>
+                        <label for="experience">Experience</label>
+                        <div style="display: flex; gap: 10px;">
+                            <input type="number" name="experience_years" id="experience" class="no-spinner" placeholder="Years">
+                            <select name="experience_months" id="experience_months" class="form-select">
+                                <option value="">Select Months</option>
+                                <option value="1">1 Month</option>
+                                <option value="2">2 Months</option>
+                                <option value="3">3 Months</option>
+                                <option value="4">4 Months</option>
+                                <option value="5">5 Months</option>
+                                <option value="6">6 Months</option>
+                                <option value="7">7 Months</option>
+                                <option value="8">8 Months</option>
+                                <option value="9">9 Months</option>
+                                <option value="10">10 Months</option>
+                                <option value="11">11 Months</option>
+                            </select>
+                        </div>
                     </div>
+                    
+                    
                     <div class="rt-input-group">
                         <label for="show">Looking for a job ? </label>
                         <select name="show" id="show" class="form-select">
