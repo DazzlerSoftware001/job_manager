@@ -30,9 +30,12 @@ return new class extends Migration
             $table->string('education_level')->nullable();
             $table->string('qualification')->nullable();
             $table->string('branch')->nullable();
-            $table->json('language')->nullable()->change();
-            $table->integer('experience')->nullable();
-            $table->boolean('look_job')->nullable();
+            // $table->json('language')->nullable()->change();
+            $table->string('language')->nullable();
+
+            $table->decimal('experience', 5, 1)->nullable();
+
+            $table->tinyInteger('look_job')->nullable();
             $table->text('description')->nullable();
             $table->json('social_links')->nullable();
             $table->string('country')->nullable();

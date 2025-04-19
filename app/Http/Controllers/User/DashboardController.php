@@ -6,7 +6,7 @@ use App\Models\UserProfile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
-
+use Illuminate\Support\Facades\Http;
 class DashboardController extends Controller
 {
     public function Dashboard()
@@ -14,14 +14,79 @@ class DashboardController extends Controller
         return view('User.Dasboard');
     }
 
+    // public function Profile()
+    // {
+
+    //     // Getting country code
+    //         $response = Http::get('https://restcountries.com/v3.1/all');
+
+    //         if ($response->failed()) {
+    //             abort(500, 'Failed to fetch country data');
+    //         }
+        
+    //         $countries = collect($response->json())->map(function ($country) {
+    //             return [
+    //                 'name' => $country['name']['common'] ?? '',
+    //                 'code' => $country['cca2'] ?? '',
+    //                 'dial_code' => ($country['idd']['root'] ?? '') . ($country['idd']['suffixes'][0] ?? ''),
+    //                 'flag' => $country['flag'] ?? '',
+    //             ];
+    //         })->filter(function ($country) {
+    //             return !empty($country['dial_code']); // Only countries with valid dial codes
+    //         });
+
+    //     // End Getting country code
+
+
+    //     // DD($countries);
+
+    //     $user = UserProfile::find(Auth::user()->id);
+    //     // dd($user);
+    //     return view('User.UserDash.Profile', compact('user','countries'));
+    // }
+
+
     public function Profile()
     {
-        $user = UserProfile::find(Auth::user()->id);
-        $user->phone = is_string($user->phone) ? json_decode($user->phone, true) : $user->phone;
-    $user->experience = is_string($user->experience) ? json_decode($user->experience, true) : $user->experience;
-    $languages = is_string($user->lang) ? json_decode($user->lang, true) : $user->lang;
 
-        return view('User.UserDash.Profile', compact('user','languages'));
+        // Getting country code
+        $response = Http::get('https://restcountries.com/v3.1/all');
+
+        if ($response->failed()) {
+            abort(500, 'Failed to fetch country data');
+        }
+        
+        $data = collect($response->json());
+        
+        // Get countries with dial codes
+        $countries = $data->map(function ($country) {
+            return [
+                'name' => $country['name']['common'] ?? '',
+                'code' => $country['cca2'] ?? '',
+                'dial_code' => ($country['idd']['root'] ?? '') . ($country['idd']['suffixes'][0] ?? ''),
+                'flag' => $country['flag'] ?? '',
+            ];
+        })->filter(function ($country) {
+            return !empty($country['dial_code']);
+        });
+        
+        // Get all unique languages
+        $languages = $data->flatMap(function ($country) {
+            return $country['languages'] ?? [];
+        })->unique()->sort()->values();
+        
+        $user = UserProfile::find(Auth::user()->id);
+
+        $countryList = $data->map(function ($country) {
+            return [
+                'name' => $country['name']['common'] ?? '',
+                'code' => $country['cca2'] ?? '',
+                'flag' => $country['flag'] ?? '',
+            ];
+        })->sortBy('name')->values();
+        
+        return view('User.UserDash.Profile', compact('user', 'countries', 'languages','countryList'));
+        
     }
 
     public function updateProfileImage(Request $request)
@@ -45,76 +110,93 @@ class DashboardController extends Controller
             return response()->json(['status_code' => 1, 'message' => 'Image updated successfully', 'image' => $user->logo]);
         }
 
-        return response()->json(['status_code' => 2,
-            'message'                              => 'Failed to update image'], 400);
+        return response()->json(['status_code' => 2,'message'=> 'Failed to update image'], 400);
     }
 
     public function updateProfile(Request $request)
     {
+        // dd($request->all());
         $rules = [
             'name'            => 'required|string|max:255',
             'lname'           => 'required|string|max:255',
-            'email'           => 'required|email|max:255|unique:users,email,' . Auth::id(),
-            'phone'           => 'required|digits_between:10,15|unique:users,phone,' . Auth::id(),
+            'email'           => 'required|email|max:255',
+            'country_code'    => 'required',
+            // 'phone'           => 'required|digits_between:10,15',
             'dob'             => 'required|date',
-            'gender'          => 'required',
+            'gender'          => 'required|in:Male,Female',
             'education_level' => 'required',
             'qualification'   => 'required',
-            'branch'          => 'required',
+            'branch'          => 'nullable',
             'lang'            => 'required|array',
-            'experience["years"]'      => 'requiredarray',
-            'show'            => 'required',
+            'exp_year'        => 'required',
+            'exp_months'      => 'required',
+            'jobSearch'       => 'required',
             'description'     => 'required|string',
             'social_link'     => 'required|array',
-            'Country'         => 'required',
-            'State'           => 'required',
+            'social_name'     => 'required|array',
+            'country'         => 'required',
             'address'         => 'required|string|min:10|max:255',
-            'ps'              => 'required',
+            'state'           => 'required',
+            'postalCode'      => 'required',
         ];
 
         $validator = Validator::make($request->all(), $rules);
+       
 
-        if ($validator->fails()) {
+        if (!$validator->fails()) {
+
+           
+            $profile = UserProfile::where('id', Auth::id())->first();
+
+            if (! $profile) {
+                return response()->json(['status_code' => 0, 'message' => 'Profile not found']);
+            }
+            // dd($request->all());
+
+            $years  = $request->input('exp_year');
+            $months = $request->input('exp_months');
+            // dd($years,$months);
+
+            if (!empty($months) && $months > 0) {
+                // Ensure months like '5' becomes '05'
+                $formattedMonths = str_pad($months, 2, '0', STR_PAD_LEFT);
+                $profile->experience = floatval($years . '.' . $formattedMonths);
+            } else {
+                $profile->experience = floatval($years);
+            }
+
+
+            $profile->name            = $request->input('name');
+            $profile->lname           = $request->input('lname');
+            $profile->email           = $request->input('email');
+            $profile->phone           = $request->input('phone.code') . $request->input('phone.number');
+            $profile->date_of_birth   = $request->input('dob');
+            $profile->gender          = $request->input('gender');
+            $profile->education_level = $request->input('education_level');
+            $profile->qualification   = $request->input('qualification');
+            $profile->branch          = $request->input('branch');  
+            $profile->language        = json_encode($request->input('lang'));
+            // $profile->experience      = $years . $months;
+            $profile->look_job        = $request->input('jobSearch');
+            $profile->description     = $request->input('description');
+            $profile->social_links    = json_encode($request->input('social_link'));
+            $profile->country         = $request->input('country');
+            $profile->state           = $request->input('state');
+            $profile->address         = $request->input('address');
+            $profile->postal_code     = $request->input('ps');
+            $profile->updated_at      = now(); // update timestamp
+
+            $profile->save();
+
+            return response()->json(['status_code' => 1, 'message' => 'Profile updated successfully']);
+            
+
+        }else{
             return response()->json(['status_code' => 2, 'message' => $validator->errors()->first()]);
+
         }
 
-        // try {
-        $profile = UserProfile::where('id', Auth::id())->first();
-
-        if (! $profile) {
-            $profile     = new UserProfile();
-            $profile->id = Auth::id(); // Set user ID if primary key
-        }
-
-        $years  = $request->input('experience.years', ''); // default to empty string
-        $months = $request->input('experience.months', '');
-
-        $profile->name            = $request->input('name');
-        $profile->lname           = $request->input('lname');
-        $profile->email           = $request->input('email');
-        $profile->phone           = $request->input('phone.code') . $request->input('phone.number');
-        $profile->date_of_birth   = $request->input('dob');
-        $profile->gender          = $request->input('gender');
-        $profile->education_level = $request->input('education_level');
-        $profile->qualification   = $request->input('qualification');
-        $profile->branch          = $request->input('branch');  
-        $profile->language        = json_encode($request->input('lang'));
-        $profile->experience      = $years . $months;
-        $profile->look_job        = $request->input('show');
-        $profile->description     = $request->input('description');
-        $profile->social_links    = json_encode($request->input('social_link'));
-        $profile->country         = $request->input('Country');
-        $profile->state           = $request->input('State');
-        $profile->address         = $request->input('address');
-        $profile->postal_code     = $request->input('ps');
-        $profile->updated_at      = now(); // update timestamp
-
-        $profile->save();
-
-        return response()->json(['status_code' => 1, 'message' => 'Profile updated successfully']);
-        // } catch (\Exception $e) {
-        //     return response()->json(['status_code' => 0, 'message' => 'Unable to update profile']);
-        // }
+        
     }
 
 }

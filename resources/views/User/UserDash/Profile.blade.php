@@ -41,21 +41,21 @@
                     <div class="rt-input-group">
                         <label for="email">Email</label>
                         <input type="email" id="email" name="email" value="{{ $user->email }}"
-                            placeholder="careernext@gmqail.com" required>
+                            placeholder="careernext@gmqail.com" required readonly>
                     </div>
                     <div class="rt-input-group">
                         <label for="phone">Phone</label>
                         <div style="display: flex; gap: 10px;">
                             <select name="country_code" id="country_code" class="form-select" style="width:30%;" required>
-                                <option value="+880" {{ $user->country_code == '+880' ? 'selected' : '' }}>🇧🇩 +880 (BD)</option>
-                                <option value="+91" {{ $user->country_code == '+91' ? 'selected' : '' }}>🇮🇳 +91 (IN)</option>
-                                <option value="+1" {{ $user->country_code == '+1' ? 'selected' : '' }}>🇺🇸 +1 (US)</option>
-                                <option value="+44" {{ $user->country_code == '+44' ? 'selected' : '' }}>🇬🇧 +44 (UK)</option>
-                                <option value="+61" {{ $user->country_code == '+61' ? 'selected' : '' }}>🇦🇺 +61 (AU)</option>
+                                @foreach ($countries as $country)
+                                    <option value="{{ $country['dial_code'] }}" {{ old('country_code') == $country['dial_code'] ? 'selected' : '' }}>
+                                        {{ $country['flag'] }} {{ $country['dial_code'] }} ({{ $country['name'] }})
+                                    </option>
+                                @endforeach
                             </select>
                     
                             <input type="text" id="phone" name="phone" value="{{ $user->phone ?? '' }}"
-                                placeholder="1234567890" required>
+                                placeholder="1234567890" required readonly>
                         </div>
                     </div>
                     
@@ -90,38 +90,28 @@
                     </div>
                     <div class="rt-input-group">
                         <label for="qualification">Qualification</label>
-                        <select name="qualification" id="qualification" class="form-select">
-                            <option value="1">Select Qualification</option>
-                            <option value="2">SSC</option>
-                            <option value="3">HSC</option>
-                            <option value="4">Diploma</option>
-                            <option value="5">Graduation</option>
-                            <option value="6">Post Graduation</option>
-                        </select>
+                        <input type="text" name="qualification" id="qualification" class="form-control" placeholder="Ex- B.Tech" required>
+                           
                     </div>
+
                     <div class="rt-input-group">
                         <label for="branch">Branch</label>
-                        <select name="branch" id="branch" class="form-select">
-                            <option value="1">Select Qualification</option>
-                            <option value="2">SSC</option>
-                            <option value="3">HSC</option>
-                            <option value="4">Diploma</option>
-                            <option value="5">Graduation</option>
-                            <option value="6">Post Graduation</option>
-                        </select>
+                        <input type="text" name="branch" id="branch" placeholder="Ex- CS" class="form-control">
+                            
                     </div>
+
                     <div class="rt-input-group">
                         <label for="lang">Language</label>
                         <select name="lang[]" id="lang" class="form-select" multiple>
                             <option value="">Select Language</option>
-                            <option value=""></option>
-                            <option value="2" {{ in_array('2', $user->lang ?? []) ? 'selected' : '' }}>English</option>
-                            <option value="3" {{ in_array('3', $user->lang ?? []) ? 'selected' : '' }}>Hindi</option>
-                            <option value="4" {{ in_array('4', $user->lang ?? []) ? 'selected' : '' }}>French</option>
-                            <option value="5" {{ in_array('5', $user->lang ?? []) ? 'selected' : '' }}>Spanish</option>
-                            <option value="6" {{ in_array('6', $user->lang ?? []) ? 'selected' : '' }}>Chinese</option>
+                            @foreach ($languages as $lang)
+                                <option value="{{ $lang }}" {{ in_array($lang, $user->lang ?? []) ? 'selected' : '' }}>
+                                    {{ $lang }}
+                                </option>
+                            @endforeach
                         </select>
                     </div>
+                    
                     
                 </div>
                 <!-- qualification end -->
@@ -131,8 +121,8 @@
                     <div class="rt-input-group">
                         <label for="experience">Experience</label>
                         <div style="display: flex; gap: 10px;">
-                            <input type="number" name="experience_years" id="experience" class="no-spinner" placeholder="Years">
-                            <select name="experience_months" id="experience_months" class="form-select">
+                            <input type="number" name="exp_year" id="experience" class="no-spinner" placeholder="Years">
+                            <select name="exp_months" id="experience_months" class="form-select">
                                 <option value="">Select Months</option>
                                 <option value="1">1 Month</option>
                                 <option value="2">2 Months</option>
@@ -152,7 +142,7 @@
                     
                     <div class="rt-input-group">
                         <label for="show">Looking for a job ? </label>
-                        <select name="show" id="show" class="form-select">
+                        <select name="jobSearch" id="jobSearch" class="form-select">
                             <option value="">Select</option>
                             <option value="1" {{ $user->look_job == '1' ? 'selected' : '' }}>Yes</option>
                             <option value="0" {{ $user->look_job == '0' ? 'selected' : '' }}>No</option>
@@ -172,26 +162,26 @@
             <h6 class="fw-medium mt-4 mb-4">Social Links</h6>
             <div class="social__links p-30 radius-16 bg-white" id="social">
                 <div class="info__field" id="socialFields">
-                    <!-- First Field -->
-                    <div class="row g-3">
+                    <!-- First Field (Default Facebook) -->
+                    <div class="row g-3 social-group">
                         <div class="col-sm-6">
                             <div class="rt-input-group">
                                 <label for="Facebook">Facebook</label>
-                                <input type="url" id="Facebook" name="social_link[]"
-                                    placeholder="https://www.facebook.com/yourpage" required>
-                                <input type="hidden" name="social_link[]" value="Facebook">
+                                <input type="url" name="social_link[]" placeholder="https://www.facebook.com/yourpage" required>
+                                <input type="hidden" name="social_name[]" value="Facebook">
                             </div>
                         </div>
                     </div>
                 </div>
-
+            
                 <!-- Add Button -->
                 <div class="d-block mt-30">
-                    <button type="button" class="added__social__link">
+                    <button type="button" class="added__social__links btn btn-primary">
                         Add Another Network
                     </button>
                 </div>
             </div>
+            
             <!-- address area -->
             <h6 class="fw-medium mt-4 mb-4">Address / Location</h6>
             <div class="social__links radius-16 p-30 bg-white" id="address">
@@ -199,41 +189,34 @@
                     <div class="info__field">
                         <div class="rt-input-group">
                             <label for="Country">Country</label>
-                            <select name="Country" id="Country" class="form-select">
-                                <option value="1">Select Country</option>
-                                <option value="2" {{ $user->country == '2' ? 'selected' : '' }}>Bangladesh</option>
-                                <option value="3" {{ $user->country == '3' ? 'selected' : '' }}>India</option>
-                                <option value="4" {{ $user->country == '4' ? 'selected' : '' }}>Pakistan</option>
-                                <option value="5" {{ $user->country == '5' ? 'selected' : '' }}>Nepal</option>
-                                <option value="6" {{ $user->country == '6' ? 'selected' : '' }}>Srilanka</option>
-                                <option value="7" {{ $user->country == '7' ? 'selected' : '' }}>China</option>
-                                <option value="8" {{ $user->country == '8' ? 'selected' : '' }}>USA</option>
+                            <select name="country" id="country" class="form-select">
+                                <option value="">Select Country</option>
+                                @foreach ($countryList as $country)
+                                    <option value="{{ $country['name'] }}" 
+                                        {{ $user->country == $country['name'] ? 'selected' : '' }}>
+                                        {{ $country['flag'] }} {{ $country['name'] }}
+                                    </option>
+                                @endforeach
                             </select>
                         </div>
+                        
                         <div class="rt-input-group">
                             <label for="pr">Present Address</label>
-                            <input type="text" id="pr" name="address" value="{{$user->address}}" placeholder="2715 Ash Dr. San Jose,USA"
+                            <input type="text" id="pr" name="address" value="{{$user->address}}" placeholder="Enter Your Address "
                                 required>
                         </div>
                     </div>
                     <div>
                         <div class="info__field">
                             <div class="rt-input-group">
-                                <label for="State">State</label>
-                                <select name="State" id="State" class="form-select">
-                                    <option value="1">Select State</option>
-                                    <option value="2" {{ $user->state == '2' ? 'selected' : '' }}>Dhaka</option>
-                                    <option value="3" {{ $user->state == '3' ? 'selected' : '' }}>Chittagong</option>
-                                    <option value="4" {{ $user->state == '4' ? 'selected' : '' }}>Sylhet</option>
-                                    <option value="5" {{ $user->state == '5' ? 'selected' : '' }}>Rajshahi</option>
-                                    <option value="6" {{ $user->state == '6' ? 'selected' : '' }}>Khulna</option>
-                                    <option value="7" {{ $user->state == '7' ? 'selected' : '' }}>Barishal</option>
-                                    <option value="8" {{ $user->state == '8' ? 'selected' : '' }}>Mymensingh</option>
-                                </select>
+                                <label for="state">State</label>
+                                <input type="text" name="state" id="state" class="form-control" placeholder="Enter Your State" required>
+                                   
                             </div>
+
                             <div class="rt-input-group">
-                                <label for="ps">Postal Code</label>
-                                <input type="text" id="ps" name="ps" value="{{$user->postal_code}}" placeholder="8340" required>
+                                <label for="postalCode">Postal Code</label>
+                                <input type="text" id="postalCode" name="postalCode" value="{{$user->postal_code}}" placeholder="Ex -128340" required>
                             </div>
                         </div>
                     </div>
@@ -261,7 +244,73 @@
                     });
                 }
             });
+
+            document.addEventListener('DOMContentLoaded', function() {
+                var country_code = document.getElementById('country_code');
+                if (country_code) {
+                    const country = new Choices(country_code, {
+                        shouldSort: false,
+                        position: 'down',
+                        removeItemButton: true, // Enables removing selected items
+                    });
+                }
+            });
+
+            document.addEventListener('DOMContentLoaded', function() {
+                var country = document.getElementById('country');
+                if (country) {
+                    const countries = new Choices(country, {
+                        shouldSort: false,
+                        position: 'down',
+                        removeItemButton: true, // Enables removing selected items
+                    });
+                }
+            });
     </script>
+    
+
+    <!-- JS to handle adding new social fields -->
+    <script>
+        document.querySelector('.added__social__links').addEventListener('click', function () {
+            const container = document.getElementById('socialFields');
+    
+            const newField = document.createElement('div');
+            newField.classList.add('row', 'g-3', 'social-group', 'align-items-end');
+    
+            newField.innerHTML = `
+                <div class="col-sm-3">
+                    <div class="rt-input-group">
+                        <label>Media Name</label>
+                        <input type="text" name="social_name[]" placeholder="e.g., Twitter" required>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="rt-input-group">
+                        <label>Media Link</label>
+                        <input type="url" name="social_link[]" placeholder="https://twitter.com/yourprofile" required>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <button type="button" class="btn btn-danger remove-social">Remove</button>
+                </div>
+            `;
+    
+            container.appendChild(newField);
+        });
+    
+        // Remove button functionality
+        document.addEventListener('click', function (e) {
+            if (e.target.classList.contains('remove-social')) {
+                const group = e.target.closest('.social-group');
+                group.remove();
+            }
+        });
+    </script>
+    
+    
+  
+
+
 
     {{-- Update Profile Image --}}
     <script>

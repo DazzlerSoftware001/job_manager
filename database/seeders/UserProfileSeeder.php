@@ -27,9 +27,10 @@ class UserProfileSeeder extends Seeder
             'education_level' => 'PG',
             'qualification'   => 'MSc Computer Science',
             'branch'          => 'Information Technology',
-            'language' => ['English', 'Spanish', 'Hindi'],
+            'language' => json_encode(['English', 'Spanish', 'Hindi']),
+
             'experience'      => 5,
-            'look_job'        => true,
+            'look_job'        => 1,
             'description'     => 'A highly skilled software developer with a passion for building scalable applications.',
             'social_links'    => json_encode([
                 'linkedin' => 'https://linkedin.com/in/johndoe',
@@ -39,7 +40,6 @@ class UserProfileSeeder extends Seeder
             'country'         => 'USA',
             'state'           => 'California',
             'postal_code'     => 90001,
-            'created_at'      => now(),
         ]);
     }
 }
