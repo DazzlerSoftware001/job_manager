@@ -17,8 +17,11 @@ class DashboardController extends Controller
     public function Profile()
     {
         $user = UserProfile::find(Auth::user()->id);
+        $user->phone = is_string($user->phone) ? json_decode($user->phone, true) : $user->phone;
+    $user->experience = is_string($user->experience) ? json_decode($user->experience, true) : $user->experience;
+    $languages = is_string($user->lang) ? json_decode($user->lang, true) : $user->lang;
 
-        return view('User.UserDash.Profile', compact('user'));
+        return view('User.UserDash.Profile', compact('user','languages'));
     }
 
     public function updateProfileImage(Request $request)
@@ -59,7 +62,7 @@ class DashboardController extends Controller
             'qualification'   => 'required',
             'branch'          => 'required',
             'lang'            => 'required|array',
-            'experience'      => 'required',
+            'experience["years"]'      => 'requiredarray',
             'show'            => 'required',
             'description'     => 'required|string',
             'social_link'     => 'required|array',
@@ -76,36 +79,39 @@ class DashboardController extends Controller
         }
 
         // try {
-            $profile = UserProfile::where('id', Auth::id())->first();
+        $profile = UserProfile::where('id', Auth::id())->first();
 
-            if (! $profile) {
-                $profile     = new UserProfile();
-                $profile->id = Auth::id(); // Set user ID if primary key
-            }
+        if (! $profile) {
+            $profile     = new UserProfile();
+            $profile->id = Auth::id(); // Set user ID if primary key
+        }
 
-            $profile->name          = $request->input('name');
-            $profile->lname         = $request->input('lname');
-            $profile->email         = $request->input('email');
-            $profile->phone         = $request->input('phone');
-            $profile->date_of_birth           = $request->input('dob');
-            $profile->gender        = $request->input('gender');
-            $profile->education_level     = $request->input('education_level');
-            $profile->qualification = $request->input('qualification');
-            $profile->branch        = $request->input('branch');
-            $profile->language     = json_encode($request->input('lang'));
-            $profile->experience    = $request->input('experience');
-            $profile->look_job     = $request->input('show');
-            $profile->description   = $request->input('description');
-            $profile->social_links        = json_encode($request->input('social_link'));
-            $profile->country       = $request->input('Country');
-            $profile->state         = $request->input('State');
-            $profile->address       = $request->input('address');   
-            $profile->postal_code   = $request->input('ps');
-            $profile->updated_at    = now(); // update timestamp
+        $years  = $request->input('experience.years', ''); // default to empty string
+        $months = $request->input('experience.months', '');
 
-            $profile->save();
+        $profile->name            = $request->input('name');
+        $profile->lname           = $request->input('lname');
+        $profile->email           = $request->input('email');
+        $profile->phone           = $request->input('phone.code') . $request->input('phone.number');
+        $profile->date_of_birth   = $request->input('dob');
+        $profile->gender          = $request->input('gender');
+        $profile->education_level = $request->input('education_level');
+        $profile->qualification   = $request->input('qualification');
+        $profile->branch          = $request->input('branch');  
+        $profile->language        = json_encode($request->input('lang'));
+        $profile->experience      = $years . $months;
+        $profile->look_job        = $request->input('show');
+        $profile->description     = $request->input('description');
+        $profile->social_links    = json_encode($request->input('social_link'));
+        $profile->country         = $request->input('Country');
+        $profile->state           = $request->input('State');
+        $profile->address         = $request->input('address');
+        $profile->postal_code     = $request->input('ps');
+        $profile->updated_at      = now(); // update timestamp
 
-            return response()->json(['status_code' => 1, 'message' => 'Profile updated successfully']);
+        $profile->save();
+
+        return response()->json(['status_code' => 1, 'message' => 'Profile updated successfully']);
         // } catch (\Exception $e) {
         //     return response()->json(['status_code' => 0, 'message' => 'Unable to update profile']);
         // }

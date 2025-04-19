@@ -34,7 +34,7 @@
                             placeholder="First Name" required>
                     </div>
                     <div class="rt-input-group">
-                        <label for="name">Last Name</label>
+                        <label for="lname">Last Name</label>
                         <input type="text" id="lname" name="lname" value="{{ $user->lname }}"
                             placeholder="Last Name" required>
                     </div>
@@ -101,15 +101,17 @@
                     </div>
                     <div class="rt-input-group">
                         <label for="lang">Language</label>
-                        <select name="lang[]" id="lang" class="form-select">
-                            <option value="1" {{ $user->lang == '1' ? 'selected' : '' }}>Select Language</option>
-                            <option value="2" {{ $user->lang == '2' ? 'selected' : '' }}>English</option>
-                            <option value="3" {{ $user->lang == '3' ? 'selected' : '' }}>Hindi</option>
-                            <option value="4" {{ $user->lang == '4' ? 'selected' : '' }}>French</option>
-                            <option value="5" {{ $user->lang == '5' ? 'selected' : '' }}>Spanish</option>
-                            <option value="6" {{ $user->lang == '6' ? 'selected' : '' }}>Chinese</option>
+                        <select name="lang[]" id="lang" class="form-select" multiple>
+                            <option value="">Select Language</option>
+                            <option value=""></option>
+                            <option value="2" {{ in_array('2', $user->lang ?? []) ? 'selected' : '' }}>English</option>
+                            <option value="3" {{ in_array('3', $user->lang ?? []) ? 'selected' : '' }}>Hindi</option>
+                            <option value="4" {{ in_array('4', $user->lang ?? []) ? 'selected' : '' }}>French</option>
+                            <option value="5" {{ in_array('5', $user->lang ?? []) ? 'selected' : '' }}>Spanish</option>
+                            <option value="6" {{ in_array('6', $user->lang ?? []) ? 'selected' : '' }}>Chinese</option>
                         </select>
                     </div>
+                    
                 </div>
                 <!-- qualification end -->
 
@@ -130,7 +132,7 @@
                         <select name="show" id="show" class="form-select">
                             <option value="">Select</option>
                             <option value="1" {{ $user->look_job == '1' ? 'selected' : '' }}>Yes</option>
-                            <option value="2" {{ $user->look_job == '1' ? 'selected' : '' }}>No</option>
+                            <option value="0" {{ $user->look_job == '0' ? 'selected' : '' }}>No</option>
                         </select>
                     </div>
 
@@ -224,6 +226,19 @@
 @endsection
 @section('script')
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+                var lang = document.getElementById('lang');
+                if (lang) {
+                    const lang1 = new Choices(lang, {
+                        shouldSort: false,
+                        position: 'down',
+                        removeItemButton: true, // Enables removing selected items
+                    });
+                }
+            });
+    </script>
 
     {{-- Update Profile Image --}}
     <script>

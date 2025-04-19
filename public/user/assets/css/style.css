@@ -12283,3 +12283,16 @@ input::placeholder {
     color: var(--rts-button-3);
     font-weight: 600;
 }
+
+
+/* Hide spinner in Chrome, Safari, Edge */
+.no-spinner::-webkit-inner-spin-button,
+.no-spinner::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Hide spinner in Firefox */
+.no-spinner {
+    -moz-appearance: textfield;
+}
