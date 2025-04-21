@@ -1,16 +1,15 @@
 <?php
-
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Models\JobPost;
 use App\Models\JobApplication;
+use App\Models\JobPost;
+use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+
 class UserJobController extends Controller
 {
-
 
     // public function applyjob(Request $request, $job_id)
     // {
@@ -48,20 +47,19 @@ class UserJobController extends Controller
     {
         // ✅ Get the authenticated user ID
         // $user_id = Auth::id();
-        $user_id =3;
-
+        $user_id = 3;
 
         // ✅ Check if the job exists and is still active
         $today = Carbon::today();
-        $job = JobPost::where('status', 1)
-                    ->whereDate('jobexpiry', '>=', $today)
-                    ->where('id', $job_id)
-                    ->firstOrFail();
+        $job   = JobPost::where('status', 1)
+            ->whereDate('jobexpiry', '>=', $today)
+            ->where('id', $job_id)
+            ->firstOrFail();
 
         // ✅ Check if the user already applied to this job
         $alreadyApplied = JobApplication::where('user_id', $user_id)
-                                        ->where('job_id', $job_id)
-                                        ->exists();
+            ->where('job_id', $job_id)
+            ->exists();
 
         if ($alreadyApplied) {
             return back()->with('error', 'You have already applied to this job.');
@@ -70,26 +68,62 @@ class UserJobController extends Controller
         // ✅ Store the application
         JobApplication::create([
             'user_id' => $user_id,
-            'job_id' => $job_id,
-            'status' => 'pending',
+            'job_id'  => $job_id,
+            'status'  => 'pending',
         ]);
 
         return back()->with('success', 'Your application has been submitted successfully!');
     }
 
-    public function appliedjob() {
+    public function appliedjob()
+    {
 
-        $userId = Auth::user()->id;
-        $appliedjob = JobApplication::where('user_id',$userId)->where('status','pending')->get();
-        // dd($userId,$appliedjob);
-        return view('User.UserDash.AppliedJob');
+        // $userId = Auth::user()->id;
+        // $appliedjob = JobApplication::with([
+        //     'user:id,name,email',
+        //     'jobPost:id,title',
+        // ])->select(['id', 'user_id', 'job_id', 'status', 'created_at']);
+        // // dd($userId,$appliedjob);
+
+        $userId     = Auth::user()->id;
+        $appliedjob = JobApplication::where('user_id', $userId)
+            ->where('status', 'pending')
+            ->get();
+
+        // Extract the job IDs from the applications
+        $jobIds = $appliedjob->pluck('job_id')->all();
+
+        // Now paginate over all job posts with these IDs
+        $jobDetails = JobPost::whereIn('id', $jobIds)
+            ->paginate(1)
+            ->withQueryString();
+
+        // Pass $jobDetails to your view for pagination links and processing
+
+        return view('User.UserDash.AppliedJob', compact('jobDetails'));
     }
 
-    public function ShortList()
-    {   $user_id = Auth::user()->id;
-        $ShortList=JobApplication::where('user_id', $user_id)
-            ->where('status','shortlisted')
+    public function ShortList() {
+        // $user_id = Auth::user()->id;
+        // $ShortList                          = JobApplication::where('user_id', $user_id)
+        //     ->where('status', 'shortlisted')
+        //     ->get();
+        $userId     = Auth::user()->id;
+        $appliedjob = JobApplication::where('user_id', $userId)
+            ->where('status', 'shortlisted')
             ->get();
-        
+
+        // Extract the job IDs from the applications
+        $jobIds = $appliedjob->pluck('job_id')->all();
+
+        // Now paginate over all job posts with these IDs
+        $jobDetails = JobPost::whereIn('id', $jobIds)
+            ->paginate(1)
+            ->withQueryString();
+
+        // Pass $jobDetails to your view for pagination links and processing
+
+        return view('User.UserDash.ShortlistJob', compact('jobDetails'));
+
     }
 }

@@ -1,6 +1,6 @@
 @extends('User.UserDashLayout.main')
 @section('title')
-    Applied Job
+    Shortlisted Job
 @endsection
 @section('main-container')
     <div class="applied__job__info radius-16">

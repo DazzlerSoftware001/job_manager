@@ -86,7 +86,7 @@
                     </div>
                     <div class="rt-input-group">
                         <label for="qualification">Qualification</label>
-                        <input type="text" name="qualification" id="qualification" class="form-control" placeholder="Ex- B.Tech" required>
+                        <input type="text" name="qualification" id="qualification" class="form-control" value="{{ $user->qualification }}" placeholder="Ex- B.Tech" required>
                            
                     </div>
 
