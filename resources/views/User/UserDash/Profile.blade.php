@@ -47,11 +47,7 @@
                         <label for="phone">Phone</label>
                         <div style="display: flex; gap: 10px;">
                             <select name="country_code" id="country_code" class="form-select" style="width:30%;" required>
-                                @foreach ($countries as $country)
-                                    <option value="{{ $country['dial_code'] }}" {{ old('country_code') == $country['dial_code'] ? 'selected' : '' }}>
-                                        {{ $country['flag'] }} {{ $country['dial_code'] }} ({{ $country['name'] }})
-                                    </option>
-                                @endforeach
+                               
                             </select>
                     
                             <input type="text" id="phone" name="phone" value="{{ $user->phone ?? '' }}"
@@ -104,11 +100,7 @@
                         <label for="lang">Language</label>
                         <select name="lang[]" id="lang" class="form-select" multiple>
                             <option value="">Select Language</option>
-                            @foreach ($languages as $lang)
-                                <option value="{{ $lang }}" {{ in_array($lang, $user->lang ?? []) ? 'selected' : '' }}>
-                                    {{ $lang }}
-                                </option>
-                            @endforeach
+                            
                         </select>
                     </div>
                     
@@ -191,14 +183,9 @@
                             <label for="Country">Country</label>
                             <select name="country" id="country" class="form-select">
                                 <option value="">Select Country</option>
-                                @foreach ($countryList as $country)
-                                    <option value="{{ $country['name'] }}" 
-                                        {{ $user->country == $country['name'] ? 'selected' : '' }}>
-                                        {{ $country['flag'] }} {{ $country['name'] }}
-                                    </option>
-                                @endforeach
                             </select>
                         </div>
+                        
                         
                         <div class="rt-input-group">
                             <label for="pr">Present Address</label>
@@ -233,41 +220,230 @@
 @section('script')
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+   
+    {{-- country_code --}}
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-                var lang = document.getElementById('lang');
-                if (lang) {
-                    const lang1 = new Choices(lang, {
-                        shouldSort: false,
-                        position: 'down',
-                        removeItemButton: true, // Enables removing selected items
-                    });
-                }
-            });
-
-            document.addEventListener('DOMContentLoaded', function() {
-                var country_code = document.getElementById('country_code');
-                if (country_code) {
-                    const country = new Choices(country_code, {
-                        shouldSort: false,
-                        position: 'down',
-                        removeItemButton: true, // Enables removing selected items
-                    });
-                }
-            });
-
-            document.addEventListener('DOMContentLoaded', function() {
-                var country = document.getElementById('country');
-                if (country) {
-                    const countries = new Choices(country, {
-                        shouldSort: false,
-                        position: 'down',
-                        removeItemButton: true, // Enables removing selected items
-                    });
-                }
-            });
+            var countryCodeDropdown = document.getElementById('country_code');
+            
+            if (countryCodeDropdown) {
+                // Full list of country codes with country names
+                const countryCodeList = [
+                    { code: "+1", country: "United States" },
+                    { code: "+1", country: "Canada" },
+                    { code: "+44", country: "United Kingdom" },
+                    { code: "+91", country: "India" },
+                    { code: "+61", country: "Australia" },
+                    { code: "+81", country: "Japan" },
+                    { code: "+33", country: "France" },
+                    { code: "+49", country: "Germany" },
+                    { code: "+55", country: "Brazil" },
+                    { code: "+34", country: "Spain" },
+                    { code: "+39", country: "Italy" },
+                    { code: "+86", country: "China" },
+                    { code: "+7", country: "Russia" },
+                    { code: "+27", country: "South Africa" },
+                    { code: "+52", country: "Mexico" },
+                    { code: "+31", country: "Netherlands" },
+                    { code: "+41", country: "Switzerland" },
+                    { code: "+47", country: "Norway" },
+                    { code: "+46", country: "Sweden" },
+                    { code: "+45", country: "Denmark" },
+                    { code: "+48", country: "Poland" },
+                    { code: "+53", country: "Cuba" },
+                    { code: "+54", country: "Argentina" },
+                    { code: "+56", country: "Chile" },
+                    { code: "+57", country: "Colombia" },
+                    { code: "+58", country: "Venezuela" },
+                    { code: "+60", country: "Malaysia" },
+                    { code: "+62", country: "Indonesia" },
+                    { code: "+63", country: "Philippines" },
+                    { code: "+64", country: "New Zealand" },
+                    { code: "+65", country: "Singapore" },
+                    { code: "+66", country: "Thailand" },
+                    { code: "+81", country: "Japan" },
+                    { code: "+82", country: "South Korea" },
+                    { code: "+84", country: "Vietnam" },
+                    { code: "+90", country: "Turkey" },
+                    { code: "+91", country: "India" },
+                    { code: "+92", country: "Pakistan" },
+                    { code: "+93", country: "Afghanistan" },
+                    { code: "+94", country: "Sri Lanka" },
+                    { code: "+95", country: "Myanmar" },
+                    { code: "+98", country: "Iran" },
+                    { code: "+211", country: "South Sudan" },
+                    { code: "+212", country: "Morocco" },
+                    { code: "+213", country: "Algeria" },
+                    { code: "+216", country: "Tunisia" },
+                    { code: "+218", country: "Libya" },
+                    { code: "+220", country: "Gambia" },
+                    { code: "+221", country: "Senegal" },
+                    { code: "+222", country: "Mauritania" },
+                    { code: "+223", country: "Mali" },
+                    { code: "+224", country: "Guinea" },
+                    { code: "+225", country: "Ivory Coast" },
+                    { code: "+226", country: "Burkina Faso" },
+                    { code: "+227", country: "Niger" },
+                    { code: "+228", country: "Togo" },
+                    { code: "+229", country: "Benin" },
+                    { code: "+230", country: "Mauritius" },
+                    { code: "+231", country: "Liberia" },
+                    { code: "+232", country: "Sierra Leone" },
+                    { code: "+233", country: "Ghana" },
+                    { code: "+234", country: "Nigeria" },
+                    { code: "+235", country: "Chad" },
+                    { code: "+236", country: "Central African Republic" },
+                    { code: "+237", country: "Cameroon" },
+                    { code: "+238", country: "Cape Verde" },
+                    { code: "+239", country: "São Tomé and Príncipe" },
+                    { code: "+240", country: "Equatorial Guinea" },
+                    { code: "+241", country: "Gabon" },
+                    { code: "+242", country: "Congo" },
+                    { code: "+243", country: "Democratic Republic of the Congo" },
+                    { code: "+244", country: "Angola" },
+                    { code: "+245", country: "Guinea-Bissau" },
+                    { code: "+246", country: "British Indian Ocean Territory" },
+                    { code: "+247", country: "Ascension Island" },
+                    { code: "+248", country: "Seychelles" },
+                    { code: "+249", country: "Sudan" },
+                    { code: "+250", country: "Rwanda" },
+                    { code: "+251", country: "Ethiopia" },
+                    { code: "+252", country: "Somalia" },
+                    { code: "+253", country: "Djibouti" },
+                    { code: "+254", country: "Kenya" },
+                    { code: "+255", country: "Tanzania" },
+                    { code: "+256", country: "Uganda" },
+                    { code: "+257", country: "Burundi" },
+                    { code: "+258", country: "Mozambique" },
+                    { code: "+260", country: "Zambia" },
+                    { code: "+261", country: "Madagascar" },
+                    { code: "+262", country: "Réunion" },
+                    { code: "+263", country: "Zimbabwe" },
+                    { code: "+264", country: "Namibia" },
+                    { code: "+265", country: "Malawi" },
+                    { code: "+266", country: "Lesotho" },
+                    { code: "+267", country: "Botswana" },
+                    { code: "+268", country: "Eswatini" },
+                    { code: "+269", country: "Comoros" },
+                    { code: "+27", country: "South Africa" }
+                ];
+        
+                // Populate the country code dropdown dynamically
+                countryCodeList.forEach(function(item) {
+                    const option = document.createElement('option');
+                    option.value = item.code;  // Set value to country code
+                    option.textContent = `${item.country} (${item.code})`;  // Display country and code
+                    countryCodeDropdown.appendChild(option);
+                });
+            }
+        });
     </script>
     
+    <script>
+
+        $(document).ready(function() {
+            var country_code = document.getElementById('country_code');
+            if (country_code) {
+                const country = new Choices(country_code, {
+                    shouldSort: false,
+                    position: 'down',
+                    removeItemButton: true, // Enables removing selected items
+                });
+            }
+        });
+            
+    </script>
+
+    {{-- End country_code --}}
+
+    
+
+
+    {{-- country --}}
+    <script>
+        $(document).ready(function() {
+          // Sample country list (can be fetched from an API or database)
+          const countries = [
+            "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Argentina",
+            "Armenia", "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain",
+            "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Bhutan",
+            "Bolivia", "Bosnia and Herzegovina", "Botswana", "Brazil", "Brunei",
+            "Bulgaria", "Burkina Faso", "Burundi", "Cambodia", "Cameroon", "Canada",
+            "Chile", "China", "Colombia", "Costa Rica", "Croatia", "Cuba", "Cyprus",
+            "Czech Republic", "Denmark", "Dominican Republic", "Ecuador", "Egypt",
+            "El Salvador", "Estonia", "Ethiopia", "Fiji", "Finland", "France", "Germany",
+            "Greece", "Guatemala", "Honduras", "Hungary", "Iceland", "India", "Indonesia",
+            "Iran", "Iraq", "Ireland", "Israel", "Italy", "Jamaica", "Japan", "Jordan",
+            "Kazakhstan", "Kenya", "Kuwait", "Malaysia", "Mexico", "Morocco", "Nepal",
+            "Netherlands", "New Zealand", "Nigeria", "Norway", "Pakistan", "Panama", "Peru",
+            "Philippines", "Poland", "Portugal", "Qatar", "Romania", "Russia", "South Korea",
+            "Spain", "Sri Lanka", "Sudan", "Sweden", "Switzerland", "Syria", "Thailand", "Turkey",
+            "United Kingdom", "United States", "Uruguay", "Vietnam", "Yemen"
+          ];
+      
+          // Loop through the countries array and append to the select element
+          countries.forEach(function(country) {
+            $('#country').append('<option value="' + country + '">' + country + '</option>');
+          });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            var country = document.getElementById('country');
+            if (country) {
+                const countries = new Choices(country, {
+                    shouldSort: false,
+                    position: 'down',
+                    removeItemButton: true, // Enables removing selected items
+                });
+            }
+        });
+    </script>
+    {{-- End country --}}
+
+    {{--language --}}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var lang = document.getElementById('lang');
+            
+            if (lang) {
+                // List of languages (can be fetched from an API or use this static list)
+                const languageList = [
+                    "Afrikaans", "Arabic", "Bengali", "Chinese", "Czech", "Danish", "Dutch", "English",
+                    "Finnish", "French", "German", "Greek", "Gujarati", "Hebrew", "Hindi", "Hungarian",
+                    "Indonesian", "Italian", "Japanese", "Javanese", "Kannada", "Korean", "Latvian",
+                    "Mandarin", "Malay", "Marathi", "Norwegian", "Polish", "Portuguese", "Punjabi",
+                    "Romanian", "Russian", "Spanish", "Swahili", "Swedish", "Tamil", "Telugu", "Turkish",
+                    "Ukrainian", "Urdu", "Vietnamese", "Wolof", "Yoruba", "Zulu"
+                ];
+        
+                // Populate the language dropdown dynamically
+                languageList.forEach(function(langName) {
+                    const option = document.createElement('option');
+                    option.value = langName;
+                    option.textContent = langName;
+                    lang.appendChild(option);
+                });
+            }
+        });
+    </script>
+
+    <script>
+            $(document).ready(function()  {
+            var lang = document.getElementById('lang');
+            if (lang) {
+                const lang1 = new Choices(lang, {
+                    shouldSort: false,
+                    position: 'down',
+                    removeItemButton: true, // Enables removing selected items
+                });
+            }
+        });
+    </script>
+    {{-- End language --}}
+        
+
 
     <!-- JS to handle adding new social fields -->
     <script>
@@ -306,11 +482,6 @@
             }
         });
     </script>
-    
-    
-  
-
-
 
     {{-- Update Profile Image --}}
     <script>

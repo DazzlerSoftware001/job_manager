@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Hash;
 class DashboardController extends Controller
 {
     public function Dashboard()
@@ -18,75 +19,49 @@ class DashboardController extends Controller
     // {
 
     //     // Getting country code
-    //         $response = Http::get('https://restcountries.com/v3.1/all');
+    //     $response = Http::get('https://restcountries.com/v3.1/all');
 
-    //         if ($response->failed()) {
-    //             abort(500, 'Failed to fetch country data');
-    //         }
+    //     if ($response->failed()) {
+    //         abort(500, 'Failed to fetch country data');
+    //     }
         
-    //         $countries = collect($response->json())->map(function ($country) {
-    //             return [
-    //                 'name' => $country['name']['common'] ?? '',
-    //                 'code' => $country['cca2'] ?? '',
-    //                 'dial_code' => ($country['idd']['root'] ?? '') . ($country['idd']['suffixes'][0] ?? ''),
-    //                 'flag' => $country['flag'] ?? '',
-    //             ];
-    //         })->filter(function ($country) {
-    //             return !empty($country['dial_code']); // Only countries with valid dial codes
-    //         });
-
-    //     // End Getting country code
-
-
-    //     // DD($countries);
-
+    //     $data = collect($response->json());
+        
+    //     // Get countries with dial codes
+    //     $countries = $data->map(function ($country) {
+    //         return [
+    //             'name' => $country['name']['common'] ?? '',
+    //             'code' => $country['cca2'] ?? '',
+    //             'dial_code' => ($country['idd']['root'] ?? '') . ($country['idd']['suffixes'][0] ?? ''),
+    //             'flag' => $country['flag'] ?? '',
+    //         ];
+    //     })->filter(function ($country) {
+    //         return !empty($country['dial_code']);
+    //     });
+        
+    //     // Get all unique languages
+    //     $languages = $data->flatMap(function ($country) {
+    //         return $country['languages'] ?? [];
+    //     })->unique()->sort()->values();
+        
     //     $user = UserProfile::find(Auth::user()->id);
-    //     // dd($user);
-    //     return view('User.UserDash.Profile', compact('user','countries'));
+
+    //     $countryList = $data->map(function ($country) {
+    //         return [
+    //             'name' => $country['name']['common'] ?? '',
+    //             'code' => $country['cca2'] ?? '',
+    //             'flag' => $country['flag'] ?? '',
+    //         ];
+    //     })->sortBy('name')->values();
+        
+    //     return view('User.UserDash.Profile', compact('user', 'countries', 'languages','countryList'));
+        
     // }
-
-
     public function Profile()
     {
-
-        // Getting country code
-        $response = Http::get('https://restcountries.com/v3.1/all');
-
-        if ($response->failed()) {
-            abort(500, 'Failed to fetch country data');
-        }
-        
-        $data = collect($response->json());
-        
-        // Get countries with dial codes
-        $countries = $data->map(function ($country) {
-            return [
-                'name' => $country['name']['common'] ?? '',
-                'code' => $country['cca2'] ?? '',
-                'dial_code' => ($country['idd']['root'] ?? '') . ($country['idd']['suffixes'][0] ?? ''),
-                'flag' => $country['flag'] ?? '',
-            ];
-        })->filter(function ($country) {
-            return !empty($country['dial_code']);
-        });
-        
-        // Get all unique languages
-        $languages = $data->flatMap(function ($country) {
-            return $country['languages'] ?? [];
-        })->unique()->sort()->values();
-        
-        $user = UserProfile::find(Auth::user()->id);
-
-        $countryList = $data->map(function ($country) {
-            return [
-                'name' => $country['name']['common'] ?? '',
-                'code' => $country['cca2'] ?? '',
-                'flag' => $country['flag'] ?? '',
-            ];
-        })->sortBy('name')->values();
-        
-        return view('User.UserDash.Profile', compact('user', 'countries', 'languages','countryList'));
-        
+        $user = UserProfile::find(Auth::id());
+    
+        return view('User.UserDash.Profile', compact('user'));
     }
 
     public function updateProfileImage(Request $request)
@@ -197,6 +172,43 @@ class DashboardController extends Controller
         }
 
         
+    }
+
+    public function ChangePassword()
+    {
+        return view('User.UserDash.ChangePassword');
+    }
+
+    public function UpdatePassword(Request $request)
+    {
+        // dd($request->all());
+            $rules = [
+                'password' => 'required|string|min:8|confirmed',
+            ];
+
+            $validator = Validator::make($request->all(),$rules);
+
+            if(!$validator->fails())
+            {
+
+                $userId =Auth::id(); 
+                $user = UserProfile::find($userId);
+
+                if($user !=null)
+                { 
+                    $user->password = Hash::make($request->password);
+                    $user->save();
+            
+                    return response()->json(['status_code' => 1,'message'=> 'Password Changed Succesfully','redirect_url' => route('User.login')
+            
+                    ]);
+                }else{
+                    return response()->json(['status_code' => 2,'message'=> 'Not found']);
+                }
+
+            }else{
+                return response()->json(['status_code' => 2,'message'=> $validator->errors()->first()]);
+            }
     }
 
 }
