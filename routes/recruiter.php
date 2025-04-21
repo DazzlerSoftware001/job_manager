@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Recruiter\DashboardController;
 use App\Http\Controllers\Recruiter\JobController;
 use App\Http\Controllers\Recruiter\AuthController;
+use App\Http\Controllers\Recruiter\ApplicantsController;
 
 Route::prefix('Recruiter')->group(function () {
     Route::get('/login', [AuthController::class, 'login'])->name('Recruiter.login');
@@ -32,6 +33,14 @@ Route::prefix('Recruiter')->group(function () {
         
         Route::get('/getEducation', [JobController::class, 'getEducation'])->name('Recruiter.getEducation');
         Route::get('/getBranch', [JobController::class, 'getBranch'])->name('Recruiter.getBranch');
+
+        Route::get('/allApplicants', [ApplicantsController::class, 'allApplicants'])->name('Recruiter.AllApplicants');
+        Route::post('/getAllApplicants', [ApplicantsController::class, 'getAllApplicants'])->name('Recruiter.GetAllApplicants');
+        Route::post('/verifyStatus', [ApplicantsController::class, 'verifyStatus'])->name('Recruiter.VerifyStatus');
+        
+        Route::get('/shortlistApplicants', [ApplicantsController::class, 'shortlistApplicants'])->name('Recruiter.ShortlistApplicants');
+        Route::post('/getShortlistApplicants', [ApplicantsController::class, 'getShortlistApplicants'])->name('Recruiter.GetShortlistApplicants');
+
 
         Route::post('/logout', [AuthController::class, 'logout'])->name('Recruiter.logout');
 

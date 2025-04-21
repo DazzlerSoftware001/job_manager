@@ -46,7 +46,7 @@
                         </a>
                     </li>
 
-                    <li class="menu-title" data-key="t-applications">Applications</li>
+                    <li class="menu-title" data-key="t-applications">Job Attribute</li>
 
                     <li>
                         <a href="javascript: void(0);" class="has-arrow">
@@ -63,6 +63,20 @@
                             <li><a href="{{route('Admin.JobExperience')}}" data-key="t-p-list">Jobs Experience</a></li> --}}
                         </ul>
                     </li>
+
+                    <li class="menu-title" data-key="t-applications">Applicants</li>
+                    
+                    <li>
+                        <a href="javascript: void(0);" class="has-arrow">
+                            <i class="icon nav-icon" data-eva="briefcase-outline"></i>
+                            <span class="menu-item" data-key="t-projects">Candidate</span>
+                        </a>
+                        <ul class="sub-menu" aria-expanded="false">
+                            <li><a href="{{route('Recruiter.AllApplicants')}}" data-key="t-p-grid">All Applicants</a></li>
+                            <li><a href="{{route('Recruiter.ShortlistApplicants')}}" data-key="t-p-grid">Shortlist Applicants</a></li>
+                        </ul>
+                    </li>
+
 
                     {{-- <li>
                         <a href="{{route('Admin.Companies')}}">

@@ -44,4 +44,9 @@ class Jobpost extends Model
         'admin_verify',
         'status'
     ];
+
+    public function applications()
+    {
+        return $this->hasMany(JobApplication::class, 'job_id');
+    }
 }
