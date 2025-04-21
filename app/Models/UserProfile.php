@@ -13,4 +13,9 @@ class UserProfile extends Model
 
     protected $fillable = ['id','user_type','user_details','name','lname','email','phone','address','logo','status','password','date_of_birth','gender','education_level','qualification','branch','language','experience','look_job','description','social_links','country','state','postal_code'];
     public $timestamps = false; 
+
+    public function jobApplications()
+    {
+        return $this->hasMany(JobApplication::class, 'user_id');
+    }
 }

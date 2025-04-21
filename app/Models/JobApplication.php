@@ -10,4 +10,14 @@ class JobApplication extends Model
 
     protected $table = 'job_applications'; 
     protected $fillable = ['user_id', 'job_id','status'];
+
+    public function user()
+    {
+        return $this->belongsTo(UserProfile::class, 'user_id');
+    }
+
+    public function jobPost()
+    {
+        return $this->belongsTo(JobPost::class, 'job_id');
+    }
 }
