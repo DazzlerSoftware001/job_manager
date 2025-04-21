@@ -14,7 +14,7 @@ Change Password
                 <div class="rt-input-group position-relative">
                     <label for="password">Password</label>
                     <div class="input-box position-relative">
-                        <input type="password" class="form-control" name="password" id="password" placeholder="Enter your New password">
+                        <input type="password" class="form-control" name="password" id="password" placeholder="New password">
                         <span class="position-absolute" style="top: 73%; right: 15px; transform: translateY(-50%); cursor: pointer;" onclick="togglePassword('password', 'toggleIcon1')">
                             <i class="far fa-eye" id="toggleIcon1"></i>
                         </span>
