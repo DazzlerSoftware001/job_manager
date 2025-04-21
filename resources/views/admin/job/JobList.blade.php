@@ -103,6 +103,7 @@
                                                 <th>Admin Verify</th>
                                                 <th>Status</th>
                                                 <th>Create Date</th>
+                                                <th>Job Expiry</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>

@@ -2966,7 +2966,8 @@ class JobController extends Controller
             2 => 'admin_verify',
             3 => 'status',
             4 => 'created_at',
-            5 => 'id',
+            5 => 'jobexpiry',
+            6 => 'id',
         );
 
         $query = JobPost::query();
@@ -3038,6 +3039,9 @@ class JobController extends Controller
 
 
             $dataArray[] = date('d-M-Y', strtotime($record->created_at));
+            // $dataArray[] = date('d-M-Y', strtotime($record->jobexpiry));
+            $dataArray[] = '<span style="color: red;">' . date('d-M-Y', strtotime($record->jobexpiry)) . '</span>';
+
 
             $dataArray[] = '<div class="d-flex gap-2">
 
@@ -3296,7 +3300,8 @@ class JobController extends Controller
             2 => 'admin_verify',
             3 => 'status',
             4 => 'created_at',
-            5 => 'id',
+            5 => 'jobexpiry',
+            6 => 'id',
         );
 
         $query = JobPost::query()->where('admin_verify',1);
@@ -3368,6 +3373,7 @@ class JobController extends Controller
 
 
             $dataArray[] = date('d-M-Y', strtotime($record->created_at));
+            $dataArray[] = '<span style="color: red;">' . date('d-M-Y', strtotime($record->jobexpiry)) . '</span>';
 
             $dataArray[] = '<div class="d-flex gap-2">
 
@@ -3420,7 +3426,8 @@ class JobController extends Controller
             2 => 'admin_verify',
             3 => 'status',
             4 => 'created_at',
-            5 => 'id',
+            5 => 'jobexpiry',
+            6 => 'id',
         );
 
         $query = JobPost::query()->where('admin_verify',2);
@@ -3492,6 +3499,7 @@ class JobController extends Controller
 
 
             $dataArray[] = date('d-M-Y', strtotime($record->created_at));
+            $dataArray[] = '<span style="color: red;">' . date('d-M-Y', strtotime($record->jobexpiry)) . '</span>';
 
             $dataArray[] = '<div class="d-flex gap-2">
 
@@ -3544,7 +3552,8 @@ class JobController extends Controller
             2 => 'admin_verify',
             3 => 'status',
             4 => 'created_at',
-            5 => 'id',
+            5 => 'jobexpiry',
+            6 => 'id',
         );
 
         $query = JobPost::query()->where('admin_verify',0);
@@ -3616,6 +3625,7 @@ class JobController extends Controller
 
 
             $dataArray[] = date('d-M-Y', strtotime($record->created_at));
+            $dataArray[] = '<span style="color: red;">' . date('d-M-Y', strtotime($record->jobexpiry)) . '</span>';
 
             $dataArray[] = '<div class="d-flex gap-2">
 
