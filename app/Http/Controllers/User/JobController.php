@@ -14,7 +14,7 @@ class JobController extends Controller
     public function JobList(Request $request)
     {
         $today = Carbon::today();
-        $query = JobPost::where('status', 1)->whereDate('jobexpiry', '>=', $today);
+        $query = JobPost::where('status', 1)->where('admin_verify', 1)->whereDate('jobexpiry', '>=', $today);
 
         if($request->has('title') && $request->title !== '') {
             $query->where('title', $request->title);
