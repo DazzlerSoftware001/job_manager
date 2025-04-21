@@ -3,8 +3,7 @@
     Jobs
 @endsection
 @section('main-container')
-<script src="https://cdn.tiny.cloud/1/k73iszd3tzdamw58yk6fmdzasoe86nkkbzktvgqtvxvcrr17/tinymce/6/tinymce.min.js"
-referrerpolicy="origin"></script>
+
    <!-- breadcrumb area -->
    <div class="rts__section breadcrumb__background">
         <div class="container">
@@ -81,76 +80,19 @@ referrerpolicy="origin"></script>
             <div class="row g-30">
                <div class="col-lg-7 col-xl-8">
                 <div class="rts__job__details">
-                    <div class="rts__tab active__link mb-30">
-                        <nav>
-                            <div class="nav nav-tabs">
-                                <a class="nav-link active" href="#all">All</a>
-                                <a class="nav-link" href="#description">Job Description</a>
-                                <a class="nav-link" href="#responsibility">Responsibilities</a>
-                                <a class="nav-link" href="#requirements">Requirements</a>
-                                <a class="nav-link" href="#skill">Skill & Experience</a>
-                                <a class="nav-link" href="#salary">Salary & Benefits</a>
-                            </div>
-                        </nav>
-                    </div>
                     <div class="job-description">
-                        {!! html_entity_decode($job->job_desc) !!}
+                        {!! $job->job_desc !!}
 
                     </div>
-                    
-                    {{--
-                    <div id="description" class="mb-30">
-                        <h6 class="fw-semibold mb-20">Job Description</h6>
-                        <p>We are seeking a skilled Part-Time Software Engineer to join our team, specializing in social media content creation for lead generation purposes. The ideal candidate will have a creative flair, technical proficiency, and a strong understanding of social media trends and algorithms. Must be able to work Monday-Friday during EST business hours. This role will be under the ScaledOn brand, but will be working directly with one of our partners as their dedicated Software Engineer.</p>
-                    </div>
                    
-                     <div id="responsibility" class="mb-30">
-                        <h6 class="fw-semibold mb-20">Responsibility</h6>
-                        <ul class="list-style-dot">
-                            <li>Design and build web and enterprise application using in ReactJS/Next JS/.Net Core</li>
-                            <li>Collaborate with cross-functional teams to analyze, design, and implement new features.</li>
-                            <li>Follow defined coding rules/conventions defined by the company.</li>
-                            <li>Perform Unit test and ensure proper test coverage as per organizational standard.</li>
-                            <li>Prepare basic design, detail design, execute basic acceptance testing.</li>
-                            <li>Follow review process for peer review to code delivery.</li>
-                            <li>Participate in defined meeting as per company policy.</li>
-                            <li>Senior Software Engineer should pose mindset and ability to lead small team.</li>
-                        </ul>
+                    <div id="responsibility" class="mb-30">
+                        {!! $job->job_resp !!}
+                    
                     </div>
+                    
                     <div id="requirements" class="mb-30">
-                        <h6 class="fw-semibold mb-20">Requirements</h6>
-                        <ul class="list-style-dot">
-                            <li>Excellent knowledge of Relational Databases MYSQL and ORM technologies (JPA, Hibernate).</li>
-                            <li>Strong understanding on Object-Oriented analysis and design using common design patterns.</li>
-                            <li>Need to know advanced in ReactJS/Next JS/.Net Core.</li>
-                            <li>Practical experience in REST & RESTful web services.</li>
-                            <li>Commanding knowledge on Maven, Gradle build tools.</li>
-                            <li>Follow review process for peer review to code delivery.</li>
-                            <li>Participate in defined meeting as per company policy.</li>
-                            <li>Senior Software Engineer should pose mindset and ability to lead small team.</li>
-                        </ul>
+                        {!! $job->job_req !!}
                     </div>
-                    <div id="skill" class="mb-30">
-                        <h6 class="fw-semibold mb-20">Skills and Experience</h6>
-                        <div class="job__tags job__details__tags">
-                            <a href="#" class="job__tag">Javascript</a>
-                            <a href="#" class="job__tag">user interface</a>
-                            <a href="#" class="job__tag">Problem Solving</a>
-                        </div>
-                    </div>
-                    <div id="salary" class="mb-30">
-                        <h6 class="fw-semibold mb-20">Salary and Benefits</h6>
-                        <ul class="list-style-dot">
-                            <li>Lunch Facilities: Full Subsidize</li>
-                            <li>Salary Review: Yearly</li>
-                            <li>Festival Bonus: 2</li>
-                            <li>This will be a Night Shift work- Timing will be from 11.00 PM to 07.00 AM.</li>
-                            <li>Weekend-Two Days</li>
-                            <li>Monthly on time guaranteed payment</li>
-                            <li>early Earned Leave, Sick Leave and Casual Leave facility and many more to come soon.</li>
-                            <li>Salery: $1000- $2000 Monthly</li>
-                        </ul>
-                    </div> --}}
 
                     <div class="d-flex flex-wrap gap-4 mt-40 mb-30">
                         
@@ -176,11 +118,12 @@ referrerpolicy="origin"></script>
                         </div>
                     </div>
                 </div>
+                
                 <div class="job__location">
                     <h6 class="fw-semibold mb-30">Job Location</h6>
-                    <div class="gmap height-500">
+                    {{-- <div class="gmap height-500">
                         <iframe src="https://maps.google.com/maps?width=100%25&amp;height=600&amp;hl=en&amp;q=Reacthemes+(ReacThemes)&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"></iframe>
-                    </div>
+                    </div> --}}
                 </div>
                </div>
                <div class="col-lg-5 col-xl-4 d-flex flex-column gap-40">
