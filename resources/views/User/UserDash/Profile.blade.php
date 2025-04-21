@@ -46,12 +46,13 @@
                     <div class="rt-input-group">
                         <label for="phone">Phone</label>
                         <div style="display: flex; gap: 10px;">
-                            <select name="country_code" id="country_code" class="form-select" style="width:30%;" required>
+                            <select name="country_code" id="country_code" class="form-select" style="height: 55px;"
+                                required>
 
                             </select>
 
                             <input type="text" id="phone" name="phone" value="{{ $user->phone ?? '' }}"
-                                placeholder="1234567890" required readonly>
+                                placeholder="1234567890" required readonly style="width:77%;height: 55px;">
                         </div>
                     </div>
 
@@ -169,19 +170,45 @@
                 <!-- editor area end -->
             </div>
             <h6 class="fw-medium mt-4 mb-4">Social Links</h6>
+            @php
+                $socialLinks = json_decode($user->social_links ?? '{}', true);
+            @endphp
+
             <div class="social__links p-30 radius-16 bg-white" id="social">
                 <div class="info__field" id="socialFields">
-                    <!-- First Field (Default Facebook) -->
-                    <div class="row g-3 social-group">
-                        <div class="col-sm-6">
-                            <div class="rt-input-group">
-                                <label for="Facebook">Facebook</label>
-                                <input type="url" name="social_link[]"
-                                    placeholder="https://www.facebook.com/yourpage" required>
-                                <input type="hidden" name="social_name[]" value="Facebook">
-                            </div>
+                    @foreach ($socialLinks as $name => $link)
+                        <div class="row g-3 social-group align-items-end">
+                            @if ($loop->first && $name === 'Facebook')
+                                <!-- Default Facebook field -->
+                                <div class="col-sm-6">
+                                    <div class="rt-input-group">
+                                        <label for="{{ $name }}">{{ $name }}</label>
+                                        <input type="url" name="social_link[]" value="{{ $link }}"
+                                            placeholder="https://www.{{ strtolower($name) }}.com/yourpage" required>
+                                        <input type="hidden" name="social_name[]" value="{{ $name }}">
+                                    </div>
+                                </div>
+                            @else
+                                <!-- Additional fields -->
+                                <div class="col-sm-3">
+                                    <div class="rt-input-group">
+                                        <label>Media Name</label>
+                                        <input type="text" name="social_name[]" value="{{ $name }}" required>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="rt-input-group">
+                                        <label>Media Link</label>
+                                        <input type="url" name="social_link[]" value="{{ $link }}"
+                                            placeholder="https://{{ strtolower($name) }}.com/yourprofile" required>
+                                    </div>
+                                </div>
+                                <div class="col-sm-2">
+                                    <button type="button" class="btn btn-danger remove-social">Remove</button>
+                                </div>
+                            @endif
                         </div>
-                    </div>
+                    @endforeach
                 </div>
 
                 <!-- Add Button -->
@@ -192,11 +219,15 @@
                 </div>
             </div>
 
+
             <!-- address area -->
             <h6 class="fw-medium mt-4 mb-4">Address / Location</h6>
             <div class="social__links radius-16 p-30 bg-white" id="address">
                 <div class="row row-cols-md-2 row-cols-lg-2 row-cols-1 g-30">
                     <div class="info__field">
+                        @php
+                            $selectedCountry = $user->country;
+                        @endphp
                         <div class="rt-input-group">
                             <label for="Country">Country</label>
                             <select name="country" id="country" class="form-select">
@@ -215,8 +246,8 @@
                         <div class="info__field">
                             <div class="rt-input-group">
                                 <label for="state">State</label>
-                                <input type="text" name="state" id="state" class="form-control"
-                                    placeholder="Enter Your State" required>
+                                <input type="text" name="state" id="state" value="{{ $user->state }}"
+                                    class="form-control" placeholder="Enter Your State" required>
 
                             </div>
 
@@ -655,8 +686,7 @@
             if (country_code) {
                 const country = new Choices(country_code, {
                     shouldSort: false,
-                    position: 'down',
-                    removeItemButton: true, // Enables removing selected items
+                    // position: 'down', // Enables removing selected items
                 });
             }
         });
@@ -670,6 +700,8 @@
     {{-- country --}}
     <script>
         $(document).ready(function() {
+            const selectedCountry = @json($selectedCountry); // Passing the selected country to JS
+
             // Sample country list (can be fetched from an API or database)
             const countries = [
                 "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Argentina",
@@ -691,7 +723,9 @@
 
             // Loop through the countries array and append to the select element
             countries.forEach(function(country) {
-                $('#country').append('<option value="' + country + '">' + country + '</option>');
+                const isSelected = country === selectedCountry ? 'selected' :
+                ''; // Check if the country is the selected one
+                $('#country').append(`<option value="${country}" ${isSelected}>${country}</option>`);
             });
         });
     </script>
@@ -703,7 +737,6 @@
                 const countries = new Choices(country, {
                     shouldSort: false,
                     position: 'down',
-                    removeItemButton: true, // Enables removing selected items
                 });
             }
         });
@@ -711,32 +744,6 @@
     {{-- End country --}}
 
     {{-- language --}}
-    {{-- <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var lang = document.getElementById('lang');
-            
-            if (lang) {
-                // List of languages (can be fetched from an API or use this static list)
-                const languageList = [
-                    "Afrikaans", "Arabic", "Bengali", "Chinese", "Czech", "Danish", "Dutch", "English",
-                    "Finnish", "French", "German", "Greek", "Gujarati", "Hebrew", "Hindi", "Hungarian",
-                    "Indonesian", "Italian", "Japanese", "Javanese", "Kannada", "Korean", "Latvian",
-                    "Mandarin", "Malay", "Marathi", "Norwegian", "Polish", "Portuguese", "Punjabi",
-                    "Romanian", "Russian", "Spanish", "Swahili", "Swedish", "Tamil", "Telugu", "Turkish",
-                    "Ukrainian", "Urdu", "Vietnamese", "Wolof", "Yoruba", "Zulu"
-                ];
-        
-                // Populate the language dropdown dynamically
-                languageList.forEach(function(langName) {
-                    const option = document.createElement('option');
-                    option.value = langName;
-                    option.textContent = langName;
-                    lang.appendChild(option);
-                });
-            }
-        });
-    </script> --}}
-
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var lang = document.getElementById('lang');

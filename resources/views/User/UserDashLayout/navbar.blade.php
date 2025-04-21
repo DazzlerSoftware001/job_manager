@@ -217,14 +217,14 @@
                                     </div>
                                 </div>
                                 <ul class="rts__dropdown dropdown-menu top-25">
-                                    <li><a class="dropdown-item" href="{{route('User.Dashboard')}}">Dashboard</a></li>
+                                    {{-- <li><a class="dropdown-item" href="{{route('User.Dashboard')}}">Dashboard</a></li>
                                     <li><a class="dropdown-item" href="{{route('User.Profile')}}">Profile</a></li>
                                     <li><a class="dropdown-item" href="candidate-resume.html">Resume</a></li>
                                     <li><a class="dropdown-item" href="candidate-shortlist.html">Shortlist Job</a></li>
-                                    <li><a class="dropdown-item" href="candidate-message.html">Message</a></li>
-                                    <li><a class="dropdown-item" href="candidate-passwordchange.html">Change Password</a></li>
+                                    <li><a class="dropdown-item" href="candidate-message.html">Message</a></li> --}}
+                                    <li><a class="dropdown-item" href="{{route('User.ChangePassword')}}">Change Password</a></li>
                                     <li><a class="dropdown-item" href="javascript:void(0);" id="logoutButton">Log Out</a></li>
-                                    <li><a class="dropdown-item" href="candidate-deleteprofile.html">Delete Account</a></li>
+                                    {{-- <li><a class="dropdown-item" href="candidate-deleteprofile.html">Delete Account</a></li> --}}
                                 </ul>  
                             </div>
                             <button class="d-md-block d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvas" aria-controls="offcanvas"><i class="fa-sharp fa-regular fa-bars"></i></button>

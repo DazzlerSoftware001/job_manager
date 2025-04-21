@@ -2,24 +2,22 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
-use App\Models\UserProfile;
 use App\Models\JobApplication;
-
+use App\Models\UserProfile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
+
 class DashboardController extends Controller
 {
     public function Dashboard()
     {
-        $userId = Auth::id();
+        $userId          = Auth::id();
         $appliedJobCount = JobApplication::where('user_id', $userId)->where('status', 'pending')->count();
 
-    
-        $ShortlistedJobCount = JobApplication::where('user_id',$userId)->where('status','shortlisted')->count();
-        return view('User.Dasboard',compact('appliedJobCount','ShortlistedJobCount'));
+        $ShortlistedJobCount = JobApplication::where('user_id', $userId)->where('status', 'shortlisted')->count();
+        return view('User.Dasboard', compact('appliedJobCount', 'ShortlistedJobCount'));
     }
 
     // public function Profile()
@@ -31,9 +29,9 @@ class DashboardController extends Controller
     //     if ($response->failed()) {
     //         abort(500, 'Failed to fetch country data');
     //     }
-        
+
     //     $data = collect($response->json());
-        
+
     //     // Get countries with dial codes
     //     $countries = $data->map(function ($country) {
     //         return [
@@ -45,12 +43,12 @@ class DashboardController extends Controller
     //     })->filter(function ($country) {
     //         return !empty($country['dial_code']);
     //     });
-        
+
     //     // Get all unique languages
     //     $languages = $data->flatMap(function ($country) {
     //         return $country['languages'] ?? [];
     //     })->unique()->sort()->values();
-        
+
     //     $user = UserProfile::find(Auth::user()->id);
 
     //     $countryList = $data->map(function ($country) {
@@ -60,14 +58,14 @@ class DashboardController extends Controller
     //             'flag' => $country['flag'] ?? '',
     //         ];
     //     })->sortBy('name')->values();
-        
+
     //     return view('User.UserDash.Profile', compact('user', 'countries', 'languages','countryList'));
-        
+
     // }
     public function Profile()
     {
         $user = UserProfile::find(Auth::id());
-    
+
         return view('User.UserDash.Profile', compact('user'));
     }
 
@@ -92,7 +90,7 @@ class DashboardController extends Controller
             return response()->json(['status_code' => 1, 'message' => 'Image updated successfully', 'image' => $user->logo]);
         }
 
-        return response()->json(['status_code' => 2,'message'=> 'Failed to update image'], 400);
+        return response()->json(['status_code' => 2, 'message' => 'Failed to update image'], 400);
     }
 
     public function updateProfile(Request $request)
@@ -123,11 +121,9 @@ class DashboardController extends Controller
         ];
 
         $validator = Validator::make($request->all(), $rules);
-       
 
-        if (!$validator->fails()) {
+        if (! $validator->fails()) {
 
-           
             $profile = UserProfile::where('id', Auth::id())->first();
 
             if (! $profile) {
@@ -139,14 +135,29 @@ class DashboardController extends Controller
             $months = $request->input('exp_months');
             // dd($years,$months);
 
-            if (!empty($months) && $months > 0) {
+            if (! empty($months) && $months > 0) {
                 // Ensure months like '5' becomes '05'
-                $formattedMonths = str_pad($months, 2, '0', STR_PAD_LEFT);
+                $formattedMonths     = str_pad($months, 2, '0', STR_PAD_LEFT);
                 $profile->experience = floatval($years . '.' . $formattedMonths);
             } else {
                 $profile->experience = floatval($years);
             }
 
+            $socialNames = $request->input('social_name');
+            $socialLinks = $request->input('social_link');
+
+            $socialData = [];
+
+            if ($socialNames && $socialLinks) {
+                foreach ($socialNames as $index => $name) {
+                    $link = $socialLinks[$index] ?? null;
+                    if ($name && $link) {
+                        $socialData[$name] = $link;
+                    }
+                }
+            }
+
+            $profile->social_links = json_encode($socialData);
 
             $profile->name            = $request->input('name');
             $profile->lname           = $request->input('lname');
@@ -156,29 +167,27 @@ class DashboardController extends Controller
             $profile->gender          = $request->input('gender');
             $profile->education_level = $request->input('education_level');
             $profile->qualification   = $request->input('qualification');
-            $profile->branch          = $request->input('branch');  
+            $profile->branch          = $request->input('branch');
             $profile->language        = json_encode($request->input('lang'));
             // $profile->experience      = $years . $months;
-            $profile->look_job        = $request->input('jobSearch');
-            $profile->description     = $request->input('description');
-            $profile->social_links    = json_encode($request->input('social_link'));
-            $profile->country         = $request->input('country');
-            $profile->state           = $request->input('state');
-            $profile->address         = $request->input('address');
-            $profile->postal_code     = $request->input('ps');
-            $profile->updated_at      = now(); // update timestamp
+            $profile->look_job     = $request->input('jobSearch');
+            $profile->description  = $request->input('description');
+            // $profile->social_links = json_encode($request->input('social_link'));
+            $profile->country      = $request->input('country');
+            $profile->state        = $request->input('state');
+            $profile->address      = $request->input('address');
+            $profile->postal_code  = $request->input('postalCode');
+            $profile->updated_at   = now(); // update timestamp
 
             $profile->save();
 
             return response()->json(['status_code' => 1, 'message' => 'Profile updated successfully']);
-            
 
-        }else{
+        } else {
             return response()->json(['status_code' => 2, 'message' => $validator->errors()->first()]);
 
         }
 
-        
     }
 
     public function ChangePassword()
@@ -189,33 +198,31 @@ class DashboardController extends Controller
     public function UpdatePassword(Request $request)
     {
         // dd($request->all());
-            $rules = [
-                'password' => 'required|string|min:8|confirmed',
-            ];
+        $rules = [
+            'password' => 'required|string|min:8|confirmed',
+        ];
 
-            $validator = Validator::make($request->all(),$rules);
+        $validator = Validator::make($request->all(), $rules);
 
-            if(!$validator->fails())
-            {
+        if (! $validator->fails()) {
 
-                $userId =Auth::id(); 
-                $user = UserProfile::find($userId);
+            $userId = Auth::id();
+            $user   = UserProfile::find($userId);
 
-                if($user !=null)
-                { 
-                    $user->password = Hash::make($request->password);
-                    $user->save();
-            
-                    return response()->json(['status_code' => 1,'message'=> 'Password Changed Succesfully','redirect_url' => route('User.login')
-            
-                    ]);
-                }else{
-                    return response()->json(['status_code' => 2,'message'=> 'Not found']);
-                }
+            if ($user != null) {
+                $user->password = Hash::make($request->password);
+                $user->save();
 
-            }else{
-                return response()->json(['status_code' => 2,'message'=> $validator->errors()->first()]);
+                return response()->json(['status_code' => 1, 'message' => 'Password Changed Succesfully', 'redirect_url' => route('User.login'),
+
+                ]);
+            } else {
+                return response()->json(['status_code' => 2, 'message' => 'Not found']);
             }
+
+        } else {
+            return response()->json(['status_code' => 2, 'message' => $validator->errors()->first()]);
+        }
     }
 
 }
