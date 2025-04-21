@@ -13,7 +13,7 @@
                     </svg>
                     </div>
                     <div class="content">
-                        <h5 class="lh-sm">10+</h5>
+                        <h5 class="lh-sm">{{$appliedJobCount}}</h5>
                         <p class="font-20">Applied Job</p>
                     </div>
             </div>
@@ -24,7 +24,7 @@
                     </svg>
                     </div>
                     <div class="content">
-                        <h5 class="lh-sm">20+</h5>
+                        <h5 class="lh-sm">{{$ShortlistedJobCount}}</h5>
                         <p class="font-20">Shortlist Job</p>
                     </div>
             </div>

@@ -3,6 +3,8 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Models\UserProfile;
+use App\Models\JobApplication;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -12,7 +14,12 @@ class DashboardController extends Controller
 {
     public function Dashboard()
     {
-        return view('User.Dasboard');
+        $userId = Auth::id();
+        $appliedJobCount = JobApplication::where('user_id', $userId)->where('status', 'pending')->count();
+
+    
+        $ShortlistedJobCount = JobApplication::where('user_id',$userId)->where('status','shortlisted')->count();
+        return view('User.Dasboard',compact('appliedJobCount','ShortlistedJobCount'));
     }
 
     // public function Profile()
