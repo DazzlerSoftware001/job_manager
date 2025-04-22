@@ -190,6 +190,60 @@ class DashboardController extends Controller
 
     }
 
+    // resume
+    public function resume() {
+        return view('User.UserDash.Resume');
+    }
+
+    public function UploadResume(Request $request) {
+// 'max:2048',
+        $rules = [
+            'resume' => ['required','mimes:pdf',
+                function ($attribute, $value, $fail) use ($request) {
+                    if ($request->hasFile('resume')) {
+                        $fileName = $request->file('resume')->getClientOriginalName();
+                        if (strlen($fileName) > 255) {
+                            $fail('The resume file name must not exceed 255 characters.');
+                        }
+                    }
+                },
+            ],
+        ];
+        
+
+        $valid = Validator::make($request->all(),$rules);
+
+        if(!$valid->fails())
+        {
+
+            if ($request->hasFile('resume')) {
+                 // Check if the user already has a resume saved
+                // $user = auth()->user(); // or however you're fetching the user
+                // if ($user->resume) {
+                //     // Delete the old file from storage
+                //     Storage::disk('public')->delete($user->resume);
+                // }
+
+                // Upload the new resume
+                $file = $request->file('resume');
+                $filename = time() . '_' . $file->getClientOriginalName();
+        // dd($filename);
+
+                $path = $file->storeAs('resumes', $filename, 'public');
+
+                // Update user or relevant model with new file path
+                $user->resume = $path;
+                $user->save();
+            }
+
+
+        }else{
+            return response()->json(['status_code'=>0,'message'=>$valid->errors()->first()]);
+        }
+    }
+    // end resume
+
+
     public function ChangePassword()
     {
         return view('User.UserDash.ChangePassword');
@@ -225,12 +279,6 @@ class DashboardController extends Controller
         }
     }
 
-    public function resume() {
-        return view('User.UserDash.Resume');
-    }
-
-    public function uploadResume(Request $request) {
-        
-    }
+    
 
 }

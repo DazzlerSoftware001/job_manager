@@ -12,11 +12,11 @@
                 <a class="nav-link" href="#address">Portfolio </a>
                 <a class="nav-link" href="#address">Award</a>
             </div>
-        </nav> --}}
+        </nav> 
         <div class="my__details" id="info">
-            <div class="info__top align-items-start flex-column">
+            <div class="info__top align-items-start">
 
-                <div class="select__image">
+               <div class="select__image">
                     <label for="file" class="file-upload__label__two">
                         <span>
                             <i class="fa-light fa-file-arrow-up"></i>
@@ -27,6 +27,8 @@
                     </label>
                     <input type="file" class="file-upload__input__two" id="file" required>
                 </div>
+
+
                 <div class="cv__included d-flex gap-30">
                     <div class="single__item">
                         <div class="d-flex justify-content-between">
@@ -47,6 +49,27 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>--}}
+
+            <form action="javascript:void(0)" method="POST" id="uploadResume" enctype="multipart/form-data" >
+         <div class="row">
+              
+                <div class="col-md-6 mb-3">
+                    <label for="resume" class="form-label">Resume<span class="text-danger">*</span></label>
+                    <input type="file" class="form-control" id="resume" name="resume" required  accept=".pdf">
+                    <small class="text-danger">Only PDF will be accepted</small>
+                </div>
+
+                <div class="col-md-2 " style="margin-top: 36px;">
+                    <button type="submit" class="btn btn-primary">Upload</button>
+                </div>
+            </form>
+
+
+            <div class="col-12 mb-3">
+                <label for="cover_letter" class="form-label">Cover Letter</label>
+                <textarea class="form-control" id="cover_letter" name="cover_letter" rows="5" placeholder="Write your cover letter here..."></textarea>
             </div>
         </div>
     </div>
@@ -249,4 +272,71 @@
         </div>
     </div> --}}
     <!-- Portfolio end -->
+@endsection
+@section('script')
+    <script type="text/javascript">
+        $('#uploadResume').on('submit', function(e) {
+            e.preventDefault(); // prevent form from reloading
+
+            var url = "{{ route('User.UploadResume') }}";
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: new FormData(this),
+                contentType: false,
+                cache: false,
+                processData: false,
+                dataType: 'json',
+                success: function(result) {
+                    if (result.status_code == 1) {
+                        Toastify({
+                            text: result.message,
+                            duration: 3000,
+                            gravity: "top",
+                            position: "right",
+                            className: "bg-success"
+                        }).showToast();
+
+                        setTimeout(function() {
+                            if (result.redirect_url) {
+                                window.location.href = result.redirect_url;
+                            } else {
+                                location.reload();
+                            }
+                        }, 750);
+
+                    } else if (result.status_code == 2) {
+                        Toastify({
+                            text: result.message,
+                            duration: 3000,
+                            gravity: "top",
+                            position: "right",
+                            className: "bg-warning"
+                        }).showToast();
+                    } else {
+                        Toastify({
+                            text: result.message,
+                            duration: 3000,
+                            gravity: "top",
+                            position: "right",
+                            className: "bg-danger"
+                        }).showToast();
+                    }
+                },
+                error: function(xhr) {
+                    Toastify({
+                        text: "Something went wrong!",
+                        duration: 3000,
+                        gravity: "top",
+                        position: "right",
+                        className: "bg-danger"
+                    }).showToast();
+                }
+            });
+        });
+    </script>
 @endsection
