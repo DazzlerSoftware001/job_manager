@@ -225,4 +225,12 @@ class DashboardController extends Controller
         }
     }
 
+    public function resume() {
+        return view('User.UserDash.Resume');
+    }
+
+    public function uploadResume(Request $request) {
+        
+    }
+
 }

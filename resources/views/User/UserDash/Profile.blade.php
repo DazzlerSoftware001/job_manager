@@ -46,7 +46,7 @@
                     <div class="rt-input-group">
                         <label for="phone">Phone</label>
                         <div style="display: flex; gap: 10px;">
-                            <select name="country_code" id="country_code" class="form-select" style="height: 55px;"
+                            <select name="country_code" id="country_code" class="form-select" style="height: 55px;" readonly
                                 required>
 
                             </select>

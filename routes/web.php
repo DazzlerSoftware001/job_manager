@@ -28,6 +28,7 @@ Route::prefix('User')->group(function () {
         Route::get('Profile', [DashboardController::class, 'Profile'])->name('User.Profile');
         Route::post('/updateProfileImage', [DashboardController::class, 'updateProfileImage'])->name('User.UpdateProfileImage');
         Route::post('/UpdateProfile', [DashboardController::class, 'updateProfile'])->name('User.UpdateProfile');
+        Route::get('/Resume', [DashboardController::class, 'resume'])->name('User.Resume');
         
         Route::get('ChangePassword', [DashboardController::class, 'ChangePassword'])->name('User.ChangePassword');
         Route::post('UpdatePassword', [DashboardController::class, 'UpdatePassword'])->name('User.UpdatePassword');
