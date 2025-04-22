@@ -3,6 +3,53 @@
     Resume
 @endsection
 @section('main-container')
+
+<style>
+    .add-skill-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        animation: fadeIn 0.3s ease-in-out;
+    }
+
+    .skill-input {
+        padding: 10px 15px;
+        border: 2px solid #4f46e5;
+        border-radius: 8px;
+        font-size: 14px;
+        outline: none;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 8px rgba(79, 70, 229, 0.1);
+    }
+
+    .skill-input:focus {
+        border-color: #6366f1;
+        box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2);
+    }
+
+    .add-skill-btn {
+        padding: 10px 20px;
+        background: linear-gradient(135deg, #4f46e5, #6366f1);
+        color: white;
+        font-weight: bold;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background 0.3s ease, transform 0.2s ease;
+    }
+
+    .add-skill-btn:hover {
+        background: linear-gradient(135deg, #4338ca, #4f46e5);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: scale(0.95); }
+        to { opacity: 1; transform: scale(1); }
+    }
+</style>
+
     <div class="my__profile__tab radius-16 bg-white">
         {{-- <nav>
             <div class="nav nav-tabs">
@@ -50,28 +97,57 @@
                     </div>
                 </div>
             </div>
-        </div>--}}
+        </div> --}}
 
-            <form action="javascript:void(0)" method="POST" id="uploadResume" enctype="multipart/form-data" >
-         <div class="row">
-              
+        <form action="javascript:void(0)" method="POST" id="uploadResume" enctype="multipart/form-data">
+            <div class="row">
+
                 <div class="col-md-6 mb-3">
                     <label for="resume" class="form-label">Resume<span class="text-danger">*</span></label>
-                    <input type="file" class="form-control" id="resume" name="resume" required  accept=".pdf">
+                    <input type="file" class="form-control" id="resume" name="resume" required accept=".pdf">
                     <small class="text-danger">Only PDF will be accepted</small>
                 </div>
 
-                <div class="col-md-2 " style="margin-top: 36px;">
+                <div class="col-md-1 " style="margin-top: 36px;">
                     <button type="submit" class="btn btn-primary">Upload</button>
                 </div>
-            </form>
 
+                <div class="col-12 col-sm-8 col-md-6 col-lg-4 mt-4">
+                    <div class="card shadow-sm border-0">
+                        <div class="card-body">
+                            @if (!empty($resumeName) && !empty($resumePath))
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="me-4">
+                                        <h6 class="mb-0">
+                                            <i class="bi bi-file-earmark-pdf-fill text-danger me-1"></i>
+                                            <strong>{{ $resumeName }}</strong>
+                                        </h6>
+                                    </div>
+                                    <div class="">
+                                        <a href="{{ $resumePath }}" target="_blank"
+                                            class="btn btn-outline-primary btn-sm">
+                                            View
+                                        </a>
+                                    </div>
+                                </div>
+                            @else
+                                <p class="text-muted mb-0">No resume uploaded yet.</p>
+                            @endif
+                        </div>
+                    </div>
+                </div>
 
-            <div class="col-12 mb-3">
-                <label for="cover_letter" class="form-label">Cover Letter</label>
-                <textarea class="form-control" id="cover_letter" name="cover_letter" rows="5" placeholder="Write your cover letter here..."></textarea>
+        </form>
+
+                <form id="uploadCoverLetter">
+                    <div class="mb-3">
+                        <label for="cover_letter" class="form-label">Cover Letter</label>
+                        <textarea class="form-control" id="cover_letter" name="cover_letter" rows="5"
+                            placeholder="Write your cover letter here...">{{$candidate->cover_letter}}</textarea>
+                    </div>
+                    <button type="submit" class="btn btn-success">Upload Cover Letter</button>
+                </form>
             </div>
-        </div>
     </div>
 
     <!-- education -->
@@ -79,20 +155,24 @@
     <div class="my__education radius-16 p-30 bg-white" id="education-1">
         <div class="my__skillset">
             <ul class="skill__tags">
-                <li><span class="skill__item">HTML</span> <span><i class="fa-regular fa-xmark"></i></span>
+                <li><span class="skill__item">HTML</span> <span><i class="fa-regular fa-xmark"></i></span></li>
+        
+                <!-- Add Skill Input and Button (Initially Hidden) -->
+                <li class="add-skill-wrapper" style="display: none;">
+                    <input type="text" name="skill[]" placeholder="Enter skill" class="skill-input" multiple>
+                    <button class="add-skill-btn">Add Skill</button>
                 </li>
-                <li><span class="skill__item">C++</span> <span><i class="fa-regular fa-xmark"></i></span>
+                
+        
+                <!-- Plus Icon -->
+                <li>
+                    <span class="skill__item__add toggle-add-skill">
+                        <i class="fa-regular fa-plus"></i>
+                    </span>
                 </li>
-                <li><span class="skill__item">Wordpress</span> <span><i class="fa-regular fa-xmark"></i></span> </li>
-                <li><span class="skill__item">JQuery</span> <span><i class="fa-regular fa-xmark"></i></span> </li>
-                <li><span class="skill__item">Website Development</span> <span><i class="fa-regular fa-xmark"></i></span>
-                </li>
-                <li><span class="skill__item">Figma</span> <span><i class="fa-regular fa-xmark"></i></span> </li>
-                <li><span class="skill__item">CSS</span> <span><i class="fa-regular fa-xmark"></i></span>
-                </li>
-                <li><span class="skill__item__add"><i class="fa-regular fa-plus"></i></span></li>
             </ul>
         </div>
+        
         <div class="accordion" id="rts-accordion-2">
             <div class="accordion-item">
                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#c1"
@@ -219,61 +299,10 @@
         </div>
     </div>
     <!-- education end -->
-
-    <!-- Portfolio -->
-    {{-- <h6 class="fw-medium mt-30 mb-20">My Portfolio</h6>
-    <div class="my__education radius-16 p-30 bg-white" id="education-2">
-        <div class="my__portfolio">
-            <div class="row row-cols-lg-2 row-cols-xl-3 row-cols-xxl-4 g-30">
-                <div class="single__portfolio">
-                    <div class="delete__icon">
-                        <button type="button">
-                            <i class="far fa-trash-alt"></i>
-                        </button>
-                    </div>
-                    <figure class="portfolio__thumb">
-                        <img src="assets/img/dashboard/p-1.webp" alt="">
-                    </figure>
-                </div>
-                <div class="single__portfolio">
-                    <div class="delete__icon">
-                        <button type="button">
-                            <i class="far fa-trash-alt"></i>
-                        </button>
-                    </div>
-                    <figure class="portfolio__thumb">
-                        <img src="assets/img/dashboard/p-2.webp" alt="">
-                    </figure>
-                </div>
-                <div class="single__portfolio">
-                    <div class="delete__icon">
-                        <button type="button">
-                            <i class="far fa-trash-alt"></i>
-                        </button>
-                    </div>
-                    <figure class="portfolio__thumb">
-                        <img src="assets/img/dashboard/p-3.webp" alt="">
-                    </figure>
-                </div>
-                <div class="single__portfolio">
-                    <div class="delete__icon">
-                        <button type="button">
-                            <i class="far fa-trash-alt"></i>
-                        </button>
-                    </div>
-                    <figure class="portfolio__thumb">
-                        <img src="assets/img/dashboard/p-4.webp" alt="">
-                    </figure>
-                </div>
-            </div>
-            <div class="d-flex justify-content-start mt-30">
-                <a href="#" class="added__social__link">Add Portfolio</a>
-            </div>
-        </div>
-    </div> --}}
-    <!-- Portfolio end -->
 @endsection
 @section('script')
+
+    {{-- For Upload Resume --}}
     <script type="text/javascript">
         $('#uploadResume').on('submit', function(e) {
             e.preventDefault(); // prevent form from reloading
@@ -339,4 +368,78 @@
             });
         });
     </script>
+
+    {{-- For Upload Cover Letter --}}
+    <script type="text/javascript">
+        $('#uploadCoverLetter').on('submit', function(e) {
+            e.preventDefault(); // prevent form from reloading
+
+            var url = "{{ route('User.UploadCoverLetter') }}";
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: new FormData(this),
+                contentType: false,
+                cache: false,
+                processData: false,
+                dataType: 'json',
+                success: function(result) {
+                    if (result.status_code == 1) {
+                        Toastify({
+                            text: result.message,
+                            duration: 3000,
+                            gravity: "top",
+                            position: "right",
+                            className: "bg-success"
+                        }).showToast();
+
+                        setTimeout(function() {
+                            if (result.redirect_url) {
+                                window.location.href = result.redirect_url;
+                            } else {
+                                location.reload();
+                            }
+                        }, 750);
+
+                    } else if (result.status_code == 2) {
+                        Toastify({
+                            text: result.message,
+                            duration: 3000,
+                            gravity: "top",
+                            position: "right",
+                            className: "bg-warning"
+                        }).showToast();
+                    } else {
+                        Toastify({
+                            text: result.message,
+                            duration: 3000,
+                            gravity: "top",
+                            position: "right",
+                            className: "bg-danger"
+                        }).showToast();
+                    }
+                },
+                error: function(xhr) {
+                    Toastify({
+                        text: "Something went wrong!",
+                        duration: 3000,
+                        gravity: "top",
+                        position: "right",
+                        className: "bg-danger"
+                    }).showToast();
+                }
+            });
+        });
+    </script>
+    <script>
+        document.querySelector('.toggle-add-skill').addEventListener('click', function () {
+            const inputWrapper = document.querySelector('.add-skill-wrapper');
+            inputWrapper.style.display = inputWrapper.style.display === 'none' ? 'flex' : 'none';
+        });
+    </script>
+    
 @endsection

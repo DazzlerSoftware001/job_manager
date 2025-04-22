@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->string('resume')->nullable(); // assuming it's a file path
+            $table->string('cover_letter')->nullable();
             $table->string('skill')->nullable();
             $table->string('company')->nullable();
             $table->string('position')->nullable();

@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\CandidateProfile;
 use App\Models\JobApplication;
 use App\Models\UserProfile;
 use Illuminate\Http\Request;
@@ -170,14 +171,14 @@ class DashboardController extends Controller
             $profile->branch          = $request->input('branch');
             $profile->language        = json_encode($request->input('lang'));
             // $profile->experience      = $years . $months;
-            $profile->look_job     = $request->input('jobSearch');
-            $profile->description  = $request->input('description');
+            $profile->look_job    = $request->input('jobSearch');
+            $profile->description = $request->input('description');
             // $profile->social_links = json_encode($request->input('social_link'));
-            $profile->country      = $request->input('country');
-            $profile->state        = $request->input('state');
-            $profile->address      = $request->input('address');
-            $profile->postal_code  = $request->input('postalCode');
-            $profile->updated_at   = now(); // update timestamp
+            $profile->country     = $request->input('country');
+            $profile->state       = $request->input('state');
+            $profile->address     = $request->input('address');
+            $profile->postal_code = $request->input('postalCode');
+            $profile->updated_at  = now(); // update timestamp
 
             $profile->save();
 
@@ -191,14 +192,23 @@ class DashboardController extends Controller
     }
 
     // resume
-    public function resume() {
-        return view('User.UserDash.Resume');
+    public function resume()
+    {
+        $id = Auth::user()->id;
+
+        $candidate = CandidateProfile::where('user_id', $id)->first();
+
+        $resumeName = $candidate->resume ? basename($candidate->resume) : null;
+
+        $resumePath = $candidate->resume ? asset('user/assets/' . $candidate->resume) : null;
+
+        return view('User.UserDash.Resume', compact('resumeName', 'resumePath', 'candidate'));
     }
 
-    public function UploadResume(Request $request) {
-// 'max:2048',
+    public function UploadResume(Request $request)
+    {
         $rules = [
-            'resume' => ['required','mimes:pdf',
+            'resume' => ['required', 'mimes:pdf',
                 function ($attribute, $value, $fail) use ($request) {
                     if ($request->hasFile('resume')) {
                         $fileName = $request->file('resume')->getClientOriginalName();
@@ -209,40 +219,101 @@ class DashboardController extends Controller
                 },
             ],
         ];
-        
 
-        $valid = Validator::make($request->all(),$rules);
+        $valid = Validator::make($request->all(), $rules);
 
-        if(!$valid->fails())
-        {
+        $user = Auth::user()->only(['id', 'name']);
 
-            if ($request->hasFile('resume')) {
-                 // Check if the user already has a resume saved
-                // $user = auth()->user(); // or however you're fetching the user
-                // if ($user->resume) {
-                //     // Delete the old file from storage
-                //     Storage::disk('public')->delete($user->resume);
-                // }
+        if (! $valid->fails()) {
 
-                // Upload the new resume
-                $file = $request->file('resume');
-                $filename = time() . '_' . $file->getClientOriginalName();
-        // dd($filename);
+            // Try to find existing profile or create new one
+            $candidate = CandidateProfile::where('user_id', $user['id'])->first();
 
-                $path = $file->storeAs('resumes', $filename, 'public');
-
-                // Update user or relevant model with new file path
-                $user->resume = $path;
-                $user->save();
+            if (! $candidate) {
+                $candidate          = new CandidateProfile();
+                $candidate->user_id = $user['id'];
+            } else {
+                // Delete old resume if it exists
+                if ($candidate->resume && file_exists(public_path('user/assets/' . $candidate->resume))) {
+                    unlink(public_path('user/assets/' . $candidate->resume));
+                }
             }
 
+            if ($request->hasFile('resume')) {
+                $file     = $request->file('resume');
+                $filename = time() . '_' . preg_replace('/\s+/', '_', $user['name']) . '_Resume.pdf';
 
-        }else{
-            return response()->json(['status_code'=>0,'message'=>$valid->errors()->first()]);
+                $file->move(public_path('user/assets/resume/'), $filename);
+                $candidate->resume = 'resume/' . $filename;
+            }
+
+            $candidate->save();
+
+            return response()->json([
+                'status_code' => 1,
+                'message'     => 'Resume uploaded successfully',
+            ]);
+
+        } else {
+            return response()->json([
+                'status_code' => 0,
+                'message'     => $valid->errors()->first(),
+            ]);
         }
     }
-    // end resume
 
+    public function UploadCoverLetter(Request $request)
+    {
+        $request->validate([
+            'cover_letter' => 'required|string|max:5000', // you can adjust max length if needed
+        ]);
+
+        $user = Auth::user()->id;
+
+        // Find existing candidate profile or create new
+        $candidate = CandidateProfile::where('user_id', $user)->first();
+
+        if (! $candidate) {
+            $candidate          = new CandidateProfile();
+            $candidate->user_id = $user;
+        }
+
+        $candidate->cover_letter = $request->cover_letter;
+        $candidate->save();
+
+        return response()->json([
+            'status_code' => 1,
+            'message'     => 'Cover letter saved successfully.',
+        ]);
+    }
+
+    public function addSkill(Request $request)
+    {
+        $request->validate([
+            'skills'   => 'required|array',
+            'skills.*' => 'string|max:255',
+        ]);
+
+        $user = Auth::user()->id;
+
+        $candidate = CandidateProfile::where('user_id', $user)->first();
+
+        $existingSkills = $candidate->skill ?? []; // assuming skills is casted to array in model
+        $newSkills      = array_filter($request->skills);
+
+        // Merge & remove duplicates
+        $combinedSkills = array_unique(array_merge($existingSkills, $newSkills));
+
+        $user->skills = $combinedSkills;
+        $user->save();
+
+        return response()->json([
+            'status_code' => 1,
+            'message'     => 'Skills added successfully!',
+        ]);
+    }
+
+    // end resume
 
     public function ChangePassword()
     {
@@ -278,7 +349,5 @@ class DashboardController extends Controller
             return response()->json(['status_code' => 2, 'message' => $validator->errors()->first()]);
         }
     }
-
-    
 
 }

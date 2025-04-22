@@ -9,11 +9,12 @@ class CandidateProfile extends Model
 {
     use HasFactory;
 
-    protected $table = 'candidate_profiles';
+    protected $table = 'candidate_profile';
 
     protected $fillable = [
         'user_id',
         'resume',
+        'cover_letter',
         'skill',
         'company',
         'position',
