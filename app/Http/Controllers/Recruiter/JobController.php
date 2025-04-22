@@ -23,6 +23,7 @@ use App\Models\Recruiter;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Crypt;
+
 use Illuminate\Support\Facades\Auth;
 
 class JobController extends Controller
@@ -212,10 +213,13 @@ class JobController extends Controller
             2 => 'admin_verify',
             2 => 'status',
             3 => 'created_at',
-            4 => 'id',
+            4 => 'jobexpiry',
+            5 => 'id',
         );
 
-        $query = JobPost::query();
+        // $query = JobPost::query();
+        $query = JobPost::withCount('applications');
+
         // Count Data
 
         if (!empty($search)) {
@@ -256,6 +260,11 @@ class JobController extends Controller
 
 
             $dataArray[] = date('d-M-Y', strtotime($record->created_at));
+            $dataArray[] = '<span style="color: red;">' . date('d-M-Y', strtotime($record->jobexpiry)) . '</span>';
+            // $dataArray[] = '<span class="badge bg-warning">' . $record->applications_count . ' Applied</span>';
+            $dataArray[] = '<a href="' . route('Recruiter.JobApllicants', ['job_id' => Crypt::encrypt($record->id)]) . '" class="badge bg-warning text-decoration-none" style="cursor: pointer;">' . $record->applications_count . ' Applied</a>';
+
+
 
             $dataArray[] = '<div class="d-flex gap-2">
 
@@ -465,5 +474,21 @@ class JobController extends Controller
         }
         
 
+    }
+
+
+    public function JobApllicants($job_id)
+    {
+        try {
+            $decryptedId = Crypt::decrypt($job_id);
+        } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
+            abort(404, 'Invalid Job ID');
+        }
+
+        $job = JobPost::with(['applications.user'])->findOrFail($decryptedId);
+
+        $applicants = $job->applications->pluck('user');
+        // dd($applicants);
+        return view('recruiter.applicants.JobApllicants', compact('job', 'applicants'));
     }
 }
