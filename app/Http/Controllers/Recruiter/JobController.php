@@ -501,7 +501,7 @@ class JobController extends Controller
             abort(404, 'Invalid User ID');
         }
 
-        $user = UserProfile::findOrFail($decryptedId);
+        $user = UserProfile::with('candidateProfile')->find($decryptedId);
         // dd($user);
         return view('recruiter.applicants.ApllicantsDetails',compact('user'));
     }

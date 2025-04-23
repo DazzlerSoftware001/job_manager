@@ -21,7 +21,7 @@
                             <div class="row align-items-center">
                                 <!-- Profile Image -->
                                 <div class="col-md-2 text-center">
-                                    <img src="path_to_image.jpg" class="img-fluid rounded-circle" alt="Profile Picture" style="width: 100px; height: 100px; object-fit: cover;">
+                                    <img src="{{ $user->logo ? asset($user->logo) : url('user/assets/img/profile/default.png') }}" class="img-fluid rounded-circle" alt="Profile Picture" style="width: 100px; height: 100px; object-fit: cover;">
                                 </div>
 
                                 <!-- Name, Role, Location, Employment Type, Skills -->

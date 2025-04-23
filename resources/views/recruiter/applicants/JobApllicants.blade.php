@@ -26,7 +26,7 @@
                                             <div class="card-body">
                                                 <img src="{{ $user->logo ? asset($user->logo) : url('user/assets/img/profile/default.png') }}"
                                                      class="rounded-circle mb-3" width="80" height="80" alt="Profile">
-                                                <h5 class="card-title fw-bold mb-1">{{ $user->name }}</h5>
+                                                <h5 class="card-title fw-bold mb-1">{{ $user->name }} {{ $user->lname }}</h5>
                                                 <p class="text-muted mb-2">{{ $user->position ?? 'Not specified' }}</p>
                         
                                                 <div class="d-flex justify-content-center gap-3 text-muted small mb-3">
