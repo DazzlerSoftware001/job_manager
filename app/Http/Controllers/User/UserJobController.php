@@ -126,4 +126,9 @@ class UserJobController extends Controller
         return view('User.UserDash.ShortlistJob', compact('jobDetails'));
 
     }
+
+    public function GetSavedJob()
+    {
+        return view('User.UserDash.SavedJob');
+    }
 }

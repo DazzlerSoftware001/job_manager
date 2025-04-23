@@ -56,7 +56,7 @@
         </div>
     </div>
 
-    <div class="chart__and__notification gap-4 my-4">
+    <div class="my-4">
         <!-- profile view -->
         <div class="profile__view bg-white">
             <div class="d-flex flex-wrap gap-3 align-items-center justify-content-between">
@@ -81,7 +81,7 @@
         </div>
         <!-- profile view end -->
 
-        <!-- notification -->
+        {{-- <!-- notification -->
         <div class="notification__area bg-white">
         <h6 class="fw-medium mb-20">Recent Notification</h6>
         <div class="notification__list">
@@ -114,10 +114,10 @@
             </div>
         </div>
         </div>
-        <!-- notification end -->
+        <!-- notification end --> --}}
     </div>
 
-    <!-- Applied Jobs -->
+    {{-- <!-- Applied Jobs -->
     <div class="applied__jobs">
         <h6 class="fw-medium mb-30">Applications Overview</h6>
         <div class="row px-3 d-flex flex-column g-30">
@@ -238,7 +238,7 @@
             </div> 
             <!-- single job item end --> 
         </div>
-    </div>
+    </div> --}}
     
 @endsection
 @section('script')
