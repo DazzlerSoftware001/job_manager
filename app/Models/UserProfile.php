@@ -10,7 +10,7 @@ class UserProfile extends Model
 
     protected $table = 'users';
 
-    protected $fillable = ['id', 'user_type', 'user_details', 'name', 'lname', 'email', 'phone', 'address', 'logo', 'status', 'password', 'date_of_birth', 'gender', 'education_level', 'qualification', 'branch', 'language', 'experience', 'look_job', 'description', 'social_links', 'country', 'state','city', 'postal_code'];
+    protected $fillable = ['id', 'user_type', 'user_details', 'name', 'lname', 'email', 'phone', 'address', 'logo', 'status', 'password', 'date_of_birth', 'gender', 'education_level', 'qualification', 'branch', 'language', 'experience', 'look_job', 'description', 'social_links', 'country', 'state', 'city', 'postal_code'];
     public $timestamps  = false;
 
     public function jobApplications()
@@ -20,6 +20,7 @@ class UserProfile extends Model
 
     public function candidateProfile()
     {
-        return $this->hasOne(CandidateProfile::class);
+        return $this->hasOne(CandidateProfile::class, 'user_id');
     }
+
 }

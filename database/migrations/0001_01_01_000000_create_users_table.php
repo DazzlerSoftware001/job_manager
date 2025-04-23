@@ -40,6 +40,7 @@ return new class extends Migration
             $table->json('social_links')->nullable();
             $table->string('country')->nullable();
             $table->string('state')->nullable();
+            $table->string('city')->nullable();
             $table->integer('postal_code')->nullable();
             $table->rememberToken();
             $table->timestamps();

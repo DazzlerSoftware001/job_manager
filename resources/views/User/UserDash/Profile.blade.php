@@ -235,6 +235,12 @@
                             </select>
                         </div>
 
+                        <div class="rt-input-group">
+                            <label for="city">City</label>
+                            <input type="text" name="city" id="city" value="{{ $user->city }}"
+                                class="form-control" placeholder="Enter Your City" required>
+                        </div>
+
 
                         <div class="rt-input-group">
                             <label for="pr">Present Address</label>

@@ -163,6 +163,21 @@
     </div>
     </div>
 
+    <h6 class="fw-medium mt-30 mb-20">Current Job Type</h6>
+    <div class="bg-white mt-3 p-3 rounded shadow-sm">
+        <form action="" class="row" id="UploadDesignation">
+            <div class="col-6 col-sm-4">
+                <input type="text" class="form-control" placeholder="Type your Designation">
+            </div>
+            <div class="col-2 col-sm-1">
+                <button type="submit" class="btn btn-primary w-100">
+                    Submit
+                </button>
+            </div>
+        </form>
+    </div>
+
+
     <!-- education -->
     <h6 class="fw-medium mt-30 mb-20">Skill & Experience</h6>
     <div class="my__education radius-16 p-30 bg-white" id="education-1">
@@ -568,6 +583,73 @@
                     } else {
                         alert(response.message);
                     }
+                }
+            });
+        });
+    </script>
+
+    {{-- For Upload Designation --}}
+    <script type="text/javascript">
+        $('#UploadDesignation').on('submit', function(e) {
+            e.preventDefault(); // prevent form from reloading
+
+            var url = "{{ route('User.UploadDesignation') }}";
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: new FormData(this),
+                contentType: false,
+                cache: false,
+                processData: false,
+                dataType: 'json',
+                success: function(result) {
+                    if (result.status_code == 1) {
+                        Toastify({
+                            text: result.message,
+                            duration: 3000,
+                            gravity: "top",
+                            position: "right",
+                            className: "bg-success"
+                        }).showToast();
+
+                        setTimeout(function() {
+                            if (result.redirect_url) {
+                                window.location.href = result.redirect_url;
+                            } else {
+                                location.reload();
+                            }
+                        }, 750);
+
+                    } else if (result.status_code == 2) {
+                        Toastify({
+                            text: result.message,
+                            duration: 3000,
+                            gravity: "top",
+                            position: "right",
+                            className: "bg-warning"
+                        }).showToast();
+                    } else {
+                        Toastify({
+                            text: result.message,
+                            duration: 3000,
+                            gravity: "top",
+                            position: "right",
+                            className: "bg-danger"
+                        }).showToast();
+                    }
+                },
+                error: function(xhr) {
+                    Toastify({
+                        text: "Something went wrong!",
+                        duration: 3000,
+                        gravity: "top",
+                        position: "right",
+                        className: "bg-danger"
+                    }).showToast();
                 }
             });
         });

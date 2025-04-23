@@ -118,6 +118,7 @@ class DashboardController extends Controller
             'country'         => 'required',
             'address'         => 'required|string|min:10|max:255',
             'state'           => 'required',
+            'city'           => 'required',
             'postalCode'      => 'required',
         ];
 
@@ -176,6 +177,7 @@ class DashboardController extends Controller
             // $profile->social_links = json_encode($request->input('social_link'));
             $profile->country     = $request->input('country');
             $profile->state       = $request->input('state');
+            $profile->city       = $request->input('city');
             $profile->address     = $request->input('address');
             $profile->postal_code = $request->input('postalCode');
             $profile->updated_at  = now(); // update timestamp
@@ -367,6 +369,12 @@ class DashboardController extends Controller
         $candidate->save();
 
         return response()->json(['status_code' => 1, 'message' => 'Skill removed successfully.']);
+    }
+
+    public function uploadDesignation(Request $request) {
+        // $data = UserProfile::with('candidateProfile')->find(3)->toArray();
+        // dd($data);
+
     }
 
     // end resume
