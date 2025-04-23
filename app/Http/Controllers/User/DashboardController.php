@@ -86,7 +86,7 @@ class DashboardController extends Controller
 
             $imageName = time() . '.' . $request->image->extension();
             $request->image->move(public_path('user/assets/img/profile/'), $imageName);
-            $user->logo = 'profile/' . $imageName;
+            $user->logo = 'user/assets/img/profile/' . $imageName;
             $user->save();
             return response()->json(['status_code' => 1, 'message' => 'Image updated successfully', 'image' => $user->logo]);
         }
