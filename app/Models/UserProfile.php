@@ -23,4 +23,9 @@ class UserProfile extends Model
         return $this->hasOne(CandidateProfile::class, 'user_id');
     }
 
+    public function candidateEmployment()
+    {
+        return $this->hasMany(CandidateEmployment::class, 'user_id');
+    }
+
 }

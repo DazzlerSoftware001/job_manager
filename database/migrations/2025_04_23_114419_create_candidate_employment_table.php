@@ -11,17 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('candidate_profile', function (Blueprint $table) {
+        Schema::create('candidate_employment', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->string('resume')->nullable(); // assuming it's a file path
-            $table->string('cover_letter')->nullable();
-            $table->string('skill')->nullable();
-            $table->string('position')->nullable();
+            $table->string('company_name'); // Company name
+            $table->string('position'); // Job position
+            $table->string('experience'); // Experience
+            $table->text('description'); 
             $table->timestamps();
 
             // Foreign key constraint
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('userprofiles')->onDelete('cascade');
         });
     }
 
@@ -30,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('candidate_profile');
+        Schema::dropIfExists('candidate_employment');
     }
 };

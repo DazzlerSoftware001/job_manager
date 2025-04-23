@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use App\Models\CandidateEmployment;
 
 class DashboardController extends Controller
 {
@@ -118,7 +119,7 @@ class DashboardController extends Controller
             'country'         => 'required',
             'address'         => 'required|string|min:10|max:255',
             'state'           => 'required',
-            'city'           => 'required',
+            'city'            => 'required',
             'postalCode'      => 'required',
         ];
 
@@ -177,7 +178,7 @@ class DashboardController extends Controller
             // $profile->social_links = json_encode($request->input('social_link'));
             $profile->country     = $request->input('country');
             $profile->state       = $request->input('state');
-            $profile->city       = $request->input('city');
+            $profile->city        = $request->input('city');
             $profile->address     = $request->input('address');
             $profile->postal_code = $request->input('postalCode');
             $profile->updated_at  = now(); // update timestamp
@@ -371,10 +372,63 @@ class DashboardController extends Controller
         return response()->json(['status_code' => 1, 'message' => 'Skill removed successfully.']);
     }
 
-    public function uploadDesignation(Request $request) {
-        // $data = UserProfile::with('candidateProfile')->find(3)->toArray();
-        // dd($data);
+    public function uploadDesignation(Request $request)
+    {
+        $rules = [
+            'designation' => 'required|string|max:255',
+        ];
 
+        $validator = Validator::make($request->all(), $rules);
+
+        if (! $validator->fails()) {
+
+            $profile = UserProfile::with('candidateProfile')->where('id', Auth::id())->first();
+
+            if (! $profile) {
+                return response()->json(['status_code' => 0, 'message' => 'Profile not found']);
+            }
+
+            // If candidateProfile exists, update it
+            if ($profile->candidateProfile) {
+                $candidateProfile = $profile->candidateProfile;
+            } else {
+                // If not exists, create a new instance
+                $candidateProfile          = new CandidateProfile();
+                $candidateProfile->user_id = $profile->id;
+            }
+
+            $candidateProfile->position   = $request->input('designation');
+            $candidateProfile->updated_at = now(); // only needed if timestamps are off
+            $candidateProfile->save();
+
+            return response()->json(['status_code' => 1, 'message' => 'Designation updated successfully']);
+
+        } else {
+            return response()->json(['status_code' => 2, 'message' => $validator->errors()->first()]);
+        }
+    }
+
+    public function candidateExp(Request $request)
+    {
+        $request->validate([
+            'company'    => 'required|string|max:255',
+            'position'   => 'required|string|max:255',
+            'experience' => 'required|string|max:255',
+            'desc'       => 'nullable|string',
+        ]);
+
+        CandidateEmployment::create([
+            'user_id'      => Auth::user()->id, // or your custom user_profile_id if needed
+            'company_name' => $request->company,
+            'position'     => $request->position,
+            'experience'   => $request->experience,
+            'description'  => $request->desc,
+        ]);
+
+        return response()->json([
+            'status_code'  => 1,
+            'message'      => 'Experience saved successfully!',
+        ]);
     }
 
     // end resume

@@ -165,9 +165,10 @@
 
     <h6 class="fw-medium mt-30 mb-20">Current Job Type</h6>
     <div class="bg-white mt-3 p-3 rounded shadow-sm">
-        <form action="" class="row" id="UploadDesignation">
+        <form action="javasript:void(0)" class="row" id="UploadDesignation">
             <div class="col-6 col-sm-4">
-                <input type="text" class="form-control" placeholder="Type your Designation">
+                <input type="text" name="designation" class="form-control" value="{{ $candidate->position }}"
+                    placeholder="Type your Designation">
             </div>
             <div class="col-2 col-sm-1">
                 <button type="submit" class="btn btn-primary w-100">
@@ -238,37 +239,52 @@
                     Software Engineer
                 </button>
                 <div id="c1" class="accordion-collapse collapse" data-bs-parent="#rts-accordion-2">
-                    <div class="accordion-body p-0 mt-3 mb-20">
-                        <div class="info__field">
-                            <div class="row row-cols-sm-2 row-cols-1">
-                                <div class="rt-input-group">
-                                    <label for="title-4">Title</label>
-                                    <input type="text" id="title-4" placeholder="Software Engineer" required>
+                    <form action="javascript:void(0)" id="CandidateExp">
+                        <div class="accordion-body p-0 mt-3 mb-20">
+                            <div class="info__field">
+                                <div class="row row-cols-sm-2 row-cols-1">
+                                    <div class="rt-input-group">
+                                        <label for="cm-4">Company</label>
+                                        <input type="text" id="cm-4" name="company" placeholder="Company Name"
+                                            required>
+                                    </div>
+                                    <div class="rt-input-group">
+                                        <label for="title-4">Postion</label>
+                                        <input type="text" id="title-4" name="position"
+                                            placeholder="Software Engineer" required>
+                                    </div>
+                                </div>
+                                <div class="row row-cols-sm-2 row-cols-1">
+                                    <div class="rt-input-group">
+                                        <label for="de-4">Experience</label>
+                                        <input type="number" class="no-spinner" name="exp_years" id="de-4"
+                                            placeholder="Experience in year" required>
+                                    </div>
+                                    <div class="rt-input-group">
+                                        <label for="sd-4">Month</label>
+                                        <select name="exp_months" id="experience_months" class="form-select">
+                                            <option value="">Select Months</option>
+                                            @for ($i = 1; $i <= 11; $i++)
+                                                <option value="{{ $i }}">
+                                                    {{ $i }} Month{{ $i > 1 ? 's' : '' }}
+                                                </option>
+                                            @endfor
+                                        </select>
+                                    </div>
                                 </div>
                                 <div class="rt-input-group">
-                                    <label for="cm-4">Company</label>
-                                    <input type="text" id="cm-4" placeholder="Reactheme" required>
+                                    <label for="desc-4">Description</label>
+                                    <textarea name="desc" id="desc-4" cols="30" rows="5" placeholder="Description"></textarea>
                                 </div>
                             </div>
-                            <div class="row row-cols-sm-2 row-cols-1">
-                                <div class="rt-input-group">
-                                    <label for="de-4">end date</label>
-                                    <input type="text" id="de-4" placeholder="DD/ MM/ YY" required>
-                                </div>
-                                <div class="rt-input-group">
-                                    <label for="sd-4">Start Date</label>
-                                    <input type="text" id="sd-4" placeholder="DD/MM/YY" required>
-                                </div>
+                            <div class="d-flex justify-content-end mt-30">
                             </div>
-                            <div class="rt-input-group">
-                                <label for="desc-4">Description</label>
-                                <textarea name="desc" id="desc-4" cols="30" rows="5" placeholder="Description"></textarea>
+                            <div class="d-flex justify-content-end mt-30">
+                                <button type="submit" class="btn">Add Experience</button>
+                                <a href="#" class="removeExperience added__social__link">Remove Experience</a>
                             </div>
                         </div>
-                        <div class="d-flex justify-content-end mt-30">
-                            <a href="#" class="added__social__link">Remove EXperience</a>
-                        </div>
-                    </div>
+                    </form>
                 </div>
             </div>
 
@@ -306,7 +322,8 @@
                             </div>
                         </div>
                         <div class="d-flex justify-content-end mt-30">
-                            <a href="#" class="added__social__link">Remove EXperience</a>
+                            <button type="submit" class="btn">Add Experience</button>
+                            <a href="#" class="removeExperience added__social__link">Remove Experience</a>
                         </div>
                     </div>
                 </div>
@@ -351,8 +368,11 @@
                     </div>
                 </div>
             </div>
+            {{-- <div class="d-flex justify-content-start">
+                <a href="#" class="added__social__link">Add Experience</a>
+            </div> --}}
             <div class="d-flex justify-content-start">
-                <a href="#" class="added__social__link">Add Skill</a>
+                <a href="#" id="addExperienceBtn" class="added__social__link">Add Experience</a>
             </div>
         </div>
     </div>
@@ -565,6 +585,7 @@
         });
     </script>
 
+    {{-- For Remove Skill --}}
     <script>
         $('#skillList').on('click', '.remove-skill', function() {
             let skill = $(this).data('skill');
@@ -624,6 +645,147 @@
                             }
                         }, 750);
 
+                    } else if (result.status_code == 2) {
+                        Toastify({
+                            text: result.message,
+                            duration: 3000,
+                            gravity: "top",
+                            position: "right",
+                            className: "bg-warning"
+                        }).showToast();
+                    } else {
+                        Toastify({
+                            text: result.message,
+                            duration: 3000,
+                            gravity: "top",
+                            position: "right",
+                            className: "bg-danger"
+                        }).showToast();
+                    }
+                },
+                error: function(xhr) {
+                    Toastify({
+                        text: "Something went wrong!",
+                        duration: 3000,
+                        gravity: "top",
+                        position: "right",
+                        className: "bg-danger"
+                    }).showToast();
+                }
+            });
+        });
+    </script>
+
+    <script>
+        let experienceCount = 1;
+
+        document.getElementById("addExperienceBtn").addEventListener("click", function(e) {
+            e.preventDefault();
+
+            const uniqueId = `c${experienceCount}`;
+            const html = `
+        <div class="accordion-item">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#${uniqueId}"
+                aria-expanded="false" aria-controls="${uniqueId}">
+                Wordpress Developer
+            </button>
+            <div id="${uniqueId}" class="accordion-collapse collapse">
+                <div class="accordion-body p-0 mt-3 mb-20">
+                    <div class="info__field">
+                        <div class="row row-cols-sm-2 row-cols-1">
+                            <div class="rt-input-group">
+                                <label for="title-${experienceCount}">Title</label>
+                                <input type="text" id="title-${experienceCount}" placeholder="Software Engineer" required>
+                            </div>
+                            <div class="rt-input-group">
+                                <label for="cm-${experienceCount}">Company</label>
+                                <input type="text" id="cm-${experienceCount}" placeholder="Reactheme" required>
+                            </div>
+                        </div>
+                        <div class="row row-cols-sm-2 row-cols-1">
+                            <div class="rt-input-group">
+                                <label for="de-${experienceCount}">End Date</label>
+                                <input type="text" id="de-${experienceCount}" placeholder="DD/MM/YY" required>
+                            </div>
+                            <div class="rt-input-group">
+                                <label for="sd-${experienceCount}">Start Date</label>
+                                <input type="text" id="sd-${experienceCount}" placeholder="DD/MM/YY" required>
+                            </div>
+                        </div>
+                        <div class="rt-input-group">
+                            <label for="desc-${experienceCount}">Description</label>
+                            <textarea name="desc" id="desc-${experienceCount}" cols="30" rows="5" placeholder="Description"></textarea>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-end mt-30">
+                        <a href="#" class="removeExperience added__social__link">Remove Experience</a>
+                    </div>
+                </div>
+            </div>
+        </div>`;
+
+            document.getElementById("rts-accordion-2").insertAdjacentHTML('beforeend', html);
+            experienceCount++;
+        });
+
+        // Delegate remove functionality
+        document.addEventListener("click", function(e) {
+            if (e.target.classList.contains("removeExperience")) {
+                e.preventDefault();
+                e.target.closest(".accordion-item").remove();
+            }
+        });
+    </script>
+
+    {{-- For Submit Candidate Experience --}}
+    <script type="text/javascript">
+        $('#CandidateExp').on('submit', function(e) {
+            e.preventDefault();
+
+            let form = this;
+            let url = "{{ route('User.CandidateExp') }}";
+
+            // Create FormData object
+            let formData = new FormData(form);
+
+            // Combine exp_years and exp_months into one string like "2 years 5 months"
+            let years = formData.get('exp_years') || 0;
+            let months = formData.get('exp_months') || 0;
+            let experience = `${years} years ${months} months`;
+
+            // Append combined field and remove individual ones
+            formData.delete('exp_years');
+            formData.delete('exp_months');
+            formData.append('experience', experience);
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: formData,
+                contentType: false,
+                cache: false,
+                processData: false,
+                dataType: 'json',
+                success: function(result) {
+                    if (result.status_code == 1) {
+                        Toastify({
+                            text: result.message,
+                            duration: 3000,
+                            gravity: "top",
+                            position: "right",
+                            className: "bg-success"
+                        }).showToast();
+
+                        setTimeout(function() {
+                            if (result.redirect_url) {
+                                window.location.href = result.redirect_url;
+                            } else {
+                                location.reload();
+                            }
+                        }, 750);
                     } else if (result.status_code == 2) {
                         Toastify({
                             text: result.message,
