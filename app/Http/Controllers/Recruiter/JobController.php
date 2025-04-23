@@ -19,6 +19,7 @@ use App\Models\JobIntType;
 use App\Models\JobEducation;
 use App\Models\JobPost;
 use App\Models\Recruiter;
+use App\Models\UserProfile;
 
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -490,5 +491,18 @@ class JobController extends Controller
         $applicants = $job->applications->pluck('user');
         // dd($applicants);
         return view('recruiter.applicants.JobApllicants', compact('job', 'applicants'));
+    }
+
+    public function ApllicantsDetails($userId)
+    {
+        try {
+            $decryptedId = Crypt::decrypt($userId);
+        } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
+            abort(404, 'Invalid User ID');
+        }
+
+        $user = UserProfile::findOrFail($decryptedId);
+        // dd($user);
+        return view('recruiter.applicants.ApllicantsDetails',compact('user'));
     }
 }
