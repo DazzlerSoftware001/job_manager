@@ -3,52 +3,65 @@
     Resume
 @endsection
 @section('main-container')
+    <style>
+        .add-skill-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: fadeIn 0.3s ease-in-out;
+        }
 
-<style>
-    .add-skill-wrapper {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        animation: fadeIn 0.3s ease-in-out;
-    }
+        .skill-input {
+            padding: 10px 15px;
+            border: 2px solid #4f46e5;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(79, 70, 229, 0.1);
+        }
 
-    .skill-input {
-        padding: 10px 15px;
-        border: 2px solid #4f46e5;
-        border-radius: 8px;
-        font-size: 14px;
-        outline: none;
-        transition: all 0.3s ease;
-        box-shadow: 0 2px 8px rgba(79, 70, 229, 0.1);
-    }
+        .skill-input:focus {
+            border-color: #6366f1;
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2);
+        }
 
-    .skill-input:focus {
-        border-color: #6366f1;
-        box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2);
-    }
+        .add-skill-btn {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #4f46e5, #6366f1);
+            color: white;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
 
-    .add-skill-btn {
-        padding: 10px 20px;
-        background: linear-gradient(135deg, #4f46e5, #6366f1);
-        color: white;
-        font-weight: bold;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: background 0.3s ease, transform 0.2s ease;
-    }
+        .add-skill-btn:hover {
+            background: linear-gradient(135deg, #4338ca, #4f46e5);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+        }
 
-    .add-skill-btn:hover {
-        background: linear-gradient(135deg, #4338ca, #4f46e5);
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
-    }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
 
-    @keyframes fadeIn {
-        from { opacity: 0; transform: scale(0.95); }
-        to { opacity: 1; transform: scale(1); }
-    }
-</style>
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .skill__item {
+            background-color: #e0e0e0;
+            padding: 4px 8px;
+            border-radius: 6px;
+            margin-right: 8px;
+        }
+    </style>
 
     <div class="my__profile__tab radius-16 bg-white">
         {{-- <nav>
@@ -139,31 +152,61 @@
 
         </form>
 
-                <form id="uploadCoverLetter">
-                    <div class="mb-3">
-                        <label for="cover_letter" class="form-label">Cover Letter</label>
-                        <textarea class="form-control" id="cover_letter" name="cover_letter" rows="5"
-                            placeholder="Write your cover letter here...">{{$candidate->cover_letter}}</textarea>
-                    </div>
-                    <button type="submit" class="btn btn-success">Upload Cover Letter</button>
-                </form>
+        <form id="uploadCoverLetter">
+            <div class="mb-3">
+                <label for="cover_letter" class="form-label">Cover Letter</label>
+                <textarea class="form-control" id="cover_letter" name="cover_letter" rows="5"
+                    placeholder="Write your cover letter here...">{{ $candidate->cover_letter }}</textarea>
             </div>
+            <button type="submit" class="btn btn-success">Upload Cover Letter</button>
+        </form>
+    </div>
     </div>
 
     <!-- education -->
     <h6 class="fw-medium mt-30 mb-20">Skill & Experience</h6>
     <div class="my__education radius-16 p-30 bg-white" id="education-1">
         <div class="my__skillset">
-            <ul class="skill__tags">
-                <li><span class="skill__item">HTML</span> <span><i class="fa-regular fa-xmark"></i></span></li>
-        
+            <ul class="skill__tags" id="skillList">
+                @php
+                    $skills = is_string($candidate->skill) ? json_decode($candidate->skill, true) : $candidate->skill;
+                @endphp
+
+                @if (!empty($skills) && is_array($skills))
+                    @foreach ($skills as $skill)
+                        <li>
+                            <span class="skill__item">{{ $skill }}</span>
+                            <span class="remove-skill cursor-pointer text-red-500" data-skill="{{ $skill }}">
+                                <i class="fa-regular fa-xmark"></i>
+                            </span>
+                        </li>
+                    @endforeach
+                @else
+                    <li>No skills added yet.</li>
+                @endif
+
+
+                {{-- 
+
+                <li class="flex items-center gap-2 mb-2">
+                    <span class="skill__item px-2 py-1 bg-gray-200 rounded"></span>
+                    <span class="remove-skill text-red-500 cursor-pointer" data-skill="{{ $skill }}">
+                        <i class="fa-regular fa-xmark"></i>
+                    </span>
+                </li> --}}
+
+
+
                 <!-- Add Skill Input and Button (Initially Hidden) -->
-                <li class="add-skill-wrapper" style="display: none;">
-                    <input type="text" name="skill[]" placeholder="Enter skill" class="skill-input" multiple>
-                    <button class="add-skill-btn">Add Skill</button>
-                </li>
-                
-        
+                <form action="javascript:void(0)" method="POST" id="uploadSkill">
+                    <li class="add-skill-wrapper" style="display: none;">
+                        {{-- <input type="text" name="skill[]" placeholder="Enter skill" class="skill-input" multiple> --}}
+                        <input type="text" name="skills[]" placeholder="Enter skill" class="skill-input" multiple>
+                        <button class="add-skill-btn">Add Skill</button>
+                    </li>
+                </form>
+
+
                 <!-- Plus Icon -->
                 <li>
                     <span class="skill__item__add toggle-add-skill">
@@ -172,7 +215,7 @@
                 </li>
             </ul>
         </div>
-        
+
         <div class="accordion" id="rts-accordion-2">
             <div class="accordion-item">
                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#c1"
@@ -301,7 +344,6 @@
     <!-- education end -->
 @endsection
 @section('script')
-
     {{-- For Upload Resume --}}
     <script type="text/javascript">
         $('#uploadResume').on('submit', function(e) {
@@ -435,11 +477,99 @@
             });
         });
     </script>
+
+    {{-- For Add Skill --}}
     <script>
-        document.querySelector('.toggle-add-skill').addEventListener('click', function () {
+        document.querySelector('.toggle-add-skill').addEventListener('click', function() {
             const inputWrapper = document.querySelector('.add-skill-wrapper');
             inputWrapper.style.display = inputWrapper.style.display === 'none' ? 'flex' : 'none';
         });
+
+        $('#uploadSkill').on('submit', function(e) {
+            e.preventDefault(); // prevent form from reloading
+
+            var url = "{{ route('User.AddSkill') }}";
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: new FormData(this),
+                contentType: false,
+                cache: false,
+                processData: false,
+                dataType: 'json',
+                success: function(result) {
+                    if (result.status_code == 1) {
+                        Toastify({
+                            text: result.message,
+                            duration: 3000,
+                            gravity: "top",
+                            position: "right",
+                            className: "bg-success"
+                        }).showToast();
+
+                        setTimeout(function() {
+                            if (result.redirect_url) {
+                                window.location.href = result.redirect_url;
+                            } else {
+                                location.reload();
+                            }
+                        }, 750);
+
+                    } else if (result.status_code == 2) {
+                        Toastify({
+                            text: result.message,
+                            duration: 3000,
+                            gravity: "top",
+                            position: "right",
+                            className: "bg-warning"
+                        }).showToast();
+                    } else {
+                        Toastify({
+                            text: result.message,
+                            duration: 3000,
+                            gravity: "top",
+                            position: "right",
+                            className: "bg-danger"
+                        }).showToast();
+                    }
+                },
+                error: function(xhr) {
+                    Toastify({
+                        text: "Something went wrong!",
+                        duration: 3000,
+                        gravity: "top",
+                        position: "right",
+                        className: "bg-danger"
+                    }).showToast();
+                }
+            });
+        });
     </script>
-    
+
+    <script>
+        $('#skillList').on('click', '.remove-skill', function() {
+            let skill = $(this).data('skill');
+            let listItem = $(this).closest('li');
+
+            $.ajax({
+                url: "{{ route('User.RemoveSkill') }}",
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    skill: skill
+                },
+                success: function(response) {
+                    if (response.status_code == 1) {
+                        listItem.remove(); // instantly remove from UI
+                    } else {
+                        alert(response.message);
+                    }
+                }
+            });
+        });
+    </script>
 @endsection

@@ -294,23 +294,79 @@ class DashboardController extends Controller
             'skills.*' => 'string|max:255',
         ]);
 
-        $user = Auth::user()->id;
+        $userId    = Auth::id();
+        $candidate = CandidateProfile::where('user_id', $userId)->first();
 
-        $candidate = CandidateProfile::where('user_id', $user)->first();
+        if (! $candidate) {
+            return response()->json([
+                'status_code' => 0,
+                'message'     => 'Candidate profile not found.',
+            ]);
+        }
 
-        $existingSkills = $candidate->skill ?? []; // assuming skills is casted to array in model
+        // Normalize existing skills to array
+        $candidate->skill = is_array($candidate->skill)
+        ? $candidate->skill
+        : json_decode($candidate->skill, true);
+
+        // Fallback for edge case where json_decode returns null
+        if (! is_array($candidate->skill)) {
+            $candidate->skill = [$candidate->skill];
+        }
+
+        // Check for duplicate skills
         $newSkills      = array_filter($request->skills);
+        $existingSkills = array_intersect($newSkills, $candidate->skill);
 
-        // Merge & remove duplicates
-        $combinedSkills = array_unique(array_merge($existingSkills, $newSkills));
+        if ($existingSkills) {
+            return response()->json([
+                'status_code' => 0,
+                'message'     => 'Skill Already Exist',
+            ]);
+        }
 
-        $user->skills = $combinedSkills;
-        $user->save();
+        // Merge new skills with existing ones while ensuring no duplicates
+        $combinedSkills = array_unique(array_merge($candidate->skill, $newSkills));
+
+        $candidate->skill = $combinedSkills;
+        $candidate->save();
 
         return response()->json([
             'status_code' => 1,
             'message'     => 'Skills added successfully!',
         ]);
+    }
+
+    public function removeSkill(Request $request)
+    {
+        $request->validate([
+            'skill' => 'required|string',
+        ]);
+
+        $userId    = Auth::id();
+        $candidate = CandidateProfile::where('user_id', $userId)->first();
+
+        if (! $candidate) {
+            return response()->json(['status_code' => 0, 'message' => 'Candidate not found.']);
+        }
+
+        // Decode skill if stored as JSON string
+        $skills = is_array($candidate->skill)
+        ? $candidate->skill
+        : json_decode($candidate->skill, true);
+
+        // Fallback if still not array
+        if (! is_array($skills)) {
+            $skills = [];
+        }
+
+        // Remove the skill
+        $updatedSkills = array_filter($skills, fn($item) => $item !== $request->skill);
+
+        $candidate->skill = array_values($updatedSkills); // reindex
+        $candidate->save();
+
+        return response()->json(['status_code' => 1, 'message' => 'Skill removed successfully.']);
     }
 
     // end resume
