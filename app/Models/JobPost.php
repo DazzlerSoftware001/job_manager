@@ -49,6 +49,10 @@ class Jobpost extends Model
     {
         return $this->hasMany(JobApplication::class, 'job_id');
     }
+    public function saveJob()
+    {
+        return $this->hasMany(SaveJob::class, 'job_id');
+    }
 
     
 }

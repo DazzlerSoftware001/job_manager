@@ -15,10 +15,8 @@ class CandidateProfile extends Model
         'resume',
         'cover_letter',
         'skill',
-        'company',
         'position',
-        'experience',
-        'description',
+        'view_profile',
     ];
 
     public function user()

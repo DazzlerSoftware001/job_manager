@@ -155,8 +155,14 @@
         <form id="uploadCoverLetter">
             <div class="mb-3">
                 <label for="cover_letter" class="form-label">Cover Letter</label>
-                <textarea class="form-control" id="cover_letter" name="cover_letter" rows="5"
-                    placeholder="Write your cover letter here...">{{ $candidate->cover_letter }}</textarea>
+
+                @if ($candidate && $candidate->cover_letter)
+                    <textarea class="form-control" id="cover_letter" name="cover_letter" rows="5"
+                        placeholder="Write your cover letter here...">{{ $candidate->cover_letter }}</textarea>
+                @else
+                    <textarea class="form-control" id="cover_letter" name="cover_letter" rows="5"
+                        placeholder="Write your cover letter here..."></textarea>
+                @endif
             </div>
             <button type="submit" class="btn btn-success">Upload Cover Letter</button>
         </form>
@@ -167,8 +173,12 @@
     <div class="bg-white mt-3 p-3 rounded shadow-sm">
         <form action="javasript:void(0)" class="row" id="UploadDesignation">
             <div class="col-6 col-sm-4">
-                <input type="text" name="designation" class="form-control" value="{{ $candidate->position }}"
-                    placeholder="Type your Designation">
+                @if ($candidate && $candidate->position)
+                    <input type="text" name="designation" class="form-control" value="{{ $candidate->position }}"
+                        placeholder="Type your Designation">
+                @else
+                    <input type="text" name="designation" class="form-control" placeholder="Type your Designation">
+                @endif
             </div>
             <div class="col-2 col-sm-1">
                 <button type="submit" class="btn btn-primary w-100">
@@ -179,13 +189,16 @@
     </div>
 
 
-    <!-- education -->
+    <!-- Skill & Experience -->
     <h6 class="fw-medium mt-30 mb-20">Skill & Experience</h6>
     <div class="my__education radius-16 p-30 bg-white" id="education-1">
         <div class="my__skillset">
             <ul class="skill__tags" id="skillList">
                 @php
-                    $skills = is_string($candidate->skill) ? json_decode($candidate->skill, true) : $candidate->skill;
+                    $skills =
+                        $candidate && is_string($candidate->skill)
+                            ? json_decode($candidate->skill, true)
+                            : $candidate->skill ?? [];
                 @endphp
 
                 @if (!empty($skills) && is_array($skills))
@@ -201,27 +214,13 @@
                     <li>No skills added yet.</li>
                 @endif
 
-
-                {{-- 
-
-                <li class="flex items-center gap-2 mb-2">
-                    <span class="skill__item px-2 py-1 bg-gray-200 rounded"></span>
-                    <span class="remove-skill text-red-500 cursor-pointer" data-skill="{{ $skill }}">
-                        <i class="fa-regular fa-xmark"></i>
-                    </span>
-                </li> --}}
-
-
-
                 <!-- Add Skill Input and Button (Initially Hidden) -->
                 <form action="javascript:void(0)" method="POST" id="uploadSkill">
                     <li class="add-skill-wrapper" style="display: none;">
-                        {{-- <input type="text" name="skill[]" placeholder="Enter skill" class="skill-input" multiple> --}}
                         <input type="text" name="skills[]" placeholder="Enter skill" class="skill-input" multiple>
                         <button class="add-skill-btn">Add Skill</button>
                     </li>
                 </form>
-
 
                 <!-- Plus Icon -->
                 <li>
@@ -245,36 +244,74 @@
                                 <div class="row row-cols-sm-2 row-cols-1">
                                     <div class="rt-input-group">
                                         <label for="cm-4">Company</label>
-                                        <input type="text" id="cm-4" name="company" placeholder="Company Name"
-                                            required>
+                                        @if ($can_exp && $can_exp->company_name)
+                                            <input type="text" id="cm-4" name="company"
+                                                placeholder="Company Name" value="{{ $can_exp->company_name }}" required>
+                                        @else
+                                            <input type="text" id="cm-4" name="company"
+                                                placeholder="Company Name" required>
+                                        @endif
                                     </div>
                                     <div class="rt-input-group">
                                         <label for="title-4">Postion</label>
-                                        <input type="text" id="title-4" name="position"
-                                            placeholder="Software Engineer" required>
+
+                                        @if ($can_exp && $can_exp->position)
+                                            <input type="text" id="title-4" name="position"
+                                                placeholder="Software Engineer" value="{{ $can_exp->position }}" required>
+                                        @else
+                                            <input type="text" id="title-4" name="position"
+                                                placeholder="Software Engineer" required>
+                                        @endif
                                     </div>
                                 </div>
+                                @php
+                                    // Initialize default values
+                                    $years = null;
+                                    $months = null;
+
+                                    // Check if $candidate exists and has experience
+                                    if ($can_exp && $can_exp->experience) {
+                                        $experience = $can_exp->experience;
+
+                                        // Check if experience has the format 'x years y months'
+                                        if (preg_match('/(\d+)\s*years?\s*(\d+)\s*months?/', $experience, $matches)) {
+                                            $years = $matches[1]; // Get the years part
+                                            $months = $matches[2]; // Get the months part
+                                        } elseif (preg_match('/(\d+)\s*years?/', $experience, $matches)) {
+                                            $years = $matches[1]; // Only years
+                                        } elseif (preg_match('/(\d+)\s*months?/', $experience, $matches)) {
+                                            $months = $matches[1]; // Only months
+                                        }
+                                    }
+                                @endphp
+
                                 <div class="row row-cols-sm-2 row-cols-1">
                                     <div class="rt-input-group">
                                         <label for="de-4">Experience</label>
                                         <input type="number" class="no-spinner" name="exp_years" id="de-4"
-                                            placeholder="Experience in year" required>
+                                            value="{{ old('exp_years', $years) ?? '' }}" placeholder="Experience in years"
+                                            required>
                                     </div>
                                     <div class="rt-input-group">
                                         <label for="sd-4">Month</label>
                                         <select name="exp_months" id="experience_months" class="form-select">
                                             <option value="">Select Months</option>
-                                            @for ($i = 1; $i <= 11; $i++)
-                                                <option value="{{ $i }}">
+                                            @for ($i = 1; $i <= 12; $i++)
+                                                <option value="{{ $i }}" {{ $months == $i ? 'selected' : '' }}>
                                                     {{ $i }} Month{{ $i > 1 ? 's' : '' }}
                                                 </option>
                                             @endfor
                                         </select>
                                     </div>
                                 </div>
+
                                 <div class="rt-input-group">
                                     <label for="desc-4">Description</label>
-                                    <textarea name="desc" id="desc-4" cols="30" rows="5" placeholder="Description"></textarea>
+                                    @if ($can_exp && $can_exp->position)
+                                        <textarea name="desc" id="desc-4" cols="30" rows="5" placeholder="Description">{{ $can_exp->description }}</textarea>
+                                    @else
+                                        <textarea name="desc" id="desc-4" cols="30" rows="5" placeholder="Description"></textarea>
+                                    @endif
                                 </div>
                             </div>
                             <div class="d-flex justify-content-end mt-30">
@@ -287,97 +324,62 @@
                     </form>
                 </div>
             </div>
-
-            <div class="accordion-item">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#c2"
-                    aria-expanded="false" aria-controls="c2">
-                    Django Developer
-                </button>
-                <div id="c2" class="accordion-collapse collapse" data-bs-parent="#rts-accordion-2">
-                    <div class="accordion-body p-0 mt-3 mb-20">
-                        <div class="info__field">
-                            <div class="row row-cols-sm-2 row-cols-1">
-                                <div class="rt-input-group">
-                                    <label for="title-5">Title</label>
-                                    <input type="text" id="title-5" placeholder="Software Engineer" required>
-                                </div>
-                                <div class="rt-input-group">
-                                    <label for="cm-5">Company</label>
-                                    <input type="text" id="cm-5" placeholder="Reactheme" required>
-                                </div>
-                            </div>
-                            <div class="row row-cols-sm-2 row-cols-1">
-                                <div class="rt-input-group">
-                                    <label for="de-5">end date</label>
-                                    <input type="text" id="de-5" placeholder="DD/ MM/ YY" required>
-                                </div>
-                                <div class="rt-input-group">
-                                    <label for="sd-5">Start Date</label>
-                                    <input type="text" id="sd-5" placeholder="DD/MM/YY" required>
-                                </div>
-                            </div>
-                            <div class="rt-input-group">
-                                <label for="desc-5">Description</label>
-                                <textarea name="desc" id="desc-5" cols="30" rows="5" placeholder="Description"></textarea>
-                            </div>
-                        </div>
-                        <div class="d-flex justify-content-end mt-30">
-                            <button type="submit" class="btn">Add Experience</button>
-                            <a href="#" class="removeExperience added__social__link">Remove Experience</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="accordion-item">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#c3"
-                    aria-expanded="false" aria-controls="collapseThree">
-                    Wordpress Developer
-                </button>
-                <div id="c3" class="accordion-collapse collapse" data-bs-parent="#rts-accordion-2">
-                    <div class="accordion-body p-0 mt-3 mb-20">
-                        <div class="info__field">
-                            <div class="row row-cols-sm-2 row-cols-1">
-                                <div class="rt-input-group">
-                                    <label for="title-6">Title</label>
-                                    <input type="text" id="title-6" placeholder="Software Engineer" required>
-                                </div>
-                                <div class="rt-input-group">
-                                    <label for="cm-6">Company</label>
-                                    <input type="text" id="cm-6" placeholder="Reactheme" required>
-                                </div>
-                            </div>
-                            <div class="row row-cols-sm-2 row-cols-1">
-                                <div class="rt-input-group">
-                                    <label for="de-6">end date</label>
-                                    <input type="text" id="de-6" placeholder="DD/ MM/ YY" required>
-                                </div>
-                                <div class="rt-input-group">
-                                    <label for="sd-6">Start Date</label>
-                                    <input type="text" id="sd-6" placeholder="DD/MM/YY" required>
-                                </div>
-                            </div>
-                            <div class="rt-input-group">
-                                <label for="desc-6">Description</label>
-                                <textarea name="desc" id="desc-6" cols="30" rows="5" placeholder="Description"></textarea>
-                            </div>
-                        </div>
-                        <div class="d-flex justify-content-end mt-30">
-                            <a href="#" class="added__social__link">Remove EXperience</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {{-- <div class="d-flex justify-content-start">
-                <a href="#" class="added__social__link">Add Experience</a>
-            </div> --}}
             <div class="d-flex justify-content-start">
                 <a href="#" id="addExperienceBtn" class="added__social__link">Add Experience</a>
             </div>
         </div>
     </div>
+    <!-- Skill & Experience end -->
+
+
+    <!-- education -->
+    <h6 class="fw-medium mt-30 mb-20">Education</h6>
+    <div class="my_education bg-white radius-16 p-30">
+        <div class="d-flex justify-content-start mb-3">
+            <a href="javascript:void(0)" id="addEducationBtn" class="added__social__link">Add Educational Information</a>
+        </div>
+
+        <div id="educationContainer"></div>
+
+
+        <div class="accordion-item">
+            <div id="c3" class="accordion-collapse collapse" data-bs-parent="#rts-accordion-2">
+                <div class="accordion-body p-0 mt-3 mb-20">
+                    <div class="info__field">
+                        <div class="row row-cols-sm-2 row-cols-1">
+                            <div class="rt-input-group">
+                                <label for="title-6">Institute Name</label>
+                                <input type="text" id="title-6" placeholder="Software Engineer" required>
+                            </div>
+                            <div class="rt-input-group">
+                                <label for="cm-6">Degree</label>
+                                <input type="text" id="cm-6" placeholder="Reactheme" required>
+                            </div>
+                        </div>
+                        <div class="row row-cols-sm-2 row-cols-1">
+                            <div class="rt-input-group">
+                                <label for="sd-6">Start Date</label>
+                                <input type="text" id="sd-6" placeholder="DD/MM/YY" required>
+                            </div>
+                            <div class="rt-input-group">
+                                <label for="de-6">end date</label>
+                                <input type="text" id="de-6" placeholder="DD/ MM/ YY" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-end mt-30">
+                        <a href="#" class="added__social__link">Remove EXperience</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
     <!-- education end -->
+
+
 @endsection
+
 @section('script')
     {{-- For Upload Resume --}}
     <script type="text/javascript">
@@ -452,6 +454,73 @@
             e.preventDefault(); // prevent form from reloading
 
             var url = "{{ route('User.UploadCoverLetter') }}";
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: new FormData(this),
+                contentType: false,
+                cache: false,
+                processData: false,
+                dataType: 'json',
+                success: function(result) {
+                    if (result.status_code == 1) {
+                        Toastify({
+                            text: result.message,
+                            duration: 3000,
+                            gravity: "top",
+                            position: "right",
+                            className: "bg-success"
+                        }).showToast();
+
+                        setTimeout(function() {
+                            if (result.redirect_url) {
+                                window.location.href = result.redirect_url;
+                            } else {
+                                location.reload();
+                            }
+                        }, 750);
+
+                    } else if (result.status_code == 2) {
+                        Toastify({
+                            text: result.message,
+                            duration: 3000,
+                            gravity: "top",
+                            position: "right",
+                            className: "bg-warning"
+                        }).showToast();
+                    } else {
+                        Toastify({
+                            text: result.message,
+                            duration: 3000,
+                            gravity: "top",
+                            position: "right",
+                            className: "bg-danger"
+                        }).showToast();
+                    }
+                },
+                error: function(xhr) {
+                    Toastify({
+                        text: "Something went wrong!",
+                        duration: 3000,
+                        gravity: "top",
+                        position: "right",
+                        className: "bg-danger"
+                    }).showToast();
+                }
+            });
+        });
+    </script>
+
+    {{-- For Upload Designation --}}
+    <script type="text/javascript">
+        $('#UploadDesignation').on('submit', function(e) {
+            e.preventDefault(); // prevent form from reloading
+
+            var url = "{{ route('User.UploadDesignation') }}";
 
             $.ajax({
                 url: url,
@@ -609,74 +678,8 @@
         });
     </script>
 
-    {{-- For Upload Designation --}}
-    <script type="text/javascript">
-        $('#UploadDesignation').on('submit', function(e) {
-            e.preventDefault(); // prevent form from reloading
-
-            var url = "{{ route('User.UploadDesignation') }}";
-
-            $.ajax({
-                url: url,
-                type: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                data: new FormData(this),
-                contentType: false,
-                cache: false,
-                processData: false,
-                dataType: 'json',
-                success: function(result) {
-                    if (result.status_code == 1) {
-                        Toastify({
-                            text: result.message,
-                            duration: 3000,
-                            gravity: "top",
-                            position: "right",
-                            className: "bg-success"
-                        }).showToast();
-
-                        setTimeout(function() {
-                            if (result.redirect_url) {
-                                window.location.href = result.redirect_url;
-                            } else {
-                                location.reload();
-                            }
-                        }, 750);
-
-                    } else if (result.status_code == 2) {
-                        Toastify({
-                            text: result.message,
-                            duration: 3000,
-                            gravity: "top",
-                            position: "right",
-                            className: "bg-warning"
-                        }).showToast();
-                    } else {
-                        Toastify({
-                            text: result.message,
-                            duration: 3000,
-                            gravity: "top",
-                            position: "right",
-                            className: "bg-danger"
-                        }).showToast();
-                    }
-                },
-                error: function(xhr) {
-                    Toastify({
-                        text: "Something went wrong!",
-                        duration: 3000,
-                        gravity: "top",
-                        position: "right",
-                        className: "bg-danger"
-                    }).showToast();
-                }
-            });
-        });
-    </script>
-
-    <script>
+    {{-- For Adding Another Experince Column --}}
+    {{-- <script>
         let experienceCount = 1;
 
         document.getElementById("addExperienceBtn").addEventListener("click", function(e) {
@@ -717,9 +720,10 @@
                             <textarea name="desc" id="desc-${experienceCount}" cols="30" rows="5" placeholder="Description"></textarea>
                         </div>
                     </div>
-                    <div class="d-flex justify-content-end mt-30">
-                        <a href="#" class="removeExperience added__social__link">Remove Experience</a>
-                    </div>
+                   <div class="d-flex justify-content-end mt-30">
+                                <button type="submit" class="btn">Add Experience</button>
+                                <a href="#" class="removeExperience added__social__link">Remove Experience</a>
+                            </div>
                 </div>
             </div>
         </div>`;
@@ -735,7 +739,7 @@
                 e.target.closest(".accordion-item").remove();
             }
         });
-    </script>
+    </script> --}}
 
     {{-- For Submit Candidate Experience --}}
     <script type="text/javascript">
@@ -814,6 +818,61 @@
                     }).showToast();
                 }
             });
+        });
+    </script>
+
+    {{-- For Adding Another Education Column --}}
+    <script>
+        document.getElementById('addEducationBtn').addEventListener('click', function() {
+            const container = document.getElementById('educationContainer');
+
+            // Template for new education block
+            const template = `
+        <div class="accordion-item">
+            <div class="accordion-collapse collapse show">
+                <div class="accordion-body p-0 mt-3 mb-20">
+                    <form id="AddEducation" action="javascript:void(0)">
+                        <div class="info__field">
+                            <div class="row row-cols-sm-2 row-cols-1">
+                                <div class="rt-input-group">
+                                    <label>Institute Name</label>
+                                    <input type="text" name="institute" class="form-control" placeholder="Enter Institute Name" required>
+                                </div>
+                                <div class="rt-input-group">
+                                    <label>Degree</label>
+                                    <input type="text" name="degree" class="form-control" placeholder="Enter Degree Name" required>
+                                </div>
+                            </div>
+                            <div class="row row-cols-sm-2 row-cols-1">
+                                <div class="rt-input-group">
+                                    <label>Start Date</label>
+                                    <input type="date" name="start_date" class="form-control" required>
+                                </div>
+                                <div class="rt-input-group">
+                                    <label>End Date</label>
+                                    <input type="date" name="end_date" class="form-control" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-end mt-30">
+                            <button type="submit" class="btn btn-primary me-3">Add Education</button>
+                            <a href="javascript:void(0)" class="added__social__link remove-education">Remove Education</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        `;
+
+            container.insertAdjacentHTML('beforeend', template);
+        });
+
+        // Delegate event for remove button
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('remove-education')) {
+                e.preventDefault();
+                e.target.closest('.accordion-item').remove();
+            }
         });
     </script>
 @endsection

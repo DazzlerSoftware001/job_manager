@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('cover_letter')->nullable();
             $table->string('skill')->nullable();
             $table->string('position')->nullable();
+            $table->integer('view_profile')->nullable();
             $table->timestamps();
 
             // Foreign key constraint

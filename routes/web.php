@@ -45,6 +45,11 @@ Route::prefix('User')->group(function () {
        
         Route::get('/SavedJob', [UserJobController::class, 'SavedJob'])->name('User.SavedJob');
         Route::get('/GetSavedJob', [UserJobController::class, 'GetSavedJob'])->name('User.GetSavedJob');
+        Route::get('/UnsaveJob', [UserJobController::class, 'UnsaveJob'])->name('User.UnsaveJob');
+
+        Route::post('/SaveJob', [JobController::class, 'saveJob'])->name('User.SaveJob');
+        Route::post('/removeSavedJob', [JobController::class, 'removeSavedJob'])->name('User.RemoveSavedJob');
+
 
         Route::post('/logout', [AuthController::class, 'logout'])->name('User.logout');
     });

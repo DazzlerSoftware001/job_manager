@@ -198,14 +198,20 @@ class DashboardController extends Controller
     public function resume()
     {
         $id = Auth::user()->id;
-
+    
         $candidate = CandidateProfile::where('user_id', $id)->first();
+    
+        $resumeName = null;
+        $resumePath = null;
+    
+        if ($candidate && $candidate->resume) {
+            $resumeName = basename($candidate->resume);
+            $resumePath = asset('user/assets/' . $candidate->resume);
+        }
 
-        $resumeName = $candidate->resume ? basename($candidate->resume) : null;
-
-        $resumePath = $candidate->resume ? asset('user/assets/' . $candidate->resume) : null;
-
-        return view('User.UserDash.Resume', compact('resumeName', 'resumePath', 'candidate'));
+        $can_exp = CandidateEmployment::where('user_id', $id)->first();
+    
+        return view('User.UserDash.Resume', compact('resumeName', 'resumePath', 'candidate', 'can_exp'));
     }
 
     public function UploadResume(Request $request)

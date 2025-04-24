@@ -7,6 +7,7 @@ use App\Models\JobPost;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use App\Models\SaveJob;
 
 class UserJobController extends Controller
 {
@@ -103,7 +104,8 @@ class UserJobController extends Controller
         return view('User.UserDash.AppliedJob', compact('jobDetails'));
     }
 
-    public function ShortList() {
+    public function ShortList()
+    {
         // $user_id = Auth::user()->id;
         // $ShortList                          = JobApplication::where('user_id', $user_id)
         //     ->where('status', 'shortlisted')
@@ -129,6 +131,12 @@ class UserJobController extends Controller
 
     public function GetSavedJob()
     {
-        return view('User.UserDash.SavedJob');
+        $userId = Auth::id();
+
+        // Assuming there is a 'job' relationship in your SaveJob model
+        $savedJobs = SaveJob::with('jobPost')->where('user_id', $userId)->get()->toArray();
+        // dd($savedJobs);
+
+        return view('User.UserDash.SavedJob', compact('savedJobs'));
     }
 }
