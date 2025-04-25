@@ -253,7 +253,7 @@ class DashboardController extends Controller
                 $filename = time() . '_' . preg_replace('/\s+/', '_', $user['name']) . '_Resume.pdf';
 
                 $file->move(public_path('user/assets/resume/'), $filename);
-                $candidate->resume = 'resume/' . $filename;
+                $candidate->resume = 'user/assets/resume/' . $filename;
             }
 
             $candidate->save();
