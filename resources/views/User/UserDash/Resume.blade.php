@@ -232,6 +232,39 @@
         </div>
 
         <div class="accordion" id="rts-accordion-2">
+            @if ($can_exp)
+                @foreach ($can_exp as $exp)
+                    @php
+                        $years = '0';
+                        $months = '0';
+
+                        if (!empty($exp->experience)) {
+                            if (preg_match('/(\d+)\s*years?\s*(\d*)\s*months?/', $exp->experience, $match)) {
+                                $years = $match[1] ?? '0';
+                                $months = $match[2] ?? '0';
+                            } elseif (preg_match('/(\d+)\s*years?/', $exp->experience, $match)) {
+                                $years = $match[1];
+                            } elseif (preg_match('/(\d+)\s*months?/', $exp->experience, $match)) {
+                                $months = $match[1];
+                            }
+                        }
+                    @endphp
+
+                   
+
+                    <div class="submitted-education-info mb-3">
+                        {{-- <h5>Submitted Education Information</h5> --}}
+                        <p><strong>Company:</strong> {{ $exp->company_name }}</p>
+                        <p><strong>Position:</strong> {{ $exp->position }}</p>
+                        <p><strong>Experience (Years):</strong> {{ $years }}</p>
+                        <p><strong>Experience (Months):</strong> {{ $months }}</p>
+                        <p><strong>Description</strong> {{ $exp->description }}</p>
+                    </div>
+                @endforeach
+            @else
+                <p>No experience found.</p>
+            @endif
+
             <div class="accordion-item">
                 <div id="c1" class="accordion-collapse collapse" data-bs-parent="#rts-accordion-2">
                     <form action="javascript:void(0)" id="CandidateExp">
@@ -240,14 +273,16 @@
                                 <div class="row row-cols-sm-2 row-cols-1">
                                     <div class="rt-input-group">
                                         <label for="cm-4">Company</label>
-                                        <input type="text" id="cm-4" name="company" placeholder="Company Name" required>
+                                        <input type="text" id="cm-4" name="company" placeholder="Company Name"
+                                            required>
                                     </div>
                                     <div class="rt-input-group">
                                         <label for="title-4">Position</label>
-                                        <input type="text" id="title-4" name="position" placeholder="Software Engineer" required>
+                                        <input type="text" id="title-4" name="position"
+                                            placeholder="Software Engineer" required>
                                     </div>
                                 </div>
-            
+
                                 <div class="row row-cols-sm-2 row-cols-1">
                                     <div class="rt-input-group">
                                         <label for="de-4">Experience</label>
@@ -267,13 +302,13 @@
                                         </select>
                                     </div>
                                 </div>
-            
+
                                 <div class="rt-input-group">
                                     <label for="desc-4">Description</label>
                                     <textarea name="desc" id="desc-4" cols="30" rows="5" placeholder="Description"></textarea>
                                 </div>
                             </div>
-            
+
                             <div class="d-flex justify-content-end mt-30">
                                 <button type="submit" class="btn">Add Experience</button>
                                 <a href="#" class="removeExperience added__social__link ms-3">Remove Experience</a>
@@ -282,7 +317,7 @@
                     </form>
                 </div>
             </div>
-            <div class="d-flex justify-content-start">
+            <div class="d-flex justify-content-start" id="addExperienceContainer">
                 <a href="#" id="addExperienceBtn" class="added__social__link">Add Experience</a>
             </div>
         </div>
@@ -293,43 +328,94 @@
     <!-- education -->
     <h6 class="fw-medium mt-30 mb-20">Education</h6>
     <div class="my_education bg-white radius-16 p-30">
-        <div class="d-flex justify-content-start mb-3">
-            <a href="javascript:void(0)" id="addEducationBtn" class="added__social__link">Add Educational Information</a>
-        </div>
 
-        <div id="educationContainer"></div>
+        @if ($educations)
+            @foreach ($educations as $education)
+                <div class="submitted-education-info mb-3">
+                    {{-- <h5>Submitted Education Information</h5> --}}
+                    <p><strong>Education Level:</strong> {{ $education->level }}</p>
+                    <p><strong>Board Type:</strong> {{ $education->board_university }}</p>
+                    <p><strong>Institute Name:</strong> {{ $education->school_college }}</p>
+                    <p><strong>Stream:</strong> {{ $education->stream }}</p>
+                    <p><strong>Passing Year:</strong> {{ $education->passing_year }}</p>
+                    <p><strong>Percentage:</strong> {{ $education->percentage }}</p>
+                </div>
+            @endforeach
+        @else
+            <p>No education information available.</p>
+        @endif
 
-
+        <!-- Education Form -->
         <div class="accordion-item">
-            <div id="c3" class="accordion-collapse collapse" data-bs-parent="#rts-accordion-2">
+            <div id="c3" class="accordion-collapse collapse">
                 <div class="accordion-body p-0 mt-3 mb-20">
-                    <div class="info__field">
-                        <div class="row row-cols-sm-2 row-cols-1">
-                            <div class="rt-input-group">
-                                <label for="title-6">Institute Name</label>
-                                <input type="text" id="title-6" placeholder="Software Engineer" required>
+                    <form action="javascript:void(0)" id="AddEducation">
+                        <div class="info__field">
+                            <div class="row row-cols-sm-2 row-cols-1">
+                                <div class="rt-input-group">
+                                    <label for="level">Education Level<span
+                                            class="text-danger d-inline">*</span></label>
+                                    <select name="level" id="level" required
+                                        style="width: 100%; padding: 0.625rem 1rem; border: 1px solid #ddd; border-radius: 8px; height: 50px; background-color: white;">
+                                        <option value="">Select Level</option>
+                                        <option value="10th">10th</option>
+                                        <option value="12th">12th</option>
+                                        <option value="UG">Graduation/Diploma</option>
+                                        <option value="PG">Post Graduation</option>
+                                        <option value="PhD">PhD</option>
+                                    </select>
+                                </div>
+
+                                <div class="rt-input-group">
+                                    <label for="board_university">Board/University<span
+                                            class="text-danger d-inline">*</span></label>
+                                    <input type="text" id="board_university" name="board_university"
+                                        placeholder="Enter Board/University" required>
+                                </div>
                             </div>
-                            <div class="rt-input-group">
-                                <label for="cm-6">Degree</label>
-                                <input type="text" id="cm-6" placeholder="Reactheme" required>
+
+                            <div class="row row-cols-sm-2 row-cols-1 mt-3">
+                                <div class="rt-input-group">
+                                    <label for="school_college">School/College Name<span
+                                            class="text-danger d-inline">*</span></label>
+                                    <input type="text" id="school_college" name="school_college"
+                                        placeholder="Enter Institute Name" required>
+                                </div>
+                                <div class="rt-input-group">
+                                    <label for="stream">Stream</label>
+                                    <input type="text" id="stream" name="stream" placeholder="Enter Your Stream">
+                                </div>
+                            </div>
+
+                            <div class="row row-cols-sm-2 row-cols-1 mt-3">
+                                <div class="rt-input-group">
+                                    <label for="passing_year">Passing Year<span
+                                            class="text-danger d-inline">*</span></label>
+                                    <input type="number" class="no-snipper" id="passing_year" name="passing_year"
+                                        placeholder="YYYY" required max="{{ date('Y') }}">
+                                </div>
+                                <div class="rt-input-group">
+                                    <label for="percentage">Percentage<span class="text-danger d-inline">*</span></label>
+                                    <input type="text" id="percentage" name="percentage" placeholder="e.g. 85%"
+                                        required>
+                                </div>
                             </div>
                         </div>
-                        <div class="row row-cols-sm-2 row-cols-1">
-                            <div class="rt-input-group">
-                                <label for="sd-6">Start Date</label>
-                                <input type="text" id="sd-6" placeholder="DD/MM/YY" required>
-                            </div>
-                            <div class="rt-input-group">
-                                <label for="de-6">end date</label>
-                                <input type="text" id="de-6" placeholder="DD/ MM/ YY" required>
-                            </div>
+
+                        <div class="d-flex justify-content-end mt-30">
+                            <button type="submit" class="btn me-3 added__social__link">Add Education</button>
+                            <a href="javascript:void(0)" id="removeEducationBtn" class="added__social__link">Remove
+                                Education</a>
                         </div>
-                    </div>
-                    <div class="d-flex justify-content-end mt-30">
-                        <a href="#" class="added__social__link">Remove EXperience</a>
-                    </div>
+                    </form>
+
                 </div>
             </div>
+        </div>
+
+        <!-- Add Education Button -->
+        <div class="d-flex justify-content-start" id="addEducationContainer">
+            <a href="javascript:void(0)" id="addEducationBtn" class="added__social__link">Add Educational Information</a>
         </div>
 
     </div>
@@ -636,26 +722,43 @@
         });
     </script>
 
-    {{-- For Adding Another Experince Column --}}
+    {{-- For Showing the Experince Column --}}
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
+        document.addEventListener("DOMContentLoaded", function() {
             const addExpBtn = document.getElementById("addExperienceBtn");
+            const addExpCon = document.getElementById("addExperienceContainer");
             const expDiv = document.getElementById("c1");
-            const removeExpBtn = document.querySelector(".removeExperience");
-    
-            // Show/Hide experience form
-            addExpBtn.addEventListener("click", function (e) {
-                e.preventDefault();
-                expDiv.classList.toggle("show");
-            });
-    
-            // Hide experience form on remove click
-            if (removeExpBtn) {
-                removeExpBtn.addEventListener("click", function (e) {
-                    e.preventDefault();
-                    expDiv.classList.remove("show");
-                });
+
+            // Note: This element exists after clicking "Add", so we attach the listener dynamically
+            function attachRemoveListener() {
+                const removeExpBtn = document.querySelector(".removeExperience");
+                if (removeExpBtn) {
+                    removeExpBtn.addEventListener("click", function(e) {
+                        e.preventDefault();
+                        expDiv.classList.remove("show");
+                        if (addExpCon) {
+                            addExpCon.classList.remove("d-none"); // Show again
+                            addExpCon.classList.add("d-flex"); // Show again
+                        }
+                    });
+                }
             }
+
+            addExpBtn.addEventListener("click", function(e) {
+                e.preventDefault();
+
+                // Show experience form
+                expDiv.classList.add("show");
+
+                // Hide "Add Experience" button
+                if (addExpCon) {
+                    addExpCon.classList.remove("d-flex");
+                    addExpCon.classList.add("d-none");
+                }
+
+                // Attach remove handler
+                attachRemoveListener();
+            });
         });
     </script>
 
@@ -739,58 +842,94 @@
         });
     </script>
 
-    {{-- For Adding Another Education Column --}}
+    {{-- For Showing the Education Column --}}
     <script>
-        document.getElementById('addEducationBtn').addEventListener('click', function() {
-            const container = document.getElementById('educationContainer');
+        document.addEventListener("DOMContentLoaded", function() {
+            const addBtn = document.getElementById("addEducationBtn");
+            const removeBtn = document.getElementById("removeEducationBtn");
+            const formSection = document.getElementById("c3");
+            const addContainer = document.getElementById("addEducationContainer");
 
-            // Template for new education block
-            const template = `
-        <div class="accordion-item">
-            <div class="accordion-collapse collapse show">
-                <div class="accordion-body p-0 mt-3 mb-20">
-                    <form id="AddEducation" action="javascript:void(0)">
-                        <div class="info__field">
-                            <div class="row row-cols-sm-2 row-cols-1">
-                                <div class="rt-input-group">
-                                    <label>Institute Name</label>
-                                    <input type="text" name="institute" class="form-control" placeholder="Enter Institute Name" required>
-                                </div>
-                                <div class="rt-input-group">
-                                    <label>Degree</label>
-                                    <input type="text" name="degree" class="form-control" placeholder="Enter Degree Name" required>
-                                </div>
-                            </div>
-                            <div class="row row-cols-sm-2 row-cols-1">
-                                <div class="rt-input-group">
-                                    <label>Start Date</label>
-                                    <input type="date" name="start_date" class="form-control" required>
-                                </div>
-                                <div class="rt-input-group">
-                                    <label>End Date</label>
-                                    <input type="date" name="end_date" class="form-control" required>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="d-flex justify-content-end mt-30">
-                            <button type="submit" class="btn btn-primary me-3">Add Education</button>
-                            <a href="javascript:void(0)" class="added__social__link remove-education">Remove Education</a>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-        `;
-
-            container.insertAdjacentHTML('beforeend', template);
-        });
-
-        // Delegate event for remove button
-        document.addEventListener('click', function(e) {
-            if (e.target.classList.contains('remove-education')) {
+            addBtn.addEventListener("click", function(e) {
                 e.preventDefault();
-                e.target.closest('.accordion-item').remove();
-            }
+                formSection.classList.add("show"); // Show the form
+                addContainer.style.display = "none"; // Hide the button
+            });
+
+            removeBtn.addEventListener("click", function(e) {
+                e.preventDefault();
+                formSection.classList.remove("show"); // Hide the form
+                addContainer.style.display = "flex"; // Show the button again
+            });
+        });
+    </script>
+
+    {{-- For Submit Candidate Qualification --}}
+    <script type="text/javascript">
+        $('#AddEducation').on('submit', function(e) {
+            e.preventDefault();
+
+            let form = this;
+            let url = "{{ route('User.CandidateEducation') }}"; // change to your route name
+
+            let formData = new FormData(form);
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: formData,
+                contentType: false,
+                cache: false,
+                processData: false,
+                dataType: 'json',
+                success: function(result) {
+                    if (result.status_code == 1) {
+                        Toastify({
+                            text: result.message,
+                            duration: 3000,
+                            gravity: "top",
+                            position: "right",
+                            className: "bg-success"
+                        }).showToast();
+
+                        setTimeout(function() {
+                            if (result.redirect_url) {
+                                window.location.href = result.redirect_url;
+                            } else {
+                                location.reload();
+                            }
+                        }, 750);
+                    } else if (result.status_code == 2) {
+                        Toastify({
+                            text: result.message,
+                            duration: 3000,
+                            gravity: "top",
+                            position: "right",
+                            className: "bg-warning"
+                        }).showToast();
+                    } else {
+                        Toastify({
+                            text: result.message,
+                            duration: 3000,
+                            gravity: "top",
+                            position: "right",
+                            className: "bg-danger"
+                        }).showToast();
+                    }
+                },
+                error: function(xhr) {
+                    Toastify({
+                        text: "Something went wrong!",
+                        duration: 3000,
+                        gravity: "top",
+                        position: "right",
+                        className: "bg-danger"
+                    }).showToast();
+                }
+            });
         });
     </script>
 @endsection

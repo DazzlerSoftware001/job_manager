@@ -35,6 +35,8 @@ Route::prefix('User')->group(function () {
         Route::post('/addSkill', [DashboardController::class, 'addSkill'])->name('User.AddSkill');
         Route::post('/removeSkill', [DashboardController::class, 'removeSkill'])->name('User.RemoveSkill');
         Route::post('/candidateExp', [DashboardController::class, 'candidateExp'])->name('User.CandidateExp');
+        Route::post('/CandidateEducation', [DashboardController::class, 'CandidateEducation'])->name('User.CandidateEducation');
+
         
         Route::get('ChangePassword', [DashboardController::class, 'ChangePassword'])->name('User.ChangePassword');
         Route::post('UpdatePassword', [DashboardController::class, 'UpdatePassword'])->name('User.UpdatePassword');

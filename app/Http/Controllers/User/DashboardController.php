@@ -2,14 +2,15 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\CandidateEmployment;
 use App\Models\CandidateProfile;
+use App\Models\CandidateQualifications;
 use App\Models\JobApplication;
 use App\Models\UserProfile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use App\Models\CandidateEmployment;
 
 class DashboardController extends Controller
 {
@@ -198,20 +199,22 @@ class DashboardController extends Controller
     public function resume()
     {
         $id = Auth::user()->id;
-    
+
         $candidate = CandidateProfile::where('user_id', $id)->first();
-    
+
         $resumeName = null;
         $resumePath = null;
-    
+
         if ($candidate && $candidate->resume) {
             $resumeName = basename($candidate->resume);
             $resumePath = asset('user/assets/' . $candidate->resume);
         }
 
-        $can_exp = CandidateEmployment::where('user_id', $id)->first();
-    
-        return view('User.UserDash.Resume', compact('resumeName', 'resumePath', 'candidate', 'can_exp'));
+        $can_exp = CandidateEmployment::where('user_id', $id)->get();
+
+        $educations = CandidateQualifications::where('user_id', $id)->get();
+
+        return view('User.UserDash.Resume', compact('resumeName', 'resumePath', 'candidate', 'can_exp', 'educations'));
     }
 
     public function UploadResume(Request $request)
@@ -432,8 +435,37 @@ class DashboardController extends Controller
         ]);
 
         return response()->json([
+            'status_code' => 1,
+            'message'     => 'Experience saved successfully!',
+        ]);
+    }
+
+    public function CandidateEducation(Request $request)
+    {
+
+        // Optional validation
+        $request->validate([
+            'level'        => 'required|string',
+            'board_university'        => 'required|string',
+            'school_college'    => 'required|string',
+            'stream'       => 'nullable|string',
+            'passing_year' => 'required|numeric|max:' . date('Y'),
+            'percentage'   => 'required'
+        ]);
+
+        $education                   = new CandidateQualifications();
+        $education->user_id          = Auth::user()->id;
+        $education->level            = $request->level;
+        $education->board_university = $request->board_university;
+        $education->school_college   = $request->school_college;
+        $education->stream           = $request->stream;
+        $education->passing_year     = $request->passing_year;
+        $education->percentage     = $request->percentage;
+        $education->save();
+
+        return response()->json([
             'status_code'  => 1,
-            'message'      => 'Experience saved successfully!',
+            'message'      => 'Education added successfully.',
         ]);
     }
 
