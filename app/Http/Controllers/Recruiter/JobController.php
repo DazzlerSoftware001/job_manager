@@ -514,7 +514,12 @@ class JobController extends Controller
 
         // Check and increment view_profile if candidate profile exists
         if ($user && $user->candidateProfile) {
-            $user->candidateProfile->increment('view_profile');
+            if (is_null($user->candidateProfile->view_profile)) {
+                $user->candidateProfile->view_profile = 1;
+                $user->candidateProfile->save();
+            } else {
+                $user->candidateProfile->increment('view_profile');
+            }
         }
 
         return view('recruiter.applicants.ApllicantsDetails', compact('user'));
