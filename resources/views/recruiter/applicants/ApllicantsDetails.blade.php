@@ -54,12 +54,28 @@
 
                                 <!-- Action Buttons -->
                                 <div class="col-md-3 text-md-end mt-3 mt-md-0">
-                                    <a href="{{route('Recruiter.CandidateShortlist',[
-                                        'userId' => Crypt::encrypt($user->id),
-                                        'jobId' => Crypt::encrypt($DecJob_Id)
-                                    ])}}" class="btn btn-outline-primary me-2">Shortlist</a>
 
-                                        <a href="{{route('Recruiter.CandidateCVDownload', ['userId' => Crypt::encrypt($user->id)])}}" class="btn btn-primary">Cv Download</a>
+                                    @if($application->status!=='shortlisted')
+                                        <button id="shortlistBtn" class="btn btn-outline-warning me-2">Shortlist</button>
+                                    @elseif($application->status=='shortlisted')
+                                        <button  class="btn btn-warning me-2">Shortlisted</button>
+                                    @endif
+
+                                    @if($application->status!=='rejected')
+                                        <button id="RejectBtn" class="btn btn-outline-danger me-2">Reject</button>
+                                    @elseif($application->status=='rejected')
+                                        <button  class="btn btn-danger me-2">Rejected</button>
+                                    @endif
+
+                                    @if($application->status!=='hired')
+                                        <button id="HireBtn" class="btn btn-outline-primary me-2">Hire</button>
+                                    @elseif($application->status=='hired')
+                                        <button  class="btn btn-success me-2">Hired</button>
+                                    @endif
+                                    {{-- $user->id
+                                    $DecJob_Id --}}
+
+                                    <a href="{{route('Recruiter.CandidateCVDownload', ['userId' => Crypt::encrypt($user->id)])}}" class="btn btn-primary mt-1">Cv Download</a>
 
 
                                 </div>
@@ -92,5 +108,183 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     @section('script')
+    <script>
+        $(document).ready(function () {
+            $('#shortlistBtn').on('click', function () {
+                var url = "{{ route('Recruiter.CandidateShortlist', [
+                    'userId' => Crypt::encrypt($user->id),
+                    'jobId' => Crypt::encrypt($DecJob_Id)
+                ]) }}";
+    
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    dataType: 'json',
+                    success: function (result) {
+                        if (result.status_code === 1) {
+                            Toastify({
+                                text: result.message,
+                                duration: 3000,
+                                gravity: "top",
+                                position: "right",
+                                style: { background: "green", color: "white" }
+                            }).showToast();
+                            setTimeout(function () {
+                                location.reload();
+                            }, 1000);
+
+                        } else if (result.status_code === 2) {
+                            Toastify({
+                                text: result.message,
+                                duration: 3000,
+                                gravity: "top",
+                                position: "right",
+                                style: { background: "#c7ac14", color: "white" }
+                            }).showToast();
+                        } else {
+                            Toastify({
+                                text: result.message,
+                                duration: 3000,
+                                gravity: "top",
+                                position: "right",
+                                style: { background: "red", color: "white" }
+                            }).showToast();
+                        }
+                    },
+                    error: function () {
+                        Toastify({
+                            text: 'An error occurred. Please try again.',
+                            duration: 3000,
+                            gravity: "top",
+                            position: "right",
+                            style: { background: "red", color: "white" }
+                        }).showToast();
+                    }
+                });
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $('#RejectBtn').on('click', function () {
+                var url = "{{ route('Recruiter.CandidateReject', [
+                    'userId' => Crypt::encrypt($user->id),
+                    'jobId' => Crypt::encrypt($DecJob_Id)
+                ]) }}";
+
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    dataType: 'json',
+                    success: function (result) {
+                        if (result.status_code === 1) {
+                            Toastify({
+                                text: result.message,
+                                duration: 3000,
+                                gravity: "top",
+                                position: "right",
+                                style: { background: "green", color: "white" }
+                            }).showToast();
+                            setTimeout(function () {
+                                location.reload();
+                            }, 1000);
+                        } else if (result.status_code === 2) {
+                            Toastify({
+                                text: result.message,
+                                duration: 3000,
+                                gravity: "top",
+                                position: "right",
+                                style: { background: "#c7ac14", color: "white" }
+                            }).showToast();
+                        } else {
+                            Toastify({
+                                text: result.message,
+                                duration: 3000,
+                                gravity: "top",
+                                position: "right",
+                                style: { background: "red", color: "white" }
+                            }).showToast();
+                        }
+                    },
+                    error: function () {
+                        Toastify({
+                            text: 'An error occurred. Please try again.',
+                            duration: 3000,
+                            gravity: "top",
+                            position: "right",
+                            style: { background: "red", color: "white" }
+                        }).showToast();
+                    }
+                });
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $('#HireBtn').on('click', function () {
+                var url = "{{ route('Recruiter.CandidateHire', [
+                    'userId' => Crypt::encrypt($user->id),
+                    'jobId' => Crypt::encrypt($DecJob_Id)
+                ]) }}";
+
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    dataType: 'json',
+                    success: function (result) {
+                        if (result.status_code === 1) {
+                            Toastify({
+                                text: result.message,
+                                duration: 3000,
+                                gravity: "top",
+                                position: "right",
+                                style: { background: "green", color: "white" }
+                            }).showToast();
+                            setTimeout(function () {
+                                location.reload();
+                            }, 1000);
+                        } else if (result.status_code === 2) {
+                            Toastify({
+                                text: result.message,
+                                duration: 3000,
+                                gravity: "top",
+                                position: "right",
+                                style: { background: "#c7ac14", color: "white" }
+                            }).showToast();
+                        } else {
+                            Toastify({
+                                text: result.message,
+                                duration: 3000,
+                                gravity: "top",
+                                position: "right",
+                                style: { background: "red", color: "white" }
+                            }).showToast();
+                        }
+                    },
+                    error: function () {
+                        Toastify({
+                            text: 'An error occurred. Please try again.',
+                            duration: 3000,
+                            gravity: "top",
+                            position: "right",
+                            style: { background: "red", color: "white" }
+                        }).showToast();
+                    }
+                });
+            });
+        });
+    </script>
+    
     
     @endsection
