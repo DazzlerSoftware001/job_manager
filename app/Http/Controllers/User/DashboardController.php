@@ -20,7 +20,10 @@ class DashboardController extends Controller
         $appliedJobCount = JobApplication::where('user_id', $userId)->where('status', 'pending')->count();
 
         $ShortlistedJobCount = JobApplication::where('user_id', $userId)->where('status', 'shortlisted')->count();
-        return view('User.Dasboard', compact('appliedJobCount', 'ShortlistedJobCount'));
+
+        $viewProfile = CandidateProfile::where('user_id', $userId)->sum('view_profile');
+
+        return view('User.Dasboard', compact('appliedJobCount', 'ShortlistedJobCount', 'viewProfile'));
     }
 
     // public function Profile()

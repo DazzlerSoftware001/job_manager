@@ -37,7 +37,7 @@
                         
                     </div>
                     <div class="content">
-                        <h5 class="lh-sm">555+</h5>
+                        <h5 class="lh-sm">{{$viewProfile}}</h5>
                         <p class="font-20">Views</p>
                     </div>
             </div>
