@@ -233,10 +233,6 @@
 
         <div class="accordion" id="rts-accordion-2">
             <div class="accordion-item">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#c1"
-                    aria-expanded="false" aria-controls="c1">
-                    Software Engineer
-                </button>
                 <div id="c1" class="accordion-collapse collapse" data-bs-parent="#rts-accordion-2">
                     <form action="javascript:void(0)" id="CandidateExp">
                         <div class="accordion-body p-0 mt-3 mb-20">
@@ -244,81 +240,43 @@
                                 <div class="row row-cols-sm-2 row-cols-1">
                                     <div class="rt-input-group">
                                         <label for="cm-4">Company</label>
-                                        @if ($can_exp && $can_exp->company_name)
-                                            <input type="text" id="cm-4" name="company"
-                                                placeholder="Company Name" value="{{ $can_exp->company_name }}" required>
-                                        @else
-                                            <input type="text" id="cm-4" name="company"
-                                                placeholder="Company Name" required>
-                                        @endif
+                                        <input type="text" id="cm-4" name="company" placeholder="Company Name" required>
                                     </div>
                                     <div class="rt-input-group">
-                                        <label for="title-4">Postion</label>
-
-                                        @if ($can_exp && $can_exp->position)
-                                            <input type="text" id="title-4" name="position"
-                                                placeholder="Software Engineer" value="{{ $can_exp->position }}" required>
-                                        @else
-                                            <input type="text" id="title-4" name="position"
-                                                placeholder="Software Engineer" required>
-                                        @endif
+                                        <label for="title-4">Position</label>
+                                        <input type="text" id="title-4" name="position" placeholder="Software Engineer" required>
                                     </div>
                                 </div>
-                                @php
-                                    // Initialize default values
-                                    $years = null;
-                                    $months = null;
-
-                                    // Check if $candidate exists and has experience
-                                    if ($can_exp && $can_exp->experience) {
-                                        $experience = $can_exp->experience;
-
-                                        // Check if experience has the format 'x years y months'
-                                        if (preg_match('/(\d+)\s*years?\s*(\d+)\s*months?/', $experience, $matches)) {
-                                            $years = $matches[1]; // Get the years part
-                                            $months = $matches[2]; // Get the months part
-                                        } elseif (preg_match('/(\d+)\s*years?/', $experience, $matches)) {
-                                            $years = $matches[1]; // Only years
-                                        } elseif (preg_match('/(\d+)\s*months?/', $experience, $matches)) {
-                                            $months = $matches[1]; // Only months
-                                        }
-                                    }
-                                @endphp
-
+            
                                 <div class="row row-cols-sm-2 row-cols-1">
                                     <div class="rt-input-group">
                                         <label for="de-4">Experience</label>
                                         <input type="number" class="no-spinner" name="exp_years" id="de-4"
-                                            value="{{ old('exp_years', $years) ?? '' }}" placeholder="Experience in years"
-                                            required>
+                                            placeholder="Experience in years" required>
                                     </div>
                                     <div class="rt-input-group">
                                         <label for="sd-4">Month</label>
                                         <select name="exp_months" id="experience_months" class="form-select">
                                             <option value="">Select Months</option>
-                                            @for ($i = 1; $i <= 12; $i++)
-                                                <option value="{{ $i }}" {{ $months == $i ? 'selected' : '' }}>
-                                                    {{ $i }} Month{{ $i > 1 ? 's' : '' }}
-                                                </option>
-                                            @endfor
+                                            <!-- Loop to generate months -->
+                                            <script>
+                                                for (let i = 1; i <= 12; i++) {
+                                                    document.write(`<option value="${i}">${i} Month${i > 1 ? 's' : ''}</option>`);
+                                                }
+                                            </script>
                                         </select>
                                     </div>
                                 </div>
-
+            
                                 <div class="rt-input-group">
                                     <label for="desc-4">Description</label>
-                                    @if ($can_exp && $can_exp->position)
-                                        <textarea name="desc" id="desc-4" cols="30" rows="5" placeholder="Description">{{ $can_exp->description }}</textarea>
-                                    @else
-                                        <textarea name="desc" id="desc-4" cols="30" rows="5" placeholder="Description"></textarea>
-                                    @endif
+                                    <textarea name="desc" id="desc-4" cols="30" rows="5" placeholder="Description"></textarea>
                                 </div>
                             </div>
-                            <div class="d-flex justify-content-end mt-30">
-                            </div>
+            
                             <div class="d-flex justify-content-end mt-30">
                                 <button type="submit" class="btn">Add Experience</button>
-                                <a href="#" class="removeExperience added__social__link">Remove Experience</a>
+                                <a href="#" class="removeExperience added__social__link ms-3">Remove Experience</a>
                             </div>
                         </div>
                     </form>
@@ -679,67 +637,27 @@
     </script>
 
     {{-- For Adding Another Experince Column --}}
-    {{-- <script>
-        let experienceCount = 1;
-
-        document.getElementById("addExperienceBtn").addEventListener("click", function(e) {
-            e.preventDefault();
-
-            const uniqueId = `c${experienceCount}`;
-            const html = `
-        <div class="accordion-item">
-            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#${uniqueId}"
-                aria-expanded="false" aria-controls="${uniqueId}">
-                Wordpress Developer
-            </button>
-            <div id="${uniqueId}" class="accordion-collapse collapse">
-                <div class="accordion-body p-0 mt-3 mb-20">
-                    <div class="info__field">
-                        <div class="row row-cols-sm-2 row-cols-1">
-                            <div class="rt-input-group">
-                                <label for="title-${experienceCount}">Title</label>
-                                <input type="text" id="title-${experienceCount}" placeholder="Software Engineer" required>
-                            </div>
-                            <div class="rt-input-group">
-                                <label for="cm-${experienceCount}">Company</label>
-                                <input type="text" id="cm-${experienceCount}" placeholder="Reactheme" required>
-                            </div>
-                        </div>
-                        <div class="row row-cols-sm-2 row-cols-1">
-                            <div class="rt-input-group">
-                                <label for="de-${experienceCount}">End Date</label>
-                                <input type="text" id="de-${experienceCount}" placeholder="DD/MM/YY" required>
-                            </div>
-                            <div class="rt-input-group">
-                                <label for="sd-${experienceCount}">Start Date</label>
-                                <input type="text" id="sd-${experienceCount}" placeholder="DD/MM/YY" required>
-                            </div>
-                        </div>
-                        <div class="rt-input-group">
-                            <label for="desc-${experienceCount}">Description</label>
-                            <textarea name="desc" id="desc-${experienceCount}" cols="30" rows="5" placeholder="Description"></textarea>
-                        </div>
-                    </div>
-                   <div class="d-flex justify-content-end mt-30">
-                                <button type="submit" class="btn">Add Experience</button>
-                                <a href="#" class="removeExperience added__social__link">Remove Experience</a>
-                            </div>
-                </div>
-            </div>
-        </div>`;
-
-            document.getElementById("rts-accordion-2").insertAdjacentHTML('beforeend', html);
-            experienceCount++;
-        });
-
-        // Delegate remove functionality
-        document.addEventListener("click", function(e) {
-            if (e.target.classList.contains("removeExperience")) {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const addExpBtn = document.getElementById("addExperienceBtn");
+            const expDiv = document.getElementById("c1");
+            const removeExpBtn = document.querySelector(".removeExperience");
+    
+            // Show/Hide experience form
+            addExpBtn.addEventListener("click", function (e) {
                 e.preventDefault();
-                e.target.closest(".accordion-item").remove();
+                expDiv.classList.toggle("show");
+            });
+    
+            // Hide experience form on remove click
+            if (removeExpBtn) {
+                removeExpBtn.addEventListener("click", function (e) {
+                    e.preventDefault();
+                    expDiv.classList.remove("show");
+                });
             }
         });
-    </script> --}}
+    </script>
 
     {{-- For Submit Candidate Experience --}}
     <script type="text/javascript">
