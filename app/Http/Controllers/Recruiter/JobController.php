@@ -18,6 +18,7 @@ use App\Models\JobSkill;
 use App\Models\JobTypes;
 use App\Models\Recruiter;
 use App\Models\UserProfile;
+use App\Models\JobApplication;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
@@ -484,27 +485,15 @@ class JobController extends Controller
         $job = JobPost::with(['applications.user'])->findOrFail($decryptedId);
 
         $applicants = $job->applications->pluck('user');
-        // dd($applicants);
+        // dd($job,$applicants);
         return view('recruiter.applicants.JobApllicants', compact('job', 'applicants'));
     }
 
-    // public function ApllicantsDetails($userId)
-    // {
-    //     try {
-    //         $decryptedId = Crypt::decrypt($userId);
-    //     } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
-    //         abort(404, 'Invalid User ID');
-    //     }
-
-    //     $user = UserProfile::with('candidateProfile')->find($decryptedId);
-    //     // dd($user);
-    //     return view('recruiter.applicants.ApllicantsDetails',compact('user'));
-    // }
-
-    public function ApllicantsDetails($userId)
+    public function ApllicantsDetails($userId, $jobId)
     {
         try {
             $decryptedId = Crypt::decrypt($userId);
+            $DecJob_Id = Crypt::decrypt($jobId);
         } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
             abort(404, 'Invalid User ID');
         }
@@ -521,8 +510,71 @@ class JobController extends Controller
                 $user->candidateProfile->increment('view_profile');
             }
         }
+        // dd($user);
+        // dd($user->candidateProfile->resume);
 
-        return view('recruiter.applicants.ApllicantsDetails', compact('user'));
+        return view('recruiter.applicants.ApllicantsDetails', compact('user','DecJob_Id'));
+    }
+
+
+    public function CandidateShortlist($userId,$Job_Id)
+    {
+
+        try {
+            $decryptedId = Crypt::decrypt($userId);
+            $DecJob_Id = Crypt::decrypt($Job_Id);
+
+            $application = JobApplication::where('user_id', $decryptedId)
+            ->where('job_id', $DecJob_Id)
+            ->first();
+
+            if($application)
+            {
+                $application->status  = 'shortlisted';
+
+                if ($application->save()) {
+                    return response()->json(['status_code' => 1,'message' => 'Candidate shortlisted.']);
+                } else {
+                    return response()->json([
+                        'status_code' => 0,'message' => 'Failed to Candidate shortlist.']);
+                }
+
+            }else {
+                return response()->json(['status_code' => 0,'message' => 'Application not found.']);
+            }
+        
+
+        } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
+            abort(404, 'Invalid User ID');
+        }
+
+
+    }
+
+    public function CandidateCVDownload($userId)
+    {
+        try {
+            $decryptedId = Crypt::decrypt($userId);
+        // dd($decryptedId);
+
+        $user = UserProfile::with('candidateProfile')->findOrFail($decryptedId);
+        $path = public_path($user->candidateProfile->resume);
+        // dd($path);
+
+        if (file_exists($path)) {
+            // dd('path');
+
+            return response()->download($path);
+        } else {
+            dd('fdf');
+            return back()->with('error', 'File not found.');
+        }
+
+        } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
+            abort(404, 'Invalid User ID');
+        }
+
+
     }
 
 }

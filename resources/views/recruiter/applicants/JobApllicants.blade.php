@@ -56,7 +56,12 @@
                                                     @endforeach
                                                 </div>
                         
-                                                <a href="{{route('Recruiter.ApllicantsDetails', ['userId' => Crypt::encrypt($user->id)])}}" class="btn btn-outline-primary rounded-pill px-4">View Profile</a>
+                                                {{-- <a href="{{route('Recruiter.ApllicantsDetails', ['userId' => Crypt::encrypt($user->id)])}}" class="btn btn-outline-primary rounded-pill px-4">View Profile</a> --}}
+                                                <a href="{{ route('Recruiter.ApllicantsDetails', [
+                                                    'userId' => Crypt::encrypt($user->id),
+                                                    'jobId' => Crypt::encrypt($job->id)
+                                                ]) }}" class="btn btn-outline-primary rounded-pill px-4">View Profile</a>
+
                                             </div>
                                         </div>
                                     </div>

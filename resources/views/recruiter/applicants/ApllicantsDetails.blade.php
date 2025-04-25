@@ -54,8 +54,14 @@
 
                                 <!-- Action Buttons -->
                                 <div class="col-md-3 text-md-end mt-3 mt-md-0">
-                                    <button class="btn btn-outline-primary me-2">Shortlist</button>
-                                    <button class="btn btn-primary">Cv Download</button>
+                                    <a href="{{route('Recruiter.CandidateShortlist',[
+                                        'userId' => Crypt::encrypt($user->id),
+                                        'jobId' => Crypt::encrypt($DecJob_Id)
+                                    ])}}" class="btn btn-outline-primary me-2">Shortlist</a>
+
+                                        <a href="{{route('Recruiter.CandidateCVDownload', ['userId' => Crypt::encrypt($user->id)])}}" class="btn btn-primary">Cv Download</a>
+
+
                                 </div>
                             </div>
 
