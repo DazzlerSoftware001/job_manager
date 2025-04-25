@@ -34,8 +34,11 @@ Route::prefix('Recruiter')->group(function () {
         // JobApllicants
         Route::get('/JobApllicants/{job_id}', [JobController::class, 'JobApllicants'])->name('Recruiter.JobApllicants');
         Route::get('/ApllicantsDetails/{userId}/{jobId}', [JobController::class, 'ApllicantsDetails'])->name('Recruiter.ApllicantsDetails');
-        Route::get('/CandidateShortlist/{userId}/{jobId}', [JobController::class, 'CandidateShortlist'])->name('Recruiter.CandidateShortlist');
        
+        Route::get('/CandidateShortlist/{userId}/{jobId}', [JobController::class, 'CandidateShortlist'])->name('Recruiter.CandidateShortlist');
+        Route::get('/CandidateReject/{userId}/{jobId}', [JobController::class, 'CandidateReject'])->name('Recruiter.CandidateReject');
+        Route::get('/CandidateHire/{userId}/{jobId}', [JobController::class, 'CandidateHire'])->name('Recruiter.CandidateHire');
+
         Route::get('/CandidateCVDownload/{userId}', [JobController::class, 'CandidateCVDownload'])->name('Recruiter.CandidateCVDownload');
 
 
