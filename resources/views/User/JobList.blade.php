@@ -102,6 +102,7 @@
                                     Submit
                                 </button>
                             </div>
+                        </form>
 
 
                             <!-- job location -->
@@ -192,7 +193,6 @@
                             <button type="submit"
                                 class="rts__btn no__fill__btn max-content mx-auto job__search__btn font-sm"
                                 aria-label="Search">Find Job</button>
-                        </form>
                     </div>
 
                 </div>
