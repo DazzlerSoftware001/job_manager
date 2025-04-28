@@ -97,11 +97,13 @@
                                         required style="padding-right: 80px;">
                                     <i class="fa-light fa-magnifying-glass"></i>
                                 </div>
-                                <button class="btn btn-sm btn-primary"
+                                <button class="btn btn-sm btn-primary" type="submit"
                                     style="position: absolute; top: 73%; right: 10px; transform: translateY(-50%); border: none;">
                                     Submit
                                 </button>
                             </div>
+
+                            
                             <!-- job location -->
                             <div class="search__item">
                                 <h6 class="mb-3 font-20 fw-medium text-dark text-capitalize">Search Location</h6>
@@ -120,23 +122,7 @@
                                     <i class="fa-light fa-location-dot"></i>
                                 </div>
                             </div>
-                            <!-- job category -->
-                            <div class="search__item">
-                                <h6 class="mb-3 font-20 fw-medium text-dark text-capitalize">Search By Job category</h6>
-                                <div class="position-relative">
-                                    <div class="nice-select" tabindex="0">
-                                        <span class="current">Choose a Category</span>
-                                        <ul class="list">
-                                            <li data-value="Nothing" data-display="Search By Job category"
-                                                class="option selected focus">Choose a Category</li>
-                                            <li data-value="1" class="option">Government</li>
-                                            <li data-value="2" class="option">NGO</li>
-                                            <li data-value="3" class="option ">Private</li>
-                                        </ul>
-                                    </div>
-                                    <i class="rt-briefcase"></i>
-                                </div>
-                            </div>
+
                             <!-- job post time -->
                             <div class="search__item">
                                 <h6 class="mb-3 font-20 fw-medium text-dark text-capitalize">Date posted</h6>
@@ -144,11 +130,10 @@
                                     <div class="nice-select" tabindex="0">
                                         <span class="current">Date Posted</span>
                                         <ul class="list">
-                                            <li data-value="Nothing" data-display="Date posted"
-                                                class="option selected focus">Date Posted</li>
-                                            <li data-value="1" class="option">01 Jan 24</li>
-                                            <li data-value="2" class="option">05 Feb 24</li>
-                                            <li data-value="3" class="option">07 Mar 24</li>
+                                            <li data-value="Nothing" data-display="Date posted"class="option selected focus">Date Posted</li>
+                                            @foreach ($DatePost as $value)
+                                                <li data-value="{{ $value->created_at }}" class="option">{{ date('d M Y', strtotime($value->created_at)) }}</li>
+                                            @endforeach
                                         </ul>
                                     </div>
                                     <i class="fa-light fa-clock"></i>
@@ -168,27 +153,7 @@
                                             <span>({{ $t->count }})</span>
                                         </div>
                                     @endforeach
-                                    {{-- <div class="d-flex align-items-center justify-content-between list">
-                                        <div class="d-flex gap-2 align-items-center checkbox">
-                                            <input type="checkbox" name="part" id="part">
-                                            <label for="part">Part Time</label>
-                                        </div>
-                                        <span>(80)</span>
-                                    </div>
-                                    <div class="d-flex align-items-center justify-content-between list">
-                                        <div class="d-flex gap-2 align-items-center checkbox">
-                                            <input type="checkbox" name="temporary" id="temporary">
-                                            <label for="temporary">temporary</label>
-                                        </div>
-                                        <span>(150)</span>
-                                    </div>
-                                    <div class="d-flex align-items-center justify-content-between list">
-                                        <div class="d-flex gap-2 align-items-center checkbox">
-                                            <input type="checkbox" name="freelance" id="freelance">
-                                            <label for="freelance">freelance</label>
-                                        </div>
-                                        <span>(130)</span>
-                                    </div> --}}
+                                   
                                 </div>
                             </div>
 
@@ -199,8 +164,8 @@
                                     @foreach ($experience as $exp)
                                         <div class="d-flex align-items-center justify-content-between list">
                                             <div class="d-flex gap-2 align-items-center checkbox">
-                                                <input type="checkbox" name="5year" id="5year">
-                                                <label for="5year">{{ $exp->max_exp }} year</label>
+                                                <input type="checkbox" name="exp" id="exp">
+                                                <label for="exp">{{ $exp->max_exp }} year</label>
                                             </div>
                                             <span>({{ $exp->count }})</span>
                                         </div>
@@ -212,35 +177,18 @@
                             <div class="search__item">
                                 <div class="mb-3 font-20 fw-medium text-dark text-capitalize">salary offered</div>
                                 <div class="search__item__list">
+                                    @foreach ($salaryoffer as $salary)
 
-                                    <div class="d-flex align-items-center justify-content-between list">
-                                        <div class="d-flex gap-2 align-items-center checkbox">
-                                            <input type="checkbox" name="500" id="500">
-                                            <label for="500">under $500</label>
+                                        <div class="d-flex align-items-center justify-content-between list">
+                                            <div class="d-flex gap-2 align-items-center checkbox">
+                                                <input type="checkbox" name="saloffer" id="saloffer">
+                                                <label for="saloffer">{{ $salary->max_sal }}</label>
+                                            </div>
+                                            <span>({{$salary->count}})</span>
                                         </div>
-                                        <span>(10)</span>
-                                    </div>
-                                    <div class="d-flex align-items-center justify-content-between list">
-                                        <div class="d-flex gap-2 align-items-center checkbox">
-                                            <input type="checkbox" name="5000" id="5000">
-                                            <label for="5000">$5,000 - $10,000</label>
-                                        </div>
-                                        <span>(44)</span>
-                                    </div>
-                                    <div class="d-flex align-items-center justify-content-between list">
-                                        <div class="d-flex gap-2 align-items-center checkbox">
-                                            <input type="checkbox" name="1000" id="1000">
-                                            <label for="1000">$10,000 - $15,000</label>
-                                        </div>
-                                        <span>(27)</span>
-                                    </div>
-                                    <div class="d-flex align-items-center justify-content-between list">
-                                        <div class="d-flex gap-2 align-items-center checkbox">
-                                            <input type="checkbox" name="1500" id="1500">
-                                            <label for="1500">$15,000 - $20,000</label>
-                                        </div>
-                                        <span>(85)</span>
-                                    </div>
+
+                                    @endforeach
+                                   
                                 </div>
                             </div>
                             <button type="submit"
@@ -248,39 +196,7 @@
                                 aria-label="Search">Find Job</button>
                         </form>
                     </div>
-                    <!-- job aleart -->
-                    <div class="job__aleart job__search__section">
-                        <form action="#" class="d-flex flex-column row-35">
-                            <div class="search__item">
-                                <label for="alert" class="mb-3 font-20 fw-medium text-dark text-capitalize">Job
-                                    Alert</label>
-                                <div class="position-relative">
-                                    <input type="text" id="alert" placeholder="Enter Type Of job" required>
-                                    <i class="fa-light fa-magnifying-glass"></i>
-                                </div>
-                            </div>
-                            <!-- job location -->
-                            <div class="search__item no-icon">
-                                <label for="frequency"
-                                    class="mb-3 font-20 fw-medium text-dark text-capitalize">EmailFrequency</label>
-                                <div class="position-relative">
-                                    <div class="nice-select" tabindex="0">
-                                        <span class="current">Daily</span>
-                                        <ul class="list">
-                                            <li data-value="Nothing" data-display="Daily" class="option selected focus">
-                                                Daily</li>
-                                            <li data-value="1" class="option">Weakly</li>
-                                            <li data-value="2" class="option">Monthly</li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- job category -->
-                            <button type="submit" class="rts__btn fill__btn py-3 rounded-2 job__search"
-                                aria-label="Search">Save Job Alert</button>
-                        </form>
-                    </div>
-                    <!-- job aleart end -->
+                   
                 </div>
                 <div class="col-lg-7 col-xl-8">
                     <div
@@ -303,10 +219,9 @@
                                             <li data-value="" data-display="All Category" class="option selected focus">
                                                 All Category
                                             </li>
-
-                                            @foreach ($industries as $industry)
-                                                <li data-value="{{ $industry }}" class="option">
-                                                    {{ $industry }}
+                                            @foreach ($jobs as $industry)
+                                                <li data-value="{{ $industry->industry }}" class="option">
+                                                    {{ $industry->industry }}
                                                 </li>
                                             @endforeach
                                         </ul>
@@ -513,183 +428,6 @@
 
     <!-- app center end -->
 
-
-
-    <div class="modal similar__modal fade " id="loginModal">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="max-content similar__form form__padding">
-                    <div class="d-flex mb-3 align-items-center justify-content-between">
-                        <h6 class="mb-0">Login To careernext</h6>
-                        <button type="button" data-bs-dismiss="modal" aria-label="Close">
-                            <i class="fa-regular fa-xmark text-primary"></i>
-                        </button>
-                    </div>
-                    <div class="d-block has__line text-center">
-                        <p>Choose your Account Type</p>
-                    </div>
-
-                    <div class="tab__switch flex-wrap flex-sm-nowrap nav-tab mt-30 mb-30">
-                        <button class="rts__btn nav-link  active"><i class="fa-light fa-user"></i>Candidate</button>
-                        <button class="rts__btn nav-link"><i class="rt-briefcase"></i> Employer</button>
-                    </div>
-                    <div class="tab-content" id="">
-
-                    </div>
-                    <form action="#" method="post" class="d-flex flex-column gap-3">
-                        <div class="form-group">
-                            <label for="email" class="fw-medium text-dark mb-3">Your Email</label>
-                            <div class="position-relative">
-                                <input type="email" name="email" id="email" value="user@test.com"
-                                    placeholder="Enter your email" required>
-                                <i class="fa-light fa-user icon"></i>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="password" class="fw-medium text-dark mb-3">Password</label>
-                            <div class="position-relative">
-                                <input type="password" name="password" value="1234" id="password"
-                                    placeholder="Enter your password" required>
-                                <i class="fa-light fa-lock icon"></i>
-                            </div>
-                        </div>
-                        <div class="d-flex flex-wrap justify-content-between align-items-center fw-medium">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                <label class="form-check-label" for="flexCheckDefault">
-                                    Remember me
-                                </label>
-                            </div>
-                            <a href="#" class="forgot__password text-para" data-bs-toggle="modal"
-                                data-bs-target="#forgotModal">Forgot Password?</a>
-                        </div>
-                        <div class="form-group my-3">
-                            <button class="rts__btn w-100 fill__btn">Login</button>
-                        </div>
-                    </form>
-                    <div class="d-block has__line text-center">
-                        <p>Or</p>
-                    </div>
-                    <div class="d-flex gap-4 flex-wrap justify-content-center mt-20 mb-20">
-                        <div class="is__social google">
-                            <button><img src="{{ url('user/assets/img/icon/google-small.svg') }}" alt="">Continue
-                                with Google</button>
-                        </div>
-                        <div class="is__social facebook">
-                            <button><img src="{{ url('user/assets/img/icon/facebook-small.svg') }}"
-                                    alt="">Continue with Facebook</button>
-                        </div>
-                    </div>
-                    <span class="d-block text-center fw-medium">Don`t have an account? <a href="#"
-                            data-bs-target="#signupModal" data-bs-toggle="modal" class="text-primary">Sign Up</a> </span>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- signup form -->
-    <div class="modal similar__modal fade " id="signupModal">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="max-content similar__form form__padding">
-                    <div class="d-flex mb-3 align-items-center justify-content-between">
-                        <h6 class="mb-0">Create A Free Account</h6>
-                        <button type="button" data-bs-dismiss="modal" aria-label="Close">
-                            <i class="fa-regular fa-xmark text-primary"></i>
-                        </button>
-                    </div>
-                    <div class="d-block has__line text-center">
-                        <p>Choose your Account Type</p>
-                    </div>
-
-                    <div class="tab__switch flex-wrap flex-sm-nowrap nav-tab mt-30 mb-30">
-                        <button class="rts__btn nav-link  active"><i class="fa-light fa-user"></i>Candidate</button>
-                        <button class="rts__btn nav-link"><i class="rt-briefcase"></i> Employer</button>
-                    </div>
-                    <form action="#" class="d-flex flex-column gap-3">
-
-                        <div class="form-group">
-                            <label for="sname" class="fw-medium text-dark mb-3">Your Name</label>
-                            <div class="position-relative">
-                                <input type="text" name="sname" id="sname" placeholder="Candidate" required>
-                                <i class="fa-light fa-user icon"></i>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="signemail" class="fw-medium text-dark mb-3">Your Email</label>
-                            <div class="position-relative">
-                                <input type="email" name="signemail" id="signemail" placeholder="Enter your email"
-                                    required>
-                                <i class="fa-sharp fa-light fa-envelope icon"></i>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="spassword" class="fw-medium text-dark mb-3">Password</label>
-                            <div class="position-relative">
-                                <input type="password" name="spassword" id="spassword" placeholder="Enter your password"
-                                    required>
-                                <i class="fa-light fa-lock icon"></i>
-                            </div>
-                        </div>
-
-                        <div class="form-group my-3">
-                            <button class="rts__btn w-100 fill__btn">Login</button>
-                        </div>
-                    </form>
-                    <div class="d-block has__line text-center">
-                        <p>Or</p>
-                    </div>
-                    <div class="d-flex flex-wrap justify-content-center gap-4 mt-20 mb-20">
-                        <div class="is__social google">
-                            <button><img src="{{ url('user/assets/img/icon/google-small.svg') }}" alt="">Continue
-                                with Google</button>
-                        </div>
-                        <div class="is__social facebook">
-                            <button><img src="{{ url('user/assets/img/icon/facebook-small.svg') }}"
-                                    alt="">Continue with Facebook</button>
-                        </div>
-                    </div>
-                    <span class="d-block text-center fw-medium">Have an account? <a href="#"
-                            data-bs-target="#loginModal" data-bs-toggle="modal" class="text-primary">Login</a> </span>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- forgot password form -->
-    <div class="modal similar__modal fade " id="forgotModal">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="max-content similar__form form__padding">
-                    <div class="d-flex mb-3 align-items-center justify-content-between">
-                        <h6 class="mb-0">Forgot Password</h6>
-                        <button type="button" data-bs-dismiss="modal" aria-label="Close">
-                            <i class="fa-regular fa-xmark text-primary"></i>
-                        </button>
-                    </div>
-                    <form action="#" class="d-flex flex-column gap-3">
-
-                        <div class="form-group">
-                            <label for="fmail" class="fw-medium text-dark mb-3">Your Email</label>
-                            <div class="position-relative">
-                                <input type="email" name="email" id="fmail" placeholder="Enter your email"
-                                    required>
-                                <i class="fa-sharp fa-light fa-envelope icon"></i>
-                            </div>
-                        </div>
-
-                        <div class="form-group my-3">
-                            <button class="rts__btn w-100 fill__btn">Reset Password</button>
-                        </div>
-                    </form>
-
-                    <span class="d-block text-center fw-medium">Remember Your Password? <a href="#"
-                            data-bs-target="#loginModal" data-bs-toggle="modal" class="text-primary">Login</a> </span>
-                </div>
-            </div>
-        </div>
-    </div>
 @endsection
 @section('script')
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

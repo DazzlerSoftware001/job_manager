@@ -15,37 +15,41 @@ class JobController extends Controller
 
     public function JobList(Request $request)
     {
+        dd($request->all());
         $today = Carbon::today();
         $query = JobPost::where('status', 1)->where('admin_verify', 1)->whereDate('jobexpiry', '>=', $today);
 
         if ($request->has('title') && $request->title !== '') {
-            $query->where('title', $request->title);
+            $query->where('title', 'like', '%' . $request->title . '%');
         }
+        
 
         // Filter by category if selected
         if ($request->has('category') && $request->category !== '') {
-            $query->where('industry', $request->category);
+            $query->where('industry',  'like', '%' .  $request->category . '%');
         }
 
         $jobs = $query->paginate(1)->withQueryString(); // Adjust pagination as needed
                                                         // $JobCategory = JobCategory::all();
-        $industries = JobPost::distinct()->pluck('industry');
-        $type       = JobPost::select('type', DB::raw('count(*) as count'))
-            ->groupBy('type')
-            ->get();
+        $location = JobPost::select('location')->where('status', 1)->where('admin_verify', 1)->whereDate('jobexpiry', '>=', $today)->distinct()->get();
+        $DatePost = JobPost::select('created_at')->where('status', 1)->where('admin_verify', 1)->whereDate('jobexpiry', '>=', $today)->distinct()->get();
+        $type = JobPost::select('type', DB::raw('count(*) as count'))->where('status', 1)->where('admin_verify', 1)->whereDate('jobexpiry', '>=', $today)->groupBy('type')->get();
+        $experience = JobPost::select('max_exp', DB::raw('count(*) as count'))->where('status', 1)->where('admin_verify', 1)->whereDate('jobexpiry', '>=', $today)->groupBy('max_exp')->get();
+        $salaryoffer = JobPost::select('max_sal', DB::raw('count(*) as count'))->where('sal_status', '!=', 'off')->where('status', 1)->where('admin_verify', 1)->whereDate('jobexpiry', '>=', $today)->groupBy('max_sal')->get();
+        
+        $filters = JobPost::where('status', 1)->where('admin_verify', 1)->whereDate('jobexpiry', '>=', $today)->distinct()->get();
 
-        $experience = JobPost::select('max_exp', DB::raw('count(*) as count'))
-            ->groupBy('max_exp')
-            ->get();
 
-        $location = JobPost::select('location')->distinct()->get();
+       
+
+
 
         $savedJobs = SaveJob::where('user_id', Auth::id())->pluck('job_id')->toArray();
 
         // $data = JobPost::all();
-        // dd($jobs);
+        // dd($salaryoffer);
 
-        return view('User.JobList', compact('jobs', 'industries', 'type', 'experience', 'location', 'savedJobs'));
+        return view('User.JobList', compact('jobs','location', 'DatePost', 'type', 'experience','salaryoffer', 'filters','savedJobs'));
     }
 
     public function saveJob(Request $request)
