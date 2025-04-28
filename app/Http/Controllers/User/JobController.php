@@ -34,7 +34,7 @@ class JobController extends Controller
             $query->where('location',  $request->location);
         }
 
-        if ($request->has('date_posted') && $request->location !== '') {
+        if ($request->has('date_posted') && $request->date_posted !== '') {
             $dateOnly = \Carbon\Carbon::parse($request->date_posted)->toDateString();
             $query->whereDate('created_at', '=', $dateOnly);
         }
@@ -44,7 +44,12 @@ class JobController extends Controller
                                                         // $JobCategory = JobCategory::all();
         $location = JobPost::select('location')->where('status', 1)->where('admin_verify', 1)->whereDate('jobexpiry', '>=', $today)->distinct()->get();
         $industry = JobPost::select('industry')->where('status', 1)->where('admin_verify', 1)->whereDate('jobexpiry', '>=', $today)->distinct()->get();
-        $DatePost = JobPost::select('created_at')->where('status', 1)->where('admin_verify', 1)->whereDate('jobexpiry', '>=', $today)->distinct()->get();
+        $DatePost = JobPost::selectRaw("DATE_FORMAT(created_at, '%Y-%m-%d') as created_at")
+    ->where('status', 1)
+    ->where('admin_verify', 1)
+    ->whereDate('jobexpiry', '>=', $today)
+    ->distinct()
+    ->get();
         $type = JobPost::select('type', DB::raw('count(*) as count'))->where('status', 1)->where('admin_verify', 1)->whereDate('jobexpiry', '>=', $today)->groupBy('type')->get();
         $experience = JobPost::select('max_exp', DB::raw('count(*) as count'))->where('status', 1)->where('admin_verify', 1)->whereDate('jobexpiry', '>=', $today)->groupBy('max_exp')->get();
         $salaryoffer = JobPost::select('max_sal', DB::raw('count(*) as count'))->where('sal_status', '!=', 'off')->where('status', 1)->where('admin_verify', 1)->whereDate('jobexpiry', '>=', $today)->groupBy('max_sal')->get();
