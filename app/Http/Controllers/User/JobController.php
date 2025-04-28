@@ -53,7 +53,7 @@ class JobController extends Controller
         $savedJobs = SaveJob::where('user_id', Auth::id())->pluck('job_id')->toArray();
 
         // $data = JobPost::all();
-        // dd($salaryoffer);
+        // dd($DatePost);
 
         return view('User.JobList', compact('jobs','location', 'industry', 'DatePost', 'type', 'experience','salaryoffer', 'filters','savedJobs'));
     }

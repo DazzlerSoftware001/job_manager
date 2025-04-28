@@ -123,7 +123,7 @@
                             
 
                             <!-- job post time -->
-                            <div class="search__item">
+                            {{-- <div class="search__item">
                                 <h6 class="mb-3 font-20 fw-medium text-dark text-capitalize">Date posted</h6>
                                 <div class="position-relative">
                                     <div class="nice-select" tabindex="0">
@@ -139,7 +139,32 @@
                                     </div>
                                     <i class="fa-light fa-clock"></i>
                                 </div>
+                            </div> --}}
+
+                            <div class="search__item">
+                                <h6 class="mb-3 font-20 fw-medium text-dark text-capitalize">Date Posted</h6>
+                                <form action="{{ route('User.JobList') }}" method="GET" class="date-select" id="dateForm">
+                                    <input type="hidden" name="date_posted" id="selectedDate" value="">
+                                    <div class="position-relative">
+                                        <select name="date_posted" id="selectedDate" class="form-select" onchange="this.form.submit()">
+                                            <option value="Nothing" selected disabled>Date Posted</option>
+                                            @foreach ($DatePost as $value)
+                                                <option value="{{ date('Y-m-d', strtotime($value->created_at)) }}">
+                                                    {{ date('d M Y', strtotime($value->created_at)) }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </form>
                             </div>
+                            
+                            
+                            
+                           
+                            
+                            
+                            
+                            
 
                             <!-- job post time -->
                             <div class="search__item">
@@ -432,24 +457,45 @@
 
     </script>
 
+    <script>
+        $(document).ready(function() {
+            // Attach click handler to all options inside nice-select
+            $('.select-location .list .option').on('click', function() {
+                var selectedValue = $(this).data('value');
+                var selectedText = $(this).text();
+        
+                // Update the displayed text
+                $('.select-location .current').text(selectedText);
+        
+                // Set the hidden input value
+                $('#selectedLocation').val(selectedValue);
+        
+                // Submit the form
+                $('#locationForm').submit();
+            });
+        });
+    </script>
+
 <script>
     $(document).ready(function() {
-        // Attach click handler to all options inside nice-select
-        $('.select-location .list .option').on('click', function() {
-            var selectedValue = $(this).data('value');
-            var selectedText = $(this).text();
-    
-            // Update the displayed text
-            $('.select-location .current').text(selectedText);
-    
-            // Set the hidden input value
-            $('#selectedLocation').val(selectedValue);
-    
+        // Listen for click events on the options inside nice-select
+        $('.nice-select .list .option').on('click', function() {
+            var selectedDate = $(this).data('value');  // Get selected date value
+            var selectedText = $(this).text();         // Get selected text
+
+            // Update the displayed text inside the nice-select dropdown
+            $('.nice-select .current').text(selectedText);
+
+            // Set the hidden input value with the selected date
+            $('#selectedDate').val(selectedDate);
+
             // Submit the form
-            $('#locationForm').submit();
+            $('#dateForm').submit();
         });
     });
-    </script>
+</script>
+
+    
 
     <script>
         function handleBookmarkClick(event) {
