@@ -33,7 +33,7 @@ return new class extends Migration
             // $table->json('language')->nullable()->change();
             $table->string('language')->nullable();
 
-            $table->decimal('experience', 5, 1)->nullable();
+            $table->decimal('experience', 5, 2)->nullable();
 
             $table->tinyInteger('look_job')->nullable();
             $table->text('description')->nullable();

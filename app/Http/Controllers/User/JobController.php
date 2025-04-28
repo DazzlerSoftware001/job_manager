@@ -15,7 +15,7 @@ class JobController extends Controller
 
     public function JobList(Request $request)
     {
-        dd($request->all());
+        // dd($request->all());
         $today = Carbon::today();
         $query = JobPost::where('status', 1)->where('admin_verify', 1)->whereDate('jobexpiry', '>=', $today);
 
@@ -28,10 +28,14 @@ class JobController extends Controller
         if ($request->has('category') && $request->category !== '') {
             $query->where('industry',  'like', '%' .  $request->category . '%');
         }
+        if($request->has('location') && $request->location !== '') {
+            $query->where('location', 'like', '%' . $request->location . '%');
+        }
 
         $jobs = $query->paginate(1)->withQueryString(); // Adjust pagination as needed
                                                         // $JobCategory = JobCategory::all();
         $location = JobPost::select('location')->where('status', 1)->where('admin_verify', 1)->whereDate('jobexpiry', '>=', $today)->distinct()->get();
+        $industry = JobPost::select('industry')->where('status', 1)->where('admin_verify', 1)->whereDate('jobexpiry', '>=', $today)->distinct()->get();
         $DatePost = JobPost::select('created_at')->where('status', 1)->where('admin_verify', 1)->whereDate('jobexpiry', '>=', $today)->distinct()->get();
         $type = JobPost::select('type', DB::raw('count(*) as count'))->where('status', 1)->where('admin_verify', 1)->whereDate('jobexpiry', '>=', $today)->groupBy('type')->get();
         $experience = JobPost::select('max_exp', DB::raw('count(*) as count'))->where('status', 1)->where('admin_verify', 1)->whereDate('jobexpiry', '>=', $today)->groupBy('max_exp')->get();
@@ -49,7 +53,7 @@ class JobController extends Controller
         // $data = JobPost::all();
         // dd($salaryoffer);
 
-        return view('User.JobList', compact('jobs','location', 'DatePost', 'type', 'experience','salaryoffer', 'filters','savedJobs'));
+        return view('User.JobList', compact('jobs','location', 'industry', 'DatePost', 'type', 'experience','salaryoffer', 'filters','savedJobs'));
     }
 
     public function saveJob(Request $request)

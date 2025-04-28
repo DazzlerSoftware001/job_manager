@@ -103,24 +103,28 @@
                                 </button>
                             </div>
 
-                            
+
                             <!-- job location -->
                             <div class="search__item">
                                 <h6 class="mb-3 font-20 fw-medium text-dark text-capitalize">Search Location</h6>
-                                <div class="position-relative">
-                                    <div class="nice-select" tabindex="0">
-                                        <span class="current">Search Location</span>
-                                        <ul class="list">
-                                            <li data-value="Nothing" data-display="Search Location"
-                                                class="option selected focus">Search Location</li>
-                                            @foreach ($location as $value)
-                                                <li data-value="{{ $value->location }}" class="option">
-                                                    {{ $value->location }}</li>
-                                            @endforeach
-                                        </ul>
+                                <form action="{{ route('User.JobList') }}" method="GET" class="location-select"
+                                    id="locationForm">
+                                <input type="hidden" name="location" id="selectedLocation" value="">
+                                    <div class="position-relative">
+                                        <div class="nice-select select-location" tabindex="0">
+                                            <span class="current">Search Location</span>
+                                            <ul class="list">
+                                                <li data-value="Nothing" data-display="Search Location"
+                                                    class="option selected focus">Search Location</li>
+                                                @foreach ($location as $value)
+                                                    <li data-value="{{ $value->location }}" class="option">
+                                                        {{ $value->location }}</li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
+                                        <i class="fa-light fa-location-dot"></i>
                                     </div>
-                                    <i class="fa-light fa-location-dot"></i>
-                                </div>
+                                </form>
                             </div>
 
                             <!-- job post time -->
@@ -130,9 +134,11 @@
                                     <div class="nice-select" tabindex="0">
                                         <span class="current">Date Posted</span>
                                         <ul class="list">
-                                            <li data-value="Nothing" data-display="Date posted"class="option selected focus">Date Posted</li>
+                                            <li data-value="Nothing"
+                                                data-display="Date posted"class="option selected focus">Date Posted</li>
                                             @foreach ($DatePost as $value)
-                                                <li data-value="{{ $value->created_at }}" class="option">{{ date('d M Y', strtotime($value->created_at)) }}</li>
+                                                <li data-value="{{ $value->created_at }}" class="option">
+                                                    {{ date('d M Y', strtotime($value->created_at)) }}</li>
                                             @endforeach
                                         </ul>
                                     </div>
@@ -153,7 +159,7 @@
                                             <span>({{ $t->count }})</span>
                                         </div>
                                     @endforeach
-                                   
+
                                 </div>
                             </div>
 
@@ -178,17 +184,15 @@
                                 <div class="mb-3 font-20 fw-medium text-dark text-capitalize">salary offered</div>
                                 <div class="search__item__list">
                                     @foreach ($salaryoffer as $salary)
-
                                         <div class="d-flex align-items-center justify-content-between list">
                                             <div class="d-flex gap-2 align-items-center checkbox">
                                                 <input type="checkbox" name="saloffer" id="saloffer">
                                                 <label for="saloffer">{{ $salary->max_sal }}</label>
                                             </div>
-                                            <span>({{$salary->count}})</span>
+                                            <span>({{ $salary->count }})</span>
                                         </div>
-
                                     @endforeach
-                                   
+
                                 </div>
                             </div>
                             <button type="submit"
@@ -196,7 +200,7 @@
                                 aria-label="Search">Find Job</button>
                         </form>
                     </div>
-                   
+
                 </div>
                 <div class="col-lg-7 col-xl-8">
                     <div
@@ -213,13 +217,10 @@
                                 <input type="hidden" name="category" id="selectedCategory" value="">
 
                                 <div class="position-relative">
-                                    <div class="nice-select" tabindex="0">
-                                        <span class="current">Industry</span>
+                                    <div class="nice-select industry-select" tabindex="0">
+                                        <span class="current">All Category</span>
                                         <ul class="list">
-                                            <li data-value="" data-display="All Category" class="option selected focus">
-                                                All Category
-                                            </li>
-                                            @foreach ($jobs as $industry)
+                                            @foreach ($industry as $industry)
                                                 <li data-value="{{ $industry->industry }}" class="option">
                                                     {{ $industry->industry }}
                                                 </li>
@@ -427,35 +428,34 @@
     </div>
 
     <!-- app center end -->
-
 @endsection
 @section('script')
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script>
-        // document.addEventListener("DOMContentLoaded", function() {
-        //     const categorySelect = document.getElementById("categorySelect");
-        //     const categoryForm = document.getElementById("categoryForm");
-        //     const hiddenInput = document.getElementById("selectedCategory");
-
-        //     document.querySelectorAll(".nice-select .option").forEach(option => {
-        //         option.addEventListener("click", function() {
-        //             const selectedValue = this.getAttribute("data-value");
-        //             hiddenInput.value = selectedValue; // Set hidden input value
-        //             categoryForm.submit(); // Auto-submit form
-        //         });
-        //     });
-        // });
 
         document.addEventListener("DOMContentLoaded", function() {
             const categoryForm = document.getElementById("categoryForm");
             const hiddenInput = document.getElementById("selectedCategory");
 
-            document.querySelectorAll(".nice-select .option").forEach(option => {
+            document.querySelectorAll(".industry-select .option").forEach(option => {
                 option.addEventListener("click", function() {
                     const selectedValue = this.getAttribute("data-value");
                     hiddenInput.value = selectedValue; // Set the hidden input value
                     categoryForm.submit(); // Submit the form automatically
+                });
+            });
+        });
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const locationForm = document.getElementById("locationForm");
+            const hiddenInput = document.getElementById("selectedLocation");
+
+            document.querySelectorAll(".select-location .option").forEach(option => {
+                option.addEventListener("click", function() {
+                    const selectedValue = this.getAttribute("data-value");
+                    hiddenInput.value = selectedValue; // Set the hidden input value
+                    locationForm.submit(); // Submit the form automatically
                 });
             });
         });
@@ -469,70 +469,69 @@
         }
     </script>
 
-<script>
-    function handleBookmarkClick(event, jobId, el) {
-        event.preventDefault();
+    <script>
+        function handleBookmarkClick(event, jobId, el) {
+            event.preventDefault();
 
-        let isSaved = el.getAttribute('data-saved') === 'true';
-        let url = isSaved ? '{{ route('User.RemoveSavedJob') }}' : '{{ route('User.SaveJob') }}';
+            let isSaved = el.getAttribute('data-saved') === 'true';
+            let url = isSaved ? '{{ route('User.RemoveSavedJob') }}' : '{{ route('User.SaveJob') }}';
 
-        fetch(url, {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    job_id: jobId
+            fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        job_id: jobId
+                    })
                 })
-            })
-            .then(res => res.json())
-            .then(result => {
-                let className = "bg-danger";
+                .then(res => res.json())
+                .then(result => {
+                    let className = "bg-danger";
 
-                if (result.status_code === 1) {
-                    className = "bg-success";
+                    if (result.status_code === 1) {
+                        className = "bg-success";
 
-                    // Update bookmark icon
-                    const icon = el.querySelector('i');
-                    if (isSaved) {
-                        icon.classList.remove('filled', 'bg-grey', 'text-black');
-                        el.setAttribute('data-saved', 'false');
-                    } else {
-                        icon.classList.add('filled', 'bg-grey', 'text-black');
-                        el.setAttribute('data-saved', 'true');
+                        // Update bookmark icon
+                        const icon = el.querySelector('i');
+                        if (isSaved) {
+                            icon.classList.remove('filled', 'bg-grey', 'text-black');
+                            el.setAttribute('data-saved', 'false');
+                        } else {
+                            icon.classList.add('filled', 'bg-grey', 'text-black');
+                            el.setAttribute('data-saved', 'true');
+                        }
+
+                        // Optional redirect or reload
+                        setTimeout(() => {
+                            if (result.redirect_url) {
+                                window.location.href = result.redirect_url;
+                            } else {
+                                location.reload();
+                            }
+                        }, 750);
+                    } else if (result.status_code === 2) {
+                        className = "bg-warning";
                     }
 
-                    // Optional redirect or reload
-                    setTimeout(() => {
-                        if (result.redirect_url) {
-                            window.location.href = result.redirect_url;
-                        } else {
-                            location.reload();
-                        }
-                    }, 750);
-                } else if (result.status_code === 2) {
-                    className = "bg-warning";
-                }
-
-                Toastify({
-                    text: result.message || "Something went wrong.",
-                    duration: 3000,
-                    gravity: "top",
-                    position: "right",
-                    className: className
-                }).showToast();
-            })
-            .catch(() => {
-                Toastify({
-                    text: "Something went wrong!",
-                    duration: 3000,
-                    gravity: "top",
-                    position: "right",
-                    className: "bg-danger"
-                }).showToast();
-            });
-    }
-</script>
-
+                    Toastify({
+                        text: result.message || "Something went wrong.",
+                        duration: 3000,
+                        gravity: "top",
+                        position: "right",
+                        className: className
+                    }).showToast();
+                })
+                .catch(() => {
+                    Toastify({
+                        text: "Something went wrong!",
+                        duration: 3000,
+                        gravity: "top",
+                        position: "right",
+                        className: "bg-danger"
+                    }).showToast();
+                });
+        }
+    </script>
 @endsection
