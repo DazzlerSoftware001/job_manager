@@ -18,7 +18,7 @@
                         <div class="single__applied__job__content">
                             <div class="icon">
                                 {{-- <img src="{{ asset($job['com_logo']) ?? url('company/logo/default.png')}}" alt=""> --}}
-                                <img src="{{ $job['com_logo'] ? asset($job['com_logo']) : asset('company/logo/default.png') }}"
+                                <img src="{{ $job['com_logo'] ? asset($job['com_logo']) : asset('company/logo/default.png') }}"  onerror="this.onerror=null; this.src='{{ url('company/logo/default.png') }}';"
                                     alt="">
 
                             </div>

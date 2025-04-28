@@ -15,7 +15,7 @@
         <div class="my__details" id="info">
             <div class="info__top">
                 <div class="author__image">
-                    <img id="profileImage" src="{{ url('user/assets/img/' . $user->logo) }}"
+                    <img id="profileImage" src="{{ asset($user->logo) }}"
                         onerror="this.onerror=null; this.src='{{ url('user/assets/img/profile/default.png') }}';"
                         alt="">
                 </div>

@@ -394,7 +394,7 @@
 
                         // Check if logo exists and update the profile image
                         if (data.logo) {
-                            $('#profileImage1').attr('src', "{{ url('recruiter') }}/" + data.logo);
+                            $('#profileImage1').attr('src', "{{ asset('') }}" + data.logo);
                         } else {
                             $('#profileImage1').attr('src',
                                 "{{ url('recruiter/logo/default.png') }}");

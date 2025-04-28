@@ -3,7 +3,7 @@
     Recruiter-Dashboard
 @endsection
 @section('page-title')
-Dashboard
+    Dashboard
 @endsection
 @section('main-container')
     <div class="main-content">
@@ -26,7 +26,7 @@ Dashboard
                                             </div>
                                             <div class="flex-grow-1">
                                                 <p class="text-muted mb-1">Applied</p>
-                                                <h4 class="mb-0">{{$appliedCount}}</h4>
+                                                <h4 class="mb-0">{{ $appliedCount }}</h4>
                                             </div>
 
                                             {{-- <div class="flex-shrink-0 align-self-end ms-2">
@@ -53,7 +53,7 @@ Dashboard
                                             </div>
                                             <div class="flex-grow-1">
                                                 <p class="text-muted mb-1">Shorlisted</p>
-                                                <h4 class="mb-0">{{$shortlistedCount}}</h4>
+                                                <h4 class="mb-0">{{ $shortlistedCount }}</h4>
                                             </div>
 
                                             {{-- <div class="flex-shrink-0 align-self-end ms-2">
@@ -80,7 +80,7 @@ Dashboard
                                             </div>
                                             <div class="flex-grow-1">
                                                 <p class="text-muted mb-1">Hired</p>
-                                                <h4 class="mb-0">{{$hiredCount}}</h4>
+                                                <h4 class="mb-0">{{ $hiredCount }}</h4>
                                             </div>
                                             {{-- <div class="flex-shrink-0 align-self-end ms-2">
                                                 <div class="badge rounded-pill font-size-13 bg-danger-subtle text-danger">- 1.04%
@@ -106,8 +106,7 @@ Dashboard
                                         <div class="dropdown">
                                             <a class="dropdown-toggle text-reset" href="#" data-bs-toggle="dropdown"
                                                 aria-haspopup="true" aria-expanded="false">
-                                                <span class="fw-semibold">Sort By:</span> <span
-                                                    class="text-muted">Yearly<i
+                                                <span class="fw-semibold">Sort By:</span> <span class="text-muted">Yearly<i
                                                         class="mdi mdi-chevron-down ms-1"></i></span>
                                             </a>
 
@@ -129,7 +128,9 @@ Dashboard
 
                                                 <div class="d-flex flex-wrap align-items-center gap-2">
                                                     <h2 class="mb-0">$24,568</h2>
-                                                    <div class="badge rounded-pill font-size-13 bg-success-subtle text-success ">+
+                                                    <div
+                                                        class="badge rounded-pill font-size-13 bg-success-subtle text-success ">
+                                                        +
                                                         2.65%</div>
                                                 </div>
                                             </div>
@@ -180,7 +181,8 @@ Dashboard
                                     </div>
                                     <div class="col-xxl-9">
                                         <div>
-                                            <div id="chart-column" class="apex-charts" data-colors='["#f1f3f7", "#3b76e1"]'></div>
+                                            <div id="chart-column" class="apex-charts"
+                                                data-colors='["#f1f3f7", "#3b76e1"]'></div>
                                         </div>
                                     </div>
                                 </div>
@@ -221,7 +223,8 @@ Dashboard
                                         </div>
 
                                         <div class="m-n3">
-                                            <div id="chart-area" data-colors='["#3b76e1", "#f56e6e"]' class="apex-charts"></div>
+                                            <div id="chart-area" data-colors='["#3b76e1", "#f56e6e"]'
+                                                class="apex-charts"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -255,7 +258,8 @@ Dashboard
                                             </div>
                                         </div>
 
-                                        <div id="chart-donut" data-colors='["#3b76e1", "#f1f3f7", "#f56e6e"]' class="mt-2"></div>
+                                        <div id="chart-donut" data-colors='["#3b76e1", "#f1f3f7", "#f56e6e"]'
+                                            class="mt-2"></div>
 
                                         <div class="text-center mt-4 border-top">
                                             <div class="row">
@@ -318,8 +322,7 @@ Dashboard
                                                     <div class="d-flex align-items-center">
                                                         <div class="flex-shrink-0 me-3">
                                                             <div class="avatar-sm">
-                                                                <div
-                                                                    class="avatar-title bg-primary bg-gradient rounded">
+                                                                <div class="avatar-title bg-primary bg-gradient rounded">
                                                                     #1
                                                                 </div>
                                                             </div>
@@ -330,7 +333,8 @@ Dashboard
                                                             <div class="fw-semibold font-size-15">$ 25.4</div>
                                                         </div>
                                                         <div class="flex-shrink-0">
-                                                            <h5 class="font-size-14 mb-0 text-truncate w-xs bg-light p-2 rounded text-center">
+                                                            <h5
+                                                                class="font-size-14 mb-0 text-truncate w-xs bg-light p-2 rounded text-center">
                                                                 3.82k</h5>
                                                         </div>
                                                     </div>
@@ -339,8 +343,7 @@ Dashboard
                                                     <div class="d-flex align-items-center">
                                                         <div class="flex-shrink-0 me-3">
                                                             <div class="avatar-sm">
-                                                                <div
-                                                                    class="avatar-title bg-primary bg-gradient rounded">
+                                                                <div class="avatar-title bg-primary bg-gradient rounded">
                                                                     #2
                                                                 </div>
                                                             </div>
@@ -350,7 +353,8 @@ Dashboard
                                                             <div class="fw-semibold font-size-15">$ 24.5</div>
                                                         </div>
                                                         <div class="flex-shrink-0">
-                                                            <h5 class="font-size-14 mb-0 text-truncate w-xs bg-light p-2 rounded text-center">
+                                                            <h5
+                                                                class="font-size-14 mb-0 text-truncate w-xs bg-light p-2 rounded text-center">
                                                                 3.14k</h5>
                                                         </div>
                                                     </div>
@@ -359,8 +363,7 @@ Dashboard
                                                     <div class="d-flex align-items-center">
                                                         <div class="flex-shrink-0 me-3">
                                                             <div class="avatar-sm">
-                                                                <div
-                                                                    class="avatar-title bg-primary bg-gradient rounded">
+                                                                <div class="avatar-title bg-primary bg-gradient rounded">
                                                                     #3
                                                                 </div>
                                                             </div>
@@ -370,7 +373,8 @@ Dashboard
                                                             <div class="fw-semibold font-size-15">$ 22.5</div>
                                                         </div>
                                                         <div class="flex-shrink-0">
-                                                            <h5 class="font-size-14 mb-0 text-truncate w-xs bg-light p-2 rounded text-center">
+                                                            <h5
+                                                                class="font-size-14 mb-0 text-truncate w-xs bg-light p-2 rounded text-center">
                                                                 2.84k</h5>
                                                         </div>
                                                     </div>
@@ -379,8 +383,7 @@ Dashboard
                                                     <div class="d-flex align-items-center">
                                                         <div class="flex-shrink-0 me-3">
                                                             <div class="avatar-sm">
-                                                                <div
-                                                                    class="avatar-title bg-primary bg-gradient rounded">
+                                                                <div class="avatar-title bg-primary bg-gradient rounded">
                                                                     #4
                                                                 </div>
                                                             </div>
@@ -390,7 +393,8 @@ Dashboard
                                                             <div class="fw-semibold font-size-15">$ 21.5</div>
                                                         </div>
                                                         <div class="flex-shrink-0">
-                                                            <h5 class="font-size-14 mb-0 text-truncate w-xs bg-light p-2 rounded text-center">
+                                                            <h5
+                                                                class="font-size-14 mb-0 text-truncate w-xs bg-light p-2 rounded text-center">
                                                                 2.06k</h5>
                                                         </div>
                                                     </div>
@@ -422,13 +426,15 @@ Dashboard
                                                         <div class="dropdown">
                                                             <a class="dropdown-toggle" href="#" role="button"
                                                                 data-bs-toggle="dropdown" aria-expanded="false">
-                                                                <i data-eva="more-horizontal-outline" data-eva-width="20" data-eva-height="20"
-                                                                    class="fill-white"></i>
+                                                                <i data-eva="more-horizontal-outline" data-eva-width="20"
+                                                                    data-eva-height="20" class="fill-white"></i>
                                                             </a>
-    
+
                                                             <ul class="dropdown-menu dropdown-menu-end">
-                                                                <li><a class="dropdown-item" href="#">Action</a></li>
-                                                                <li><a class="dropdown-item" href="#">Another action</a>
+                                                                <li><a class="dropdown-item" href="#">Action</a>
+                                                                </li>
+                                                                <li><a class="dropdown-item" href="#">Another
+                                                                        action</a>
                                                                 </li>
                                                                 <li><a class="dropdown-item" href="#">Something else
                                                                         here</a></li>
@@ -440,12 +446,14 @@ Dashboard
                                         </div>
                                     </div>
                                     <!-- end user-profile-img -->
-    
+
                                     <div class="mt-n5 position-relative">
                                         <div class="text-center">
                                             <!-- Profile Image with Camera Icon -->
                                             <div class="position-relative d-inline-block">
-                                                <img id="profileImage" src="{{url('recruiter/assets/images/profile/default.png')}}" onerror="this.onerror=null; this.src='{{ url('recruiter/assets/images/profile/default.png') }}';"
+                                                <img id="profileImage"
+                                                    src="{{ url('recruiter/assets/images/profile/default.png') }}"
+                                                    onerror="this.onerror=null; this.src='{{ url('recruiter/assets/images/profile/default.png') }}';"
                                                     alt="" class="avatar-xl rounded-circle img-thumbnail">
                                                 <button
                                                     class="btn btn-sm btn-primary position-absolute bottom-0 end-0 rounded-circle"
@@ -458,7 +466,7 @@ Dashboard
                                             <div class="mt-3">
                                                 <!-- Editable Name with Pencil Icon -->
                                                 <h5 class="mb-1 d-inline-block position-relative" id="nameDisplay">
-                                                    </h5>
+                                                </h5>
                                                 <input type="text" id="nameInput" class="form-control d-none"
                                                     value="Enter your name">
 
@@ -501,7 +509,7 @@ Dashboard
                                         </div>
                                     </div>
                                     <!-- Edit Name Modal End -->
-    
+
                                     <div class="px-3 py-2">
                                         {{-- <div class="row text-center pb-3">
                                             <div class="col-6 border-end">
@@ -517,10 +525,10 @@ Dashboard
                                                 </div>
                                             </div>
                                         </div> --}}
-    
+
                                         <hr class="mb-4">
-    
-                                        
+
+
                                         <div class="mb-4">
                                             {{-- <div class="d-flex align-items-start">
                                                 <div class="flex-grow-1">
@@ -532,21 +540,24 @@ Dashboard
                                                     </button>
                                                 </div>
                                             </div> --}}
-    
-                                            <div id="chart-radialBar" class="apex-charts" data-colors='["#3b76e1"]'></div>
-    
+
+                                            <div id="chart-radialBar" class="apex-charts" data-colors='["#3b76e1"]'>
+                                            </div>
+
                                             <div class="text-center mt-4">
                                                 <h4>$26,256</h4>
                                                 <p class="text-muted">Earning this Month</p>
-                                                <div
-                                                    class="d-flex align-items-start justify-content-center gap-2">
-                                                    <div class="badge rounded-pill font-size-13 bg-success-subtle text-success ">+ 2.65%
+                                                <div class="d-flex align-items-start justify-content-center gap-2">
+                                                    <div
+                                                        class="badge rounded-pill font-size-13 bg-success-subtle text-success ">
+                                                        + 2.65%
                                                     </div>
-                                                    <div class="text-muted text-start text-truncate">From previous period</div>
+                                                    <div class="text-muted text-start text-truncate">From previous period
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-    
+
                                         {{-- <hr class="mb-4"> --}}
                                         {{-- <div class="px-4 mx-n3" data-simplebar style="height: 258px;">
     
@@ -629,8 +640,7 @@ Dashboard
                                     <div class="flex-shrink-0">
                                         <div class="dropdown">
                                             <a class="dropdown-toggle text-muted" href="#"
-                                                data-bs-toggle="dropdown" aria-haspopup="true"
-                                                aria-expanded="false">
+                                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 <i data-eva="more-horizontal-outline" class="fill-muted"
                                                     data-eva-height="18" data-eva-width="18"></i>
                                             </a>
@@ -663,14 +673,13 @@ Dashboard
                                                 <div class="row align-items-center">
                                                     <div class="col-auto">
                                                         <div class="p-1 py-2">
-                                                            <h5 class="font-size-16 mb-0">5 <i
-                                                                    class="mdi mdi-star"></i></h5>
+                                                            <h5 class="font-size-16 mb-0">5 <i class="mdi mdi-star"></i>
+                                                            </h5>
                                                         </div>
                                                     </div>
                                                     <div class="col">
                                                         <div class="p-1 py-2">
-                                                            <div
-                                                                class="progress animated-progess custom-progress">
+                                                            <div class="progress animated-progess custom-progress">
                                                                 <div class="progress-bar bg-gradient bg-primary"
                                                                     role="progressbar" style="width: 90%"
                                                                     aria-valuenow="90" aria-valuemin="0"
@@ -690,14 +699,13 @@ Dashboard
                                                 <div class="row align-items-center">
                                                     <div class="col-auto">
                                                         <div class="p-1 py-2">
-                                                            <h5 class="font-size-16 mb-0">4 <i
-                                                                    class="mdi mdi-star"></i></h5>
+                                                            <h5 class="font-size-16 mb-0">4 <i class="mdi mdi-star"></i>
+                                                            </h5>
                                                         </div>
                                                     </div>
                                                     <div class="col">
                                                         <div class="p-1 py-2">
-                                                            <div
-                                                                class="progress animated-progess custom-progress">
+                                                            <div class="progress animated-progess custom-progress">
                                                                 <div class="progress-bar bg-gradient bg-primary"
                                                                     role="progressbar" style="width: 75%"
                                                                     aria-valuenow="75" aria-valuemin="0"
@@ -717,14 +725,13 @@ Dashboard
                                                 <div class="row align-items-center">
                                                     <div class="col-auto">
                                                         <div class="p-1 py-2">
-                                                            <h5 class="font-size-16 mb-0">3 <i
-                                                                    class="mdi mdi-star"></i></h5>
+                                                            <h5 class="font-size-16 mb-0">3 <i class="mdi mdi-star"></i>
+                                                            </h5>
                                                         </div>
                                                     </div>
                                                     <div class="col">
                                                         <div class="p-1 py-2">
-                                                            <div
-                                                                class="progress animated-progess custom-progress">
+                                                            <div class="progress animated-progess custom-progress">
                                                                 <div class="progress-bar bg-gradient bg-primary"
                                                                     role="progressbar" style="width: 60%"
                                                                     aria-valuenow="60" aria-valuemin="0"
@@ -744,14 +751,13 @@ Dashboard
                                                 <div class="row align-items-center">
                                                     <div class="col-auto">
                                                         <div class="p-1 py-2">
-                                                            <h5 class="font-size-16 mb-0">2 <i
-                                                                    class="mdi mdi-star"></i></h5>
+                                                            <h5 class="font-size-16 mb-0">2 <i class="mdi mdi-star"></i>
+                                                            </h5>
                                                         </div>
                                                     </div>
                                                     <div class="col">
                                                         <div class="p-1 py-2">
-                                                            <div
-                                                                class="progress animated-progess custom-progress">
+                                                            <div class="progress animated-progess custom-progress">
                                                                 <div class="progress-bar bg-gradient bg-warning"
                                                                     role="progressbar" style="width: 50%"
                                                                     aria-valuenow="50" aria-valuemin="0"
@@ -772,14 +778,13 @@ Dashboard
                                                 <div class="row align-items-center">
                                                     <div class="col-auto">
                                                         <div class="p-1 py-2">
-                                                            <h5 class="font-size-16 mb-0">1 <i
-                                                                    class="mdi mdi-star"></i></h5>
+                                                            <h5 class="font-size-16 mb-0">1 <i class="mdi mdi-star"></i>
+                                                            </h5>
                                                         </div>
                                                     </div>
                                                     <div class="col">
                                                         <div class="p-1 py-2">
-                                                            <div
-                                                                class="progress animated-progess custom-progress">
+                                                            <div class="progress animated-progess custom-progress">
                                                                 <div class="progress-bar bg-gradient bg-danger"
                                                                     role="progressbar" style="width: 20%"
                                                                     aria-valuenow="20" aria-valuemin="0"
@@ -813,38 +818,50 @@ Dashboard
                                                         <div>
                                                             <div class="d-flex align-items-start">
                                                                 <div class="flex-grow-1">
-                                                                    <div class="badge bg-success bg-gradient mb-2"><i class="mdi mdi-star"></i> 4.1</div>
+                                                                    <div class="badge bg-success bg-gradient mb-2"><i
+                                                                            class="mdi mdi-star"></i> 4.1</div>
                                                                 </div>
                                                                 <div class="flex-shrink-0">
                                                                     <p class="text-muted font-size-13">12 Jul, 21</p>
                                                                 </div>
                                                             </div>
-                                                            
-                                                            <p class="text-muted mb-4">It will be as simple as in fact, It will seem like simplified</p>
+
+                                                            <p class="text-muted mb-4">It will be as simple as in fact, It
+                                                                will seem like simplified</p>
                                                             <div class="d-flex align-items-start">
                                                                 <div class="flex-grow-1">
                                                                     <h5 class="font-size-14 mb-0">Samuel</h5>
                                                                 </div>
-            
+
                                                                 <div class="flex-shrink-0">
                                                                     <div class="hstack gap-3">
-                                                                        <div data-bs-toggle="tooltip" data-bs-placement="top" title="Like">
-                                                                            <a href="#" class="text-muted"><i class="mdi mdi-thumb-up-outline"></i></a>
+                                                                        <div data-bs-toggle="tooltip"
+                                                                            data-bs-placement="top" title="Like">
+                                                                            <a href="#" class="text-muted"><i
+                                                                                    class="mdi mdi-thumb-up-outline"></i></a>
                                                                         </div>
                                                                         <div class="vr"></div>
-                                                                        <div data-bs-toggle="tooltip" data-bs-placement="top" title="Comment">
-                                                                            <a href="#" class="text-muted"><i class="mdi mdi-comment-text-outline"></i></a>
+                                                                        <div data-bs-toggle="tooltip"
+                                                                            data-bs-placement="top" title="Comment">
+                                                                            <a href="#" class="text-muted"><i
+                                                                                    class="mdi mdi-comment-text-outline"></i></a>
                                                                         </div>
                                                                         <div class="vr"></div>
                                                                         <div class="dropdown">
-                                                                            <a class="text-muted dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                            <a class="text-muted dropdown-toggle"
+                                                                                href="#" data-bs-toggle="dropdown"
+                                                                                aria-haspopup="true"
+                                                                                aria-expanded="false">
                                                                                 <i class="mdi mdi-dots-horizontal"></i>
                                                                             </a>
-                                                                        
+
                                                                             <div class="dropdown-menu dropdown-menu-right">
-                                                                            <a class="dropdown-item" href="#">Action</a>
-                                                                            <a class="dropdown-item" href="#">Another action</a>
-                                                                            <a class="dropdown-item" href="#">Something else here</a>
+                                                                                <a class="dropdown-item"
+                                                                                    href="#">Action</a>
+                                                                                <a class="dropdown-item"
+                                                                                    href="#">Another action</a>
+                                                                                <a class="dropdown-item"
+                                                                                    href="#">Something else here</a>
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -856,37 +873,49 @@ Dashboard
                                                         <div>
                                                             <div class="d-flex align-items-start">
                                                                 <div class="flex-grow-1">
-                                                                    <div class="badge bg-success bg-gradient mb-2"><i class="mdi mdi-star"></i> 4.0</div>
+                                                                    <div class="badge bg-success bg-gradient mb-2"><i
+                                                                            class="mdi mdi-star"></i> 4.0</div>
                                                                 </div>
                                                                 <div class="flex-shrink-0">
                                                                     <p class="text-muted font-size-13">06 Jul, 21</p>
                                                                 </div>
                                                             </div>
-                                                            <p class="text-muted mb-4">Sed ut perspiciatis iste error sit</p>
+                                                            <p class="text-muted mb-4">Sed ut perspiciatis iste error sit
+                                                            </p>
                                                             <div class="d-flex align-items-start">
                                                                 <div class="flex-grow-1">
                                                                     <h5 class="font-size-14 mb-0">Joseph</h5>
                                                                 </div>
-            
+
                                                                 <div class="flex-shrink-0">
                                                                     <div class="hstack gap-3">
-                                                                        <div data-bs-toggle="tooltip" data-bs-placement="top" title="Like">
-                                                                            <a href="#" class="text-muted"><i class="mdi mdi-thumb-up-outline"></i></a>
+                                                                        <div data-bs-toggle="tooltip"
+                                                                            data-bs-placement="top" title="Like">
+                                                                            <a href="#" class="text-muted"><i
+                                                                                    class="mdi mdi-thumb-up-outline"></i></a>
                                                                         </div>
                                                                         <div class="vr"></div>
-                                                                        <div data-bs-toggle="tooltip" data-bs-placement="top" title="Comment">
-                                                                            <a href="#" class="text-muted"><i class="mdi mdi-comment-text-outline"></i></a>
+                                                                        <div data-bs-toggle="tooltip"
+                                                                            data-bs-placement="top" title="Comment">
+                                                                            <a href="#" class="text-muted"><i
+                                                                                    class="mdi mdi-comment-text-outline"></i></a>
                                                                         </div>
                                                                         <div class="vr"></div>
                                                                         <div class="dropdown">
-                                                                            <a class="text-muted dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                            <a class="text-muted dropdown-toggle"
+                                                                                href="#" data-bs-toggle="dropdown"
+                                                                                aria-haspopup="true"
+                                                                                aria-expanded="false">
                                                                                 <i class="mdi mdi-dots-horizontal"></i>
                                                                             </a>
-                                                                        
+
                                                                             <div class="dropdown-menu dropdown-menu-right">
-                                                                            <a class="dropdown-item" href="#">Action</a>
-                                                                            <a class="dropdown-item" href="#">Another action</a>
-                                                                            <a class="dropdown-item" href="#">Something else here</a>
+                                                                                <a class="dropdown-item"
+                                                                                    href="#">Action</a>
+                                                                                <a class="dropdown-item"
+                                                                                    href="#">Another action</a>
+                                                                                <a class="dropdown-item"
+                                                                                    href="#">Something else here</a>
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -894,42 +923,54 @@ Dashboard
                                                             </div>
                                                         </div>
                                                     </li>
-    
+
                                                     <li class="list-group-item">
                                                         <div>
                                                             <div class="d-flex align-items-start">
                                                                 <div class="flex-grow-1">
-                                                                    <div class="badge bg-success bg-gradient mb-2"><i class="mdi mdi-star"></i> 4.2</div>
+                                                                    <div class="badge bg-success bg-gradient mb-2"><i
+                                                                            class="mdi mdi-star"></i> 4.2</div>
                                                                 </div>
                                                                 <div class="flex-shrink-0">
                                                                     <p class="text-muted font-size-13">26 Jun, 21</p>
                                                                 </div>
                                                             </div>
-                                                            <p class="text-muted mb-4">Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet</p>
+                                                            <p class="text-muted mb-4">Neque porro quisquam est, qui
+                                                                dolorem ipsum quia dolor sit amet</p>
                                                             <div class="d-flex align-items-start">
                                                                 <div class="flex-grow-1">
                                                                     <h5 class="font-size-14 mb-0">Paul</h5>
                                                                 </div>
-            
+
                                                                 <div class="flex-shrink-0">
                                                                     <div class="hstack gap-3">
-                                                                        <div data-bs-toggle="tooltip" data-bs-placement="top" title="Like">
-                                                                            <a href="#" class="text-muted"><i class="mdi mdi-thumb-up-outline"></i></a>
+                                                                        <div data-bs-toggle="tooltip"
+                                                                            data-bs-placement="top" title="Like">
+                                                                            <a href="#" class="text-muted"><i
+                                                                                    class="mdi mdi-thumb-up-outline"></i></a>
                                                                         </div>
                                                                         <div class="vr"></div>
-                                                                        <div data-bs-toggle="tooltip" data-bs-placement="top" title="Comment">
-                                                                            <a href="#" class="text-muted"><i class="mdi mdi-comment-text-outline"></i></a>
+                                                                        <div data-bs-toggle="tooltip"
+                                                                            data-bs-placement="top" title="Comment">
+                                                                            <a href="#" class="text-muted"><i
+                                                                                    class="mdi mdi-comment-text-outline"></i></a>
                                                                         </div>
                                                                         <div class="vr"></div>
                                                                         <div class="dropdown">
-                                                                            <a class="text-muted dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                            <a class="text-muted dropdown-toggle"
+                                                                                href="#" data-bs-toggle="dropdown"
+                                                                                aria-haspopup="true"
+                                                                                aria-expanded="false">
                                                                                 <i class="mdi mdi-dots-horizontal"></i>
                                                                             </a>
-                                                                        
+
                                                                             <div class="dropdown-menu dropdown-menu-right">
-                                                                            <a class="dropdown-item" href="#">Action</a>
-                                                                            <a class="dropdown-item" href="#">Another action</a>
-                                                                            <a class="dropdown-item" href="#">Something else here</a>
+                                                                                <a class="dropdown-item"
+                                                                                    href="#">Action</a>
+                                                                                <a class="dropdown-item"
+                                                                                    href="#">Another action</a>
+                                                                                <a class="dropdown-item"
+                                                                                    href="#">Something else here</a>
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -937,42 +978,54 @@ Dashboard
                                                             </div>
                                                         </div>
                                                     </li>
-    
+
                                                     <li class="list-group-item">
                                                         <div>
                                                             <div class="d-flex align-items-start">
                                                                 <div class="flex-grow-1">
-                                                                    <div class="badge bg-success bg-gradient mb-2"><i class="mdi mdi-star"></i> 4.1</div>
+                                                                    <div class="badge bg-success bg-gradient mb-2"><i
+                                                                            class="mdi mdi-star"></i> 4.1</div>
                                                                 </div>
                                                                 <div class="flex-shrink-0">
                                                                     <p class="text-muted font-size-13">24 Jun, 21</p>
                                                                 </div>
                                                             </div>
-                                                            <p class="text-muted mb-4">Ut enim ad minima veniam, quis nostrum ullam corporis suscipit consequatur nisi ut</p>
+                                                            <p class="text-muted mb-4">Ut enim ad minima veniam, quis
+                                                                nostrum ullam corporis suscipit consequatur nisi ut</p>
                                                             <div class="d-flex align-items-start">
                                                                 <div class="flex-grow-1">
                                                                     <h5 class="font-size-14 mb-0">Patrick</h5>
                                                                 </div>
-            
+
                                                                 <div class="flex-shrink-0">
                                                                     <div class="hstack gap-3">
-                                                                        <div data-bs-toggle="tooltip" data-bs-placement="top" title="Like">
-                                                                            <a href="#" class="text-muted"><i class="mdi mdi-thumb-up-outline"></i></a>
+                                                                        <div data-bs-toggle="tooltip"
+                                                                            data-bs-placement="top" title="Like">
+                                                                            <a href="#" class="text-muted"><i
+                                                                                    class="mdi mdi-thumb-up-outline"></i></a>
                                                                         </div>
                                                                         <div class="vr"></div>
-                                                                        <div data-bs-toggle="tooltip" data-bs-placement="top" title="Comment">
-                                                                            <a href="#" class="text-muted"><i class="mdi mdi-comment-text-outline"></i></a>
+                                                                        <div data-bs-toggle="tooltip"
+                                                                            data-bs-placement="top" title="Comment">
+                                                                            <a href="#" class="text-muted"><i
+                                                                                    class="mdi mdi-comment-text-outline"></i></a>
                                                                         </div>
                                                                         <div class="vr"></div>
                                                                         <div class="dropdown">
-                                                                            <a class="text-muted dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                            <a class="text-muted dropdown-toggle"
+                                                                                href="#" data-bs-toggle="dropdown"
+                                                                                aria-haspopup="true"
+                                                                                aria-expanded="false">
                                                                                 <i class="mdi mdi-dots-horizontal"></i>
                                                                             </a>
-                                                                        
+
                                                                             <div class="dropdown-menu dropdown-menu-right">
-                                                                            <a class="dropdown-item" href="#">Action</a>
-                                                                            <a class="dropdown-item" href="#">Another action</a>
-                                                                            <a class="dropdown-item" href="#">Something else here</a>
+                                                                                <a class="dropdown-item"
+                                                                                    href="#">Action</a>
+                                                                                <a class="dropdown-item"
+                                                                                    href="#">Another action</a>
+                                                                                <a class="dropdown-item"
+                                                                                    href="#">Something else here</a>
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -980,7 +1033,7 @@ Dashboard
                                                             </div>
                                                         </div>
                                                     </li>
-                                                    
+
                                                 </ul>
                                             </div>
                                         </div>
@@ -1004,8 +1057,8 @@ Dashboard
                                     </div>
                                     <div class="flex-shrink-0">
                                         <div class="dropdown">
-                                            <a class="dropdown-toggle text-reset" href="#" data-bs-toggle="dropdown"
-                                                aria-haspopup="true" aria-expanded="false">
+                                            <a class="dropdown-toggle text-reset" href="#"
+                                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 <span class="fw-semibold">Report By:</span> <span
                                                     class="text-muted">Monthly<i
                                                         class="mdi mdi-chevron-down ms-1"></i></span>
@@ -1034,7 +1087,8 @@ Dashboard
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td><a href="javascript: void(0);" class="text-body fw-semibold">#BR2150</a> </td>
+                                                <td><a href="javascript: void(0);"
+                                                        class="text-body fw-semibold">#BR2150</a> </td>
                                                 <td>Smith</td>
                                                 <td>
                                                     07 Oct, 2021
@@ -1043,25 +1097,36 @@ Dashboard
                                                     $24.05
                                                 </td>
                                                 <td class="text-center">
-                                                    <span class="badge badge-pill bg-success-subtle text-success  font-size-11">Paid</span>
+                                                    <span
+                                                        class="badge badge-pill bg-success-subtle text-success  font-size-11">Paid</span>
                                                 </td>
                                                 <td>
                                                     <div class="d-flex gap-2">
-                                                        <button type="button" class="btn btn-primary bg-gradient btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="View">
-                                                            <i data-eva="eye" data-eva-height="14" data-eva-width="14" class="fill-white align-text-top"></i>
+                                                        <button type="button" class="btn btn-primary bg-gradient btn-sm"
+                                                            data-bs-toggle="tooltip" data-bs-placement="top"
+                                                            title="View">
+                                                            <i data-eva="eye" data-eva-height="14" data-eva-width="14"
+                                                                class="fill-white align-text-top"></i>
                                                         </button>
-                                                        <button type="button" class="btn btn-success bg-gradient btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit">
-                                                            <i data-eva="edit" data-eva-height="14" data-eva-width="14" class="fill-white align-text-top"></i>
+                                                        <button type="button" class="btn btn-success bg-gradient btn-sm"
+                                                            data-bs-toggle="tooltip" data-bs-placement="top"
+                                                            title="Edit">
+                                                            <i data-eva="edit" data-eva-height="14" data-eva-width="14"
+                                                                class="fill-white align-text-top"></i>
                                                         </button>
-                                                        <button type="button" class="btn btn-danger bg-gradient btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete">
-                                                            <i data-eva="trash-2" data-eva-height="14" data-eva-width="14" class="fill-white align-text-top"></i>
+                                                        <button type="button" class="btn btn-danger bg-gradient btn-sm"
+                                                            data-bs-toggle="tooltip" data-bs-placement="top"
+                                                            title="Delete">
+                                                            <i data-eva="trash-2" data-eva-height="14"
+                                                                data-eva-width="14" class="fill-white align-text-top"></i>
                                                         </button>
                                                     </div>
                                                 </td>
                                             </tr>
 
                                             <tr>
-                                                <td><a href="javascript: void(0);" class="text-body fw-semibold">#BR2149</a> </td>
+                                                <td><a href="javascript: void(0);"
+                                                        class="text-body fw-semibold">#BR2149</a> </td>
                                                 <td>James</td>
                                                 <td>
                                                     07 Oct, 2021
@@ -1070,25 +1135,36 @@ Dashboard
                                                     $26.15
                                                 </td>
                                                 <td class="text-center">
-                                                    <span class="badge badge-pill bg-success-subtle text-success  font-size-11">Paid</span>
+                                                    <span
+                                                        class="badge badge-pill bg-success-subtle text-success  font-size-11">Paid</span>
                                                 </td>
                                                 <td>
                                                     <div class="d-flex gap-2">
-                                                        <button type="button" class="btn btn-primary bg-gradient btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="View">
-                                                            <i data-eva="eye" data-eva-height="14" data-eva-width="14" class="fill-white align-text-top"></i>
+                                                        <button type="button" class="btn btn-primary bg-gradient btn-sm"
+                                                            data-bs-toggle="tooltip" data-bs-placement="top"
+                                                            title="View">
+                                                            <i data-eva="eye" data-eva-height="14" data-eva-width="14"
+                                                                class="fill-white align-text-top"></i>
                                                         </button>
-                                                        <button type="button" class="btn btn-success bg-gradient btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit">
-                                                            <i data-eva="edit" data-eva-height="14" data-eva-width="14" class="fill-white align-text-top"></i>
+                                                        <button type="button" class="btn btn-success bg-gradient btn-sm"
+                                                            data-bs-toggle="tooltip" data-bs-placement="top"
+                                                            title="Edit">
+                                                            <i data-eva="edit" data-eva-height="14" data-eva-width="14"
+                                                                class="fill-white align-text-top"></i>
                                                         </button>
-                                                        <button type="button" class="btn btn-danger bg-gradient btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete">
-                                                            <i data-eva="trash-2" data-eva-height="14" data-eva-width="14" class="fill-white align-text-top"></i>
+                                                        <button type="button" class="btn btn-danger bg-gradient btn-sm"
+                                                            data-bs-toggle="tooltip" data-bs-placement="top"
+                                                            title="Delete">
+                                                            <i data-eva="trash-2" data-eva-height="14"
+                                                                data-eva-width="14" class="fill-white align-text-top"></i>
                                                         </button>
                                                     </div>
                                                 </td>
                                             </tr>
 
                                             <tr>
-                                                <td><a href="javascript: void(0);" class="text-body fw-semibold">#BR2148</a> </td>
+                                                <td><a href="javascript: void(0);"
+                                                        class="text-body fw-semibold">#BR2148</a> </td>
                                                 <td>Jill</td>
                                                 <td>
                                                     06 Oct, 2021
@@ -1097,25 +1173,36 @@ Dashboard
                                                     $21.25
                                                 </td>
                                                 <td class="text-center">
-                                                    <span class="badge badge-pill  bg-warning-subtle  text-warning  font-size-11">Refund</span>
+                                                    <span
+                                                        class="badge badge-pill  bg-warning-subtle  text-warning  font-size-11">Refund</span>
                                                 </td>
                                                 <td>
                                                     <div class="d-flex gap-2">
-                                                        <button type="button" class="btn btn-primary bg-gradient btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="View">
-                                                            <i data-eva="eye" data-eva-height="14" data-eva-width="14" class="fill-white align-text-top"></i>
+                                                        <button type="button" class="btn btn-primary bg-gradient btn-sm"
+                                                            data-bs-toggle="tooltip" data-bs-placement="top"
+                                                            title="View">
+                                                            <i data-eva="eye" data-eva-height="14" data-eva-width="14"
+                                                                class="fill-white align-text-top"></i>
                                                         </button>
-                                                        <button type="button" class="btn btn-success bg-gradient btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit">
-                                                            <i data-eva="edit" data-eva-height="14" data-eva-width="14" class="fill-white align-text-top"></i>
+                                                        <button type="button" class="btn btn-success bg-gradient btn-sm"
+                                                            data-bs-toggle="tooltip" data-bs-placement="top"
+                                                            title="Edit">
+                                                            <i data-eva="edit" data-eva-height="14" data-eva-width="14"
+                                                                class="fill-white align-text-top"></i>
                                                         </button>
-                                                        <button type="button" class="btn btn-danger bg-gradient btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete">
-                                                            <i data-eva="trash-2" data-eva-height="14" data-eva-width="14" class="fill-white align-text-top"></i>
+                                                        <button type="button" class="btn btn-danger bg-gradient btn-sm"
+                                                            data-bs-toggle="tooltip" data-bs-placement="top"
+                                                            title="Delete">
+                                                            <i data-eva="trash-2" data-eva-height="14"
+                                                                data-eva-width="14" class="fill-white align-text-top"></i>
                                                         </button>
                                                     </div>
                                                 </td>
                                             </tr>
 
                                             <tr>
-                                                <td><a href="javascript: void(0);" class="text-body fw-semibold">#BR2147</a> </td>
+                                                <td><a href="javascript: void(0);"
+                                                        class="text-body fw-semibold">#BR2147</a> </td>
                                                 <td>Kyle</td>
                                                 <td>
                                                     05 Oct, 2021
@@ -1124,25 +1211,36 @@ Dashboard
                                                     $25.03
                                                 </td>
                                                 <td class="text-center">
-                                                    <span class="badge badge-pill bg-success-subtle text-success  font-size-11">Paid</span>
+                                                    <span
+                                                        class="badge badge-pill bg-success-subtle text-success  font-size-11">Paid</span>
                                                 </td>
                                                 <td>
                                                     <div class="d-flex gap-2">
-                                                        <button type="button" class="btn btn-primary bg-gradient btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="View">
-                                                            <i data-eva="eye" data-eva-height="14" data-eva-width="14" class="fill-white align-text-top"></i>
+                                                        <button type="button" class="btn btn-primary bg-gradient btn-sm"
+                                                            data-bs-toggle="tooltip" data-bs-placement="top"
+                                                            title="View">
+                                                            <i data-eva="eye" data-eva-height="14" data-eva-width="14"
+                                                                class="fill-white align-text-top"></i>
                                                         </button>
-                                                        <button type="button" class="btn btn-success bg-gradient btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit">
-                                                            <i data-eva="edit" data-eva-height="14" data-eva-width="14" class="fill-white align-text-top"></i>
+                                                        <button type="button" class="btn btn-success bg-gradient btn-sm"
+                                                            data-bs-toggle="tooltip" data-bs-placement="top"
+                                                            title="Edit">
+                                                            <i data-eva="edit" data-eva-height="14" data-eva-width="14"
+                                                                class="fill-white align-text-top"></i>
                                                         </button>
-                                                        <button type="button" class="btn btn-danger bg-gradient btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete">
-                                                            <i data-eva="trash-2" data-eva-height="14" data-eva-width="14" class="fill-white align-text-top"></i>
+                                                        <button type="button" class="btn btn-danger bg-gradient btn-sm"
+                                                            data-bs-toggle="tooltip" data-bs-placement="top"
+                                                            title="Delete">
+                                                            <i data-eva="trash-2" data-eva-height="14"
+                                                                data-eva-width="14" class="fill-white align-text-top"></i>
                                                         </button>
                                                     </div>
                                                 </td>
                                             </tr>
 
                                             <tr>
-                                                <td><a href="javascript: void(0);" class="text-body fw-semibold">#BR2146</a> </td>
+                                                <td><a href="javascript: void(0);"
+                                                        class="text-body fw-semibold">#BR2146</a> </td>
                                                 <td>Robert</td>
                                                 <td>
                                                     05 Oct, 2021
@@ -1151,18 +1249,28 @@ Dashboard
                                                     $22.61
                                                 </td>
                                                 <td class="text-center">
-                                                    <span class="badge badge-pill bg-success-subtle text-success  font-size-11">Paid</span>
+                                                    <span
+                                                        class="badge badge-pill bg-success-subtle text-success  font-size-11">Paid</span>
                                                 </td>
                                                 <td>
                                                     <div class="d-flex gap-2">
-                                                        <button type="button" class="btn btn-primary bg-gradient btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="View">
-                                                            <i data-eva="eye" data-eva-height="14" data-eva-width="14" class="fill-white align-text-top"></i>
+                                                        <button type="button" class="btn btn-primary bg-gradient btn-sm"
+                                                            data-bs-toggle="tooltip" data-bs-placement="top"
+                                                            title="View">
+                                                            <i data-eva="eye" data-eva-height="14" data-eva-width="14"
+                                                                class="fill-white align-text-top"></i>
                                                         </button>
-                                                        <button type="button" class="btn btn-success bg-gradient btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit">
-                                                            <i data-eva="edit" data-eva-height="14" data-eva-width="14" class="fill-white align-text-top"></i>
+                                                        <button type="button" class="btn btn-success bg-gradient btn-sm"
+                                                            data-bs-toggle="tooltip" data-bs-placement="top"
+                                                            title="Edit">
+                                                            <i data-eva="edit" data-eva-height="14" data-eva-width="14"
+                                                                class="fill-white align-text-top"></i>
                                                         </button>
-                                                        <button type="button" class="btn btn-danger bg-gradient btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete">
-                                                            <i data-eva="trash-2" data-eva-height="14" data-eva-width="14" class="fill-white align-text-top"></i>
+                                                        <button type="button" class="btn btn-danger bg-gradient btn-sm"
+                                                            data-bs-toggle="tooltip" data-bs-placement="top"
+                                                            title="Delete">
+                                                            <i data-eva="trash-2" data-eva-height="14"
+                                                                data-eva-width="14" class="fill-white align-text-top"></i>
                                                         </button>
                                                     </div>
                                                 </td>
@@ -1185,15 +1293,15 @@ Dashboard
             <!-- container-fluid -->
         </div>
         <!-- End Page-content -->
-@endsection
+    @endsection
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     @section('script')
         {{-- To get details --}}
         <script>
             $(document).ready(function() {
                 var defaultImage = "{{ url('recruiter/assets/images/profile/default.png') }}";
-                
+
                 $.ajax({
                     url: "{{ route('Recruiter.dashboardData') }}",
                     type: 'GET',
@@ -1204,10 +1312,11 @@ Dashboard
 
                         // Check if logo exists and update the profile image
                         if (data.logo) {
-                            $('#profileImage').attr('src', "{{ url('recruiter') }}/" + data.logo);
+                            $('#profileImage').attr('src', "{{ asset('') }}" + data.logo);
                         } else {
                             $('#profileImage').attr('src', defaultImage);
                         }
+
 
                         $('#nameDisplay').text(data.name);
                     },
@@ -1366,4 +1475,3 @@ Dashboard
             });
         </script>
     @endsection
-              

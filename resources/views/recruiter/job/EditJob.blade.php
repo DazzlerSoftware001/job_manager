@@ -404,8 +404,8 @@
                                         <div class="col-xl-6 text-center mt-3">
                                             <label for="job_image">Company Logo <span class="text-danger">*</span></label>
                                             <div class="mt-3">
-                                                <img id="imagePreview" src="{{ url('recruiter/logo/default.png') }}"
-                                                    onerror="this.onerror=null; this.src='{{ url('recruiter/logo/default.png') }}';"
+                                                <img id="imagePreview" src="{{ asset($jobPost->com_logo) }}"
+                                                    onerror="this.onerror=null; this.src='{{ url('company/logo/default.png') }}';"
                                                     alt="Image Preview"
                                                     style="width: 150px; height: 150px; object-fit: cover; border-radius: 10px;">
                                                 <input type="hidden" id="company_logo" name="company_logo"

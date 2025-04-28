@@ -45,13 +45,13 @@ class DashboardController extends Controller
         $user = Auth::user();
 
         if ($request->hasFile('image')) {
-            if ($user->logo && file_exists(public_path('recruiter/' . $user->logo))) {
-                unlink(public_path('recruiter/' . $user->logo));
+            if ($user->logo && file_exists(public_path( $user->logo))) {
+                unlink(public_path( $user->logo));
             }
             
             $imageName = time() . '.' . $request->image->extension();
             $request->image->move(public_path('recruiter/logo/'), $imageName);
-            $user->logo = 'logo/' . $imageName;
+            $user->logo = 'recruiter/logo/' . $imageName;
             $user->save();
             return response()->json(['status_code' => 1,'message' => 'Image updated successfully', 'image' => $user->logo]);
         }

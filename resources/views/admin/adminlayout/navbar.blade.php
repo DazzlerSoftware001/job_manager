@@ -350,10 +350,10 @@
 
                         // Check if logo exists and update the profile image
                         if (data.logo) {
-                            $('#profileImage1').attr('src', "{{ url('admin') }}/" + data.logo);
+                            $('#profileImage1').attr('src', "{{ asset('') }}" + data.logo);
                         } else {
                             $('#profileImage1').attr('src',
-                                "{{ url('admin/assets/images/users/avatar-1.jpg') }}");
+                                "{{ url('admin/logo/default.png') }}");
                         }
 
                         $('#nameDisplay1').text(data.name);

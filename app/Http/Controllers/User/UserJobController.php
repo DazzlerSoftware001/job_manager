@@ -47,8 +47,8 @@ class UserJobController extends Controller
     public function applyjob(Request $request, $job_id)
     {
         // ✅ Get the authenticated user ID
-        // $user_id = Auth::id();
-        $user_id = 3;
+        $user_id = Auth::user()->id;
+        // $user_id = 3;
 
         // ✅ Check if the job exists and is still active
         $today = Carbon::today();
@@ -87,6 +87,7 @@ class UserJobController extends Controller
         // // dd($userId,$appliedjob);
 
         $userId     = Auth::user()->id;
+        // dd($userId);
         $appliedjob = JobApplication::where('user_id', $userId)
             ->where('status', 'pending')
             ->get();
@@ -98,6 +99,7 @@ class UserJobController extends Controller
         $jobDetails = JobPost::whereIn('id', $jobIds)
             ->paginate(1)
             ->withQueryString();
+            // dd($jobDetails);
 
         // Pass $jobDetails to your view for pagination links and processing
 

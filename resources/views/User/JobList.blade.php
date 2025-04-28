@@ -479,12 +479,12 @@
 <script>
     $(document).ready(function() {
         // Listen for click events on the options inside nice-select
-        $('.nice-select .list .option').on('click', function() {
+        $('.select-date .list .option').on('click', function() {
             var selectedDate = $(this).data('value');  // Get selected date value
             var selectedText = $(this).text();         // Get selected text
 
             // Update the displayed text inside the nice-select dropdown
-            $('.nice-select .current').text(selectedText);
+            $('.select-date .current').text(selectedText);
 
             // Set the hidden input value with the selected date
             $('#selectedDate').val(selectedDate);

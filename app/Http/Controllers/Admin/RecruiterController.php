@@ -123,8 +123,8 @@ class RecruiterController extends Controller
                 if ($request->hasFile('logo')) {
                     $logo = $request->file('logo');
                     $logoName = time() . '.' . $logo->getClientOriginalExtension(); 
-                    $logo->move(public_path('Recruiter/logo'), $logoName);
-                    $logoPath = ('Recruiter/logo/'. $logoName);
+                    $logo->move(public_path('recruiter/logo'), $logoName);
+                    $logoPath = ('recruiter/logo/'. $logoName);
                 }
 
                 $Recruiter = new Recruiter();
@@ -238,8 +238,8 @@ class RecruiterController extends Controller
             if ($request->hasFile('editlogo')) {
                 $logo = $request->file('editlogo');
                 $logoName = time() . '.' . $logo->getClientOriginalExtension(); 
-                $logo->move(public_path('Recruiter/logo'), $logoName);
-                $logoPath = ('Recruiter/logo/'. $logoName);
+                $logo->move(public_path('recruiter/logo'), $logoName);
+                $logoPath = ('recruiter/logo/'. $logoName);
             }
 
             $id = $request->input('edit-id');

@@ -206,7 +206,7 @@
                             <div class="user__info">
                                 <div class="d-flex gap-3 align-items-center pointer" data-bs-toggle="dropdown">
                                     <div class="user__image">
-                                        <img class="rounded-5" width="48" height="48" src="assets/img/author/1.svg" alt="">
+                                        <img class="rounded-5" width="48" height="48" src="{{asset(Auth::user()->logo)}}" onerror="this.onerror=null; this.src='{{ url('user/assets/img/profile/default.png') }}';" alt="">
                                     </div>
                                     <div class="user__name d-none d-xl-block">
                                         <h6 class="font-20 mb-0 fw-medium lh-sm">{{Auth::user()->name}} {{Auth::user()->lname}}</h6>

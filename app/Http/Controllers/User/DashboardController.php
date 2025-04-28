@@ -210,7 +210,7 @@ class DashboardController extends Controller
 
         if ($candidate && $candidate->resume) {
             $resumeName = basename($candidate->resume);
-            $resumePath = asset( $candidate->resume);
+            $resumePath = asset($candidate->resume);
         }
 
         $can_exp = CandidateEmployment::where('user_id', $id)->get();
@@ -320,18 +320,21 @@ class DashboardController extends Controller
         }
 
         // Normalize existing skills to array
-        $candidate->skill = is_array($candidate->skill)
+        $candidateSkills = is_array($candidate->skill)
         ? $candidate->skill
         : json_decode($candidate->skill, true);
 
-        // Fallback for edge case where json_decode returns null
-        if (! is_array($candidate->skill)) {
-            $candidate->skill = [$candidate->skill];
+        if (! is_array($candidateSkills)) {
+            $candidateSkills = [];
         }
 
-        // Check for duplicate skills
-        $newSkills      = array_filter($request->skills);
-        $existingSkills = array_intersect($newSkills, $candidate->skill);
+        // Clean new skills (remove null, empty values)
+        $newSkills = array_filter($request->skills, function ($skill) {
+            return ! is_null($skill) && $skill !== '';
+        });
+
+        // Check for duplicates
+        $existingSkills = array_intersect($newSkills, $candidateSkills);
 
         if ($existingSkills) {
             return response()->json([
@@ -340,10 +343,11 @@ class DashboardController extends Controller
             ]);
         }
 
-        // Merge new skills with existing ones while ensuring no duplicates
-        $combinedSkills = array_unique(array_merge($candidate->skill, $newSkills));
+        // Merge and make unique
+        $combinedSkills = array_unique(array_merge($candidateSkills, $newSkills));
 
-        $candidate->skill = $combinedSkills;
+        // Save as JSON
+        $candidate->skill = json_encode(array_values($combinedSkills));
         $candidate->save();
 
         return response()->json([
@@ -365,12 +369,11 @@ class DashboardController extends Controller
             return response()->json(['status_code' => 0, 'message' => 'Candidate not found.']);
         }
 
-        // Decode skill if stored as JSON string
+        // Decode skills
         $skills = is_array($candidate->skill)
         ? $candidate->skill
         : json_decode($candidate->skill, true);
 
-        // Fallback if still not array
         if (! is_array($skills)) {
             $skills = [];
         }
@@ -378,7 +381,8 @@ class DashboardController extends Controller
         // Remove the skill
         $updatedSkills = array_filter($skills, fn($item) => $item !== $request->skill);
 
-        $candidate->skill = array_values($updatedSkills); // reindex
+        // Save back as JSON
+        $candidate->skill = json_encode(array_values($updatedSkills));
         $candidate->save();
 
         return response()->json(['status_code' => 1, 'message' => 'Skill removed successfully.']);
@@ -448,12 +452,12 @@ class DashboardController extends Controller
 
         // Optional validation
         $request->validate([
-            'level'        => 'required|string',
-            'board_university'        => 'required|string',
-            'school_college'    => 'required|string',
-            'stream'       => 'nullable|string',
-            'passing_year' => 'required|numeric|max:' . date('Y'),
-            'percentage'   => 'required'
+            'level'            => 'required|string',
+            'board_university' => 'required|string',
+            'school_college'   => 'required|string',
+            'stream'           => 'nullable|string',
+            'passing_year'     => 'required|numeric|max:' . date('Y'),
+            'percentage'       => 'required',
         ]);
 
         $education                   = new CandidateQualifications();
@@ -463,12 +467,12 @@ class DashboardController extends Controller
         $education->school_college   = $request->school_college;
         $education->stream           = $request->stream;
         $education->passing_year     = $request->passing_year;
-        $education->percentage     = $request->percentage;
+        $education->percentage       = $request->percentage;
         $education->save();
 
         return response()->json([
-            'status_code'  => 1,
-            'message'      => 'Education added successfully.',
+            'status_code' => 1,
+            'message'     => 'Education added successfully.',
         ]);
     }
 

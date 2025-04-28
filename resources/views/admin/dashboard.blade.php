@@ -1302,7 +1302,7 @@
         {{-- To get details --}}
         <script>
             $(document).ready(function() {
-                var defaultImage = "{{ url('admin/assets/images/users/avatar-1.jpg') }}";
+                var defaultImage = "{{ url('admin/logo/default.png') }}";
                 
                 $.ajax({
                     url: "{{ route('Admin.dashboardData') }}",
@@ -1314,7 +1314,7 @@
 
                         // Check if logo exists and update the profile image
                         if (data.logo) {
-                            $('#profileImage').attr('src', "{{ url('admin') }}/" + data.logo);
+                            $('#profileImage').attr('src', "{{ asset('') }}" + data.logo);
                         } else {
                             $('#profileImage').attr('src', defaultImage);
                         }
