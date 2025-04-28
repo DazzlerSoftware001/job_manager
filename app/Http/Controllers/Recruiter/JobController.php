@@ -23,6 +23,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Validator;
+use App\Models\CandidateQualifications;
 
 class JobController extends Controller
 {
@@ -482,7 +483,7 @@ class JobController extends Controller
             abort(404, 'Invalid Job ID');
         }
 
-        $job = JobPost::with(['applications.user'])->findOrFail($decryptedId);
+        $job = JobPost::with(['applications.user.candidateProfile'])->findOrFail($decryptedId);
 
         $applicants = $job->applications->pluck('user');
         // dd($job,$applicants);
@@ -499,7 +500,7 @@ class JobController extends Controller
         }
 
         // Load user with candidate profile
-        $user = UserProfile::with('candidateProfile')->find($decryptedId);
+        $user = UserProfile::with('candidateProfile','candidateQualification')->find($decryptedId);
 
         $application = JobApplication::where('user_id', $decryptedId)
             ->where('job_id', $DecJob_Id)

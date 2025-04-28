@@ -7,115 +7,161 @@
 @endsection
 
 @section('main-container')
-<div class="main-content">
-    <div class="page-content">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <h4 class="card-title">Applicants Details</h4>
-                        </div>
+    <div class="main-content">
+        <div class="page-content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">Applicants Details</h4>
+                            </div>
 
-                        <div class="card-body">
-                            <div class="row align-items-center">
-                                <!-- Profile Image -->
-                                <div class="col-md-2 text-center">
-                                    <img src="{{ $user->logo ? asset($user->logo) : url('user/assets/img/profile/default.png') }}" class="img-fluid rounded-circle" alt="Profile Picture" style="width: 100px; height: 100px; object-fit: cover;">
-                                </div>
+                            <div class="card-body">
+                                <div class="row align-items-center">
+                                    <!-- Profile Image -->
+                                    <div class="col-md-2 text-center">
+                                        <img src="{{ $user->logo ? asset($user->logo) : url('user/assets/img/profile/default.png') }}"
+                                            class="img-fluid rounded-circle" alt="Profile Picture"
+                                            style="width: 100px; height: 100px; object-fit: cover;">
+                                    </div>
 
-                                <!-- Name, Role, Location, Employment Type, Skills -->
-                                <div class="col-md-7">
-                                    <h3 class="mb-1">{{$user->name}} {{$user->lname}}</h3>
-                                    <p class="mb-1 text-muted">Software Engineer</p>
-                                    <p class="mb-1">
-                                        <i class="mdi mdi-map-marker-outline"></i> {{$user->state}} {{$user->country}}
-                                        &nbsp; | &nbsp;
-                                        @php
-                                            $exp = $user->experience ?? null;
+                                    <!-- Name, Role, Location, Employment Type, Skills -->
+                                    <div class="col-md-7">
+                                        <h3 class="mb-1">{{ $user->name }} {{ $user->lname }}</h3>
+                                        <p class="mb-1 text-muted">
+                                            {{ $user->candidateProfile->position ?? 'Not Specified' }}</p>
+                                        <p class="mb-1">
+                                            <i class="mdi mdi-map-marker-outline"></i> {{ $user->city }}, {{ $user->state }},
+                                            {{ $user->country }}
+                                            &nbsp; | &nbsp;
+                                            @php
+                                                $exp = $user->experience ?? null;
 
-                                            if ($exp) {
-                                                $parts = explode('.', number_format($exp, 2, '.', ''));
-                                                $years = intval($parts[0]);
-                                                $months = isset($parts[1]) ? intval($parts[1]) : 0;
-                                            }
-                                        @endphp
+                                                if ($exp) {
+                                                    $parts = explode('.', number_format($exp, 2, '.', ''));
+                                                    $years = intval($parts[0]);
+                                                    $months = isset($parts[1]) ? intval($parts[1]) : 0;
+                                                }
+                                            @endphp
 
                                             <i class="fas fa-briefcase me-1"></i>
                                             {{ $exp ? "$years Year" . ($years != 1 ? 's' : '') . ($months ? " $months Month" . ($months != 1 ? 's' : '') : '') : 'N/A' }}
 
-                                    </p>
-                                    <div class="mt-2">
-                                        <span class="badge bg-light text-dark me-2">React</span>
-                                        <span class="badge bg-light text-dark me-2">Nest Js</span>
-                                        <span class="badge bg-light text-dark">C++</span>
+                                        </p>
+                                        <div class="mt-2">
+                                            @php
+                                                $skills = $user->candidateProfile->skill ?? '[]';
+                                                $skillsArray = json_decode($skills, true) ?? [];
+                                            @endphp
+
+                                            @foreach ($skillsArray as $skill)
+                                                <span class="badge bg-light text-dark me-2">{{ $skill }}</span>
+                                            @endforeach
+                                        </div>
+                                    </div>
+
+                                    <!-- Action Buttons -->
+                                    <div class="col-md-3 text-md-end mt-3 mt-md-0">
+
+                                        @if ($application->status !== 'shortlisted')
+                                            <button id="shortlistBtn"
+                                                class="btn btn-outline-warning me-2">Shortlist</button>
+                                        @elseif($application->status == 'shortlisted')
+                                            <button class="btn btn-warning me-2">Shortlisted</button>
+                                        @endif
+
+                                        @if ($application->status !== 'rejected')
+                                            <button id="RejectBtn" class="btn btn-outline-danger me-2">Reject</button>
+                                        @elseif($application->status == 'rejected')
+                                            <button class="btn btn-danger me-2">Rejected</button>
+                                        @endif
+
+                                        @if ($application->status !== 'hired')
+                                            <button id="HireBtn" class="btn btn-outline-primary me-2">Hire</button>
+                                        @elseif($application->status == 'hired')
+                                            <button class="btn btn-success me-2">Hired</button>
+                                        @endif
+                                        {{-- $user->id
+                                    $DecJob_Id --}}
+
+                                        <a href="{{ route('Recruiter.CandidateCVDownload', ['userId' => Crypt::encrypt($user->id)]) }}"
+                                            class="btn btn-primary mt-1">Cv Download</a>
+
+
                                     </div>
                                 </div>
 
-                                <!-- Action Buttons -->
-                                <div class="col-md-3 text-md-end mt-3 mt-md-0">
-
-                                    @if($application->status!=='shortlisted')
-                                        <button id="shortlistBtn" class="btn btn-outline-warning me-2">Shortlist</button>
-                                    @elseif($application->status=='shortlisted')
-                                        <button  class="btn btn-warning me-2">Shortlisted</button>
-                                    @endif
-
-                                    @if($application->status!=='rejected')
-                                        <button id="RejectBtn" class="btn btn-outline-danger me-2">Reject</button>
-                                    @elseif($application->status=='rejected')
-                                        <button  class="btn btn-danger me-2">Rejected</button>
-                                    @endif
-
-                                    @if($application->status!=='hired')
-                                        <button id="HireBtn" class="btn btn-outline-primary me-2">Hire</button>
-                                    @elseif($application->status=='hired')
-                                        <button  class="btn btn-success me-2">Hired</button>
-                                    @endif
-                                    {{-- $user->id
-                                    $DecJob_Id --}}
-
-                                    <a href="{{route('Recruiter.CandidateCVDownload', ['userId' => Crypt::encrypt($user->id)])}}" class="btn btn-primary mt-1">Cv Download</a>
-
-
-                                </div>
                             </div>
 
                         </div>
+                        @if ($user->description != null)
+                            <h3 class="border-bottom border-primary d-inline-block pb-1">About Candidate</h3>
+                            <p class="ms-3">{{ $user->description }}</p>
+                        @endif
+
+
+                        <h3>Education</h2>
+                            @php
+                                $educations = $user->candidateQualification; // or whatever relationship you set
+                            @endphp
+                            @if ($educations)
+                                @foreach ($educations as $education)
+                                <div class="card shadow-sm mb-4 border-0">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-12 mb-2">
+                                                <h6 class="mb-0">{{ $education->level }}</h6>
+                                            </div>
+                                            <div class="col-12 mb-2">
+                                                <h6 class="mb-0">{{ $education->board_university }}</h6>
+                                            </div>
+                                            <div class="col-12 mb-2">
+                                                <h6 class="mb-0">{{ $education->school_college }}</h6>
+                                            </div>
+                                            <div class="col-12 mb-2">
+                                                <h6 class="mb-0">{{ $education->stream ?? '-' }}</h6>
+                                            </div>
+                                            <div class="col-12 mb-2">
+                                                <h6 class="mb-0">{{ $education->passing_year }}</h6>
+                                            </div>
+                                            <div class="col-12">
+                                                <h6 class="mb-0">{{ $education->percentage }}%</h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                
+                                @endforeach
+                            @else
+                                <p>No education information available.</p>
+                            @endif
 
                     </div>
-                    @if($user->description !=null)
-                        <h3 class="border-bottom border-primary d-inline-block pb-1">About Candidate</h3>
-                        <p class="ms-3">{{ $user->description }}</p>
-                    @endif
-
-                    
-                    <h3>Education</h2>
-                    <p></p>
-
                 </div>
             </div>
         </div>
+        <!-- container-fluid -->
     </div>
-    <!-- container-fluid -->
-</div>
 
-        <!-- End Page-content -->
+    <!-- End Page-content -->
 
-        <!--Details Modal -->
-       
-    @endsection
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!--Details Modal -->
 
-    @section('script')
+@endsection
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+@section('script')
     <script>
-        $(document).ready(function () {
-            $('#shortlistBtn').on('click', function () {
-                var url = "{{ route('Recruiter.CandidateShortlist', [
-                    'userId' => Crypt::encrypt($user->id),
-                    'jobId' => Crypt::encrypt($DecJob_Id)
-                ]) }}";
-    
+        $(document).ready(function() {
+            $('#shortlistBtn').on('click', function() {
+                var url =
+                    "{{ route('Recruiter.CandidateShortlist', [
+                        'userId' => Crypt::encrypt($user->id),
+                        'jobId' => Crypt::encrypt($DecJob_Id),
+                    ]) }}";
+
                 $.ajax({
                     url: url,
                     type: 'GET',
@@ -123,16 +169,19 @@
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     dataType: 'json',
-                    success: function (result) {
+                    success: function(result) {
                         if (result.status_code === 1) {
                             Toastify({
                                 text: result.message,
                                 duration: 3000,
                                 gravity: "top",
                                 position: "right",
-                                style: { background: "green", color: "white" }
+                                style: {
+                                    background: "green",
+                                    color: "white"
+                                }
                             }).showToast();
-                            setTimeout(function () {
+                            setTimeout(function() {
                                 location.reload();
                             }, 1000);
 
@@ -142,7 +191,10 @@
                                 duration: 3000,
                                 gravity: "top",
                                 position: "right",
-                                style: { background: "#c7ac14", color: "white" }
+                                style: {
+                                    background: "#c7ac14",
+                                    color: "white"
+                                }
                             }).showToast();
                         } else {
                             Toastify({
@@ -150,17 +202,23 @@
                                 duration: 3000,
                                 gravity: "top",
                                 position: "right",
-                                style: { background: "red", color: "white" }
+                                style: {
+                                    background: "red",
+                                    color: "white"
+                                }
                             }).showToast();
                         }
                     },
-                    error: function () {
+                    error: function() {
                         Toastify({
                             text: 'An error occurred. Please try again.',
                             duration: 3000,
                             gravity: "top",
                             position: "right",
-                            style: { background: "red", color: "white" }
+                            style: {
+                                background: "red",
+                                color: "white"
+                            }
                         }).showToast();
                     }
                 });
@@ -169,12 +227,13 @@
     </script>
 
     <script>
-        $(document).ready(function () {
-            $('#RejectBtn').on('click', function () {
-                var url = "{{ route('Recruiter.CandidateReject', [
-                    'userId' => Crypt::encrypt($user->id),
-                    'jobId' => Crypt::encrypt($DecJob_Id)
-                ]) }}";
+        $(document).ready(function() {
+            $('#RejectBtn').on('click', function() {
+                var url =
+                    "{{ route('Recruiter.CandidateReject', [
+                        'userId' => Crypt::encrypt($user->id),
+                        'jobId' => Crypt::encrypt($DecJob_Id),
+                    ]) }}";
 
                 $.ajax({
                     url: url,
@@ -183,16 +242,19 @@
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     dataType: 'json',
-                    success: function (result) {
+                    success: function(result) {
                         if (result.status_code === 1) {
                             Toastify({
                                 text: result.message,
                                 duration: 3000,
                                 gravity: "top",
                                 position: "right",
-                                style: { background: "green", color: "white" }
+                                style: {
+                                    background: "green",
+                                    color: "white"
+                                }
                             }).showToast();
-                            setTimeout(function () {
+                            setTimeout(function() {
                                 location.reload();
                             }, 1000);
                         } else if (result.status_code === 2) {
@@ -201,7 +263,10 @@
                                 duration: 3000,
                                 gravity: "top",
                                 position: "right",
-                                style: { background: "#c7ac14", color: "white" }
+                                style: {
+                                    background: "#c7ac14",
+                                    color: "white"
+                                }
                             }).showToast();
                         } else {
                             Toastify({
@@ -209,17 +274,23 @@
                                 duration: 3000,
                                 gravity: "top",
                                 position: "right",
-                                style: { background: "red", color: "white" }
+                                style: {
+                                    background: "red",
+                                    color: "white"
+                                }
                             }).showToast();
                         }
                     },
-                    error: function () {
+                    error: function() {
                         Toastify({
                             text: 'An error occurred. Please try again.',
                             duration: 3000,
                             gravity: "top",
                             position: "right",
-                            style: { background: "red", color: "white" }
+                            style: {
+                                background: "red",
+                                color: "white"
+                            }
                         }).showToast();
                     }
                 });
@@ -228,12 +299,13 @@
     </script>
 
     <script>
-        $(document).ready(function () {
-            $('#HireBtn').on('click', function () {
-                var url = "{{ route('Recruiter.CandidateHire', [
-                    'userId' => Crypt::encrypt($user->id),
-                    'jobId' => Crypt::encrypt($DecJob_Id)
-                ]) }}";
+        $(document).ready(function() {
+            $('#HireBtn').on('click', function() {
+                var url =
+                    "{{ route('Recruiter.CandidateHire', [
+                        'userId' => Crypt::encrypt($user->id),
+                        'jobId' => Crypt::encrypt($DecJob_Id),
+                    ]) }}";
 
                 $.ajax({
                     url: url,
@@ -242,16 +314,19 @@
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     dataType: 'json',
-                    success: function (result) {
+                    success: function(result) {
                         if (result.status_code === 1) {
                             Toastify({
                                 text: result.message,
                                 duration: 3000,
                                 gravity: "top",
                                 position: "right",
-                                style: { background: "green", color: "white" }
+                                style: {
+                                    background: "green",
+                                    color: "white"
+                                }
                             }).showToast();
-                            setTimeout(function () {
+                            setTimeout(function() {
                                 location.reload();
                             }, 1000);
                         } else if (result.status_code === 2) {
@@ -260,7 +335,10 @@
                                 duration: 3000,
                                 gravity: "top",
                                 position: "right",
-                                style: { background: "#c7ac14", color: "white" }
+                                style: {
+                                    background: "#c7ac14",
+                                    color: "white"
+                                }
                             }).showToast();
                         } else {
                             Toastify({
@@ -268,23 +346,27 @@
                                 duration: 3000,
                                 gravity: "top",
                                 position: "right",
-                                style: { background: "red", color: "white" }
+                                style: {
+                                    background: "red",
+                                    color: "white"
+                                }
                             }).showToast();
                         }
                     },
-                    error: function () {
+                    error: function() {
                         Toastify({
                             text: 'An error occurred. Please try again.',
                             duration: 3000,
                             gravity: "top",
                             position: "right",
-                            style: { background: "red", color: "white" }
+                            style: {
+                                background: "red",
+                                color: "white"
+                            }
                         }).showToast();
                     }
                 });
             });
         });
     </script>
-    
-    
-    @endsection
+@endsection

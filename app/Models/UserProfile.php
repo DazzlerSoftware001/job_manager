@@ -33,4 +33,9 @@ class UserProfile extends Model
         return $this->hasMany(SaveJob::class, 'user_id');
     }
 
+    public function candidateQualification() 
+    {
+        return $this->hasMany(CandidateQualifications::class, 'user_id');
+    }
+
 }
