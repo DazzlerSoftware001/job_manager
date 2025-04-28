@@ -10,13 +10,19 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Models\JobPost;
+use App\Models\JobApplication;
 
 
 
 class DashboardController extends Controller
 {
     public function dashboard() {
-        return view('recruiter.dashboard');
+
+        $appliedCount = JobApplication::where('status', 'pending')->count();
+        $shortlistedCount = JobApplication::where('status', 'shortlisted')->count();
+        $hiredCount = JobApplication::where('status', 'hired')->count();
+
+        return view('recruiter.dashboard',compact('appliedCount','shortlistedCount','hiredCount'));
     }
 
     public function getDashboardData() {

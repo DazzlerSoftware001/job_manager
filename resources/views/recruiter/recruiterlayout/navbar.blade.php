@@ -50,24 +50,24 @@
                  </div>
 
                  <div class="d-flex">
-                     <div class="dropdown">
-                         <button type="button" class="btn header-item" data-bs-toggle="dropdown" aria-haspopup="true"
-                             aria-expanded="false">
-                             <i class="icon-sm" data-eva="search-outline"></i>
-                         </button>
-                         <div class="dropdown-menu dropdown-menu-end dropdown-menu-md p-0">
-                             <form class="p-2">
-                                 <div class="search-box">
-                                     <div class="position-relative">
-                                         <input type="text" class="form-control bg-light border-0"
-                                             placeholder="Search...">
-                                         <i class="search-icon" data-eva="search-outline" data-eva-height="26"
-                                             data-eva-width="26"></i>
-                                     </div>
-                                 </div>
-                             </form>
-                         </div>
-                     </div>
+                    {{-- <div class="dropdown">
+                        <button type="button" class="btn header-item" data-bs-toggle="dropdown" aria-haspopup="true"
+                            aria-expanded="false">
+                            <i class="icon-sm" data-eva="search-outline"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-end dropdown-menu-md p-0">
+                            <form class="p-2">
+                                <div class="search-box">
+                                    <div class="position-relative">
+                                        <input type="text" class="form-control bg-light border-0"
+                                            placeholder="Search...">
+                                        <i class="search-icon" data-eva="search-outline" data-eva-height="26"
+                                            data-eva-width="26"></i>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
 
                      <div class="dropdown d-inline-block language-switch">
                          <button type="button" class="btn header-item" data-bs-toggle="dropdown" aria-haspopup="true"
@@ -276,33 +276,34 @@
                                  </a>
                              </div>
                          </div>
-                     </div>
+                     </div> 
 
                      <div class="dropdown d-inline-block">
                          <button type="button" class="btn header-item noti-icon right-bar-toggle"
                              id="right-bar-toggle-v">
                              <i class="icon-sm" data-eva="settings-outline"></i>
                          </button>
-                     </div>
+                     </div>--}}
 
                      <div class="dropdown d-inline-block">
                         <button type="button" class="btn header-item user text-start d-flex align-items-center" id="page-header-user-dropdown-v"
                             data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <img class="rounded-circle header-profile-user" id="profileImage1" src="{{ url('recruiter/assets/images/users/avatar-1.jpg') }}" onerror="this.onerror=null; this.src='{{ url('recruiter/assets/images/users/avatar-1.jpg') }}';"
+                            <img class="rounded-circle header-profile-user" id="profileImage1" src="{{ url('recruiter/logo/default.png') }}" onerror="this.onerror=null; this.src='{{ url('recruiter/logo/default.png') }}';"
                             alt="Header Avatar">
                         </button>
                          <div class="dropdown-menu dropdown-menu-end pt-0">
                              <div class="p-3 border-bottom">
-                                 <h6 class="mb-0" id="nameDisplay1">Jennifer Bennett</h6>
-                                 <p class="mb-0 font-size-11 text-muted" id="emailDisplay1">jennifer.bennett@email.com</p>
+                                 <h6 class="mb-0" id="nameDisplay1"></h6>
+                                 <p class="mb-0 font-size-11 text-muted" id="emailDisplay1"></p>
                              </div>
-                             <a class="dropdown-item" href="contacts-profile.html"><i
+                             <a class="dropdown-item" href="#"><i
                                      class="mdi mdi-account-circle text-muted font-size-16 align-middle me-1"></i>
                                  <span class="align-middle">Profile</span></a>
-                             <a class="dropdown-item" href="apps-chat.html"><i
+
+                             {{-- <a class="dropdown-item" href="3"><i
                                      class="mdi mdi-message-text-outline text-muted font-size-16 align-middle me-1"></i>
                                  <span class="align-middle">Messages</span></a>
-                             <a class="dropdown-item" href="pages-faqs.html"><i
+                             <a class="dropdown-item" href="#"><i
                                      class="mdi mdi-lifebuoy text-muted font-size-16 align-middle me-1"></i> <span
                                      class="align-middle">Help</span></a>
                              <div class="dropdown-divider"></div>
@@ -313,9 +314,9 @@
                                      class="mdi mdi-cog-outline text-muted font-size-16 align-middle me-1"></i> <span
                                      class="align-middle">Settings</span><span
                                      class="badge bg-success-subtle text-success ms-auto">New</span></a>
-                             <a class="dropdown-item" href="auth-lock-screen.html"><i
+                             <a class="dropdown-item" href="#"><i
                                      class="mdi mdi-lock text-muted font-size-16 align-middle me-1"></i> <span
-                                     class="align-middle">Lock screen</span></a>
+                                     class="align-middle">Lock screen</span></a> --}}
                              <a class="dropdown-item" href="javascript:void(0);" id="logoutButton">
                                  <i class="mdi mdi-logout text-muted font-size-16 align-middle me-1"></i>
                                  <span class="align-middle">Logout</span>
@@ -396,7 +397,7 @@
                             $('#profileImage1').attr('src', "{{ url('recruiter') }}/" + data.logo);
                         } else {
                             $('#profileImage1').attr('src',
-                                "{{ url('recruiter/assets/images/users/avatar-1.jpg') }}");
+                                "{{ url('recruiter/logo/default.png') }}");
                         }
 
                         $('#nameDisplay1').text(data.name);

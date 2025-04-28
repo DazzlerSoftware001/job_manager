@@ -25,14 +25,14 @@ Dashboard
                                                 </div>
                                             </div>
                                             <div class="flex-grow-1">
-                                                <p class="text-muted mb-1">Revenue</p>
-                                                <h4 class="mb-0">$21,456</h4>
+                                                <p class="text-muted mb-1">Applied</p>
+                                                <h4 class="mb-0">{{$appliedCount}}</h4>
                                             </div>
 
-                                            <div class="flex-shrink-0 align-self-end ms-2">
+                                            {{-- <div class="flex-shrink-0 align-self-end ms-2">
                                                 <div class="badge rounded-pill font-size-13 bg-success-subtle text-success ">+ 2.65%
                                                 </div>
-                                            </div>
+                                            </div> --}}
                                         </div>
                                     </div>
                                     <!-- end card body -->
@@ -52,13 +52,14 @@ Dashboard
                                                 </div>
                                             </div>
                                             <div class="flex-grow-1">
-                                                <p class="text-muted mb-1">Orders</p>
-                                                <h4 class="mb-0">5,643</h4>
+                                                <p class="text-muted mb-1">Shorlisted</p>
+                                                <h4 class="mb-0">{{$shortlistedCount}}</h4>
                                             </div>
-                                            <div class="flex-shrink-0 align-self-end ms-2">
+
+                                            {{-- <div class="flex-shrink-0 align-self-end ms-2">
                                                 <div class="badge rounded-pill font-size-13  bg-danger-subtle  text-danger ">- 0.82%
                                                 </div>
-                                            </div>
+                                            </div> --}}
                                         </div>
                                     </div>
                                     <!-- end card body -->
@@ -78,13 +79,13 @@ Dashboard
                                                 </div>
                                             </div>
                                             <div class="flex-grow-1">
-                                                <p class="text-muted mb-1">Customers</p>
-                                                <h4 class="mb-0">45,254</h4>
+                                                <p class="text-muted mb-1">Hired</p>
+                                                <h4 class="mb-0">{{$hiredCount}}</h4>
                                             </div>
-                                            <div class="flex-shrink-0 align-self-end ms-2">
+                                            {{-- <div class="flex-shrink-0 align-self-end ms-2">
                                                 <div class="badge rounded-pill font-size-13 bg-danger-subtle text-danger">- 1.04%
                                                 </div>
-                                            </div>
+                                            </div> --}}
                                         </div>
                                     </div>
                                     <!-- end card body -->
