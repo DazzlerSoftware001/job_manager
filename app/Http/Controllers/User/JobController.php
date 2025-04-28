@@ -28,8 +28,10 @@ class JobController extends Controller
         if ($request->has('category') && $request->category !== '') {
             $query->where('industry',  'like', '%' .  $request->category . '%');
         }
+
+
         if($request->has('location') && $request->location !== '') {
-            $query->where('location', 'like', '%' . $request->location . '%');
+            $query->where('location',  $request->location);
         }
 
         $jobs = $query->paginate(1)->withQueryString(); // Adjust pagination as needed

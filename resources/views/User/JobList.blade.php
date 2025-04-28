@@ -107,25 +107,19 @@
                             <!-- job location -->
                             <div class="search__item">
                                 <h6 class="mb-3 font-20 fw-medium text-dark text-capitalize">Search Location</h6>
-                                <form action="{{ route('User.JobList') }}" method="GET" class="location-select"
-                                    id="locationForm">
-                                <input type="hidden" name="location" id="selectedLocation" value="">
+                                <form action="{{ route('User.JobList') }}" method="GET" class="location-select" id="locationForm">
+                                    <input type="hidden" name="location" id="selectedLocation" value="">
                                     <div class="position-relative">
-                                        <div class="nice-select select-location" tabindex="0">
-                                            <span class="current">Search Location</span>
-                                            <ul class="list">
-                                                <li data-value="Nothing" data-display="Search Location"
-                                                    class="option selected focus">Search Location</li>
-                                                @foreach ($location as $value)
-                                                    <li data-value="{{ $value->location }}" class="option">
-                                                        {{ $value->location }}</li>
-                                                @endforeach
-                                            </ul>
-                                        </div>
-                                        <i class="fa-light fa-location-dot"></i>
+                                        <select name="location" id="selectedLocation" class="form-select" onchange="this.form.submit()">
+                                            <option value="Nothing" selected disabled>Search Location</option>
+                                            @foreach ($location as $value)
+                                                <option value="{{ $value->location }}">{{ $value->location }}</option>
+                                            @endforeach
+                                        </select>
                                     </div>
                                 </form>
                             </div>
+                            
 
                             <!-- job post time -->
                             <div class="search__item">
@@ -339,19 +333,7 @@
                         </div>
                     </div>
 
-                    {{-- <div class="rts__pagination mx-auto pt-60 max-content">
-                        <ul class="d-flex gap-2">
-                            <li><a href="#" class="inactive"><i class="rt-chevron-left"></i></a></li>
-                            <li><a class="active" href="#">1</a></li>
-                            <li><a href="#">2</a></li>
-                            <li><a href="#">3</a></li>
-                            <li><a href="#"><i class="rt-chevron-right"></i></a></li>
-                        </ul>
-                    </div> --}}
-
-                    {{-- <div class="rts__pagination mx-auto pt-60 max-content">
-                        {{ $jobs->links('pagination::bootstrap-4') }}
-                    </div> --}}
+                  
 
                     <div class="rts__pagination mx-auto pt-60 max-content">
                         <ul class="d-flex gap-2">
@@ -431,6 +413,7 @@
 @endsection
 @section('script')
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
 
     <script>
 
@@ -447,18 +430,25 @@
             });
         });
 
-        document.addEventListener("DOMContentLoaded", function() {
-            const locationForm = document.getElementById("locationForm");
-            const hiddenInput = document.getElementById("selectedLocation");
+    </script>
 
-            document.querySelectorAll(".select-location .option").forEach(option => {
-                option.addEventListener("click", function() {
-                    const selectedValue = this.getAttribute("data-value");
-                    hiddenInput.value = selectedValue; // Set the hidden input value
-                    locationForm.submit(); // Submit the form automatically
-                });
-            });
+<script>
+    $(document).ready(function() {
+        // Attach click handler to all options inside nice-select
+        $('.select-location .list .option').on('click', function() {
+            var selectedValue = $(this).data('value');
+            var selectedText = $(this).text();
+    
+            // Update the displayed text
+            $('.select-location .current').text(selectedText);
+    
+            // Set the hidden input value
+            $('#selectedLocation').val(selectedValue);
+    
+            // Submit the form
+            $('#locationForm').submit();
         });
+    });
     </script>
 
     <script>
