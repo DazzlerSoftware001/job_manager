@@ -210,7 +210,7 @@ class DashboardController extends Controller
 
         if ($candidate && $candidate->resume) {
             $resumeName = basename($candidate->resume);
-            $resumePath = asset('user/assets/' . $candidate->resume);
+            $resumePath = asset( $candidate->resume);
         }
 
         $can_exp = CandidateEmployment::where('user_id', $id)->get();
