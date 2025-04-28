@@ -149,7 +149,7 @@
                                         <select name="date_posted" id="selectedDate" class="form-select" onchange="this.form.submit()">
                                             <option value="Nothing" selected disabled>Date Posted</option>
                                             @foreach ($DatePost as $value)
-                                                <option value="{{ date('Y-m-d', strtotime($value->created_at)) }}">
+                                                <option value="{{($value->created_at) }}">
                                                     {{ date('d M Y', strtotime($value->created_at)) }}
                                                 </option>
                                             @endforeach

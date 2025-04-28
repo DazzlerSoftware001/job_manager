@@ -34,6 +34,12 @@ class JobController extends Controller
             $query->where('location',  $request->location);
         }
 
+        if ($request->has('date_posted') && $request->location !== '') {
+            $dateOnly = \Carbon\Carbon::parse($request->date_posted)->toDateString();
+            $query->whereDate('created_at', '=', $dateOnly);
+        }
+        
+
         $jobs = $query->paginate(1)->withQueryString(); // Adjust pagination as needed
                                                         // $JobCategory = JobCategory::all();
         $location = JobPost::select('location')->where('status', 1)->where('admin_verify', 1)->whereDate('jobexpiry', '>=', $today)->distinct()->get();
