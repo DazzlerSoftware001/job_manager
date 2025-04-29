@@ -50,7 +50,7 @@ Route::prefix('Recruiter')->group(function () {
 
         Route::get('/allApplicants', [ApplicantsController::class, 'allApplicants'])->name('Recruiter.AllApplicants');
         Route::post('/getAllApplicants', [ApplicantsController::class, 'getAllApplicants'])->name('Recruiter.GetAllApplicants');
-        Route::post('/verifyStatus', [ApplicantsController::class, 'verifyStatus'])->name('Recruiter.VerifyStatus');
+        // Route::post('/verifyStatus', [ApplicantsController::class, 'verifyStatus'])->name('Recruiter.VerifyStatus');
         
         Route::get('/shortlistApplicants', [ApplicantsController::class, 'shortlistApplicants'])->name('Recruiter.ShortlistApplicants');
         Route::post('/getShortlistApplicants', [ApplicantsController::class, 'getShortlistApplicants'])->name('Recruiter.GetShortlistApplicants');

@@ -3,15 +3,146 @@ namespace App\Http\Controllers\Recruiter;
 
 use App\Http\Controllers\Controller;
 use App\Models\JobApplication;
+use Illuminate\Support\Carbon;
+use App\Models\JobPost;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 
 class ApplicantsController extends Controller
 {
     public function allApplicants()
-    {
-        return view('recruiter.applicants.AllApplicants');
+    { 
+        $today = Carbon::today();
+        $joblist = JobPost::select('id','title')->where('status', 1)->where('admin_verify', 1)->whereDate('jobexpiry', '>=', $today)->get();
+        $cities = JobApplication::with('user')->get()->pluck('user.city')->filter()->unique()->values();
+        return view('recruiter.applicants.AllApplicants',compact('joblist','cities'));
     }
+
+    // public function getAllApplicants(Request $request)
+    // {
+    //     $draw   = intval($request->input("draw"));
+    //     $offset = intval($request->input("start", 0));
+    //     $limit  = intval($request->input('length', 10));
+    //     $order  = $request->input("order");
+    //     $search = $request->input("search")['value'] ?? '';
+
+    //     // Column mapping
+    //     $columns = [
+    //         0 => 'job_applications.id',
+    //         1 => 'job_post.title',
+    //         2 => 'users.name',
+    //         3 => 'users.email',
+    //         4 => 'job_applications.status',
+    //         5 => 'job_applications.created_at',
+    //         6 => 'job_applications.id',
+    //     ];
+
+    //     // Base query with joins
+    //     $query = JobApplication::with([
+    //         'user:id,name,email',
+    //         'jobPost:id,title',
+    //     ])->select(['id', 'user_id', 'job_id', 'status', 'created_at']);
+
+    //     // Search filter
+    //     if (! empty($search)) {
+    //         $query->where(function ($q) use ($search) {
+    //             $q->where('users.name', 'like', '%' . $search . '%')
+    //                 ->orWhere('users.email', 'like', '%' . $search . '%')
+    //                 ->orWhere('job_post.title', 'like', '%' . $search . '%');
+    //         });
+    //     }
+
+    //     // Ordering
+    //     if ($order) {
+    //         $columnIndex = $order[0]['column'];
+    //         $columnName  = $columns[$columnIndex];
+    //         $dir         = $order[0]['dir'];
+    //         $query->orderBy($columnName, $dir);
+    //     } else {
+    //         $query->orderBy('job_applications.id', 'desc');
+    //     }
+
+    //     // Count total before pagination
+    //     $totalRecords = $query->count();
+
+    //     // Paginate
+    //     $records = $query->offset($offset)->limit($limit)->get();
+
+    //     $data = [];
+    //     foreach ($records as $record) {
+    //         $dataArray = [];
+
+    //         $dataArray[] = $record->id;
+    //         $dataArray[] = ucfirst($record->jobPost->title ?? 'N/A');
+    //         $dataArray[] = ucfirst($record->user->name ?? 'N/A');
+    //         $dataArray[] = $record->user->email ?? 'N/A';
+
+    //         $badgeClass = [
+    //             'pending'     => 'bg-warning',
+    //             'shortlisted' => 'bg-info',
+    //             'rejected'    => 'bg-danger',
+    //             'hired'       => 'bg-success',
+    //         ];
+
+    //         $badgeText  = ucfirst($record->status); // Capitalize first letter
+    //         $badgeColor = $badgeClass[$record->status] ?? 'bg-secondary';
+
+    //         $status = '<div class="d-flex">
+    //             <span onclick="toggleVerifyOptions(\'' . $record->id . '\');"
+    //                   class="badge ' . $badgeColor . ' text-uppercase"
+    //                   style="cursor: pointer;">' . $badgeText . '</span>
+    //         </div>';
+
+    //         if ($record->status == 'pending') {
+    //             $status .= '<div id="verify-options-' . $record->id . '" style="display: none; margin-top: 5px;">
+    //                             <div class="d-flex gap-2">
+    //                                 <button class="badge bg-info text-uppercase" style="cursor: pointer; border: none; padding: 5px 10px;" onclick="changeVerifyStatus(\'' . $record->id . '\', \'shortlisted\')">Shortlist</button>
+    //                                 <button class="badge bg-danger text-uppercase" style="cursor: pointer; border: none; padding: 5px 10px;" onclick="changeVerifyStatus(\'' . $record->id . '\', \'rejected\')">Reject</button>
+    //                             </div>
+    //                         </div>';
+    //         } elseif ($record->status == 'shortlisted') {
+    //             $status .= '<div id="verify-options-' . $record->id . '" style="display: none; margin-top: 5px;">
+    //                             <div class="d-flex gap-2">
+    //                                 <button class="badge bg-success text-uppercase" style="cursor: pointer; border: none; padding: 5px 10px;" onclick="changeVerifyStatus(\'' . $record->id . '\', \'hired\')">Hire</button>
+    //                                 <button class="badge bg-danger text-uppercase" style="cursor: pointer; border: none; padding: 5px 10px;" onclick="changeVerifyStatus(\'' . $record->id . '\', \'rejected\')">Reject</button>
+    //                             </div>
+    //                         </div>';
+    //         } elseif ($record->status == 'rejected') {
+    //             $status .= '<div id="verify-options-' . $record->id . '" style="display: none; margin-top: 5px;">
+    //                             <div class="d-flex gap-2">
+    //                                 <button class="badge bg-info text-uppercase" style="cursor: pointer; border: none; padding: 5px 10px;" onclick="changeVerifyStatus(\'' . $record->id . '\', \'shortlisted\')">Shortlist</button>
+    //                             </div>
+    //                         </div>';
+    //         }
+
+    //         $dataArray[] = $status;
+
+    //         $dataArray[] = date('d-M-Y', strtotime($record->created_at));
+
+    //         $dataArray[] = '<div class="d-flex gap-2">
+    //         <div class="edit">
+    //             <a href="' . route('Recruiter.ViewJobPost', ['id' => Crypt::encrypt($record->jobPost->id)]) . '" class="edit-item-btn text-primary">
+
+    //                 <i class="far fa-eye"></i>
+    //             </a>
+    //         </div>
+    //         <div class="remove">
+    //             <a href="javascript:void(0);" class="remove-item-btn text-danger" onclick="deleteRecord(' . $record->id . ');">
+    //                 <i class="far fa-trash-alt"></i>
+    //             </a>
+    //         </div>
+    //     </div>';
+
+    //         $data[] = $dataArray;
+    //     }
+
+    //     return response()->json([
+    //         "draw"            => $draw,
+    //         "recordsTotal"    => $totalRecords,
+    //         "recordsFiltered" => $totalRecords,
+    //         "data"            => $data,
+    //     ]);
+    // }
 
     public function getAllApplicants(Request $request)
     {
@@ -19,9 +150,20 @@ class ApplicantsController extends Controller
         $offset = intval($request->input("start", 0));
         $limit  = intval($request->input('length', 10));
         $order  = $request->input("order");
-        $search = $request->input("search")['value'] ?? '';
+        $search = $request->input("search");
+        $jobId  = $request->input('job_id');
+        $status = $request->input('status');
 
-        // Column mapping
+        // If no job is selected, return empty result
+        if (empty($jobId)) {
+            return response()->json([
+                "draw" => $draw,
+                "recordsTotal" => 0,
+                "recordsFiltered" => 0,
+                "data" => [],
+            ]);
+        }
+
         $columns = [
             0 => 'job_applications.id',
             1 => 'job_post.title',
@@ -32,35 +174,35 @@ class ApplicantsController extends Controller
             6 => 'job_applications.id',
         ];
 
-        // Base query with joins
         $query = JobApplication::with([
-            'user:id,name,email',
+            'user:id,name,email,city',
             'jobPost:id,title',
-        ])->select(['id', 'user_id', 'job_id', 'status', 'created_at']);
+        ])
+            ->where('job_id', $jobId)
+            ->select(['id', 'user_id', 'job_id', 'status', 'created_at']);
 
-        // Search filter
-        if (! empty($search)) {
-            $query->where(function ($q) use ($search) {
-                $q->where('users.name', 'like', '%' . $search . '%')
-                    ->orWhere('users.email', 'like', '%' . $search . '%')
-                    ->orWhere('job_post.title', 'like', '%' . $search . '%');
+        if (!empty($status)) {
+            $query->where('status', $status);
+        }
+
+        if (!empty($search)) {
+            $query->whereHas('user', function ($q) use ($search) {
+                $q->where('name', 'like', '%' . $search . '%')
+                ->orWhere('email', 'like', '%' . $search . '%')
+                ->orWhere('city', 'like', '%' . $search . '%');
             });
         }
 
-        // Ordering
         if ($order) {
             $columnIndex = $order[0]['column'];
-            $columnName  = $columns[$columnIndex];
-            $dir         = $order[0]['dir'];
+            $columnName = $columns[$columnIndex];
+            $dir = $order[0]['dir'];
             $query->orderBy($columnName, $dir);
         } else {
             $query->orderBy('job_applications.id', 'desc');
         }
 
-        // Count total before pagination
         $totalRecords = $query->count();
-
-        // Paginate
         $records = $query->offset($offset)->limit($limit)->get();
 
         $data = [];
@@ -78,66 +220,56 @@ class ApplicantsController extends Controller
                 'rejected'    => 'bg-danger',
                 'hired'       => 'bg-success',
             ];
-
-            $badgeText  = ucfirst($record->status); // Capitalize first letter
+            $badgeText = ucfirst($record->status);
             $badgeColor = $badgeClass[$record->status] ?? 'bg-secondary';
 
             $status = '<div class="d-flex">
                 <span onclick="toggleVerifyOptions(\'' . $record->id . '\');"
-                      class="badge ' . $badgeColor . ' text-uppercase"
-                      style="cursor: pointer;">' . $badgeText . '</span>
+                    class="badge ' . $badgeColor . ' text-uppercase"
+                    style="cursor: pointer;">' . $badgeText . '</span>
             </div>';
 
+            // Status Action Buttons
             if ($record->status == 'pending') {
                 $status .= '<div id="verify-options-' . $record->id . '" style="display: none; margin-top: 5px;">
                                 <div class="d-flex gap-2">
-                                    <button class="badge bg-info text-uppercase" style="cursor: pointer; border: none; padding: 5px 10px;" onclick="changeVerifyStatus(\'' . $record->id . '\', \'shortlisted\')">Shortlist</button>
-                                    <button class="badge bg-danger text-uppercase" style="cursor: pointer; border: none; padding: 5px 10px;" onclick="changeVerifyStatus(\'' . $record->id . '\', \'rejected\')">Reject</button>
+                                    <button class="badge bg-info text-uppercase" style="cursor: pointer;" onclick="changeVerifyStatus(\'' . $record->id . '\', \'shortlisted\')">Shortlist</button>
+                                    <button class="badge bg-danger text-uppercase" style="cursor: pointer;" onclick="changeVerifyStatus(\'' . $record->id . '\', \'rejected\')">Reject</button>
                                 </div>
                             </div>';
             } elseif ($record->status == 'shortlisted') {
                 $status .= '<div id="verify-options-' . $record->id . '" style="display: none; margin-top: 5px;">
                                 <div class="d-flex gap-2">
-                                    <button class="badge bg-success text-uppercase" style="cursor: pointer; border: none; padding: 5px 10px;" onclick="changeVerifyStatus(\'' . $record->id . '\', \'hired\')">Hire</button>
-                                    <button class="badge bg-danger text-uppercase" style="cursor: pointer; border: none; padding: 5px 10px;" onclick="changeVerifyStatus(\'' . $record->id . '\', \'rejected\')">Reject</button>
+                                    <button class="badge bg-success text-uppercase" style="cursor: pointer;" onclick="changeVerifyStatus(\'' . $record->id . '\', \'hired\')">Hire</button>
+                                    <button class="badge bg-danger text-uppercase" style="cursor: pointer;" onclick="changeVerifyStatus(\'' . $record->id . '\', \'rejected\')">Reject</button>
                                 </div>
                             </div>';
             } elseif ($record->status == 'rejected') {
                 $status .= '<div id="verify-options-' . $record->id . '" style="display: none; margin-top: 5px;">
                                 <div class="d-flex gap-2">
-                                    <button class="badge bg-info text-uppercase" style="cursor: pointer; border: none; padding: 5px 10px;" onclick="changeVerifyStatus(\'' . $record->id . '\', \'shortlisted\')">Shortlist</button>
+                                    <button class="badge bg-info text-uppercase" style="cursor: pointer;" onclick="changeVerifyStatus(\'' . $record->id . '\', \'shortlisted\')">Shortlist</button>
                                 </div>
                             </div>';
             }
 
             $dataArray[] = $status;
-
             $dataArray[] = date('d-M-Y', strtotime($record->created_at));
-
             $dataArray[] = '<div class="d-flex gap-2">
-            <div class="edit">
-                <a href="' . route('Recruiter.ViewJobPost', ['id' => Crypt::encrypt($record->jobPost->id)]) . '" class="edit-item-btn text-primary">
-
-                    <i class="far fa-eye"></i>
-                </a>
-            </div>
-            <div class="remove">
-                <a href="javascript:void(0);" class="remove-item-btn text-danger" onclick="deleteRecord(' . $record->id . ');">
-                    <i class="far fa-trash-alt"></i>
-                </a>
-            </div>
-        </div>';
+                <a href="' . route('Recruiter.ViewJobPost', ['id' => Crypt::encrypt($record->jobPost->id)]) . '" class="text-primary"><i class="far fa-eye"></i></a>
+                <a href="javascript:void(0);" class="text-danger" onclick="deleteRecord(' . $record->id . ');"><i class="far fa-trash-alt"></i></a>
+            </div>';
 
             $data[] = $dataArray;
         }
 
         return response()->json([
-            "draw"            => $draw,
-            "recordsTotal"    => $totalRecords,
+            "draw" => $draw,
+            "recordsTotal" => $totalRecords,
             "recordsFiltered" => $totalRecords,
-            "data"            => $data,
+            "data" => $data,
         ]);
     }
+
 
     public function verifyStatus(Request $request)
     {

@@ -15,6 +15,44 @@
                         <div class="card">
                             <div class="card-header">
                                 <h4 class="card-title">All Applicants</h4>
+                                <div class="row">
+                                    <div class="col-10 mt-2">
+                                        <select id="jobFilter" class="form-select">
+                                            <option value="">Filter by Job</option>
+                                            @foreach($joblist as  $job)
+                                                <option value="{{ $job->id }}">{{ $job->title }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+
+                                    <div class="col-2 mt-2">
+                                        <select id="statusFilter" class="form-select">
+                                            <option value="">Status</option>
+                                                <option value="pending">All</option>
+                                                <option value="shortlisted">ShortListed</option>
+                                                <option value="hired">Hired</option>
+                                                <option value="rejected">Rejected</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-2 mt-2">
+                                        <select id="cityFilter" class="form-select">
+                                                <option value="">City</option>
+                                                @foreach ($cities as $city )
+                                                <option value="{{$city}}">{{$city}}</option>
+                                                    
+                                                @endforeach
+                                        </select>
+                                    </div>
+
+                                    <div class="col-2 mt-2">
+                                        <input type="text" id="search" class="form-control mb-3" placeholder="Search by name, email or job title">
+                                    </div>
+
+                                </div>
+
+
+
                             </div>
 
                             <div class="card-body">
@@ -84,15 +122,23 @@
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
-                        data: function(data) {
+                        data: function (data) {
                             data.search = $('#search').val();
+                            data.job_id = $('#jobFilter').val();      // important
+                            data.status = $('#statusFilter').val();   // optional
                         }
+
                     },
                     "language": {
                         "emptyTable": "<div><lord-icon src='https://cdn.lordicon.com/msoeawqm.json' trigger='loop' style='width:75px;height:75px'></div> <div class='mt-2 noresult'><b>Sorry! No Result Found</b></div>"
                     }
                 });
 
+                $('#jobFilter, #statusFilter').on('change', function() {
+                    $('#myTable').DataTable().draw();
+                });
+
+                // 🔍 Trigger search if search box exists
                 $('#search').on('keyup', function(e) {
                     e.preventDefault();
                     $('#myTable').DataTable().draw();
@@ -113,7 +159,7 @@
         </script>
 
         {{-- change Status --}}
-        <script>
+        {{-- <script>
             function changeVerifyStatus(id, status) {
                 let actionText = status.charAt(0).toUpperCase() + status.slice(1); // Capitalized
                 let confirmButtonText = `Yes, mark as ${actionText}`;
@@ -179,69 +225,6 @@
                     }
                 });
             }
-        </script>
-
-
-
-        {{-- DeleteJobCategory --}}
-        {{-- <script>
-            function deleteRecord(id) {
-                // First AJAX to show confirmation modal
-                Swal.fire({
-                    title: 'Are you sure?',
-                    text: 'Do you really want to delete this record?',
-                    icon: 'warning',
-                    showCancelButton: true, // Show cancel button
-                    confirmButtonText: 'Yes, delete it!',
-                    cancelButtonText: 'No, cancel!',
-                    background: '#28a745',
-                }).then((response) => {
-                    // If user clicks "Yes, delete it!"
-                    if (response.isConfirmed) {
-                        // Second AJAX for actual deletion
-                        $.ajax({
-                            type: 'POST',
-                            headers: {
-                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                            },
-                            url: "{{ route('Admin.DeleteJobPost') }}",
-                            data: {
-                                id: id
-                            },
-                            dataType: 'json',
-                            success: function(deleteResult) {
-                                if (deleteResult.status_code == 1) {
-                                    // Reload the DataTable after successful deletion
-                                    $('#myTable').DataTable().ajax.reload(null, false);
-                                    Swal.fire({
-                                        title: 'Deleted!',
-                                        text: 'Record deleted successfully!',
-                                        icon: 'success',
-                                        confirmButtonText: 'Okay',
-                                        background: '#28a745'
-                                    });
-                                } else {
-                                    Swal.fire({
-                                        title: 'Error!',
-                                        text: deleteResult.message,
-                                        icon: 'error',
-                                        confirmButtonText: 'Okay',
-                                        background: '#dc3545'
-                                    });
-                                }
-                            }
-                        });
-                    } else {
-                        // If user clicks "Cancel", show the info message and no deletion happens
-                        Swal.fire({
-                            title: 'Cancelled',
-                            text: 'Your record was not deleted.',
-                            icon: 'info',
-                            confirmButtonText: 'Okay',
-                            background: '#17a2b8'
-                        });
-                    }
-                });
-            }
         </script> --}}
+
     @endsection
