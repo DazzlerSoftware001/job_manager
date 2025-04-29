@@ -250,7 +250,7 @@
                         }
                     @endphp
 
-                   
+
 
                     <div class="submitted-education-info mb-3">
                         {{-- <h5>Submitted Education Information</h5> --}}
@@ -331,19 +331,83 @@
 
         @if ($educations)
             @foreach ($educations as $education)
-                <div class="submitted-education-info mb-3">
-                    {{-- <h5>Submitted Education Information</h5> --}}
-                    <p><strong>Education Level:</strong> {{ $education->level }}</p>
-                    <p><strong>Board Type:</strong> {{ $education->board_university }}</p>
-                    <p><strong>Institute Name:</strong> {{ $education->school_college }}</p>
-                    <p><strong>Stream:</strong> {{ $education->stream }}</p>
-                    <p><strong>Passing Year:</strong> {{ $education->passing_year }}</p>
-                    <p><strong>Percentage:</strong> {{ $education->percentage }}</p>
+                <div class="submitted-education-info mb-3 position-relative">
+                    <button type="button" class="btn btn-sm btn-light edit-education-btn" data-bs-toggle="modal"
+                        data-bs-target="#editEducationModal" data-id="{{ $education->id }}"
+                        data-level="{{ $education->level }}" data-board="{{ $education->board_university }}"
+                        data-institute="{{ $education->school_college }}" data-stream="{{ $education->stream }}"
+                        data-year="{{ $education->passing_year }}" data-percentage="{{ $education->percentage }}"
+                        style="position: absolute; left:15%;">
+                        <i class="fas fa-pen"></i>
+                    </button>
+
+
+                    <p><strong class="text-dark">Education Level:</strong> {{ $education->level }}</p>
+                    <p><strong class="text-dark">Board Type:</strong> {{ $education->board_university }}</p>
+                    <p><strong class="text-dark">Institute Name:</strong> {{ $education->school_college }}</p>
+                    @if($education->stream)
+                    <p><strong class="text-dark">Stream:</strong> {{ $education->stream }}</p>
+                    @endif
+                    <p><strong class="text-dark">Passing Year:</strong> {{ $education->passing_year }}</p>
+                    <p><strong class="text-dark">Percentage/Grade:</strong> {{ $education->percentage }}</p>
+                    <hr>
                 </div>
             @endforeach
         @else
             <p>No education information available.</p>
         @endif
+
+        <!-- Edit Education Modal -->
+        <div class="modal fade" id="editEducationModal" tabindex="-1" aria-labelledby="editEducationModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form id="editEducationForm">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="editEducationModalLabel">Edit Education</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <input type="hidden" name="education_id" id="education_id">
+                            <div class="mb-2">
+                                <label>Level</label>
+                                <input type="text" name="level" id="level" class="form-control" required>
+                            </div>
+                            <div class="mb-2">
+                                <label>Board/University</label>
+                                <input type="text" name="board_university" id="board_university" class="form-control"
+                                    required>
+                            </div>
+                            <div class="mb-2">
+                                <label>Institute</label>
+                                <input type="text" name="school_college" id="school_college" class="form-control"
+                                    required>
+                            </div>
+                            <div class="mb-2">
+                                <label>Stream</label>
+                                <input type="text" name="stream" id="stream" class="form-control">
+                            </div>
+                            <div class="mb-2">
+                                <label>Passing Year</label>
+                                <input type="number" name="passing_year" id="passing_year" class="form-control"
+                                    required>
+                            </div>
+                            <div class="mb-2">
+                                <label>Percentage/Grade</label>
+                                <input type="number" name="percentage" id="percentage" class="form-control"
+                                    step="0.01" required>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
 
         <!-- Education Form -->
         <div class="accordion-item">
@@ -395,7 +459,8 @@
                                         placeholder="YYYY" required max="{{ date('Y') }}">
                                 </div>
                                 <div class="rt-input-group">
-                                    <label for="percentage">Percentage<span class="text-danger d-inline">*</span></label>
+                                    <label for="percentage">Percentage/Grade<span
+                                            class="text-danger d-inline">*</span></label>
                                     <input type="text" id="percentage" name="percentage" placeholder="e.g. 85%"
                                         required>
                                 </div>
@@ -929,6 +994,78 @@
                         className: "bg-danger"
                     }).showToast();
                 }
+            });
+        });
+    </script>
+
+    {{-- For Update Candidate Qualification --}}
+    <script>
+        $(document).ready(function() {
+            // Fill modal form with existing data
+            $('.edit-education-btn').on('click', function() {
+                $('#education_id').val($(this).data('id'));
+                $('#level').val($(this).data('level'));
+                $('#board_university').val($(this).data('board'));
+                $('#school_college').val($(this).data('institute'));
+                $('#stream').val($(this).data('stream'));
+                $('#passing_year').val($(this).data('year'));
+                $('#percentage').val($(this).data('percentage'));
+            });
+
+            // Submit updated education via AJAX
+            $('#editEducationForm').on('submit', function(e) {
+                e.preventDefault();
+
+                $.ajax({
+                    url: "{{ route('User.UpdateEducation') }}",
+                    type: "POST",
+                    data: $(this).serialize(),
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        if (response.status_code === 1) {
+                            Toastify({
+                                text: response.message,
+                                duration: 3000,
+                                gravity: "top",
+                                position: "right",
+                                style: {
+                                    background: "green"
+                                }
+                            }).showToast();
+
+                            setTimeout(function() {
+                                if (response.redirect_url) {
+                                    window.location.href = response.redirect_url;
+                                } else {
+                                    location.reload();
+                                }
+                            }, 750);
+                        } else {
+                            Toastify({
+                                text: response.message,
+                                duration: 3000,
+                                gravity: "top",
+                                position: "right",
+                                style: {
+                                    background: "orange"
+                                }
+                            }).showToast();
+                        }
+                    },
+                    error: function() {
+                        Toastify({
+                            text: "Something went wrong.",
+                            duration: 3000,
+                            gravity: "top",
+                            position: "right",
+                            style: {
+                                background: "red"
+                            }
+                        }).showToast();
+                    }
+                });
             });
         });
     </script>

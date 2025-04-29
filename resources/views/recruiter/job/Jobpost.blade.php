@@ -1007,7 +1007,7 @@
                                     }
                                 }).showToast();
 
-                                Redirect to another route after successful submission
+                                // Redirect to another route after successful submission
                                 setTimeout(function() {
                                     window.location.href =
                                         "{{ route('Recruiter.JobList') }}"; // Change this to your desired route

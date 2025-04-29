@@ -32,7 +32,8 @@
                                         <p class="mb-1 text-muted">
                                             {{ $user->candidateProfile->position ?? 'Not Specified' }}</p>
                                         <p class="mb-1">
-                                            <i class="mdi mdi-map-marker-outline"></i> {{ $user->city }}, {{ $user->state }},
+                                            <i class="mdi mdi-map-marker-outline"></i> {{ $user->city }}
+                                            {{ $user->state }}
                                             {{ $user->country }}
                                             &nbsp; | &nbsp;
                                             @php
@@ -101,12 +102,13 @@
                         @endif
 
 
-                        <h3>Education</h2>
-                            @php
-                                $educations = $user->candidateQualification; // or whatever relationship you set
-                            @endphp
-                            @if ($educations)
-                                @foreach ($educations as $education)
+                        @php
+                            $educations = $user->candidateQualification; // or whatever relationship you set
+                        @endphp
+                        {{-- {{$educations}} --}}
+                        @if (!empty($educations))
+                            <h3>Education</h3>
+                            @foreach ($educations as $education)
                                 <div class="card shadow-sm mb-4 border-0">
                                     <div class="card-body">
                                         <div class="row">
@@ -119,9 +121,11 @@
                                             <div class="col-12 mb-2">
                                                 <h6 class="mb-0">{{ $education->school_college }}</h6>
                                             </div>
+                                            @if($education->stream)
                                             <div class="col-12 mb-2">
-                                                <h6 class="mb-0">{{ $education->stream ?? '-' }}</h6>
+                                                <h6 class="mb-0">{{ $education->stream }}</h6>
                                             </div>
+                                            @endif
                                             <div class="col-12 mb-2">
                                                 <h6 class="mb-0">{{ $education->passing_year }}</h6>
                                             </div>
@@ -131,12 +135,35 @@
                                         </div>
                                     </div>
                                 </div>
-                                
-                                
-                                @endforeach
-                            @else
-                                <p>No education information available.</p>
-                            @endif
+                            @endforeach
+                        @endif
+
+                        @php
+                            $employments = $user->candidateEmployment; // or whatever relationship you set
+                        @endphp
+                        @if (!empty($employments))
+                            <h3>Experience</h3>
+                            @foreach ($employments as $employment)
+                                <div class="card shadow-sm mb-4 border-0">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <h2 class="mb-0">{{ $employment->position }}</h2>
+                                            </div>
+                                            <div class="col-12 mb-2">
+                                                <h6 class="mb-0">{{ $employment->company_name }}</h6>
+                                            </div>
+                                            <div class="col-12 mb-2">
+                                                <h6 class="mb-0">{{ $employment->experience }}</h6>
+                                            </div>
+                                            <div class="col-12 mb-2">
+                                                <h6 class="mb-0">{{ $employment->description }}</h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        @endif
 
                     </div>
                 </div>

@@ -500,11 +500,13 @@ class JobController extends Controller
         }
 
         // Load user with candidate profile
-        $user = UserProfile::with('candidateProfile','candidateQualification')->find($decryptedId);
+        $user = UserProfile::with('candidateProfile','candidateQualification','candidateEmployment')->find($decryptedId);
 
         $application = JobApplication::where('user_id', $decryptedId)
             ->where('job_id', $DecJob_Id)
             ->first();
+
+            // dd($user->candidateEmployment);
 
         // Check and increment view_profile if candidate profile exists
         if ($user && $user->candidateProfile) {

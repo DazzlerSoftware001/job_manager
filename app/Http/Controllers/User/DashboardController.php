@@ -17,7 +17,7 @@ class DashboardController extends Controller
     public function Dashboard()
     {
         $userId          = Auth::id();
-        $appliedJobCount = JobApplication::where('user_id', $userId)->where('status', 'pending')->count();
+        $appliedJobCount = JobApplication::where('user_id', $userId)->count();
 
         $ShortlistedJobCount = JobApplication::where('user_id', $userId)->where('status', 'shortlisted')->count();
 
@@ -85,8 +85,8 @@ class DashboardController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            if ($user->logo && file_exists(public_path('user/assets/img/' . $user->logo))) {
-                unlink(public_path('user/assets/img/' . $user->logo));
+            if ($user->logo && file_exists(public_path($user->logo))) {
+                unlink(public_path($user->logo));
             }
 
             $imageName = time() . '.' . $request->image->extension();
@@ -123,7 +123,7 @@ class DashboardController extends Controller
             'country'         => 'required',
             'address'         => 'required|string|min:10|max:255',
             'state'           => 'required',
-            'city'            => 'required',
+            'city'            => 'required|string',
             'postalCode'      => 'required',
         ];
 
@@ -169,7 +169,7 @@ class DashboardController extends Controller
             $profile->name            = $request->input('name');
             $profile->lname           = $request->input('lname');
             $profile->email           = $request->input('email');
-            $profile->phone           = $request->input('phone.code') . $request->input('phone.number');
+            // $profile->phone           = $request->input('phone.code') . $request->input('phone.number');
             $profile->date_of_birth   = $request->input('dob');
             $profile->gender          = $request->input('gender');
             $profile->education_level = $request->input('education_level');
@@ -474,6 +474,61 @@ class DashboardController extends Controller
             'status_code' => 1,
             'message'     => 'Education added successfully.',
         ]);
+    }
+
+    public function updateEducation(Request $request)
+    {
+        // Step 1: Validate the request
+        $validator = Validator::make($request->all(), [
+            'education_id'     => 'required|exists:education_qualifications,id',
+            'level'            => 'required|string|max:255',
+            'board_university' => 'required|string|max:255',
+            'school_college'   => 'required|string|max:255',
+            'passing_year'     => 'required|digits:4',
+            'percentage'       => 'required|numeric|min:0|max:100',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status_code' => 0,
+                'message'     => 'Validation failed',
+                'errors'      => $validator->errors(),
+            ]);
+        }
+
+        try {
+            // Step 2: Get current user's education info
+            $education = CandidateQualifications::where('user_id', Auth::id())->where('id', $request->education_id)->first();
+
+            // If record not found, optionally create it
+            if (! $education) {
+                return response()->json([
+                    'status_code' => 0,
+                    'message'     => 'Education record not found.',
+                ]);
+            }
+
+            CandidateQualifications::where('id', $request->education_id)
+                ->update([
+                    'level'            => $request->level,
+                    'board_university' => $request->board_university,
+                    'school_college'   => $request->school_college,
+                    'stream'           => $request->stream,
+                    'passing_year'     => $request->passing_year,
+                    'percentage'       => $request->percentage,
+                ]);
+
+            return response()->json([
+                'status_code' => 1,
+                'message'     => 'Candidate Qualification updated successfully!',
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'status_code' => 0,
+                'message'     => 'Error: ' . $e->getMessage(),
+            ]);
+        }
     }
 
     // end resume
