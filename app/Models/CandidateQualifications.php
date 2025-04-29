@@ -17,6 +17,7 @@ class CandidateQualifications extends Model
         'board_university',
         'school_college',
         'stream',
+        'starting_year',
         'passing_year',
         'percentage',
     ];

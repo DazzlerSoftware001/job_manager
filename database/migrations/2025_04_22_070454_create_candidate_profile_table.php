@@ -18,6 +18,10 @@ return new class extends Migration
             $table->text('cover_letter')->nullable();
             $table->string('skill')->nullable();
             $table->string('position')->nullable();
+            $table->integer('expect_sal')->nullable();
+            $table->string('award_title')->nullable();
+            $table->date('award_date')->nullable();
+            $table->text('award_desc')->nullable();
             $table->integer('view_profile')->nullable();
             $table->timestamps();
 

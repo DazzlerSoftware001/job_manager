@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('board_university');
             $table->string('school_college');
             $table->string('stream')->nullable();
+            $table->string('starting_year');
             $table->string('passing_year');
             $table->string('percentage');
             $table->timestamps();

@@ -173,15 +173,22 @@
     <div class="bg-white mt-3 p-3 rounded shadow-sm">
         <form action="javasript:void(0)" class="row" id="UploadDesignation">
             <div class="col-6 col-sm-4">
+                <label for="resume" class="form-label">Position<span class="text-danger">*</span></label>
                 @if ($candidate && $candidate->position)
                     <input type="text" name="designation" class="form-control" value="{{ $candidate->position }}"
                         placeholder="Type your Designation">
                 @else
                     <input type="text" name="designation" class="form-control" placeholder="Type your Designation">
                 @endif
-            </div>
-            <div class="col-2 col-sm-1">
-                <button type="submit" class="btn btn-primary w-100">
+                <label for="resume" class="form-label mt-3">Expect Salary<span class="text-danger">*</span></label>
+                @if ($candidate && $candidate->expect_sal)
+                    <input type="number" name="expected" class="form-control" value="{{ old('expected', $candidate->expect_sal) }}">
+                    <span class="fs-6 text-danger">Enter monthly Expected Salary</span>
+                @else
+                    <input type="number" name="expected" class="form-control no-spinner" placeholder="Expected Salary">
+                @endif
+
+                <button type="submit" class="btn btn-primary w-10 d-block mt-3">
                     Submit
                 </button>
             </div>
@@ -272,12 +279,12 @@
                             <div class="info__field">
                                 <div class="row row-cols-sm-2 row-cols-1">
                                     <div class="rt-input-group">
-                                        <label for="cm-4">Company</label>
+                                        <label for="cm-4">Company<span class="text-danger d-inline">*</span></label>
                                         <input type="text" id="cm-4" name="company" placeholder="Company Name"
                                             required>
                                     </div>
                                     <div class="rt-input-group">
-                                        <label for="title-4">Position</label>
+                                        <label for="title-4">Position<span class="text-danger d-inline">*</span></label>
                                         <input type="text" id="title-4" name="position"
                                             placeholder="Software Engineer" required>
                                     </div>
@@ -285,12 +292,13 @@
 
                                 <div class="row row-cols-sm-2 row-cols-1">
                                     <div class="rt-input-group">
-                                        <label for="de-4">Experience</label>
+                                        <label for="de-4">Experience<span
+                                                class="text-danger d-inline">*</span></label>
                                         <input type="number" class="no-spinner" name="exp_years" id="de-4"
                                             placeholder="Experience in years" required>
                                     </div>
                                     <div class="rt-input-group">
-                                        <label for="sd-4">Month</label>
+                                        <label for="sd-4">Month<span class="text-danger d-inline">*</span></label>
                                         <select name="exp_months" id="experience_months" class="form-select">
                                             <option value="">Select Months</option>
                                             <!-- Loop to generate months -->
@@ -304,7 +312,7 @@
                                 </div>
 
                                 <div class="rt-input-group">
-                                    <label for="desc-4">Description</label>
+                                    <label for="desc-4">Description<span class="text-danger d-inline">*</span></label>
                                     <textarea name="desc" id="desc-4" cols="30" rows="5" placeholder="Description"></textarea>
                                 </div>
                             </div>
@@ -336,8 +344,9 @@
                         data-bs-target="#editEducationModal" data-id="{{ $education->id }}"
                         data-level="{{ $education->level }}" data-board="{{ $education->board_university }}"
                         data-institute="{{ $education->school_college }}" data-stream="{{ $education->stream }}"
-                        data-year="{{ $education->passing_year }}" data-percentage="{{ $education->percentage }}"
-                        style="position: absolute; left:15%;">
+                        data-starting_year="{{ $education->starting_year }}"
+                        data-passing_year="{{ $education->passing_year }}"
+                        data-percentage="{{ $education->percentage }}" style="position: absolute; left:15%;">
                         <i class="fas fa-pen"></i>
                     </button>
 
@@ -345,11 +354,13 @@
                     <p><strong class="text-dark">Education Level:</strong> {{ $education->level }}</p>
                     <p><strong class="text-dark">Board Type:</strong> {{ $education->board_university }}</p>
                     <p><strong class="text-dark">Institute Name:</strong> {{ $education->school_college }}</p>
-                    @if($education->stream)
-                    <p><strong class="text-dark">Stream:</strong> {{ $education->stream }}</p>
+                    @if ($education->stream)
+                        <p><strong class="text-dark">Stream:</strong> {{ $education->stream }}</p>
                     @endif
+                    <p><strong class="text-dark">Starting Year:</strong> {{ $education->starting_year }}</p>
                     <p><strong class="text-dark">Passing Year:</strong> {{ $education->passing_year }}</p>
-                    <p><strong class="text-dark">Percentage/Grade:</strong> {{ $education->percentage }}</p>
+                    <p class="mb-3"><strong class="text-dark">Percentage/Grade:</strong> {{ $education->percentage }}
+                    </p>
                     <hr>
                 </div>
             @endforeach
@@ -370,16 +381,25 @@
                         <div class="modal-body">
                             <input type="hidden" name="education_id" id="education_id">
                             <div class="mb-2">
-                                <label>Level</label>
-                                <input type="text" name="level" id="level" class="form-control" required>
+                                <label>Level<span class="text-danger d-inline">*</span></label>
+                                <select name="level" id="level" required
+                                    style="width: 100%; padding: 0.625rem 1rem; border: 1px solid #ddd; border-radius: 8px; height: 50px; background-color: white;">
+                                    <option value="">Select Level</option>
+                                    <option value="10th">10th</option>
+                                    <option value="12th">12th</option>
+                                    <option value="UG">Graduation/Diploma</option>
+                                    <option value="PG">Post Graduation</option>
+                                    <option value="PhD">PhD</option>
+                                </select>
                             </div>
+
                             <div class="mb-2">
-                                <label>Board/University</label>
+                                <label>Board/University<span class="text-danger d-inline">*</span></label>
                                 <input type="text" name="board_university" id="board_university" class="form-control"
                                     required>
                             </div>
                             <div class="mb-2">
-                                <label>Institute</label>
+                                <label>Institute<span class="text-danger d-inline">*</span></label>
                                 <input type="text" name="school_college" id="school_college" class="form-control"
                                     required>
                             </div>
@@ -388,12 +408,17 @@
                                 <input type="text" name="stream" id="stream" class="form-control">
                             </div>
                             <div class="mb-2">
-                                <label>Passing Year</label>
+                                <label>Starting Year<span class="text-danger d-inline">*</span></label>
+                                <input type="number" name="starting_year" id="starting_year" class="form-control"
+                                    required>
+                            </div>
+                            <div class="mb-2">
+                                <label>Passing Year<span class="text-danger d-inline">*</span></label>
                                 <input type="number" name="passing_year" id="passing_year" class="form-control"
                                     required>
                             </div>
                             <div class="mb-2">
-                                <label>Percentage/Grade</label>
+                                <label>Percentage/Grade<span class="text-danger d-inline">*</span></label>
                                 <input type="number" name="percentage" id="percentage" class="form-control"
                                     step="0.01" required>
                             </div>
@@ -453,6 +478,12 @@
 
                             <div class="row row-cols-sm-2 row-cols-1 mt-3">
                                 <div class="rt-input-group">
+                                    <label for="starting_year">Starting Year<span
+                                            class="text-danger d-inline">*</span></label>
+                                    <input type="number" class="no-snipper" id="starting_year" name="starting_year"
+                                        placeholder="YYYY" required max="{{ date('Y') }}">
+                                </div>
+                                <div class="rt-input-group">
                                     <label for="passing_year">Passing Year<span
                                             class="text-danger d-inline">*</span></label>
                                     <input type="number" class="no-snipper" id="passing_year" name="passing_year"
@@ -485,6 +516,44 @@
 
     </div>
     <!-- education end -->
+
+    <!-- Award -->
+    <h6 class="fw-medium mt-30 mb-20">Award</h6>
+    <div class="my__education radius-16 p-30 bg-white" id="education-3">
+        <div class="accordion" id="rts-accordion-3">
+            <div class="accordion-item">
+                <div id="c4" class="accordion-collapse collapse" data-bs-parent="#rts-accordion-3">
+                    <div class="accordion-body p-0 mt-3 mb-20">
+                        <div class="info__field">
+                            <div class="row row-cols-sm-2 row-cols-1">
+                                <div class="rt-input-group">
+                                    <label for="titlea">Title</label>
+                                    <input type="text" id="titlea"
+                                        placeholder="McMaster Center for Software Certification" required>
+                                </div>
+                                <div class="rt-input-group">
+                                    <label for="ye-7">Year</label>
+                                    <input type="text" id="ye-7" placeholder="dd/mm/yy" required>
+                                </div>
+                            </div>
+                            <div class="rt-input-group">
+                                <label for="desc-7">Description</label>
+                                <textarea name="desc" id="desc-7" cols="30" rows="5" placeholder="Description"></textarea>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-end mt-30">
+                            <button type="submit" class="btn me-3 added__social__link">Add Award</button>
+                            <a href="#" class="removeAward added__social__link">Remove Award</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex justify-content-start" id="addAwardContainer">
+                <a href="#" id="addAwardBtn" class="added__social__link">Add Award</a>
+            </div>
+        </div>
+    </div>
+    <!-- Award end -->
 
 
 @endsection
@@ -1008,7 +1077,8 @@
                 $('#board_university').val($(this).data('board'));
                 $('#school_college').val($(this).data('institute'));
                 $('#stream').val($(this).data('stream'));
-                $('#passing_year').val($(this).data('year'));
+                $('#starting_year').val($(this).data('starting_year'));
+                $('#passing_year').val($(this).data('passing_year'));
                 $('#percentage').val($(this).data('percentage'));
             });
 
@@ -1066,6 +1136,46 @@
                         }).showToast();
                     }
                 });
+            });
+        });
+    </script>
+
+    {{-- For Showing the Award Section --}}
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const addAwdBtn = document.getElementById("addAwardBtn");
+            const addAwdCon = document.getElementById("addAwardContainer");
+            const awdDiv = document.getElementById("c4");
+
+            // Note: This element exists after clicking "Add", so we attach the listener dynamically
+            function attachRemoveListener() {
+                const removeAwdBtn = document.querySelector(".removeAward");
+                if (removeAwdBtn) {
+                    removeAwdBtn.addEventListener("click", function(e) {
+                        e.preventDefault();
+                        awdDiv.classList.remove("show");
+                        if (addAwdCon) {
+                            addAwdCon.classList.remove("d-none"); // Show again
+                            addAwdCon.classList.add("d-flex"); // Show again
+                        }
+                    });
+                }
+            }
+
+            addAwdBtn.addEventListener("click", function(e) {
+                e.preventDefault();
+
+                // Show experience form
+                awdDiv.classList.add("show");
+
+                // Hide "Add Experience" button
+                if (addAwdCon) {
+                    addAwdCon.classList.remove("d-flex");
+                    addAwdCon.classList.add("d-none");
+                }
+
+                // Attach remove handler
+                attachRemoveListener();
             });
         });
     </script>

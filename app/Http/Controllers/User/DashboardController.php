@@ -392,6 +392,7 @@ class DashboardController extends Controller
     {
         $rules = [
             'designation' => 'required|string|max:255',
+            'expected' => 'required|numeric'
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -414,6 +415,7 @@ class DashboardController extends Controller
             }
 
             $candidateProfile->position   = $request->input('designation');
+            $candidateProfile->expect_sal   = $request->input('expected');
             $candidateProfile->updated_at = now(); // only needed if timestamps are off
             $candidateProfile->save();
 
@@ -456,6 +458,7 @@ class DashboardController extends Controller
             'board_university' => 'required|string',
             'school_college'   => 'required|string',
             'stream'           => 'nullable|string',
+            'starting_year'     => 'required|numeric|max:' . date('Y'),
             'passing_year'     => 'required|numeric|max:' . date('Y'),
             'percentage'       => 'required',
         ]);
@@ -466,6 +469,7 @@ class DashboardController extends Controller
         $education->board_university = $request->board_university;
         $education->school_college   = $request->school_college;
         $education->stream           = $request->stream;
+        $education->starting_year     = $request->starting_year;
         $education->passing_year     = $request->passing_year;
         $education->percentage       = $request->percentage;
         $education->save();
@@ -484,6 +488,7 @@ class DashboardController extends Controller
             'level'            => 'required|string|max:255',
             'board_university' => 'required|string|max:255',
             'school_college'   => 'required|string|max:255',
+            'starting_year'     => 'required|digits:4',
             'passing_year'     => 'required|digits:4',
             'percentage'       => 'required|numeric|min:0|max:100',
         ]);
@@ -514,6 +519,7 @@ class DashboardController extends Controller
                     'board_university' => $request->board_university,
                     'school_college'   => $request->school_college,
                     'stream'           => $request->stream,
+                    'starting_year'     => $request->starting_year,
                     'passing_year'     => $request->passing_year,
                     'percentage'       => $request->percentage,
                 ]);

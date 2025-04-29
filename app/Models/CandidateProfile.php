@@ -16,6 +16,10 @@ class CandidateProfile extends Model
         'cover_letter',
         'skill',
         'position',
+        'expect_sal',
+        'award_title',
+        'award_date',
+        'award_desc',
         'view_profile',
     ];
 
