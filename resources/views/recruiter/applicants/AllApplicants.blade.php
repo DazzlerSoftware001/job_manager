@@ -64,6 +64,8 @@
                                                 <th>Title</th>
                                                 <th>Applicant Name</th>
                                                 <th>Applicant Email</th>
+                                                <th>Profile Image</th>
+                                                <th>City</th>
                                                 <th>Status</th>
                                                 <th>Applied Date</th>
                                                 <th>Action</th>
@@ -97,6 +99,21 @@
                 </div>
             </div>
         </div>
+
+        <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="imageModalLabel">Profile Image</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center">
+                <img id="modalImage" src="" alt="Logo" class="img-fluid">
+                </div>
+            </div>
+            </div>
+        </div>
+
     @endsection
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
@@ -126,6 +143,7 @@
                             data.search = $('#search').val();
                             data.job_id = $('#jobFilter').val();      // important
                             data.status = $('#statusFilter').val();   // optional
+                            data.city = $('#cityFilter').val();   // optional
                         }
 
                     },
@@ -134,7 +152,7 @@
                     }
                 });
 
-                $('#jobFilter, #statusFilter').on('change', function() {
+                $('#jobFilter, #statusFilter, #cityFilter').on('change', function() {
                     $('#myTable').DataTable().draw();
                 });
 
@@ -144,6 +162,15 @@
                     $('#myTable').DataTable().draw();
                 });
             });
+        </script>
+
+        <script>
+            function openImageModal(imageSrc) {
+                // Set the modal image source to the clicked image
+                document.getElementById('modalImage').src = imageSrc;
+                // Open the modal
+                $('#imageModal').modal('show');
+            }
         </script>
 
         {{-- To Show Button's --}}

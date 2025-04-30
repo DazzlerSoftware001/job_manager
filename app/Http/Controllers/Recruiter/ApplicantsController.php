@@ -153,7 +153,8 @@ class ApplicantsController extends Controller
         $search = $request->input("search");
         $jobId  = $request->input('job_id');
         $status = $request->input('status');
-
+        $city = $request->input('city');
+// dd($city);
         // If no job is selected, return empty result
         if (empty($jobId)) {
             return response()->json([
@@ -175,7 +176,7 @@ class ApplicantsController extends Controller
         ];
 
         $query = JobApplication::with([
-            'user:id,name,email,city',
+            'user:id,name,lname,email,logo,city',
             'jobPost:id,title',
         ])
             ->where('job_id', $jobId)
@@ -184,6 +185,13 @@ class ApplicantsController extends Controller
         if (!empty($status)) {
             $query->where('status', $status);
         }
+
+        if (!empty($city)) {
+            $query->whereHas('user', function ($q) use ($city) {
+                $q->where('city', $city);
+            });
+        }
+        
 
         if (!empty($search)) {
             $query->whereHas('user', function ($q) use ($search) {
@@ -211,9 +219,12 @@ class ApplicantsController extends Controller
 
             $dataArray[] = $record->id;
             $dataArray[] = ucfirst($record->jobPost->title ?? 'N/A');
-            $dataArray[] = ucfirst($record->user->name ?? 'N/A');
+            $dataArray[] = ucfirst($record->user->name) .' '.$record->user->lname;
             $dataArray[] = $record->user->email ?? 'N/A';
+            $dataArray[] = '<img src="' . asset($record->user->logo) . '" alt="Logo" style="height: 100px; width: 100px;" onclick="openImageModal(\'' . asset($record->user->logo) . '\')">';
+            $dataArray[] = $record->user->city ?? 'N/A';
 
+            
             $badgeClass = [
                 'pending'     => 'bg-warning',
                 'shortlisted' => 'bg-info',
