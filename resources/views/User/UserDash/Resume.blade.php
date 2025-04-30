@@ -3,65 +3,6 @@
     Resume
 @endsection
 @section('main-container')
-    {{-- <style>
-        .add-skill-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            animation: fadeIn 0.3s ease-in-out;
-        }
-
-        .skill-input {
-            padding: 10px 15px;
-            border: 2px solid #4f46e5;
-            border-radius: 8px;
-            font-size: 14px;
-            outline: none;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 8px rgba(79, 70, 229, 0.1);
-        }
-
-        .skill-input:focus {
-            border-color: #6366f1;
-            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2);
-        }
-
-        .add-skill-btn {
-            padding: 10px 20px;
-            background: linear-gradient(135deg, #4f46e5, #6366f1);
-            color: white;
-            font-weight: bold;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background 0.3s ease, transform 0.2s ease;
-        }
-
-        .add-skill-btn:hover {
-            background: linear-gradient(135deg, #4338ca, #4f46e5);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: scale(0.95);
-            }
-
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-
-        .skill__item {
-            background-color: #e0e0e0;
-            padding: 4px 8px;
-            border-radius: 6px;
-            margin-right: 8px;
-        }
-    </style> --}}
 
     <style>
         #skillInputsWrapper input {
@@ -244,44 +185,6 @@
     <!-- Skill & Experience -->
     <h6 class="fw-medium mt-30 mb-20">Skill & Experience</h6>
     <div class="my__education radius-16 p-30 bg-white" id="education-1">
-        {{-- <div class="my__skillset">
-            <ul class="skill__tags" id="skillList">
-                @php
-                    $skills =
-                        $candidate && is_string($candidate->skill)
-                            ? json_decode($candidate->skill, true)
-                            : $candidate->skill ?? [];
-                @endphp
-
-                @if (!empty($skills) && is_array($skills))
-                    @foreach ($skills as $skill)
-                        <li>
-                            <span class="skill__item">{{ $skill }}</span>
-                            <span class="remove-skill cursor-pointer text-red-500" data-skill="{{ $skill }}">
-                                <i class="fa-regular fa-xmark"></i>
-                            </span>
-                        </li>
-                    @endforeach
-                @else
-                    <li>No skills added yet.</li>
-                @endif
-
-                <!-- Add Skill Input and Button (Initially Hidden) -->
-                <form action="javascript:void(0)" method="POST" id="uploadSkill">
-                    <li class="add-skill-wrapper" style="display: none;">
-                        <input type="text" name="skills[]" placeholder="Enter skill" class="skill-input" multiple>
-                        <button class="add-skill-btn">Add Skill</button>
-                    </li>
-                </form>
-
-                <!-- Plus Icon -->
-                <li>
-                    <span class="skill__item__add toggle-add-skill">
-                        <i class="fa-regular fa-plus"></i>
-                    </span>
-                </li>
-            </ul>
-        </div> --}}
         <div class="my__skillset">
             <ul class="list-unstyled" id="skillList">
                 @php
@@ -307,7 +210,6 @@
                     <li>No skills added yet.</li>
                 @endif
 
-
                 <!-- Skill Input Form -->
                 <form action="javascript:void(0)" method="POST" id="uploadSkill" class="mt-3">
                     <div id="skillInputsWrapper" class="d-flex flex-column gap-2">
@@ -327,12 +229,6 @@
                         </button>
                     </div>
                 </form>
-
-
-
-
-
-
             </ul>
         </div>
 
@@ -403,7 +299,7 @@
                                             <option value="">Select Months</option>
                                             <!-- Loop to generate months -->
                                             <script>
-                                                for (let i = 1; i <= 12; i++) {
+                                                for (let i = 1; i < 12; i++) {
                                                     document.write(`<option value="${i}">${i} Month${i > 1 ? 's' : ''}</option>`);
                                                 }
                                             </script>
@@ -776,122 +672,6 @@
 @endsection
 
 @section('script')
-    <script>
-        const addSkillBtn = document.getElementById('addSkillInput');
-        const wrapper = document.getElementById('skillInputsWrapper');
-        const submitBtn = document.getElementById('SubmitSkillInput');
-        const actionsRow = document.querySelector('.form-skill-actions');
-
-        function updateUIState() {
-            const inputCount = wrapper.querySelectorAll('.skill-input-group').length;
-            if (inputCount > 0) {
-                submitBtn.classList.remove('d-none');
-                actionsRow.classList.add('justify-content-start');
-            } else {
-                submitBtn.classList.add('d-none');
-                actionsRow.classList.remove('justify-content-start');
-            }
-        }
-
-        addSkillBtn.addEventListener('click', function() {
-            const inputGroup = document.createElement('div');
-            inputGroup.className = 'd-flex align-items-center skill-input-group gap-2';
-
-            const input = document.createElement('input');
-            input.type = 'text';
-            input.name = 'skills[]';
-            input.placeholder = 'Enter skill';
-            // input.className = 'form-control';
-
-            const removeBtn = document.createElement('button');
-            removeBtn.type = 'button';
-            removeBtn.className = 'btn btn-sm btn-danger';
-            removeBtn.innerHTML = '<i class="fa-solid fa-xmark"></i>';
-
-            removeBtn.addEventListener('click', function() {
-                inputGroup.remove();
-                updateUIState();
-            });
-
-            inputGroup.appendChild(input);
-            inputGroup.appendChild(removeBtn);
-            wrapper.appendChild(inputGroup);
-
-            updateUIState();
-        });
-
-        $('#uploadSkill').on('submit', function(e) {
-            e.preventDefault(); // prevent form from reloading
-
-            var url = "{{ route('User.AddSkill') }}";
-
-            $.ajax({
-                url: url,
-                type: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                data: new FormData(this),
-                contentType: false,
-                cache: false,
-                processData: false,
-                dataType: 'json',
-                success: function(result) {
-                    if (result.status_code == 1) {
-                        Toastify({
-                            text: result.message,
-                            duration: 3000,
-                            gravity: "top",
-                            position: "right",
-                            className: "bg-success"
-                        }).showToast();
-
-                        setTimeout(function() {
-                            if (result.redirect_url) {
-                                window.location.href = result.redirect_url;
-                            } else {
-                                location.reload();
-                            }
-                        }, 750);
-
-                    } else if (result.status_code == 2) {
-                        Toastify({
-                            text: result.message,
-                            duration: 3000,
-                            gravity: "top",
-                            position: "right",
-                            className: "bg-warning"
-                        }).showToast();
-                    } else {
-                        Toastify({
-                            text: result.message,
-                            duration: 3000,
-                            gravity: "top",
-                            position: "right",
-                            className: "bg-danger"
-                        }).showToast();
-                    }
-                },
-                error: function(xhr) {
-                    Toastify({
-                        text: "Something went wrong!",
-                        duration: 3000,
-                        gravity: "top",
-                        position: "right",
-                        className: "bg-danger"
-                    }).showToast();
-                }
-            });
-        });
-    </script>
-
-
-
-
-
-
-
-
 
     {{-- For Upload Resume --}}
     <script type="text/javascript">
@@ -1095,10 +875,48 @@
     </script>
 
     {{-- For Add Skill --}}
-    {{-- <script>
-        document.querySelector('.toggle-add-skill').addEventListener('click', function() {
-            const inputWrapper = document.querySelector('.add-skill-wrapper');
-            inputWrapper.style.display = inputWrapper.style.display === 'none' ? 'flex' : 'none';
+    <script>
+        const addSkillBtn = document.getElementById('addSkillInput');
+        const wrapper = document.getElementById('skillInputsWrapper');
+        const submitBtn = document.getElementById('SubmitSkillInput');
+        const actionsRow = document.querySelector('.form-skill-actions');
+
+        function updateUIState() {
+            const inputCount = wrapper.querySelectorAll('.skill-input-group').length;
+            if (inputCount > 0) {
+                submitBtn.classList.remove('d-none');
+                actionsRow.classList.add('justify-content-start');
+            } else {
+                submitBtn.classList.add('d-none');
+                actionsRow.classList.remove('justify-content-start');
+            }
+        }
+
+        addSkillBtn.addEventListener('click', function() {
+            const inputGroup = document.createElement('div');
+            inputGroup.className = 'd-flex align-items-center skill-input-group gap-2';
+
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.name = 'skills[]';
+            input.placeholder = 'Enter skill';
+            // input.className = 'form-control';
+
+            const removeBtn = document.createElement('button');
+            removeBtn.type = 'button';
+            removeBtn.className = 'btn btn-sm btn-danger';
+            removeBtn.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+
+            removeBtn.addEventListener('click', function() {
+                inputGroup.remove();
+                updateUIState();
+            });
+
+            inputGroup.appendChild(input);
+            inputGroup.appendChild(removeBtn);
+            wrapper.appendChild(inputGroup);
+
+            updateUIState();
         });
 
         $('#uploadSkill').on('submit', function(e) {
@@ -1164,7 +982,7 @@
                 }
             });
         });
-    </script> --}}
+    </script>
 
     {{-- For Remove Skill --}}
     <script>

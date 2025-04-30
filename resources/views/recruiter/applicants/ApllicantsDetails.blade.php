@@ -130,7 +130,7 @@
                                                 <h6 class="mb-0">{{ $education->passing_year }}</h6>
                                             </div>
                                             <div class="col-12">
-                                                <h6 class="mb-0">{{ $education->percentage }}%</h6>
+                                                <h6 class="mb-0">{{ $education->percentage }}</h6>
                                             </div>
                                         </div>
                                     </div>

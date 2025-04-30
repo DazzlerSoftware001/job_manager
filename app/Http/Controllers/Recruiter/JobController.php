@@ -517,6 +517,9 @@ class JobController extends Controller
                 $user->candidateProfile->increment('view_profile');
             }
         }
+
+        
+        
         // dd($user);
         // dd($user->candidateProfile->resume);
 

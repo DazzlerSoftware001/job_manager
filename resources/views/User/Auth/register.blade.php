@@ -35,7 +35,7 @@
         <div class="card shadow rounded-4 border-0" style="max-width: 500px; width: 100%;">
             <div class="card-body p-4">
                 <div class="d-flex mb-3 align-items-center justify-content-center">
-                    <h5 class="mb-0 fw-semibold">Login to careernext</h5>
+                    <h5 class="mb-0 fw-semibold">Register to careernext</h5>
                 </div>
                 <div class="d-block has__line text-center mb-4"></div>
                 {{-- <div class="d-block has__line text-center mb-4">
@@ -83,7 +83,6 @@
                             <input class="form-check-input" type="checkbox" id="flexCheckDefault">
                             <label class="form-check-label" for="flexCheckDefault">Remember me</label>
                         </div>
-                        <a href="#" class="forgot__password text-para">Forgot Password?</a>
                     </div>
     
                     <div class="form-group my-3">

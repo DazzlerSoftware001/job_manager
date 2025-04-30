@@ -457,7 +457,7 @@ class DashboardController extends Controller
 
         // Optional validation
         $request->validate([
-            'level'            => 'required|string|unique:education_qualifications,level',
+            'level'            => 'required|string',
             'board_university' => 'required|string',
             'school_college'   => 'required|string',
             'stream'           => 'nullable|string',
