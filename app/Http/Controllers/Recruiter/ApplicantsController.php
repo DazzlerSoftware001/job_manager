@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 use App\Models\JobApplication;
 use Illuminate\Support\Carbon;
 use App\Models\JobPost;
+use App\Models\UserProfile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 
@@ -15,7 +16,16 @@ class ApplicantsController extends Controller
         $today = Carbon::today();
         $joblist = JobPost::select('id','title')->where('status', 1)->where('admin_verify', 1)->whereDate('jobexpiry', '>=', $today)->get();
         $cities = JobApplication::with('user')->get()->pluck('user.city')->filter()->unique()->values();
-        return view('recruiter.applicants.AllApplicants',compact('joblist','cities'));
+       
+        $data = [
+            'qualifications' => UserProfile::select('qualification')->distinct()->pluck('qualification')->filter(),
+            'branches' => UserProfile::select('branch')->distinct()->pluck('branch')->filter(),
+        ];
+        
+        // dd($data['qualifications']);
+
+        
+        return view('recruiter.applicants.AllApplicants',compact('joblist','cities','data'));
     }
 
     // public function getAllApplicants(Request $request)
@@ -150,11 +160,17 @@ class ApplicantsController extends Controller
         $offset = intval($request->input("start", 0));
         $limit  = intval($request->input('length', 10));
         $order  = $request->input("order");
-        $search = $request->input("search");
         $jobId  = $request->input('job_id');
-        $status = $request->input('status');
+
+        $education_level  = $request->input('education_level');
+        $Qualification  = $request->input('Qualification');
+        $Branch  = $request->input('Branch');
+        
         $city = $request->input('city');
-// dd($city);
+        $status = $request->input('status');
+        $search = $request->input("search");
+
+// dd($Qualification);
         // If no job is selected, return empty result
         if (empty($jobId)) {
             return response()->json([
@@ -176,21 +192,43 @@ class ApplicantsController extends Controller
         ];
 
         $query = JobApplication::with([
-            'user:id,name,lname,email,logo,city',
+            'user:id,name,lname,email,logo,education_level,city',
             'jobPost:id,title',
         ])
             ->where('job_id', $jobId)
             ->select(['id', 'user_id', 'job_id', 'status', 'created_at']);
 
-        if (!empty($status)) {
-            $query->where('status', $status);
+
+        if (!empty($education_level)) {
+            $query->whereHas('user', function ($q) use ($education_level) {
+                $q->where('education_level', $education_level);
+            });
         }
 
+        if (!empty($Qualification)) {
+            $query->whereHas('user', function ($q) use ($Qualification) {
+                $q->where('qualification', 'like', '%' . $Qualification . '%');
+            });
+        }
+
+        if (!empty($Branch)) {
+            $query->whereHas('user', function ($q) use ($Branch) {
+                $q->where('branch', 'like', '%' . $Branch . '%');
+            });
+        }
+
+        
         if (!empty($city)) {
             $query->whereHas('user', function ($q) use ($city) {
                 $q->where('city', $city);
             });
         }
+
+        if (!empty($status)) {
+            $query->where('status', $status);
+        }
+
+       
         
 
         if (!empty($search)) {
@@ -218,55 +256,39 @@ class ApplicantsController extends Controller
             $dataArray = [];
 
             $dataArray[] = $record->id;
-            $dataArray[] = ucfirst($record->jobPost->title ?? 'N/A');
+            // $dataArray[] = ucfirst($record->jobPost->title ?? 'N/A');
+            $dataArray[] = '<a href="' . route('Recruiter.ViewJobPost', ['id' => Crypt::encrypt($record->jobPost->id)]) . '" class="text-primary"> '.ucfirst($record->jobPost->title).'</a>';
             $dataArray[] = ucfirst($record->user->name) .' '.$record->user->lname;
             $dataArray[] = $record->user->email ?? 'N/A';
             $dataArray[] = '<img src="' . asset($record->user->logo) . '" alt="Logo" style="height: 100px; width: 100px;" onclick="openImageModal(\'' . asset($record->user->logo) . '\')">';
             $dataArray[] = $record->user->city ?? 'N/A';
 
             
-            $badgeClass = [
-                'pending'     => 'bg-warning',
-                'shortlisted' => 'bg-info',
-                'rejected'    => 'bg-danger',
-                'hired'       => 'bg-success',
-            ];
-            $badgeText = ucfirst($record->status);
-            $badgeColor = $badgeClass[$record->status] ?? 'bg-secondary';
+            // rejected shortlisted hired
+            if ($record->status === 'pending') {
+                $dataArray[] = '<span class="badge bg-warning text-dark">Applied</span>';
 
-            $status = '<div class="d-flex">
-                <span onclick="toggleVerifyOptions(\'' . $record->id . '\');"
-                    class="badge ' . $badgeColor . ' text-uppercase"
-                    style="cursor: pointer;">' . $badgeText . '</span>
-            </div>';
+            } elseif ($record->status === 'shortlisted'){
+                $dataArray[] = '<span class="badge bg-primary">' . ucfirst($record->status) . '</span>';
 
-            // Status Action Buttons
-            if ($record->status == 'pending') {
-                $status .= '<div id="verify-options-' . $record->id . '" style="display: none; margin-top: 5px;">
-                                <div class="d-flex gap-2">
-                                    <button class="badge bg-info text-uppercase" style="cursor: pointer;" onclick="changeVerifyStatus(\'' . $record->id . '\', \'shortlisted\')">Shortlist</button>
-                                    <button class="badge bg-danger text-uppercase" style="cursor: pointer;" onclick="changeVerifyStatus(\'' . $record->id . '\', \'rejected\')">Reject</button>
-                                </div>
-                            </div>';
-            } elseif ($record->status == 'shortlisted') {
-                $status .= '<div id="verify-options-' . $record->id . '" style="display: none; margin-top: 5px;">
-                                <div class="d-flex gap-2">
-                                    <button class="badge bg-success text-uppercase" style="cursor: pointer;" onclick="changeVerifyStatus(\'' . $record->id . '\', \'hired\')">Hire</button>
-                                    <button class="badge bg-danger text-uppercase" style="cursor: pointer;" onclick="changeVerifyStatus(\'' . $record->id . '\', \'rejected\')">Reject</button>
-                                </div>
-                            </div>';
-            } elseif ($record->status == 'rejected') {
-                $status .= '<div id="verify-options-' . $record->id . '" style="display: none; margin-top: 5px;">
-                                <div class="d-flex gap-2">
-                                    <button class="badge bg-info text-uppercase" style="cursor: pointer;" onclick="changeVerifyStatus(\'' . $record->id . '\', \'shortlisted\')">Shortlist</button>
-                                </div>
-                            </div>';
+            }elseif ($record->status === 'rejected'){
+                $dataArray[] = '<span class="badge bg-danger">' . ucfirst($record->status) . '</span>';
+            }elseif ($record->status === 'hired'){
+                $dataArray[] = '<span class="badge bg-success">' . ucfirst($record->status) . '</span>';
             }
+            
 
-            $dataArray[] = $status;
-            $dataArray[] = date('d-M-Y', strtotime($record->created_at));
+            $dataArray[] =  '<div class="d-flex gap-2">
+                <a href="'. route('Recruiter.ApllicantsDetails', [
+                    'userId' => Crypt::encrypt($record->user->id),
+                    'jobId' => Crypt::encrypt($record->jobPost->id)
+                ]).'" class="badge bg-primary">View Profile</a>
+              </div>';
+              $dataArray[] = date('d-M-Y', strtotime($record->created_at));
+
+
             $dataArray[] = '<div class="d-flex gap-2">
-                <a href="' . route('Recruiter.ViewJobPost', ['id' => Crypt::encrypt($record->jobPost->id)]) . '" class="text-primary"><i class="far fa-eye"></i></a>
+               
                 <a href="javascript:void(0);" class="text-danger" onclick="deleteRecord(' . $record->id . ');"><i class="far fa-trash-alt"></i></a>
             </div>';
 

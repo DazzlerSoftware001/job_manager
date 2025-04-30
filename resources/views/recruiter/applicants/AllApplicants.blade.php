@@ -14,9 +14,10 @@
                     <div class="col-lg-12">
                         <div class="card">
                             <div class="card-header">
-                                <h4 class="card-title">All Applicants</h4>
+                                {{-- <h4 class="card-title">All Applicants</h4> --}}
                                 <div class="row">
                                     <div class="col-10 mt-2">
+                                        <label for="jobFilter" class="form-label">Select Job</label>
                                         <select id="jobFilter" class="form-select">
                                             <option value="">Filter by Job</option>
                                             @foreach($joblist as  $job)
@@ -26,16 +27,51 @@
                                     </div>
 
                                     <div class="col-2 mt-2">
-                                        <select id="statusFilter" class="form-select">
-                                            <option value="">Status</option>
-                                                <option value="pending">All</option>
-                                                <option value="shortlisted">ShortListed</option>
-                                                <option value="hired">Hired</option>
-                                                <option value="rejected">Rejected</option>
+                                    </div>
+
+                                    
+                                    {{-- education level --}}
+                                    <div class="col-2 mt-2">
+                                        <label for="education_level" class="form-label">Select Education</label>
+
+                                        <select name="education_level" id="education_level" class="form-select">
+                                            <option value="">Select Education Level</option>
+                                            <option value="Matric">Secondary Education</option>
+                                            <option value="Higher Secondary">Higher Secondary Education</option>
+                                            <option value="UG">Undergraduate (UG)</option>
+                                            <option value="PG">Postgraduate (PG)</option>
+                                            <option value="PhD">Doctorate (PhD)</option>
+                                            <option value="PostDoc">Postdoctoral Research (After PhD)</option>
+                                            <option value="Diploma">Diploma & Certificate Courses</option>
+                                        </select>
+
+                                    </div>
+
+                                    {{-- Qualification --}}
+                                    <div class="col-2 mt-2">
+                                        <label for="Qualification" class="form-label">Qualification</label>
+                                        <select id="Qualification" class="form-select">
+                                                <option value="">Select</option>
+                                                @foreach ($data['qualifications'] as $qualification)
+                                                    <option value="{{ $qualification }}">{{ $qualification }}</option>
+                                                @endforeach
+                                        </select>
+                                    </div>
+
+                                    {{-- Branch --}}
+                                    <div class="col-2 mt-2">
+                                        <label for="Branch" class="form-label">Branch</label>
+                                        <select id="Branch" class="form-select">
+                                                <option value="">Select</option>
+                                                @foreach ($data['branches'] as $branche)
+                                                    <option value="{{ $branche }}">{{ $branche }}</option>
+                                                @endforeach
                                         </select>
                                     </div>
 
                                     <div class="col-2 mt-2">
+                                        <label for="cityFilter" class="form-label">Select City</label>
+                                        
                                         <select id="cityFilter" class="form-select">
                                                 <option value="">City</option>
                                                 @foreach ($cities as $city )
@@ -46,6 +82,20 @@
                                     </div>
 
                                     <div class="col-2 mt-2">
+                                        <label for="statusFilter" class="form-label">Select Status</label>
+
+                                        <select id="statusFilter" class="form-select">
+                                            <option value="">Status</option>
+                                                <option value="pending">Applied</option>
+                                                <option value="shortlisted">ShortListed</option>
+                                                <option value="hired">Hired</option>
+                                                <option value="rejected">Rejected</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-2 mt-2">
+                                        <label for="search" class="form-label">Search</label>
+
                                         <input type="text" id="search" class="form-control mb-3" placeholder="Search by name, email or job title">
                                     </div>
 
@@ -67,6 +117,8 @@
                                                 <th>Profile Image</th>
                                                 <th>City</th>
                                                 <th>Status</th>
+                                                <th>View Profile</th>
+
                                                 <th>Applied Date</th>
                                                 <th>Action</th>
                                             </tr>
@@ -140,10 +192,16 @@
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
                         data: function (data) {
-                            data.search = $('#search').val();
-                            data.job_id = $('#jobFilter').val();      // important
-                            data.status = $('#statusFilter').val();   // optional
+                            data.job_id = $('#jobFilter').val(); // important
+
+                            data.education_level = $('#education_level').val(); 
+                            data.Qualification = $('#Qualification').val(); 
+                            data.Branch = $('#Branch').val(); 
+                            
                             data.city = $('#cityFilter').val();   // optional
+                            data.status = $('#statusFilter').val();   // optional
+                            data.search = $('#search').val();
+
                         }
 
                     },
@@ -152,7 +210,7 @@
                     }
                 });
 
-                $('#jobFilter, #statusFilter, #cityFilter').on('change', function() {
+                $('#jobFilter, #education_level, #Qualification, #Branch, #cityFilter, #statusFilter').on('change', function() {
                     $('#myTable').DataTable().draw();
                 });
 
