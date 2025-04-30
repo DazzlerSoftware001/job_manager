@@ -253,20 +253,89 @@
                         }
                     @endphp
 
+                    <div class="submitted-education-info mb-3 position-relative" id="education-row-{{ $exp->id }}">
+                        <!-- Edit Button -->
+                        <button type="button" class="btn btn-sm btn-outline-primary btn-light edit-exp-btn"
+                            data-bs-toggle="modal" data-bs-target="#editExpModal" data-id="{{ $exp->id }}"
+                            data-company_name="{{ $exp->company_name }}" data-position="{{ $exp->position }}"
+                            data-exp_years="{{ $years }}" data-exp_months="{{ $months }}"
+                            data-description="{{ $exp->description }}" style="position: absolute; left:20%;">
+                            <i class="fas fa-pen"></i> Edit
+                        </button>
 
+                        <!-- Delete Button -->
+                        {{-- <button type="button" class="btn btn-outline-danger btn-sm ms-2" id="deleteExpBtn"
+                            data-id="{{ $exp->id }}" style="position: absolute; left:25%;">
+                            <i class="fas fa-trash"></i> Delete
+                        </button> --}}
 
-                    <div class="submitted-education-info mb-3">
-                        {{-- <h5>Submitted Education Information</h5> --}}
+                        <!-- Experience Info -->
                         <p><strong class="text-dark">Company:</strong> {{ $exp->company_name }}</p>
                         <p><strong class="text-dark">Position:</strong> {{ $exp->position }}</p>
                         <p><strong class="text-dark">Experience (Years):</strong> {{ $years }}</p>
                         <p><strong class="text-dark">Experience (Months):</strong> {{ $months }}</p>
                         <p><strong class="text-dark">Description:</strong> {{ $exp->description }}</p>
+                        <hr>
                     </div>
                 @endforeach
             @else
                 <p>No experience found.</p>
             @endif
+
+            <!-- Edit Education Modal -->
+            <div class="modal fade" id="editExpModal" tabindex="-1" aria-labelledby="editExpModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <form id="editExpForm">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="editExpModalLabel">Edit Experience</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <input type="hidden" name="exp_id" id="exp_id">
+
+                                <div class="mb-2">
+                                    <label>Company<span class="text-danger d-inline">*</span></label>
+                                    <input type="text" name="company_name" id="company_name" class="form-control"
+                                        required>
+                                </div>
+                                <div class="mb-2">
+                                    <label>Position<span class="text-danger d-inline">*</span></label>
+                                    <input type="text" id="position" name="position" placeholder="Software Engineer"
+                                        class="form-control" required>
+                                </div>
+                                <div class="mb-2">
+                                    <label for="de-4">Experience<span class="text-danger d-inline">*</span></label>
+                                    <input type="number" class="no-spinner form-control" name="exp_years"
+                                        id="exp_years" placeholder="Experience in years" required>
+                                </div>
+                                <div class="mb-2">
+                                    <label for="sd-4">Month</label>
+                                    <select name="exp_months" id="exp_months" class="form-select">
+                                        <option value="">Select Months</option>
+                                        <!-- Loop to generate months -->
+                                        <script>
+                                            for (let i = 1; i < 12; i++) {
+                                                document.write(`<option value="${i}">${i} Month${i > 1 ? 's' : ''}</option>`);
+                                            }
+                                        </script>
+                                    </select>
+                                </div>
+                                <div class="mb-2">
+                                    <label for="desc-4">Description<span class="text-danger d-inline">*</span></label>
+                                    <textarea name="desc" id="description" cols="30" rows="5" class="form-control"
+                                        placeholder="Description"></textarea>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">Save Changes</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
 
             <div class="accordion-item">
                 <div id="c1" class="accordion-collapse collapse" data-bs-parent="#rts-accordion-2">
@@ -672,7 +741,6 @@
 @endsection
 
 @section('script')
-
     {{-- For Upload Resume --}}
     <script type="text/javascript">
         $('#uploadResume').on('submit', function(e) {
@@ -986,10 +1054,10 @@
 
     {{-- For Remove Skill --}}
     <script>
-        $('#skillList').on('click', '.remove-skill', function () {
+        $('#skillList').on('click', '.remove-skill', function() {
             let skill = $(this).data('skill');
             let listItem = $(this).closest('li');
-    
+
             $.ajax({
                 url: "{{ route('User.RemoveSkill') }}",
                 type: 'POST',
@@ -997,9 +1065,9 @@
                     _token: '{{ csrf_token() }}',
                     skill: skill
                 },
-                success: function (response) {
+                success: function(response) {
                     if (response.status_code == 1) {
-                        listItem.fadeOut(300, function () {
+                        listItem.fadeOut(300, function() {
                             $(this).remove();
                         });
                         Toastify({
@@ -1019,7 +1087,7 @@
                         }).showToast();
                     }
                 },
-                error: function () {
+                error: function() {
                     Toastify({
                         text: "Something went wrong!",
                         duration: 3000,
@@ -1031,7 +1099,7 @@
             });
         });
     </script>
-    
+
 
     {{-- For Showing the Experince Column --}}
     <script>
@@ -1153,7 +1221,99 @@
         });
     </script>
 
-    {{-- For Showing the Education Column --}}
+    {{-- For Update Candidate Experience --}}
+    <script>
+        $(document).ready(function() {
+            // Fill modal form with existing data
+            $('.edit-exp-btn').on('click', function() {
+                $('#exp_id').val($(this).data('id'));
+                $('#company_name').val($(this).data('company_name'));
+                $('#position').val($(this).data('position'));
+                $('#exp_years').val($(this).data('exp_years'));
+                $('#exp_months').val($(this).data('exp_months'));
+                $('#description').val($(this).data('description'));
+            });
+
+            // Submit updated education via AJAX
+            $('#editExpForm').on('submit', function(e) {
+                e.preventDefault();
+
+                let form = this;
+                let url = "{{ route('User.UpdateExperience') }}";
+
+                // Create FormData object
+                let formData = new FormData(form);
+
+                // Combine exp_years and exp_months into one string like "2 years 5 months"
+                let years = formData.get('exp_years') || 0;
+                let months = formData.get('exp_months') || 0;
+                let experience = `${years} years ${months} months`;
+
+                // Append combined field and remove individual ones
+                formData.delete('exp_years');
+                formData.delete('exp_months');
+                formData.append('experience', experience);
+
+                $.ajax({
+                    url: url,
+                    type: "POST",
+                    data: $(this).serialize(),
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    data: formData,
+                    contentType: false,
+                    cache: false,
+                    processData: false,
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.status_code === 1) {
+                            Toastify({
+                                text: response.message,
+                                duration: 3000,
+                                gravity: "top",
+                                position: "right",
+                                style: {
+                                    background: "green"
+                                }
+                            }).showToast();
+
+                            setTimeout(function() {
+                                if (response.redirect_url) {
+                                    window.location.href = response.redirect_url;
+                                } else {
+                                    location.reload();
+                                }
+                            }, 750);
+                        } else {
+                            Toastify({
+                                text: response.message,
+                                duration: 3000,
+                                gravity: "top",
+                                position: "right",
+                                style: {
+                                    background: "orange"
+                                }
+                            }).showToast();
+                        }
+                    },
+                    error: function() {
+                        Toastify({
+                            text: "Something went wrong.",
+                            duration: 3000,
+                            gravity: "top",
+                            position: "right",
+                            style: {
+                                background: "red"
+                            }
+                        }).showToast();
+                    }
+                });
+            });
+        });
+    </script>
+
+    {{-- For Showing the Candidate Qualification --}}
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const addBtn = document.getElementById("addEducationBtn");
@@ -1404,7 +1564,7 @@
 
 
 
-    {{-- For Showing the Award Section --}}
+    {{-- For Showing Candidate Award --}}
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             const addAwdBtn = document.getElementById("addAwardBtn");

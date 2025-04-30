@@ -27,48 +27,6 @@ class DashboardController extends Controller
         return view('User.Dasboard', compact('appliedJobCount', 'ShortlistedJobCount', 'viewProfile'));
     }
 
-    // public function Profile()
-    // {
-
-    //     // Getting country code
-    //     $response = Http::get('https://restcountries.com/v3.1/all');
-
-    //     if ($response->failed()) {
-    //         abort(500, 'Failed to fetch country data');
-    //     }
-
-    //     $data = collect($response->json());
-
-    //     // Get countries with dial codes
-    //     $countries = $data->map(function ($country) {
-    //         return [
-    //             'name' => $country['name']['common'] ?? '',
-    //             'code' => $country['cca2'] ?? '',
-    //             'dial_code' => ($country['idd']['root'] ?? '') . ($country['idd']['suffixes'][0] ?? ''),
-    //             'flag' => $country['flag'] ?? '',
-    //         ];
-    //     })->filter(function ($country) {
-    //         return !empty($country['dial_code']);
-    //     });
-
-    //     // Get all unique languages
-    //     $languages = $data->flatMap(function ($country) {
-    //         return $country['languages'] ?? [];
-    //     })->unique()->sort()->values();
-
-    //     $user = UserProfile::find(Auth::user()->id);
-
-    //     $countryList = $data->map(function ($country) {
-    //         return [
-    //             'name' => $country['name']['common'] ?? '',
-    //             'code' => $country['cca2'] ?? '',
-    //             'flag' => $country['flag'] ?? '',
-    //         ];
-    //     })->sortBy('name')->values();
-
-    //     return view('User.UserDash.Profile', compact('user', 'countries', 'languages','countryList'));
-
-    // }
     public function Profile()
     {
         $user = UserProfile::find(Auth::id());
@@ -282,81 +240,96 @@ class DashboardController extends Controller
 
     public function UploadCoverLetter(Request $request)
     {
-        $request->validate([
-            'cover_letter' => 'required|string|max:5000', // you can adjust max length if needed
-        ]);
+        $rules = [
+            'cover_letter' => 'required|string|max:5000',
+        ];
 
-        $user = Auth::user()->id;
+        $validator = Validator::make($request->all(), $rules);
 
-        // Find existing candidate profile or create new
-        $candidate = CandidateProfile::where('user_id', $user)->first();
+        if (! $validator->fails()) {
 
-        if (! $candidate) {
-            $candidate          = new CandidateProfile();
-            $candidate->user_id = $user;
+            $user = Auth::user()->id;
+
+            // Find existing candidate profile or create new
+            $candidate = CandidateProfile::where('user_id', $user)->first();
+
+            if (! $candidate) {
+                $candidate          = new CandidateProfile();
+                $candidate->user_id = $user;
+            }
+
+            $candidate->cover_letter = $request->cover_letter;
+            $candidate->save();
+
+            return response()->json([
+                'status_code' => 1,
+                'message'     => 'Cover letter Updated successfully.',
+            ]);
+        } else {
+            return response()->json(['status_code' => 2, 'message' => $validator->errors()->first()]);
         }
-
-        $candidate->cover_letter = $request->cover_letter;
-        $candidate->save();
-
-        return response()->json([
-            'status_code' => 1,
-            'message'     => 'Cover letter saved successfully.',
-        ]);
     }
 
     public function addSkill(Request $request)
     {
-        $request->validate([
+        $rules = [
             'skills'   => 'required|array',
             'skills.*' => 'string|max:255',
-        ]);
+        ];
 
-        $userId    = Auth::id();
-        $candidate = CandidateProfile::where('user_id', $userId)->first();
+        $validator = Validator::make($request->all(), $rules);
 
-        if (! $candidate) {
+        if (! $validator->fails()) {
+
+            $userId    = Auth::id();
+            $candidate = CandidateProfile::where('user_id', $userId)->first();
+
+            if (! $candidate) {
+                return response()->json([
+                    'status_code' => 0,
+                    'message'     => 'Candidate profile not found.',
+                ]);
+            }
+
+            // Normalize existing skills to array
+            $candidateSkills = is_array($candidate->skill)
+            ? $candidate->skill
+            : json_decode($candidate->skill, true);
+
+            if (! is_array($candidateSkills)) {
+                $candidateSkills = [];
+            }
+
+            // Clean new skills (remove null, empty values)
+            $newSkills = array_filter($request->skills, function ($skill) {
+                return ! is_null($skill) && $skill !== '';
+            });
+
+            // Check for duplicates
+            $existingSkills = array_intersect($newSkills, $candidateSkills);
+
+            if ($existingSkills) {
+                return response()->json([
+                    'status_code' => 0,
+                    'message'     => 'Skill Already Exist',
+                ]);
+            }
+
+            // Merge and make unique
+            $combinedSkills = array_unique(array_merge($candidateSkills, $newSkills));
+
+            // Save as JSON
+            $candidate->skill = json_encode(array_values($combinedSkills));
+            $candidate->save();
+
             return response()->json([
-                'status_code' => 0,
-                'message'     => 'Candidate profile not found.',
+                'status_code' => 1,
+                'message'     => 'Skills added successfully!',
             ]);
+        } else {
+            return response()->json(['status_code' => 2, 'message' => $validator->errors()->first()]);
         }
 
-        // Normalize existing skills to array
-        $candidateSkills = is_array($candidate->skill)
-        ? $candidate->skill
-        : json_decode($candidate->skill, true);
-
-        if (! is_array($candidateSkills)) {
-            $candidateSkills = [];
-        }
-
-        // Clean new skills (remove null, empty values)
-        $newSkills = array_filter($request->skills, function ($skill) {
-            return ! is_null($skill) && $skill !== '';
-        });
-
-        // Check for duplicates
-        $existingSkills = array_intersect($newSkills, $candidateSkills);
-
-        if ($existingSkills) {
-            return response()->json([
-                'status_code' => 0,
-                'message'     => 'Skill Already Exist',
-            ]);
-        }
-
-        // Merge and make unique
-        $combinedSkills = array_unique(array_merge($candidateSkills, $newSkills));
-
-        // Save as JSON
-        $candidate->skill = json_encode(array_values($combinedSkills));
-        $candidate->save();
-
-        return response()->json([
-            'status_code' => 1,
-            'message'     => 'Skills added successfully!',
-        ]);
     }
 
     public function removeSkill(Request $request)
@@ -431,32 +404,104 @@ class DashboardController extends Controller
 
     public function candidateExp(Request $request)
     {
-        $request->validate([
+        $rules = [
             'company'    => 'required|string|max:255',
             'position'   => 'required|string|max:255',
             'experience' => 'required|string|max:255',
-            'desc'       => 'nullable|string',
+            'desc'       => 'required|string',
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if (! $validator->fails()) {
+
+            CandidateEmployment::create([
+                'user_id'      => Auth::user()->id, // or your custom user_profile_id if needed
+                'company_name' => $request->company,
+                'position'     => $request->position,
+                'experience'   => $request->experience,
+                'description'  => $request->desc,
+            ]);
+
+            return response()->json([
+                'status_code' => 1,
+                'message'     => 'Experience saved successfully!',
+            ]);
+
+        } else {
+            return response()->json(['status_code' => 2, 'message' => $validator->errors()->first()]);
+        }
+    }
+
+    public function UpdateExperience(Request $request)
+    {
+        // dd($request->all());
+        // Step 1: Validate the request
+        $validator = Validator::make($request->all(), [
+            'exp_id'       => 'required|exists:candidate_employment,id',
+            'company_name' => 'required|string|max:255',
+            'position'     => 'required|string|max:255',
+            'experience'   => 'required|string|max:255',
+            'desc'         => 'nullable|string',
         ]);
 
-        CandidateEmployment::create([
-            'user_id'      => Auth::user()->id, // or your custom user_profile_id if needed
-            'company_name' => $request->company,
-            'position'     => $request->position,
-            'experience'   => $request->experience,
-            'description'  => $request->desc,
-        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'status_code' => 0,
+                'message'     => 'Validation failed',
+                'errors'      => $validator->errors(),
+            ]);
+        }
 
-        return response()->json([
-            'status_code' => 1,
-            'message'     => 'Experience saved successfully!',
-        ]);
+        try {
+            // Step 2: Get current user's education info
+            $experience = CandidateEmployment::where('user_id', Auth::id())->where('id', $request->exp_id)->first();
+
+            // If record not found, optionally create it
+            if (! $experience) {
+                return response()->json([
+                    'status_code' => 0,
+                    'message'     => 'Experience record not found.',
+                ]);
+            }
+
+            CandidateEmployment::where('id', $request->exp_id)
+                ->update([
+                    'company_name' => $request->company_name,
+                    'position'     => $request->position,
+                    'experience'   => $request->experience,
+                    'description'  => $request->desc,
+                ]);
+
+            return response()->json([
+                'status_code' => 1,
+                'message'     => 'Candidate Experience updated successfully!',
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'status_code' => 0,
+                'message'     => 'Error: ' . $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function deleteExperience($id)
+    {
+        $experience = CandidateEmployment::where('id', $id)->first();
+
+        if (! $experience) {
+            return response()->json(['message' => 'Experience record not found.'], 404);
+        }
+
+        CandidateEmployment::where('id', $id)->delete();
+
+        return response()->json(['message' => 'Experience deleted successfully.'], 200);
     }
 
     public function CandidateEducation(Request $request)
     {
-
-        // Optional validation
-        $request->validate([
+        $rules = [
             'level'            => 'required|string',
             'board_university' => 'required|string',
             'school_college'   => 'required|string',
@@ -464,10 +509,31 @@ class DashboardController extends Controller
             'starting_year'    => 'required|numeric|max:' . date('Y'),
             'passing_year'     => 'required|numeric|max:' . date('Y'),
             'percentage'       => 'required',
-        ]);
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status_code' => 2,
+                'message'     => $validator->errors()->first(),
+            ]);
+        }
+
+        // Check if user already has this level of education
+        $exists = CandidateQualifications::where('user_id', Auth::id())
+            ->where('level', $request->level)
+            ->exists();
+
+        if ($exists) {
+            return response()->json([
+                'status_code' => 3,
+                'message'     => 'You have already added this education level.',
+            ]);
+        }
 
         $education                   = new CandidateQualifications();
-        $education->user_id          = Auth::user()->id;
+        $education->user_id          = Auth::id();
         $education->level            = $request->level;
         $education->board_university = $request->board_university;
         $education->school_college   = $request->school_college;
@@ -508,7 +574,7 @@ class DashboardController extends Controller
             // Step 2: Get current user's education info
             $education = CandidateQualifications::where('user_id', Auth::id())->where('id', $request->education_id)->first();
 
-            // If record not found, optionally create it
+            // If record not found, return an error
             if (! $education) {
                 return response()->json([
                     'status_code' => 0,
@@ -516,6 +582,20 @@ class DashboardController extends Controller
                 ]);
             }
 
+            // Step 3: Check if the user already has a record with the same level
+            $levelExists = CandidateQualifications::where('user_id', Auth::id())
+                ->where('level', $request->level)
+                ->where('id', '!=', $request->education_id) // Exclude the current record from the check
+                ->exists();
+
+            if ($levelExists) {
+                return response()->json([
+                    'status_code' => 0,
+                    'message'     => 'You have already added this level of education.',
+                ]);
+            }
+
+            // Step 4: Update the education record
             CandidateQualifications::where('id', $request->education_id)
                 ->update([
                     'level'            => $request->level,
