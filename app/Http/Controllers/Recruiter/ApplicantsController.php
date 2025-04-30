@@ -188,7 +188,7 @@ class ApplicantsController extends Controller
             3 => 'users.email',
             4 => 'job_applications.status',
             5 => 'job_applications.created_at',
-            6 => 'job_applications.id',
+            
         ];
 
         $query = JobApplication::with([
@@ -256,11 +256,24 @@ class ApplicantsController extends Controller
             $dataArray = [];
 
             $dataArray[] = $record->id;
-            // $dataArray[] = ucfirst($record->jobPost->title ?? 'N/A');
-            $dataArray[] = '<a href="' . route('Recruiter.ViewJobPost', ['id' => Crypt::encrypt($record->jobPost->id)]) . '" class="text-primary"> '.ucfirst($record->jobPost->title).'</a>';
-            $dataArray[] = ucfirst($record->user->name) .' '.$record->user->lname;
+            // $dataArray[] = '<a href="' . route('Recruiter.ViewJobPost', ['id' => Crypt::encrypt($record->jobPost->id)]) . '" class="text-primary"> '.ucfirst($record->jobPost->title).'</a>';
+           
+            $dataArray[] = '<div class="d-flex gap-2">
+                <a href="' . route('Recruiter.ApllicantsDetails', [
+                    'userId' => Crypt::encrypt($record->user->id),
+                    'jobId' => Crypt::encrypt($record->jobPost->id)
+                ]) . '" class="text-primary text-decoration-none" data-bs-toggle="tooltip" title="View Profile">'
+                    . ucfirst($record->user->name) . ' ' . $record->user->lname .
+                '</a>
+            </div>';
+        
+        
+
+            
+            // $dataArray[] = ucfirst($record->user->name) .' '.$record->user->lname;
             $dataArray[] = $record->user->email ?? 'N/A';
             $dataArray[] = '<img src="' . asset($record->user->logo) . '" alt="Logo" style="height: 100px; width: 100px;" onclick="openImageModal(\'' . asset($record->user->logo) . '\')">';
+           
             $dataArray[] = $record->user->city ?? 'N/A';
 
             
@@ -278,18 +291,15 @@ class ApplicantsController extends Controller
             }
             
 
-            $dataArray[] =  '<div class="d-flex gap-2">
-                <a href="'. route('Recruiter.ApllicantsDetails', [
-                    'userId' => Crypt::encrypt($record->user->id),
-                    'jobId' => Crypt::encrypt($record->jobPost->id)
-                ]).'" class="badge bg-primary">View Profile</a>
-              </div>';
+          
               $dataArray[] = date('d-M-Y', strtotime($record->created_at));
 
 
-            $dataArray[] = '<div class="d-flex gap-2">
-               
-                <a href="javascript:void(0);" class="text-danger" onclick="deleteRecord(' . $record->id . ');"><i class="far fa-trash-alt"></i></a>
+              $dataArray[] =  '<div class="d-flex gap-2">
+              <a href="'. route('Recruiter.ApllicantsDetails', [
+                  'userId' => Crypt::encrypt($record->user->id),
+                  'jobId' => Crypt::encrypt($record->jobPost->id)
+              ]).'" class="badge bg-primary">View Profile</a>
             </div>';
 
             $data[] = $dataArray;
@@ -301,23 +311,6 @@ class ApplicantsController extends Controller
             "recordsFiltered" => $totalRecords,
             "data" => $data,
         ]);
-    }
-
-
-    public function verifyStatus(Request $request)
-    {
-        $id     = $request->id;
-        $status = $request->status;
-
-        $application = JobApplication::find($id);
-        if ($application) {
-            $application->status = $status;
-            $application->save();
-
-            return response()->json(['status_code' => 1, 'message' => 'Status updated successfully.']);
-        }
-
-        return response()->json(['status_code' => 0, 'message' => 'Application not found.']);
     }
 
     public function shortlistApplicants()

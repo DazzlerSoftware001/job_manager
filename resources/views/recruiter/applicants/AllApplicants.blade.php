@@ -111,14 +111,11 @@
                                         <thead class="table-light">
                                             <tr>
                                                 <th>#</th>
-                                                <th>Title</th>
                                                 <th>Applicant Name</th>
                                                 <th>Applicant Email</th>
                                                 <th>Profile Image</th>
                                                 <th>City</th>
                                                 <th>Status</th>
-                                                <th>View Profile</th>
-
                                                 <th>Applied Date</th>
                                                 <th>Action</th>
                                             </tr>

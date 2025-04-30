@@ -13,9 +13,6 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="card">
-                            <div class="card-header">
-                                <h4 class="card-title">Applicants Details</h4>
-                            </div>
 
                             <div class="card-body">
                                 <div class="row align-items-center">
@@ -106,7 +103,8 @@
                             $educations = $user->candidateQualification; // or whatever relationship you set
                         @endphp
                         {{-- {{$educations}} --}}
-                        @if (!empty($educations))
+                        @if ($educations->isNotEmpty())
+
                             <h3>Education</h3>
                             @foreach ($educations as $education)
                                 <div class="card shadow-sm mb-4 border-0">
@@ -141,7 +139,7 @@
                         @php
                             $employments = $user->candidateEmployment; // or whatever relationship you set
                         @endphp
-                        @if (!empty($employments))
+                        @if ($employments->isNotEmpty())
                             <h3>Experience</h3>
                             @foreach ($employments as $employment)
                                 <div class="card shadow-sm mb-4 border-0">
