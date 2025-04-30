@@ -25,6 +25,8 @@ return new class extends Migration
             // Status of application
             $table->enum('status', ['pending', 'shortlisted', 'rejected', 'hired'])->default('pending');
 
+            $table->enum('recruiter_view', [0, 1])->default(0);
+
             $table->timestamps();
         });
     }

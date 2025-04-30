@@ -17,9 +17,6 @@ class CandidateProfile extends Model
         'skill',
         'position',
         'expect_sal',
-        'award_title',
-        'award_date',
-        'award_desc',
         'view_profile',
     ];
 

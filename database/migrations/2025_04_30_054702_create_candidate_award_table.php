@@ -11,19 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('candidate_profile', function (Blueprint $table) {
+        Schema::create('candidate_award', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->string('resume')->nullable(); // assuming it's a file path
-            $table->text('cover_letter')->nullable();
-            $table->string('skill')->nullable();
-            $table->string('position')->nullable();
-            $table->integer('expect_sal')->nullable();
-            $table->integer('view_profile')->nullable();
+            $table->string('award_title')->nullable();
+            $table->date('award_date')->nullable();
+            $table->text('award_desc')->nullable();
             $table->timestamps();
 
-            // Foreign key constraint
+            // Optional foreign key constraint
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            
         });
     }
 
@@ -32,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('candidate_profile');
+        Schema::dropIfExists('candidate_award');
     }
 };

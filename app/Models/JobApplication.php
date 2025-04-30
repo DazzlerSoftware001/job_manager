@@ -9,7 +9,7 @@ class JobApplication extends Model
     use HasFactory;
 
     protected $table = 'job_applications'; 
-    protected $fillable = ['user_id', 'job_id','status'];
+    protected $fillable = ['user_id', 'job_id','status', 'recruiter_view'];
 
     public function user()
     {

@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\CandidateAward;
 use App\Models\CandidateEmployment;
 use App\Models\CandidateProfile;
 use App\Models\CandidateQualifications;
@@ -166,9 +167,9 @@ class DashboardController extends Controller
 
             $profile->social_links = json_encode($socialData);
 
-            $profile->name            = $request->input('name');
-            $profile->lname           = $request->input('lname');
-            $profile->email           = $request->input('email');
+            $profile->name  = $request->input('name');
+            $profile->lname = $request->input('lname');
+            $profile->email = $request->input('email');
             // $profile->phone           = $request->input('phone.code') . $request->input('phone.number');
             $profile->date_of_birth   = $request->input('dob');
             $profile->gender          = $request->input('gender');
@@ -217,7 +218,9 @@ class DashboardController extends Controller
 
         $educations = CandidateQualifications::where('user_id', $id)->get();
 
-        return view('User.UserDash.Resume', compact('resumeName', 'resumePath', 'candidate', 'can_exp', 'educations'));
+        $awards = CandidateAward::where('user_id', $id)->get();
+
+        return view('User.UserDash.Resume', compact('resumeName', 'resumePath', 'candidate', 'can_exp', 'educations', 'awards'));
     }
 
     public function UploadResume(Request $request)
@@ -249,8 +252,8 @@ class DashboardController extends Controller
                 $candidate->user_id = $user['id'];
             } else {
                 // Delete old resume if it exists
-                if ($candidate->resume && file_exists(public_path('user/assets/' . $candidate->resume))) {
-                    unlink(public_path('user/assets/' . $candidate->resume));
+                if ($candidate->resume && file_exists(public_path($candidate->resume))) {
+                    unlink(public_path($candidate->resume));
                 }
             }
 
@@ -392,7 +395,7 @@ class DashboardController extends Controller
     {
         $rules = [
             'designation' => 'required|string|max:255',
-            'expected' => 'required|numeric'
+            'expected'    => 'required|numeric',
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -415,7 +418,7 @@ class DashboardController extends Controller
             }
 
             $candidateProfile->position   = $request->input('designation');
-            $candidateProfile->expect_sal   = $request->input('expected');
+            $candidateProfile->expect_sal = $request->input('expected');
             $candidateProfile->updated_at = now(); // only needed if timestamps are off
             $candidateProfile->save();
 
@@ -454,11 +457,11 @@ class DashboardController extends Controller
 
         // Optional validation
         $request->validate([
-            'level'            => 'required|string',
+            'level'            => 'required|string|unique:education_qualifications,level',
             'board_university' => 'required|string',
             'school_college'   => 'required|string',
             'stream'           => 'nullable|string',
-            'starting_year'     => 'required|numeric|max:' . date('Y'),
+            'starting_year'    => 'required|numeric|max:' . date('Y'),
             'passing_year'     => 'required|numeric|max:' . date('Y'),
             'percentage'       => 'required',
         ]);
@@ -469,7 +472,7 @@ class DashboardController extends Controller
         $education->board_university = $request->board_university;
         $education->school_college   = $request->school_college;
         $education->stream           = $request->stream;
-        $education->starting_year     = $request->starting_year;
+        $education->starting_year    = $request->starting_year;
         $education->passing_year     = $request->passing_year;
         $education->percentage       = $request->percentage;
         $education->save();
@@ -488,7 +491,7 @@ class DashboardController extends Controller
             'level'            => 'required|string|max:255',
             'board_university' => 'required|string|max:255',
             'school_college'   => 'required|string|max:255',
-            'starting_year'     => 'required|digits:4',
+            'starting_year'    => 'required|digits:4',
             'passing_year'     => 'required|digits:4',
             'percentage'       => 'required|numeric|min:0|max:100',
         ]);
@@ -519,7 +522,7 @@ class DashboardController extends Controller
                     'board_university' => $request->board_university,
                     'school_college'   => $request->school_college,
                     'stream'           => $request->stream,
-                    'starting_year'     => $request->starting_year,
+                    'starting_year'    => $request->starting_year,
                     'passing_year'     => $request->passing_year,
                     'percentage'       => $request->percentage,
                 ]);
@@ -527,6 +530,97 @@ class DashboardController extends Controller
             return response()->json([
                 'status_code' => 1,
                 'message'     => 'Candidate Qualification updated successfully!',
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'status_code' => 0,
+                'message'     => 'Error: ' . $e->getMessage(),
+            ]);
+        }
+    }
+
+    public function deleteEducation($id)
+    {
+        $education = CandidateQualifications::where('id', $id)->first();
+
+        if (! $education) {
+            return response()->json(['message' => 'Education record not found.'], 404);
+        }
+
+        CandidateQualifications::where('id', $id)->delete();
+
+        return response()->json(['message' => 'Education deleted successfully.'], 200);
+    }
+
+    public function CandidateAward(Request $request)
+    {
+        $rules = [
+            'award_title' => 'required|string|max:255',
+            'award_date'  => 'required',
+            'award_desc'  => 'required',
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if (! $validator->fails()) {
+
+            // If not exists, create a new instance
+            $candidateAward              = new CandidateAward();
+            $candidateAward->user_id     = Auth::user()->id;
+            $candidateAward->award_title = $request->input('award_title');
+            $candidateAward->award_date  = $request->input('award_date');
+            $candidateAward->award_desc  = $request->input('award_desc');
+            $candidateAward->updated_at  = now(); // only needed if timestamps are off
+            $candidateAward->save();
+
+            return response()->json(['status_code' => 1, 'message' => 'Award Added successfully']);
+
+        } else {
+            return response()->json(['status_code' => 2, 'message' => $validator->errors()->first()]);
+        }
+    }
+
+    public function updateAward(Request $request)
+    {
+        // Step 1: Validate the request
+        $validator = Validator::make($request->all(), [
+            'award_id'    => 'required|exists:candidate_award,id',
+            'award_title' => 'required|string|max:255',
+            'award_date'  => 'required',
+            'award_desc'  => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status_code' => 0,
+                'message'     => 'Validation failed',
+                'errors'      => $validator->errors(),
+            ]);
+        }
+
+        try {
+            // Step 2: Get current user's education info
+            $award = CandidateAward::where('user_id', Auth::id())->where('id', $request->award_id)->first();
+
+            // If record not found, optionally create it
+            if (! $award) {
+                return response()->json([
+                    'status_code' => 0,
+                    'message'     => 'Education record not found.',
+                ]);
+            }
+
+            CandidateAward::where('id', $request->award_id)
+                ->update([
+                    'award_title' => $request->award_title,
+                    'award_date'  => $request->award_date,
+                    'award_desc'  => $request->award_desc,
+                ]);
+
+            return response()->json([
+                'status_code' => 1,
+                'message'     => 'Candidate Award updated successfully!',
             ]);
 
         } catch (\Exception $e) {

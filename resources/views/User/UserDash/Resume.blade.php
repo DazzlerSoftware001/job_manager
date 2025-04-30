@@ -3,7 +3,7 @@
     Resume
 @endsection
 @section('main-container')
-    <style>
+    {{-- <style>
         .add-skill-wrapper {
             display: flex;
             align-items: center;
@@ -61,7 +61,50 @@
             border-radius: 6px;
             margin-right: 8px;
         }
+    </style> --}}
+
+    <style>
+        #skillInputsWrapper input {
+            border-radius: 20px;
+            padding: 0.4rem 1rem;
+            border: 1px solid #6c757d;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+            font-size: 14px;
+        }
+
+        .form-skill-actions {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            margin-top: 0.8rem;
+        }
+
+        #SubmitSkillInput,
+        #addSkillInput {
+            border-radius: 20px;
+            padding: 0.4rem 1rem;
+            font-size: 13px;
+            transition: all 0.3s ease;
+        }
+
+        #SubmitSkillInput:hover,
+        #addSkillInput:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.2);
+        }
+
+        @media (max-width: 768px) {
+            .form-skill-actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+
+        .skill-input-group input {
+            border-radius: 20px;
+        }
     </style>
+
 
     <div class="my__profile__tab radius-16 bg-white">
         {{-- <nav>
@@ -182,10 +225,12 @@
                 @endif
                 <label for="resume" class="form-label mt-3">Expect Salary<span class="text-danger">*</span></label>
                 @if ($candidate && $candidate->expect_sal)
-                    <input type="number" name="expected" class="form-control" value="{{ old('expected', $candidate->expect_sal) }}">
+                    <input type="number" name="expected" class="form-control"
+                        value="{{ old('expected', $candidate->expect_sal) }}">
                     <span class="fs-6 text-danger">Enter monthly Expected Salary</span>
                 @else
                     <input type="number" name="expected" class="form-control no-spinner" placeholder="Expected Salary">
+                    <span class="fs-6 text-danger">Enter monthly Expected Salary</span>
                 @endif
 
                 <button type="submit" class="btn btn-primary w-10 d-block mt-3">
@@ -199,7 +244,7 @@
     <!-- Skill & Experience -->
     <h6 class="fw-medium mt-30 mb-20">Skill & Experience</h6>
     <div class="my__education radius-16 p-30 bg-white" id="education-1">
-        <div class="my__skillset">
+        {{-- <div class="my__skillset">
             <ul class="skill__tags" id="skillList">
                 @php
                     $skills =
@@ -236,7 +281,62 @@
                     </span>
                 </li>
             </ul>
+        </div> --}}
+        <div class="my__skillset">
+            <ul class="list-unstyled" id="skillList">
+                @php
+                    $skills =
+                        $candidate && is_string($candidate->skill)
+                            ? json_decode($candidate->skill, true)
+                            : $candidate->skill ?? [];
+                @endphp
+
+                @if (!empty($skills) && is_array($skills))
+                    @foreach ($skills as $skill)
+                        <li class="d-inline-block mb-2 me-2">
+                            <span class="badge bg-primary p-2">
+                                {{ $skill }}
+                                <span class="ms-2 text-white remove-skill" style="cursor:pointer;"
+                                    data-skill="{{ $skill }}">
+                                    <i class="fa-solid fa-xmark"></i>
+                                </span>
+                            </span>
+                        </li>
+                    @endforeach
+                @else
+                    <li>No skills added yet.</li>
+                @endif
+
+
+                <!-- Skill Input Form -->
+                <form action="javascript:void(0)" method="POST" id="uploadSkill" class="mt-3">
+                    <div id="skillInputsWrapper" class="d-flex flex-column gap-2">
+                        <!-- Input field gets added here -->
+                    </div>
+
+                    <div class="form-skill-actions">
+                        <button type="submit"
+                            class="btn btn-outline-success btn-sm d-flex align-items-center gap-1 d-none"
+                            id="SubmitSkillInput">
+                            <i class="fa-solid fa-paper-plane"></i> Submit
+                        </button>
+
+                        <button type="button" class="btn btn-outline-primary btn-sm d-flex align-items-center"
+                            id="addSkillInput">
+                            <i class="fa-solid fa-plus"></i> Add Skill
+                        </button>
+                    </div>
+                </form>
+
+
+
+
+
+
+            </ul>
         </div>
+
+
 
         <div class="accordion" id="rts-accordion-2">
             @if ($can_exp)
@@ -261,11 +361,11 @@
 
                     <div class="submitted-education-info mb-3">
                         {{-- <h5>Submitted Education Information</h5> --}}
-                        <p><strong>Company:</strong> {{ $exp->company_name }}</p>
-                        <p><strong>Position:</strong> {{ $exp->position }}</p>
-                        <p><strong>Experience (Years):</strong> {{ $years }}</p>
-                        <p><strong>Experience (Months):</strong> {{ $months }}</p>
-                        <p><strong>Description</strong> {{ $exp->description }}</p>
+                        <p><strong class="text-dark">Company:</strong> {{ $exp->company_name }}</p>
+                        <p><strong class="text-dark">Position:</strong> {{ $exp->position }}</p>
+                        <p><strong class="text-dark">Experience (Years):</strong> {{ $years }}</p>
+                        <p><strong class="text-dark">Experience (Months):</strong> {{ $months }}</p>
+                        <p><strong class="text-dark">Description:</strong> {{ $exp->description }}</p>
                     </div>
                 @endforeach
             @else
@@ -339,18 +439,25 @@
 
         @if ($educations)
             @foreach ($educations as $education)
-                <div class="submitted-education-info mb-3 position-relative">
-                    <button type="button" class="btn btn-sm btn-light edit-education-btn" data-bs-toggle="modal"
-                        data-bs-target="#editEducationModal" data-id="{{ $education->id }}"
+                <div class="submitted-education-info mb-3 position-relative" id="education-row-{{ $education->id }}">
+                    <!-- Edit Button -->
+                    <button type="button" class="btn btn-sm btn-outline-primary btn-light edit-education-btn"
+                        data-bs-toggle="modal" data-bs-target="#editEducationModal" data-id="{{ $education->id }}"
                         data-level="{{ $education->level }}" data-board="{{ $education->board_university }}"
                         data-institute="{{ $education->school_college }}" data-stream="{{ $education->stream }}"
                         data-starting_year="{{ $education->starting_year }}"
                         data-passing_year="{{ $education->passing_year }}"
-                        data-percentage="{{ $education->percentage }}" style="position: absolute; left:15%;">
-                        <i class="fas fa-pen"></i>
+                        data-percentage="{{ $education->percentage }}" style="position: absolute; left:20%;">
+                        <i class="fas fa-pen"></i> Edit
                     </button>
 
+                    <!-- Delete Button -->
+                    <button type="button" class="btn btn-outline-danger btn-sm ms-2" id="deleteEducationBtn"
+                        data-id="{{ $education->id }}" style="position: absolute; left:25%;">
+                        <i class="fas fa-trash"></i> Delete
+                    </button>
 
+                    <!-- Education Info -->
                     <p><strong class="text-dark">Education Level:</strong> {{ $education->level }}</p>
                     <p><strong class="text-dark">Board Type:</strong> {{ $education->board_university }}</p>
                     <p><strong class="text-dark">Institute Name:</strong> {{ $education->school_college }}</p>
@@ -389,6 +496,7 @@
                                     <option value="12th">12th</option>
                                     <option value="UG">Graduation/Diploma</option>
                                     <option value="PG">Post Graduation</option>
+                                    <option value="Diploma">Diploma</option>
                                     <option value="PhD">PhD</option>
                                 </select>
                             </div>
@@ -409,13 +517,23 @@
                             </div>
                             <div class="mb-2">
                                 <label>Starting Year<span class="text-danger d-inline">*</span></label>
-                                <input type="number" name="starting_year" id="starting_year" class="form-control"
-                                    required>
+                                {{-- <input type="number" name="starting_year" id="edit_starting_year" class="form-control"
+                                    required> --}}
+                                <select name="starting_year" id="edit_starting_year" class="form-control">
+                                    @for ($i = date('Y'); $i >= 1950; $i--)
+                                        <option value="{{ $i }}">{{ $i }}</option>
+                                    @endfor
+                                </select>
                             </div>
                             <div class="mb-2">
                                 <label>Passing Year<span class="text-danger d-inline">*</span></label>
-                                <input type="number" name="passing_year" id="passing_year" class="form-control"
-                                    required>
+                                {{-- <input type="number" name="passing_year" id="edit_passing_year" class="form-control"
+                                    required> --}}
+                                <select name="passing_year" id="edit_passing_year" class="form-control">
+                                    @for ($i = date('Y'); $i >= 1950; $i--)
+                                        <option value="{{ $i }}">{{ $i }}</option>
+                                    @endfor
+                                </select>
                             </div>
                             <div class="mb-2">
                                 <label>Percentage/Grade<span class="text-danger d-inline">*</span></label>
@@ -449,8 +567,9 @@
                                         <option value="">Select Level</option>
                                         <option value="10th">10th</option>
                                         <option value="12th">12th</option>
-                                        <option value="UG">Graduation/Diploma</option>
+                                        <option value="UG">Graduation</option>
                                         <option value="PG">Post Graduation</option>
+                                        <option value="Diploma">Diploma</option>
                                         <option value="PhD">PhD</option>
                                     </select>
                                 </div>
@@ -478,17 +597,30 @@
 
                             <div class="row row-cols-sm-2 row-cols-1 mt-3">
                                 <div class="rt-input-group">
-                                    <label for="starting_year">Starting Year<span
-                                            class="text-danger d-inline">*</span></label>
-                                    <input type="number" class="no-snipper" id="starting_year" name="starting_year"
-                                        placeholder="YYYY" required max="{{ date('Y') }}">
+                                    <div class="row g-2">
+                                        <div class="col">
+                                            <label for="starting_year">Starting Year<span
+                                                    class="text-danger d-inline">*</span></label>
+                                            <select name="starting_year" id="starting_year" class="form-control"
+                                                style="height: 56px;">
+                                                @for ($i = date('Y'); $i >= 1950; $i--)
+                                                    <option value="{{ $i }}">{{ $i }}</option>
+                                                @endfor
+                                            </select>
+                                        </div>
+                                        <div class="col">
+                                            <label for="passing_year">Passing Year<span
+                                                    class="text-danger d-inline">*</span></label>
+                                            <select name="passing_year" id="passing_year" class="form-control"
+                                                style="height: 56px;">
+                                                @for ($i = date('Y'); $i >= 1950; $i--)
+                                                    <option value="{{ $i }}">{{ $i }}</option>
+                                                @endfor
+                                            </select>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="rt-input-group">
-                                    <label for="passing_year">Passing Year<span
-                                            class="text-danger d-inline">*</span></label>
-                                    <input type="number" class="no-snipper" id="passing_year" name="passing_year"
-                                        placeholder="YYYY" required max="{{ date('Y') }}">
-                                </div>
+
                                 <div class="rt-input-group">
                                     <label for="percentage">Percentage/Grade<span
                                             class="text-danger d-inline">*</span></label>
@@ -514,43 +646,128 @@
             <a href="javascript:void(0)" id="addEducationBtn" class="added__social__link">Add Educational Information</a>
         </div>
 
+        <!-- Delete Confirmation Modal -->
+        <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header bg-danger text-white">
+                        <h5 class="modal-title" id="confirmDeleteLabel">Confirm Delete</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure you want to delete this education record?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" id="confirmDeleteBtn" class="btn btn-danger btn-sm">Yes, Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
     </div>
     <!-- education end -->
 
     <!-- Award -->
     <h6 class="fw-medium mt-30 mb-20">Award</h6>
     <div class="my__education radius-16 p-30 bg-white" id="education-3">
-        <div class="accordion" id="rts-accordion-3">
-            <div class="accordion-item">
-                <div id="c4" class="accordion-collapse collapse" data-bs-parent="#rts-accordion-3">
-                    <div class="accordion-body p-0 mt-3 mb-20">
+
+        @if ($awards)
+            @foreach ($awards as $award)
+                <div class="submitted-education-info mb-3 position-relative">
+                    <button type="button" class="btn btn-sm btn-light edit-award-btn" data-bs-toggle="modal"
+                        data-bs-target="#editAwardModal" data-id="{{ $award->id }}"
+                        data-award_title="{{ $award->award_title }}" data-award_date="{{ $award->award_date }}"
+                        data-award_desc="{{ $award->award_desc }}" style="position: absolute; right:15%;">
+                        <i class="fas fa-pen"></i>
+                    </button>
+
+
+                    <p><strong class="text-dark">Title:</strong> {{ $award->award_title }}</p>
+                    <p><strong class="text-dark">Date:</strong>
+                        {{ \Carbon\Carbon::parse($award->award_date)->format('d M Y') }}</p>
+                    <p><strong class="text-dark">Description:</strong> {{ $award->award_desc }}</p>
+                    </p>
+                    <hr>
+                </div>
+            @endforeach
+        @else
+            <p>No education information available.</p>
+        @endif
+
+        <!-- Edit Award Modal -->
+        <div class="modal fade" id="editAwardModal" tabindex="-1" aria-labelledby="editAwardModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form id="editAwardForm">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="editAwardModalLabel">Edit Award</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <input type="hidden" name="award_id" id="award_id">
+
+                            <div class="mb-2">
+                                <label>Title<span class="text-danger d-inline">*</span></label>
+                                <input type="text" name="award_title" id="award_title" class="form-control" required>
+                            </div>
+                            <div class="mb-2">
+                                <label>Date<span class="text-danger d-inline">*</span></label>
+                                <input type="date" name="award_date" id="award_date" class="form-control" required>
+                            </div>
+                            <div class="mb-2">
+                                <label>Description<span class="text-danger d-inline">*</span></label>
+                                <textarea id="award_desc" name="award_desc" cols="30" rows="5" class="form-control"
+                                    placeholder="Description"></textarea>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Award Form -->
+        <div class="accordion-item">
+            <div id="c4" class="accordion-collapse collapse" data-bs-parent="#rts-accordion-3">
+                <div class="accordion-body p-0 mt-3 mb-20">
+                    <form action="javascript:void(0)" id="AddAward">
                         <div class="info__field">
                             <div class="row row-cols-sm-2 row-cols-1">
                                 <div class="rt-input-group">
-                                    <label for="titlea">Title</label>
-                                    <input type="text" id="titlea"
+                                    <label for="titlea">Title<span class="text-danger d-inline">*</span></label>
+                                    <input type="text" id="titlea" name="award_title"
                                         placeholder="McMaster Center for Software Certification" required>
                                 </div>
                                 <div class="rt-input-group">
-                                    <label for="ye-7">Year</label>
-                                    <input type="text" id="ye-7" placeholder="dd/mm/yy" required>
+                                    <label for="ye-7">Year<span class="text-danger d-inline">*</span></label>
+                                    <input type="date" id="ye-7" name="award_date" placeholder="dd/mm/yy"
+                                        required>
                                 </div>
                             </div>
                             <div class="rt-input-group">
-                                <label for="desc-7">Description</label>
-                                <textarea name="desc" id="desc-7" cols="30" rows="5" placeholder="Description"></textarea>
+                                <label for="desc-7">Description<span class="text-danger d-inline">*</span></label>
+                                <textarea id="desc-7" name="award_desc" cols="30" rows="5" placeholder="Description"></textarea>
                             </div>
                         </div>
                         <div class="d-flex justify-content-end mt-30">
                             <button type="submit" class="btn me-3 added__social__link">Add Award</button>
                             <a href="#" class="removeAward added__social__link">Remove Award</a>
                         </div>
-                    </div>
+                    </form>
                 </div>
             </div>
-            <div class="d-flex justify-content-start" id="addAwardContainer">
-                <a href="#" id="addAwardBtn" class="added__social__link">Add Award</a>
-            </div>
+        </div>
+
+        <!-- Add Award Button -->
+        <div class="d-flex justify-content-start" id="addAwardContainer">
+            <a href="#" id="addAwardBtn" class="added__social__link">Add Award</a>
         </div>
     </div>
     <!-- Award end -->
@@ -559,6 +776,123 @@
 @endsection
 
 @section('script')
+    <script>
+        const addSkillBtn = document.getElementById('addSkillInput');
+        const wrapper = document.getElementById('skillInputsWrapper');
+        const submitBtn = document.getElementById('SubmitSkillInput');
+        const actionsRow = document.querySelector('.form-skill-actions');
+
+        function updateUIState() {
+            const inputCount = wrapper.querySelectorAll('.skill-input-group').length;
+            if (inputCount > 0) {
+                submitBtn.classList.remove('d-none');
+                actionsRow.classList.add('justify-content-start');
+            } else {
+                submitBtn.classList.add('d-none');
+                actionsRow.classList.remove('justify-content-start');
+            }
+        }
+
+        addSkillBtn.addEventListener('click', function() {
+            const inputGroup = document.createElement('div');
+            inputGroup.className = 'd-flex align-items-center skill-input-group gap-2';
+
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.name = 'skills[]';
+            input.placeholder = 'Enter skill';
+            // input.className = 'form-control';
+
+            const removeBtn = document.createElement('button');
+            removeBtn.type = 'button';
+            removeBtn.className = 'btn btn-sm btn-danger';
+            removeBtn.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+
+            removeBtn.addEventListener('click', function() {
+                inputGroup.remove();
+                updateUIState();
+            });
+
+            inputGroup.appendChild(input);
+            inputGroup.appendChild(removeBtn);
+            wrapper.appendChild(inputGroup);
+
+            updateUIState();
+        });
+
+        $('#uploadSkill').on('submit', function(e) {
+            e.preventDefault(); // prevent form from reloading
+
+            var url = "{{ route('User.AddSkill') }}";
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: new FormData(this),
+                contentType: false,
+                cache: false,
+                processData: false,
+                dataType: 'json',
+                success: function(result) {
+                    if (result.status_code == 1) {
+                        Toastify({
+                            text: result.message,
+                            duration: 3000,
+                            gravity: "top",
+                            position: "right",
+                            className: "bg-success"
+                        }).showToast();
+
+                        setTimeout(function() {
+                            if (result.redirect_url) {
+                                window.location.href = result.redirect_url;
+                            } else {
+                                location.reload();
+                            }
+                        }, 750);
+
+                    } else if (result.status_code == 2) {
+                        Toastify({
+                            text: result.message,
+                            duration: 3000,
+                            gravity: "top",
+                            position: "right",
+                            className: "bg-warning"
+                        }).showToast();
+                    } else {
+                        Toastify({
+                            text: result.message,
+                            duration: 3000,
+                            gravity: "top",
+                            position: "right",
+                            className: "bg-danger"
+                        }).showToast();
+                    }
+                },
+                error: function(xhr) {
+                    Toastify({
+                        text: "Something went wrong!",
+                        duration: 3000,
+                        gravity: "top",
+                        position: "right",
+                        className: "bg-danger"
+                    }).showToast();
+                }
+            });
+        });
+    </script>
+
+
+
+
+
+
+
+
+
     {{-- For Upload Resume --}}
     <script type="text/javascript">
         $('#uploadResume').on('submit', function(e) {
@@ -761,7 +1095,7 @@
     </script>
 
     {{-- For Add Skill --}}
-    <script>
+    {{-- <script>
         document.querySelector('.toggle-add-skill').addEventListener('click', function() {
             const inputWrapper = document.querySelector('.add-skill-wrapper');
             inputWrapper.style.display = inputWrapper.style.display === 'none' ? 'flex' : 'none';
@@ -830,14 +1164,14 @@
                 }
             });
         });
-    </script>
+    </script> --}}
 
     {{-- For Remove Skill --}}
     <script>
-        $('#skillList').on('click', '.remove-skill', function() {
+        $('#skillList').on('click', '.remove-skill', function () {
             let skill = $(this).data('skill');
             let listItem = $(this).closest('li');
-
+    
             $.ajax({
                 url: "{{ route('User.RemoveSkill') }}",
                 type: 'POST',
@@ -845,16 +1179,41 @@
                     _token: '{{ csrf_token() }}',
                     skill: skill
                 },
-                success: function(response) {
+                success: function (response) {
                     if (response.status_code == 1) {
-                        listItem.remove(); // instantly remove from UI
+                        listItem.fadeOut(300, function () {
+                            $(this).remove();
+                        });
+                        Toastify({
+                            text: response.message,
+                            duration: 3000,
+                            gravity: "top",
+                            position: "right",
+                            className: "bg-success"
+                        }).showToast();
                     } else {
-                        alert(response.message);
+                        Toastify({
+                            text: response.message,
+                            duration: 3000,
+                            gravity: "top",
+                            position: "right",
+                            className: "bg-danger"
+                        }).showToast();
                     }
+                },
+                error: function () {
+                    Toastify({
+                        text: "Something went wrong!",
+                        duration: 3000,
+                        gravity: "top",
+                        position: "right",
+                        className: "bg-danger"
+                    }).showToast();
                 }
             });
         });
     </script>
+    
 
     {{-- For Showing the Experince Column --}}
     <script>
@@ -998,10 +1357,35 @@
         });
     </script>
 
-    {{-- For Submit Candidate Qualification --}}
+    {{-- For Manage Date --}}
     <script type="text/javascript">
         $('#AddEducation').on('submit', function(e) {
             e.preventDefault();
+
+            let startingYear = parseInt($('#starting_year').val());
+            let passingYear = parseInt($('#passing_year').val());
+
+            if (isNaN(startingYear) || isNaN(passingYear)) {
+                Toastify({
+                    text: "Both Starting Year and Passing Year are required.",
+                    duration: 3000,
+                    gravity: "top",
+                    position: "right",
+                    className: "bg-danger"
+                }).showToast();
+                return;
+            }
+
+            if (passingYear < startingYear) {
+                Toastify({
+                    text: "Passing Year must be greater than Starting Year.",
+                    duration: 3000,
+                    gravity: "top",
+                    position: "right",
+                    className: "bg-danger"
+                }).showToast();
+                return;
+            }
 
             let form = this;
             let url = "{{ route('User.CandidateEducation') }}"; // change to your route name
@@ -1077,8 +1461,8 @@
                 $('#board_university').val($(this).data('board'));
                 $('#school_college').val($(this).data('institute'));
                 $('#stream').val($(this).data('stream'));
-                $('#starting_year').val($(this).data('starting_year'));
-                $('#passing_year').val($(this).data('passing_year'));
+                $('#edit_starting_year').val($(this).data('starting_year'));
+                $('#edit_passing_year').val($(this).data('passing_year'));
                 $('#percentage').val($(this).data('percentage'));
             });
 
@@ -1140,6 +1524,68 @@
         });
     </script>
 
+    {{-- For Delete Candidate Qualification --}}
+    <script>
+        let selectedEducationId = null;
+        let selectedDeleteButton = null;
+
+        $(document).on('click', '#deleteEducationBtn', function() {
+            selectedEducationId = $(this).data('id');
+            selectedDeleteButton = $(this);
+            $('#confirmDeleteModal').modal('show');
+        });
+
+        $('#confirmDeleteBtn').on('click', function() {
+            if (!selectedEducationId) return;
+
+            let btn = selectedDeleteButton;
+            btn.html(
+                '<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span> Deleting...'
+            ).prop('disabled', true);
+
+            $.ajax({
+                url: "{{ route('User.DeleteEducation', ['id' => '__id__']) }}".replace('__id__',
+                    selectedEducationId),
+                type: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(response) {
+                    Toastify({
+                        text: "Education record deleted successfully.",
+                        duration: 3000,
+                        gravity: "top",
+                        position: "right",
+                        className: "bg-success"
+                    }).showToast();
+
+                    $(`#education-row-${selectedEducationId}`).fadeOut(300, function() {
+                        $(this).remove();
+                    });
+
+                    $('#editEducationModal').modal('hide');
+                    $('#confirmDeleteModal').modal('hide');
+                },
+                error: function() {
+                    Toastify({
+                        text: "Failed to delete the record. Please try again.",
+                        duration: 3000,
+                        gravity: "top",
+                        position: "right",
+                        className: "bg-danger"
+                    }).showToast();
+                },
+                complete: function() {
+                    btn.html('<i class="fas fa-trash"></i>').prop('disabled', false);
+                    selectedEducationId = null;
+                    selectedDeleteButton = null;
+                }
+            });
+        });
+    </script>
+
+
+
     {{-- For Showing the Award Section --}}
     <script>
         document.addEventListener("DOMContentLoaded", function() {
@@ -1176,6 +1622,144 @@
 
                 // Attach remove handler
                 attachRemoveListener();
+            });
+        });
+    </script>
+
+    {{-- For Submit Candidate Award --}}
+    <script type="text/javascript">
+        $('#AddAward').on('submit', function(e) {
+            e.preventDefault();
+
+            let form = this;
+            let url = "{{ route('User.CandidateAward') }}"; // change to your route name
+
+            let formData = new FormData(form);
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: formData,
+                contentType: false,
+                cache: false,
+                processData: false,
+                dataType: 'json',
+                success: function(result) {
+                    if (result.status_code == 1) {
+                        Toastify({
+                            text: result.message,
+                            duration: 3000,
+                            gravity: "top",
+                            position: "right",
+                            className: "bg-success"
+                        }).showToast();
+
+                        setTimeout(function() {
+                            if (result.redirect_url) {
+                                window.location.href = result.redirect_url;
+                            } else {
+                                location.reload();
+                            }
+                        }, 750);
+                    } else if (result.status_code == 2) {
+                        Toastify({
+                            text: result.message,
+                            duration: 3000,
+                            gravity: "top",
+                            position: "right",
+                            className: "bg-warning"
+                        }).showToast();
+                    } else {
+                        Toastify({
+                            text: result.message,
+                            duration: 3000,
+                            gravity: "top",
+                            position: "right",
+                            className: "bg-danger"
+                        }).showToast();
+                    }
+                },
+                error: function(xhr) {
+                    Toastify({
+                        text: "Something went wrong!",
+                        duration: 3000,
+                        gravity: "top",
+                        position: "right",
+                        className: "bg-danger"
+                    }).showToast();
+                }
+            });
+        });
+    </script>
+
+    {{-- For Update Candidate Award --}}
+    <script>
+        $(document).ready(function() {
+            // Fill modal form with existing data
+            $('.edit-award-btn').on('click', function() {
+                $('#award_id').val($(this).data('id'));
+                $('#award_title').val($(this).data('award_title'));
+                $('#award_date').val($(this).data('award_date'));
+                $('#award_desc').val($(this).data('award_desc'));
+            });
+
+            // Submit updated award via AJAX
+            $('#editAwardForm').on('submit', function(e) {
+                e.preventDefault();
+
+                $.ajax({
+                    url: "{{ route('User.UpdateAward') }}",
+                    type: "POST",
+                    data: $(this).serialize(),
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        if (response.status_code === 1) {
+                            Toastify({
+                                text: response.message,
+                                duration: 3000,
+                                gravity: "top",
+                                position: "right",
+                                style: {
+                                    background: "green"
+                                }
+                            }).showToast();
+
+                            setTimeout(function() {
+                                if (response.redirect_url) {
+                                    window.location.href = response.redirect_url;
+                                } else {
+                                    location.reload();
+                                }
+                            }, 750);
+                        } else {
+                            Toastify({
+                                text: response.message,
+                                duration: 3000,
+                                gravity: "top",
+                                position: "right",
+                                style: {
+                                    background: "orange"
+                                }
+                            }).showToast();
+                        }
+                    },
+                    error: function() {
+                        Toastify({
+                            text: "Something went wrong.",
+                            duration: 3000,
+                            gravity: "top",
+                            position: "right",
+                            style: {
+                                background: "red"
+                            }
+                        }).showToast();
+                    }
+                });
             });
         });
     </script>

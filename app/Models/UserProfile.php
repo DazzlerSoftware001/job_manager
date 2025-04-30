@@ -38,4 +38,9 @@ class UserProfile extends Model
         return $this->hasMany(CandidateQualifications::class, 'user_id');
     }
 
+    public function candidateAward() 
+    {
+        return $this->hasMany(CandidateAward::class, 'user_id');
+    }
+
 }
