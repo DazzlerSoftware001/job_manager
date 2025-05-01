@@ -264,10 +264,10 @@
                         </button>
 
                         <!-- Delete Button -->
-                        {{-- <button type="button" class="btn btn-outline-danger btn-sm ms-2" id="deleteExpBtn"
+                        <button type="button" class="btn btn-outline-danger btn-sm ms-2" id="deleteExpBtn"
                             data-id="{{ $exp->id }}" style="position: absolute; left:25%;">
                             <i class="fas fa-trash"></i> Delete
-                        </button> --}}
+                        </button>
 
                         <!-- Experience Info -->
                         <p><strong class="text-dark">Company:</strong> {{ $exp->company_name }}</p>
