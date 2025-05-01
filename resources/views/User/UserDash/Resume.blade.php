@@ -264,10 +264,16 @@
                         </button>
 
                         <!-- Delete Button -->
-                        <button type="button" class="btn btn-outline-danger btn-sm ms-2" id="deleteExpBtn"
+                        {{-- <button type="button" class="btn btn-outline-danger btn-sm ms-2" id="deleteExpBtn"
                             data-id="{{ $exp->id }}" style="position: absolute; left:25%;">
                             <i class="fas fa-trash"></i> Delete
+                        </button> --}}
+
+                        <button type="button" class="btn btn-outline-danger btn-sm ms-2" id="deleteExpBtn"
+                                style="position: absolute; left:25%;" onclick="deleteExperience({{ $exp->id }})">
+                                <i class="fas fa-trash"></i> Delete
                         </button>
+
 
                         <!-- Experience Info -->
                         <p><strong class="text-dark">Company:</strong> {{ $exp->company_name }}</p>
@@ -737,6 +743,7 @@
     </div>
     <!-- Award end -->
 
+    
 
 @endsection
 
@@ -1312,6 +1319,71 @@
             });
         });
     </script>
+
+    <script>
+        function deleteExperience(id) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'Do you really want to delete this record?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'No, cancel!',
+                background: '#28a745',
+            }).then((response) => {
+                if (response.isConfirmed) {
+                    $.ajax({
+                        type: 'DELETE',
+                        url: "{{ route('User.DeleteExperience', ':id') }}".replace(':id', id),
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        dataType: 'json',
+                        success: function (deleteResult) {
+                            if (deleteResult.status_code == 1) {
+                                Swal.fire({
+                                    title: 'Deleted!',
+                                    text: 'Record deleted successfully!',
+                                    icon: 'success',
+                                    confirmButtonText: 'Okay',
+                                    background: '#28a745'
+                                }).then(() => {
+                                    location.reload(); // Reload the whole page after alert
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: 'Error!',
+                                    text: deleteResult.message,
+                                    icon: 'error',
+                                    confirmButtonText: 'Okay',
+                                    background: '#dc3545'
+                                });
+                            }
+                        },
+                        error: function () {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Something went wrong while deleting.',
+                                icon: 'error',
+                                confirmButtonText: 'Okay',
+                                background: '#dc3545'
+                            });
+                        }
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Cancelled',
+                        text: 'Your record was not deleted.',
+                        icon: 'info',
+                        confirmButtonText: 'Okay',
+                        background: '#17a2b8'
+                    });
+                }
+            });
+        }
+    </script>
+
+
 
     {{-- For Showing the Candidate Qualification --}}
     <script>

@@ -39,5 +39,5 @@
     <link rel="stylesheet" href="{{url('user/assets/css/style.css')}}">
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css">
-
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.4/dist/sweetalert2.min.css" rel="stylesheet">
 </head>

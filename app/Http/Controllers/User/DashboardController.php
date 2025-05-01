@@ -486,18 +486,33 @@ class DashboardController extends Controller
         }
     }
 
+    // public function deleteExperience($id)
+    // {
+    //     $experience = CandidateEmployment::where('id', $id)->first();
+
+    //     if (! $experience) {
+    //         return response()->json(['status_code' =>0, 'message' => 'Experience record not found.']);
+    //     }
+
+    //     CandidateEmployment::where('id', $id)->delete();
+
+    //     return response()->json(['status_code' => 1 ,'message' => 'Experience deleted successfully.'], 200);
+    // }
+
+
     public function deleteExperience($id)
     {
-        $experience = CandidateEmployment::where('id', $id)->first();
+        $experience = CandidateEmployment::find($id);
 
         if (! $experience) {
-            return response()->json(['message' => 'Experience record not found.'], 404);
+            return response()->json(['status_code' => 0, 'message' => 'Experience record not found.']);
         }
 
-        CandidateEmployment::where('id', $id)->delete();
+        $experience->delete();
 
-        return response()->json(['message' => 'Experience deleted successfully.'], 200);
+        return response()->json(['status_code' => 1, 'message' => 'Experience deleted successfully.'], 200);
     }
+
 
     public function CandidateEducation(Request $request)
     {
