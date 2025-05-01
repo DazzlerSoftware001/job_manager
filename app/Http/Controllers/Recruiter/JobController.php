@@ -3,6 +3,7 @@ namespace App\Http\Controllers\Recruiter;
 
 use App\Http\Controllers\Controller;
 use App\Models\Companies;
+use App\Models\JobApplication;
 use App\Models\JobCategory;
 use App\Models\JobCurrency;
 use App\Models\JobDepartment;
@@ -18,12 +19,10 @@ use App\Models\JobSkill;
 use App\Models\JobTypes;
 use App\Models\Recruiter;
 use App\Models\UserProfile;
-use App\Models\JobApplication;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Validator;
-use App\Models\CandidateQualifications;
 
 class JobController extends Controller
 {
@@ -475,38 +474,67 @@ class JobController extends Controller
 
     }
 
-    public function JobApllicants($job_id)
-    {
-        try {
-            $decryptedId = Crypt::decrypt($job_id);
-        } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
-            abort(404, 'Invalid Job ID');
-        }
+//     public function JobApllicants($job_id)
+//     {
+//         try {
+//             $decryptedId = Crypt::decrypt($job_id);
+//         } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
+//             abort(404, 'Invalid Job ID');
+//         }
 
-        $job = JobPost::with(['applications.user.candidateProfile'])->findOrFail($decryptedId);
+//         $job = JobPost::with(['applications.user.candidateProfile'])->findOrFail($decryptedId);
 
-        $applicants = $job->applications->pluck('user');
-        // dd($job,$applicants);
-        return view('recruiter.applicants.JobApllicants', compact('job', 'applicants'));
+//         // dd($job->applications->recruiter_view);
+
+//         $applicants = $job->applications->pluck('user');
+//         // dd($job);
+//         $sortedViews = $job->applications->sortBy('recruiter_view')->pluck('recruiter_view');
+// dd($sortedViews);
+
+//         return view('recruiter.applicants.JobApllicants', compact('job', 'applicants'));
+//     }
+public function JobApllicants($job_id)
+{
+    try {
+        $decryptedId = Crypt::decrypt($job_id);
+    } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
+        abort(404, 'Invalid Job ID');
     }
+
+    $job = JobPost::with(['applications.user.candidateProfile'])->findOrFail($decryptedId);
+
+    // Sort the applications by 'recruiter_view' (0 first, then 1)
+    $sortedApplications = $job->applications->sortBy('recruiter_view');
+
+    // Now you can pluck 'recruiter_view' from the sorted applications
+    $sortedViews = $sortedApplications->pluck('recruiter_view');
+
+    // You can also access other applicant details if needed
+    $applicants = $sortedApplications->pluck('user');
+
+    // For debugging, dd() will show sorted recruiter_view values
+    // dd($sortedViews);
+
+    return view('recruiter.applicants.JobApllicants', compact('job', 'applicants'));
+}
 
     public function ApllicantsDetails($userId, $jobId)
     {
         try {
             $decryptedId = Crypt::decrypt($userId);
-            $DecJob_Id = Crypt::decrypt($jobId);
+            $DecJob_Id   = Crypt::decrypt($jobId);
         } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
             abort(404, 'Invalid User ID');
         }
 
         // Load user with candidate profile
-        $user = UserProfile::with('candidateProfile','candidateQualification','candidateEmployment')->find($decryptedId);
+        $user = UserProfile::with('candidateProfile', 'candidateQualification', 'candidateEmployment')->find($decryptedId);
 
         $application = JobApplication::where('user_id', $decryptedId)
             ->where('job_id', $DecJob_Id)
             ->first();
 
-            // dd($user->candidateEmployment);
+        // dd($user->candidateEmployment);
 
         // Check and increment view_profile if candidate profile exists
         if ($user && $user->candidateProfile) {
@@ -518,103 +546,103 @@ class JobController extends Controller
             }
         }
 
-        
-        
+        // dd($application);
+
+        if ($application) {
+            $application->update(['recruiter_view' => '1']);
+        }
+
+        // dd($application->recruiter_view);
+
         // dd($user);
         // dd($user->candidateProfile->resume);
 
-        return view('recruiter.applicants.ApllicantsDetails', compact('user','DecJob_Id','application'));
+        return view('recruiter.applicants.ApllicantsDetails', compact('user', 'DecJob_Id', 'application'));
     }
 
-
-    public function CandidateShortlist($userId,$Job_Id)
+    public function CandidateShortlist($userId, $Job_Id)
     {
 
         try {
             $decryptedId = Crypt::decrypt($userId);
-            $DecJob_Id = Crypt::decrypt($Job_Id);
+            $DecJob_Id   = Crypt::decrypt($Job_Id);
 
             $application = JobApplication::where('user_id', $decryptedId)
-            ->where('job_id', $DecJob_Id)
-            ->first();
+                ->where('job_id', $DecJob_Id)
+                ->first();
 
-            if($application)
-            {
-                $application->status  = 'shortlisted';
+            if ($application) {
+                $application->status = 'shortlisted';
 
                 if ($application->save()) {
-                    return response()->json(['status_code' => 1,'message' => 'Candidate shortlisted.']);
+                    return response()->json(['status_code' => 1, 'message' => 'Candidate shortlisted.']);
                 } else {
                     return response()->json([
-                        'status_code' => 0,'message' => 'Failed to Candidate shortlist.']);
+                        'status_code' => 0, 'message' => 'Failed to Candidate shortlist.']);
                 }
 
-            }else {
-                return response()->json(['status_code' => 0,'message' => 'Application not found.']);
+            } else {
+                return response()->json(['status_code' => 0, 'message' => 'Application not found.']);
             }
-        
 
         } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
             abort(404, 'Invalid User ID');
         }
 
-
     }
 
-    public function CandidateReject($userId, $Job_Id) {
+    public function CandidateReject($userId, $Job_Id)
+    {
         try {
             $decryptedId = Crypt::decrypt($userId);
-            $DecJob_Id = Crypt::decrypt($Job_Id);
+            $DecJob_Id   = Crypt::decrypt($Job_Id);
 
             $application = JobApplication::where('user_id', $decryptedId)
-            ->where('job_id', $DecJob_Id)
-            ->first();
+                ->where('job_id', $DecJob_Id)
+                ->first();
 
-            if($application)
-            {
-                $application->status  = 'rejected';
+            if ($application) {
+                $application->status = 'rejected';
 
                 if ($application->save()) {
-                    return response()->json(['status_code' => 1,'message' => 'Candidate rejected.']);
+                    return response()->json(['status_code' => 1, 'message' => 'Candidate rejected.']);
                 } else {
                     return response()->json([
-                        'status_code' => 0,'message' => 'Failed to Candidate reject.']);
+                        'status_code' => 0, 'message' => 'Failed to Candidate reject.']);
                 }
 
-            }else {
-                return response()->json(['status_code' => 0,'message' => 'Application not found.']);
+            } else {
+                return response()->json(['status_code' => 0, 'message' => 'Application not found.']);
             }
-        
 
         } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
             abort(404, 'Invalid User ID');
         }
     }
-    
-    public function CandidateHire($userId, $Job_Id) {
+
+    public function CandidateHire($userId, $Job_Id)
+    {
         try {
             $decryptedId = Crypt::decrypt($userId);
-            $DecJob_Id = Crypt::decrypt($Job_Id);
+            $DecJob_Id   = Crypt::decrypt($Job_Id);
 
             $application = JobApplication::where('user_id', $decryptedId)
-            ->where('job_id', $DecJob_Id)
-            ->first();
+                ->where('job_id', $DecJob_Id)
+                ->first();
 
-            if($application)
-            {
-                $application->status  = 'hired';
+            if ($application) {
+                $application->status = 'hired';
 
                 if ($application->save()) {
-                    return response()->json(['status_code' => 1,'message' => 'Candidate hired.']);
+                    return response()->json(['status_code' => 1, 'message' => 'Candidate hired.']);
                 } else {
                     return response()->json([
-                        'status_code' => 0,'message' => 'Failed to Candidate hire.']);
+                        'status_code' => 0, 'message' => 'Failed to Candidate hire.']);
                 }
 
-            }else {
-                return response()->json(['status_code' => 0,'message' => 'Application not found.']);
+            } else {
+                return response()->json(['status_code' => 0, 'message' => 'Application not found.']);
             }
-        
 
         } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
             abort(404, 'Invalid User ID');
@@ -625,25 +653,24 @@ class JobController extends Controller
     {
         try {
             $decryptedId = Crypt::decrypt($userId);
-        // dd($decryptedId);
+            // dd($decryptedId);
 
-        $user = UserProfile::with('candidateProfile')->findOrFail($decryptedId);
-        $path = public_path($user->candidateProfile->resume);
-        // dd($path);
+            $user = UserProfile::with('candidateProfile')->findOrFail($decryptedId);
+            $path = public_path($user->candidateProfile->resume);
+            // dd($path);
 
-        if (file_exists($path)) {
-            // dd('path');
+            if (file_exists($path)) {
+                // dd('path');
 
-            return response()->download($path);
-        } else {
-            dd('fdf');
-            return back()->with('error', 'File not found.');
-        }
+                return response()->download($path);
+            } else {
+                dd('fdf');
+                return back()->with('error', 'File not found.');
+            }
 
         } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
             abort(404, 'Invalid User ID');
         }
-
 
     }
 

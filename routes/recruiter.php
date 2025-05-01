@@ -41,6 +41,9 @@ Route::prefix('Recruiter')->group(function () {
 
         Route::get('/CandidateCVDownload/{userId}', [JobController::class, 'CandidateCVDownload'])->name('Recruiter.CandidateCVDownload');
 
+        Route::post('/GetQualifications', [ApplicantsController::class, 'getQualifications'])->name('Recruiter.GetQualifications');
+        Route::post('/GetBranches', [ApplicantsController::class, 'getBranches'])->name('Recruiter.GetBranches');
+
 
 
 
