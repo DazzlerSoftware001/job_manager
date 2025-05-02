@@ -275,13 +275,12 @@ class ApplicantsController extends Controller
             $columnIndex = $order[0]['column'];
             $columnName  = $columns[$columnIndex];
             $dir         = $order[0]['dir'];
-        
+
             // Sort with recruiter_view = '0' first (as string)
             $query->orderByRaw("recruiter_view = '0' DESC")->orderBy($columnName, $dir);
         } else {
             $query->orderByRaw("recruiter_view = '0' DESC")->orderBy('created_at', 'desc');
         }
-        
 
         $totalRecords = $query->count();
         $records      = $query->offset($offset)->limit($limit)->get();
@@ -304,7 +303,7 @@ class ApplicantsController extends Controller
 
             // $dataArray[] = ucfirst($record->user->name) .' '.$record->user->lname;
             $dataArray[] = $record->user->email ?? 'N/A';
-            $dataArray[] = '<img src="' . asset($record->user->logo) . '" alt="Logo" style="height: 100px; width: 100px;" onclick="openImageModal(\'' . asset($record->user->logo) . '\')">';
+            $dataArray[] = '<img src="' . asset($record->user->logo) . '" alt="Logo" style="height: 50px; width: 50px;border-radius:50px;" onclick="openImageModal(\'' . asset($record->user->logo) . '\')">';
 
             $dataArray[] = $record->user->city ?? 'N/A';
 
@@ -334,12 +333,15 @@ class ApplicantsController extends Controller
             $buttonLabel = $record->recruiter_view == 1 ? 'Viewed' : 'Not Viewed';
 
             $dataArray[] = '<div class="d-flex gap-2">
-    <a href="' . route('Recruiter.ApllicantsDetails', [
+                                <span class="badge ' . $buttonClass . '">' . $buttonLabel . '</span>
+                            </div>';
+
+            $dataArray[] = '<div class="d-flex gap-2">
+                            <a href="' . route('Recruiter.ApllicantsDetails', [
                 'userId' => Crypt::encrypt($record->user->id),
                 'jobId'  => Crypt::encrypt($record->jobPost->id),
-            ]) . '" class="badge ' . $buttonClass . '">' . $buttonLabel . '</a>
-</div>';
-
+            ]) . '" class="badge bg-success">View Profile</a>
+                                </div>';
             $data[] = $dataArray;
         }
 
