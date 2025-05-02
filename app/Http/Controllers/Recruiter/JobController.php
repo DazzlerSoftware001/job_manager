@@ -528,7 +528,7 @@ public function JobApllicants($job_id)
         }
 
         // Load user with candidate profile
-        $user = UserProfile::with('candidateProfile', 'candidateQualification', 'candidateEmployment')->find($decryptedId);
+        $user = UserProfile::with('candidateProfile', 'candidateQualification', 'candidateEmployment','candidateAward')->find($decryptedId);
 
         $application = JobApplication::where('user_id', $decryptedId)
             ->where('job_id', $DecJob_Id)
@@ -557,7 +557,10 @@ public function JobApllicants($job_id)
         // dd($user);
         // dd($user->candidateProfile->resume);
 
-        return view('recruiter.applicants.ApllicantsDetails', compact('user', 'DecJob_Id', 'application'));
+        $JobPost = JobPost::findOrFail($DecJob_Id)->title;
+
+        
+        return view('recruiter.applicants.ApllicantsDetails', compact('user', 'DecJob_Id', 'application','JobPost'));
     }
 
     public function CandidateShortlist($userId, $Job_Id)

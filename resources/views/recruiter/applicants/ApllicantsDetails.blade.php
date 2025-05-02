@@ -12,7 +12,13 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-lg-12">
+                        <h3 class="border-bottom border-primary d-inline-block pb-1 mb-4 text-primary">
+                            <i class="bi bi-person-circle me-2"></i> {{$JobPost}}
+                        </h3>
                         <div class="card">
+                           
+
+                          
 
                             <div class="card-body">
                                 <div class="row align-items-center">
@@ -94,8 +100,59 @@
 
                         </div>
                         @if ($user->description != null)
-                            <h3 class="border-bottom border-primary d-inline-block pb-1">About Candidate</h3>
-                            <p class="ms-3">{{ $user->description }}</p>
+                            {{-- <h3 class="border-bottom border-primary d-inline-block pb-1">About Candidate</h3>
+                            <div class="card shadow-sm mb-4 border-0">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <p class="ms-3"> Email: {{ $user->email }}</p>
+                                        <p class="ms-3"> DOB: {{ date('d-M-Y', strtotime($user->date_of_birth)) }}</p>
+                                        <p class="ms-3">Gender: {{ $user->gender }}</p>
+                                        <p class="ms-3">Looking for Job: {{ $user->look_job == 1 ? 'Yes' : 'No' }}</p>
+                                       <h6>Description</h6>
+                                        <p class="ms-3">{{ $user->description }}</p>
+                                    </div>
+                                </div>
+                            </div> --}}
+
+                            <h3 class="border-bottom border-primary d-inline-block pb-1 mb-4 text-primary">
+                                <i class="bi bi-person-circle me-2"></i> About Candidate
+                            </h3>
+                            
+                            <div class="card shadow-lg border-0 rounded-4">
+                                <div class="card-body p-4">
+                                    <div class="row g-4">
+                                        <div class="col-md-6">
+                                            <p class="mb-2">
+                                                <i class="bi bi-envelope-fill text-primary me-2"></i>
+                                                <strong>Email:</strong> {{ $user->email }}
+                                            </p>
+                                            <p class="mb-2">
+                                                <i class="bi bi-calendar-event-fill text-success me-2"></i>
+                                                <strong>DOB:</strong> {{ date('d-M-Y', strtotime($user->date_of_birth)) }}
+                                            </p>
+                                            <p class="mb-2">
+                                                <i class="bi bi-gender-ambiguous text-warning me-2"></i>
+                                                <strong>Gender:</strong> {{ ucfirst($user->gender) }}
+                                            </p>
+                                            <p class="mb-2">
+                                                <i class="bi bi-briefcase-fill text-info me-2"></i>
+                                                <strong>Looking for Job:</strong> 
+                                                <span class="badge {{ $user->look_job == 1 ? 'bg-success' : 'bg-danger' }}">
+                                                    {{ $user->look_job == 1 ? 'Yes' : 'No' }}
+                                                </span>
+                                            </p>
+                                        </div>
+                                        <div class="col-12">
+                                            <h6 class="border-bottom border-primary d-inline-block pb-1 mb-1 text-primary">
+                                                <i class="bi bi-card-text me-2"></i>Description
+                                            </h6>
+                                            <p class="text-muted ps-1">{{ $user->description }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+
                         @endif
 
 
@@ -162,6 +219,33 @@
                                 </div>
                             @endforeach
                         @endif
+
+
+                        @php
+                            $candidateAward = $user->candidateAward;
+                        @endphp
+                        @if ($candidateAward->isNotEmpty())
+                        <h3>Award</h3>
+                        @foreach ($candidateAward as $Award)
+                            <div class="card shadow-sm mb-4 border-0">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <h4 class="border-bottom border-primary d-inline-block pb-1 mb-1 text-primary">{{ $Award->award_title }}</h4>
+                                        </div>
+                                        
+                                        <div class="col-12 mt-2">
+                                            <h6 class="mb-0">{{ $Award->award_desc }}</h6>
+                                        </div>
+
+                                        <div class="col-12 mt-2">
+                                            <h6 class="mb-0">{{ $Award->award_date }}</h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    @endif
 
                     </div>
                 </div>
