@@ -10,6 +10,7 @@
     <meta name="description" content="Your Ultimate Job HTML Template">
     <meta name="keywords" content="Job, Resume, Employer, Agency"> 
     <meta name="robots" content="index, follow">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- for open graph social media -->
     <meta property="og:title" content="Your Ultimate Job HTML Template">
     <meta property="og:description" content="Your Ultimate Job HTML Template">

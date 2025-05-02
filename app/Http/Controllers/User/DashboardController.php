@@ -726,6 +726,20 @@ class DashboardController extends Controller
         }
     }
 
+    public function deleteAward($id)
+    {
+        $award = CandidateAward::find($id);
+        // dd($award);
+
+        if (! $award) {
+            return response()->json(['status_code' => 0, 'message' => 'Award record not found.']);
+        }
+
+        $award->delete();
+
+        return response()->json(['status_code' => 1, 'message' => 'Award deleted successfully.'], 200);
+    }
+
     // end resume
 
     public function ChangePassword()

@@ -51,10 +51,15 @@
                         </div>   --}}
 
                         <div class="breadcrumb__apply max-content">
-                            <form action="{{ route('User.ApplyForJOb', $job->id) }}" method="POST">
-                                @csrf
-                                <button type="submit" class="rts__btn apply__btn be-1 fill__btn">Apply</button>
-                            </form>
+                            {{-- <form action="{{ route('User.ApplyForJOb', $job->id) }}" method="POST">
+                                @csrf --}}
+                            @if ($status !== 'pending' && $status !== 'shortlisted' && $status !== 'rejected' && $status !== 'hired')
+                                <button type="button" class="rts__btn apply__btn be-1 fill__btn"
+                                    onclick="ApplyJob( {{ $job->id }})">Apply</button>
+                                {{-- </form> --}}
+                            @else
+                                <button class="rts__btn apply__btn be-1 fill__btn">Applied</button>
+                            @endif
                         </div>
 
 
@@ -188,9 +193,68 @@
         </div>
     </div>
     <!-- job list one end -->
-
 @endsection
 @section('script')
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script></script>
+    <script>
+        function ApplyJob(id) {
+            let url = "{{ route('User.ApplyForJOb') }}";
+            let formData = new FormData();
+            formData.append('job_id', id);
+            $.ajax({
+                url: url,
+                type: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: formData,
+                contentType: false,
+                cache: false,
+                processData: false,
+                dataType: 'json',
+                success: function(result) {
+                    if (result.status_code == 1) {
+                        Toastify({
+                            text: result.message,
+                            duration: 3000,
+                            gravity: "top",
+                            position: "right",
+                            className: "bg-success"
+                        }).showToast();
+
+                        if (result.status_code === 1) {
+                            setTimeout(function() {
+                                location.reload();
+                            }, 750);
+                        }
+                    } else if (result.status_code == 2) {
+                        Toastify({
+                            text: result.message,
+                            duration: 3000,
+                            gravity: "top",
+                            position: "right",
+                            className: "bg-warning"
+                        }).showToast();
+                    } else {
+                        Toastify({
+                            text: result.message,
+                            duration: 3000,
+                            gravity: "top",
+                            position: "right",
+                            className: "bg-danger"
+                        }).showToast();
+                    }
+                },
+                error: function(xhr) {
+                    Toastify({
+                        text: "Something went wrong!",
+                        duration: 3000,
+                        gravity: "top",
+                        position: "right",
+                        className: "bg-danger"
+                    }).showToast();
+                }
+            });
+        }
+    </script>
 @endsection

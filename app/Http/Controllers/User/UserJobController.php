@@ -4,10 +4,10 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use App\Models\JobApplication;
 use App\Models\JobPost;
+use App\Models\SaveJob;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
-use App\Models\SaveJob;
 
 class UserJobController extends Controller
 {
@@ -44,36 +44,75 @@ class UserJobController extends Controller
     //     return back()->with('success', 'Your application has been submitted successfully!');
     // }
 
-    public function applyjob(Request $request, $job_id)
+    // public function applyjob(Request $request, $job_id)
+    // {
+    //     // ✅ Get the authenticated user ID
+    //     $user_id = Auth::user()->id;
+    //     // $user_id = 3;
+
+    //     // ✅ Check if the job exists and is still active
+    //     $today = Carbon::today();
+    //     $job   = JobPost::where('status', 1)
+    //         ->whereDate('jobexpiry', '>=', $today)
+    //         ->where('id', $job_id)
+    //         ->firstOrFail();
+
+    //     // ✅ Check if the user already applied to this job
+    //     $alreadyApplied = JobApplication::where('user_id', $user_id)
+    //         ->where('job_id', $job_id)
+    //         ->exists();
+
+    //     if ($alreadyApplied) {
+    //         return back()->with('error', 'You have already applied to this job.');
+    //     }
+
+    //     // ✅ Store the application
+    //     JobApplication::create([
+    //         'user_id' => $user_id,
+    //         'job_id'  => $job_id,
+    //         'status'  => 'pending',
+    //     ]);
+
+    //     return back()->with('success', 'Your application has been submitted successfully!');
+    // }
+    public function applyjob(Request $request)
     {
-        // ✅ Get the authenticated user ID
-        $user_id = Auth::user()->id;
-        // $user_id = 3;
+        $user_id = Auth::id();
+        $job_id  = $request->input('job_id'); // Receive job_id from AJAX request
 
-        // ✅ Check if the job exists and is still active
-        $today = Carbon::today();
-        $job   = JobPost::where('status', 1)
-            ->whereDate('jobexpiry', '>=', $today)
+        $job = JobPost::where('status', 1)
+            ->whereDate('jobexpiry', '>=', Carbon::today())
             ->where('id', $job_id)
-            ->firstOrFail();
+            ->first();
 
-        // ✅ Check if the user already applied to this job
+        if (! $job) {
+            return response()->json([
+                'status_code' => 0,
+                'message'     => 'This job is no longer available.',
+            ]);
+        }
+
         $alreadyApplied = JobApplication::where('user_id', $user_id)
             ->where('job_id', $job_id)
             ->exists();
 
         if ($alreadyApplied) {
-            return back()->with('error', 'You have already applied to this job.');
+            return response()->json([
+                'status_code' => 2,
+                'message'     => 'You have already applied to this job.',
+            ]);
         }
 
-        // ✅ Store the application
         JobApplication::create([
             'user_id' => $user_id,
             'job_id'  => $job_id,
             'status'  => 'pending',
         ]);
 
-        return back()->with('success', 'Your application has been submitted successfully!');
+        return response()->json([
+            'status_code' => 1,
+            'message'     => 'Job Applied Seccessfully!',
+        ]);
     }
 
     public function appliedjob()
@@ -86,7 +125,7 @@ class UserJobController extends Controller
         // ])->select(['id', 'user_id', 'job_id', 'status', 'created_at']);
         // // dd($userId,$appliedjob);
 
-        $userId     = Auth::user()->id;
+        $userId = Auth::user()->id;
         // dd($userId);
         $appliedjob = JobApplication::where('user_id', $userId)
             ->where('status', 'pending')
@@ -99,7 +138,7 @@ class UserJobController extends Controller
         $jobDetails = JobPost::whereIn('id', $jobIds)
             ->paginate(1)
             ->withQueryString();
-            // dd($jobDetails);
+        // dd($jobDetails);
 
         // Pass $jobDetails to your view for pagination links and processing
 

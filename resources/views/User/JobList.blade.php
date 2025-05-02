@@ -105,25 +105,27 @@
                         </form>
 
 
-                            <!-- job location -->
-                            <div class="search__item">
-                                <h6 class="mb-3 font-20 fw-medium text-dark text-capitalize">Search Location</h6>
-                                <form action="{{ route('User.JobList') }}" method="GET" class="location-select" id="locationForm">
-                                    <input type="hidden" name="location" id="selectedLocation" value="">
-                                    <div class="position-relative">
-                                        <select name="location" id="selectedLocation" class="form-select" onchange="this.form.submit()">
-                                            <option value="Nothing" selected disabled>Search Location</option>
-                                            @foreach ($location as $value)
-                                                <option value="{{ $value->location }}">{{ $value->location }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </form>
-                            </div>
-                            
+                        <!-- job location -->
+                        <div class="search__item">
+                            <h6 class="mb-3 font-20 fw-medium text-dark text-capitalize">Search Location</h6>
+                            <form action="{{ route('User.JobList') }}" method="GET" class="location-select"
+                                id="locationForm">
+                                <input type="hidden" name="location" id="selectedLocation" value="">
+                                <div class="position-relative">
+                                    <select name="location" id="selectedLocation" class="form-select"
+                                        onchange="this.form.submit()">
+                                        <option value="Nothing" selected disabled>Search Location</option>
+                                        @foreach ($location as $value)
+                                            <option value="{{ $value->location }}">{{ $value->location }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </form>
+                        </div>
 
-                            <!-- job post time -->
-                            {{-- <div class="search__item">
+
+                        <!-- job post time -->
+                        {{-- <div class="search__item">
                                 <h6 class="mb-3 font-20 fw-medium text-dark text-capitalize">Date posted</h6>
                                 <div class="position-relative">
                                     <div class="nice-select" tabindex="0">
@@ -141,83 +143,83 @@
                                 </div>
                             </div> --}}
 
-                            <div class="search__item">
-                                <h6 class="mb-3 font-20 fw-medium text-dark text-capitalize">Date Posted</h6>
-                                <form action="{{ route('User.JobList') }}" method="GET" class="date-select" id="dateForm">
-                                    <input type="hidden" name="date_posted" id="selectedDate" value="">
-                                    <div class="position-relative">
-                                        <select name="date_posted" id="selectedDate" class="form-select" onchange="this.form.submit()">
-                                            <option value="Nothing" selected disabled>Date Posted</option>
-                                            @foreach ($DatePost as $value)
-                                                <option value="{{($value->created_at) }}">
-                                                    {{ date('d M Y', strtotime($value->created_at)) }}
-                                                </option>
-                                            @endforeach
-                                        </select>
+                        <div class="search__item">
+                            <h6 class="mb-3 font-20 fw-medium text-dark text-capitalize">Date Posted</h6>
+                            <form action="{{ route('User.JobList') }}" method="GET" class="date-select" id="dateForm">
+                                <input type="hidden" name="date_posted" id="selectedDate" value="">
+                                <div class="position-relative">
+                                    <select name="date_posted" id="selectedDate" class="form-select"
+                                        onchange="this.form.submit()">
+                                        <option value="Nothing" selected disabled>Date Posted</option>
+                                        @foreach ($DatePost as $value)
+                                            <option value="{{ $value->created_at }}">
+                                                {{ date('d M Y', strtotime($value->created_at)) }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </form>
+                        </div>
+
+
+
+
+
+
+
+
+
+                        <!-- job post time -->
+                        <div class="search__item">
+                            <div class="mb-3 font-20 fw-medium text-dark text-capitalize">job type</div>
+                            <div class="search__item__list">
+                                @foreach ($type as $t)
+                                    <div class="d-flex align-items-center justify-content-between list">
+                                        <div class="d-flex gap-2 align-items-center checkbox">
+                                            <input type="checkbox" name="fulltime" id="fulltime">
+                                            <label for="fulltime">{{ $t->type }}</label>
+                                        </div>
+                                        <span>({{ $t->count }})</span>
                                     </div>
-                                </form>
-                            </div>
-                            
-                            
-                            
-                           
-                            
-                            
-                            
-                            
+                                @endforeach
 
-                            <!-- job post time -->
-                            <div class="search__item">
-                                <div class="mb-3 font-20 fw-medium text-dark text-capitalize">job type</div>
-                                <div class="search__item__list">
-                                    @foreach ($type as $t)
-                                        <div class="d-flex align-items-center justify-content-between list">
-                                            <div class="d-flex gap-2 align-items-center checkbox">
-                                                <input type="checkbox" name="fulltime" id="fulltime">
-                                                <label for="fulltime">{{ $t->type }}</label>
-                                            </div>
-                                            <span>({{ $t->count }})</span>
+                            </div>
+                        </div>
+
+                        <!-- experience label -->
+                        <div class="search__item">
+                            <div class="mb-3 font-20 fw-medium text-dark text-capitalize">experience Label</div>
+                            <div class="search__item__list">
+                                @foreach ($experience as $exp)
+                                    <div class="d-flex align-items-center justify-content-between list">
+                                        <div class="d-flex gap-2 align-items-center checkbox">
+                                            <input type="checkbox" name="exp" id="exp">
+                                            <label for="exp">{{ $exp->max_exp }} year</label>
                                         </div>
-                                    @endforeach
-
-                                </div>
+                                        <span>({{ $exp->count }})</span>
+                                    </div>
+                                @endforeach
                             </div>
+                        </div>
 
-                            <!-- experience label -->
-                            <div class="search__item">
-                                <div class="mb-3 font-20 fw-medium text-dark text-capitalize">experience Label</div>
-                                <div class="search__item__list">
-                                    @foreach ($experience as $exp)
-                                        <div class="d-flex align-items-center justify-content-between list">
-                                            <div class="d-flex gap-2 align-items-center checkbox">
-                                                <input type="checkbox" name="exp" id="exp">
-                                                <label for="exp">{{ $exp->max_exp }} year</label>
-                                            </div>
-                                            <span>({{ $exp->count }})</span>
+                        <!-- salary label -->
+                        <div class="search__item">
+                            <div class="mb-3 font-20 fw-medium text-dark text-capitalize">salary offered</div>
+                            <div class="search__item__list">
+                                @foreach ($salaryoffer as $salary)
+                                    <div class="d-flex align-items-center justify-content-between list">
+                                        <div class="d-flex gap-2 align-items-center checkbox">
+                                            <input type="checkbox" name="saloffer" id="saloffer">
+                                            <label for="saloffer">{{ $salary->max_sal }}</label>
                                         </div>
-                                    @endforeach
-                                </div>
-                            </div>
+                                        <span>({{ $salary->count }})</span>
+                                    </div>
+                                @endforeach
 
-                            <!-- salary label -->
-                            <div class="search__item">
-                                <div class="mb-3 font-20 fw-medium text-dark text-capitalize">salary offered</div>
-                                <div class="search__item__list">
-                                    @foreach ($salaryoffer as $salary)
-                                        <div class="d-flex align-items-center justify-content-between list">
-                                            <div class="d-flex gap-2 align-items-center checkbox">
-                                                <input type="checkbox" name="saloffer" id="saloffer">
-                                                <label for="saloffer">{{ $salary->max_sal }}</label>
-                                            </div>
-                                            <span>({{ $salary->count }})</span>
-                                        </div>
-                                    @endforeach
-
-                                </div>
                             </div>
-                            <button type="submit"
-                                class="rts__btn no__fill__btn max-content mx-auto job__search__btn font-sm"
-                                aria-label="Search">Find Job</button>
+                        </div>
+                        <button type="submit" class="rts__btn no__fill__btn max-content mx-auto job__search__btn font-sm"
+                            aria-label="Search">Find Job</button>
                     </div>
 
                 </div>
@@ -358,7 +360,7 @@
                         </div>
                     </div>
 
-                  
+
 
                     <div class="rts__pagination mx-auto pt-60 max-content">
                         <ul class="d-flex gap-2">
@@ -438,10 +440,9 @@
 @endsection
 @section('script')
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    
+
 
     <script>
-
         document.addEventListener("DOMContentLoaded", function() {
             const categoryForm = document.getElementById("categoryForm");
             const hiddenInput = document.getElementById("selectedCategory");
@@ -454,7 +455,6 @@
                 });
             });
         });
-
     </script>
 
     <script>
@@ -463,39 +463,39 @@
             $('.select-location .list .option').on('click', function() {
                 var selectedValue = $(this).data('value');
                 var selectedText = $(this).text();
-        
+
                 // Update the displayed text
                 $('.select-location .current').text(selectedText);
-        
+
                 // Set the hidden input value
                 $('#selectedLocation').val(selectedValue);
-        
+
                 // Submit the form
                 $('#locationForm').submit();
             });
         });
     </script>
 
-<script>
-    $(document).ready(function() {
-        // Listen for click events on the options inside nice-select
-        $('.select-date .list .option').on('click', function() {
-            var selectedDate = $(this).data('value');  // Get selected date value
-            var selectedText = $(this).text();         // Get selected text
+    <script>
+        $(document).ready(function() {
+            // Listen for click events on the options inside nice-select
+            $('.select-date .list .option').on('click', function() {
+                var selectedDate = $(this).data('value'); // Get selected date value
+                var selectedText = $(this).text(); // Get selected text
 
-            // Update the displayed text inside the nice-select dropdown
-            $('.select-date .current').text(selectedText);
+                // Update the displayed text inside the nice-select dropdown
+                $('.select-date .current').text(selectedText);
 
-            // Set the hidden input value with the selected date
-            $('#selectedDate').val(selectedDate);
+                // Set the hidden input value with the selected date
+                $('#selectedDate').val(selectedDate);
 
-            // Submit the form
-            $('#dateForm').submit();
+                // Submit the form
+                $('#dateForm').submit();
+            });
         });
-    });
-</script>
+    </script>
 
-    
+
 
     <script>
         function handleBookmarkClick(event) {

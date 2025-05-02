@@ -270,8 +270,8 @@
                         </button> --}}
 
                         <button type="button" class="btn btn-outline-danger btn-sm ms-2" id="deleteExpBtn"
-                                style="position: absolute; left:25%;" onclick="deleteExperience({{ $exp->id }})">
-                                <i class="fas fa-trash"></i> Delete
+                            style="position: absolute; left:25%;" onclick="deleteExperience({{ $exp->id }})">
+                            <i class="fas fa-trash"></i> Delete
                         </button>
 
 
@@ -423,7 +423,8 @@
                     </button>
 
                     <!-- Delete Button -->
-                    <button type="button" class="btn btn-outline-danger btn-sm ms-2" id="deleteEducationBtn"
+                    <button type="button" class="btn btn-outline-danger btn-sm ms-2"
+                        onclick="deleteEducation({{ $education->id }})" id="deleteEducationBtn"
                         data-id="{{ $education->id }}" style="position: absolute; left:25%;">
                         <i class="fas fa-trash"></i> Delete
                     </button>
@@ -648,11 +649,17 @@
         @if ($awards)
             @foreach ($awards as $award)
                 <div class="submitted-education-info mb-3 position-relative">
-                    <button type="button" class="btn btn-sm btn-light edit-award-btn" data-bs-toggle="modal"
-                        data-bs-target="#editAwardModal" data-id="{{ $award->id }}"
+                    <button type="button" class="btn btn-sm btn-light btn-outline-primary edit-award-btn"
+                        data-bs-toggle="modal" data-bs-target="#editAwardModal" data-id="{{ $award->id }}"
                         data-award_title="{{ $award->award_title }}" data-award_date="{{ $award->award_date }}"
-                        data-award_desc="{{ $award->award_desc }}" style="position: absolute; right:15%;">
-                        <i class="fas fa-pen"></i>
+                        data-award_desc="{{ $award->award_desc }}" style="position: absolute; right:22%;">
+                        <i class="fas fa-pen"></i> Edit
+                    </button>
+
+                    <!-- Delete Button -->
+                    <button type="button" class="btn btn-outline-danger btn-sm ms-2"
+                        onclick="deleteAward({{ $award->id }})" style="position: absolute; right:15%;">
+                        <i class="fas fa-trash"></i> Delete
                     </button>
 
 
@@ -743,7 +750,7 @@
     </div>
     <!-- Award end -->
 
-    
+
 
 @endsection
 
@@ -1320,6 +1327,7 @@
         });
     </script>
 
+    {{-- For Delete Candidate Experience --}}
     <script>
         function deleteExperience(id) {
             Swal.fire({
@@ -1329,7 +1337,7 @@
                 showCancelButton: true,
                 confirmButtonText: 'Yes, delete it!',
                 cancelButtonText: 'No, cancel!',
-                background: '#28a745',
+                background: '#fff',
             }).then((response) => {
                 if (response.isConfirmed) {
                     $.ajax({
@@ -1339,14 +1347,14 @@
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
                         dataType: 'json',
-                        success: function (deleteResult) {
+                        success: function(deleteResult) {
                             if (deleteResult.status_code == 1) {
                                 Swal.fire({
                                     title: 'Deleted!',
                                     text: 'Record deleted successfully!',
                                     icon: 'success',
                                     confirmButtonText: 'Okay',
-                                    background: '#28a745'
+                                    background: '#fff'
                                 }).then(() => {
                                     location.reload(); // Reload the whole page after alert
                                 });
@@ -1356,17 +1364,17 @@
                                     text: deleteResult.message,
                                     icon: 'error',
                                     confirmButtonText: 'Okay',
-                                    background: '#dc3545'
+                                    background: '#fff'
                                 });
                             }
                         },
-                        error: function () {
+                        error: function() {
                             Swal.fire({
                                 title: 'Error!',
                                 text: 'Something went wrong while deleting.',
                                 icon: 'error',
                                 confirmButtonText: 'Okay',
-                                background: '#dc3545'
+                                background: '#fff'
                             });
                         }
                     });
@@ -1376,7 +1384,7 @@
                         text: 'Your record was not deleted.',
                         icon: 'info',
                         confirmButtonText: 'Okay',
-                        background: '#17a2b8'
+                        background: '#fff'
                     });
                 }
             });
@@ -1575,7 +1583,7 @@
     </script>
 
     {{-- For Delete Candidate Qualification --}}
-    <script>
+    {{-- <script>
         let selectedEducationId = null;
         let selectedDeleteButton = null;
 
@@ -1632,9 +1640,69 @@
                 }
             });
         });
+    </script> --}}
+    <script>
+        function deleteEducation(id) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'Do you really want to delete this record?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'No, cancel!',
+                background: '#fff',
+            }).then((response) => {
+                if (response.isConfirmed) {
+                    $.ajax({
+                        type: 'DELETE',
+                        url: "{{ route('User.DeleteEducation', ':id') }}".replace(':id', id),
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        dataType: 'json',
+                        success: function(deleteResult) {
+                            if (deleteResult.status_code == 1) {
+                                Swal.fire({
+                                    title: 'Deleted!',
+                                    text: 'Record deleted successfully!',
+                                    icon: 'success',
+                                    confirmButtonText: 'Okay',
+                                    background: '#fff'
+                                }).then(() => {
+                                    location.reload(); // Reload the whole page after alert
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: 'Error!',
+                                    text: deleteResult.message,
+                                    icon: 'error',
+                                    confirmButtonText: 'Okay',
+                                    background: '#fff'
+                                });
+                            }
+                        },
+                        error: function() {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Something went wrong while deleting.',
+                                icon: 'error',
+                                confirmButtonText: 'Okay',
+                                background: '#fff'
+                            });
+                        }
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Cancelled',
+                        text: 'Your record was not deleted.',
+                        icon: 'info',
+                        confirmButtonText: 'Okay',
+                        background: '#fff'
+                    });
+                }
+            });
+        }
     </script>
-
-
 
     {{-- For Showing Candidate Award --}}
     <script>
@@ -1674,6 +1742,24 @@
                 attachRemoveListener();
             });
         });
+    </script>
+
+    {{-- For Manage Date  --}}
+    <script>
+        const dateInput = document.getElementById('ye-7');
+        const dateInput1 = document.getElementById('award_date');
+        const today = new Date();
+
+        // Set max to yesterday
+        const yesterday = new Date(today);
+        yesterday.setDate(today.getDate());
+
+        // Format to YYYY-MM-DD
+        const yyyy = yesterday.getFullYear();
+        const mm = String(yesterday.getMonth() + 1).padStart(2, '0');
+        const dd = String(yesterday.getDate()).padStart(2, '0');
+        dateInput.max = `${yyyy}-${mm}-${dd}`;
+        dateInput1.max = `${yyyy}-${mm}-${dd}`;
     </script>
 
     {{-- For Submit Candidate Award --}}
@@ -1812,5 +1898,69 @@
                 });
             });
         });
+    </script>
+
+    {{-- For Delete Candidate Award --}}
+    <script>
+        function deleteAward(id) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'Do you really want to delete this record?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'No, cancel!',
+                background: '#fff',
+            }).then((response) => {
+                if (response.isConfirmed) {
+                    $.ajax({
+                        type: 'DELETE',
+                        url: "{{ route('User.DeleteAward', ':id') }}".replace(':id', id),
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        dataType: 'json',
+                        success: function(deleteResult) {
+                            if (deleteResult.status_code == 1) {
+                                Swal.fire({
+                                    title: 'Deleted!',
+                                    text: 'Record deleted successfully!',
+                                    icon: 'success',
+                                    confirmButtonText: 'Okay',
+                                    background: '#fff'
+                                }).then(() => {
+                                    location.reload(); // Reload the whole page after alert
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: 'Error!',
+                                    text: deleteResult.message,
+                                    icon: 'error',
+                                    confirmButtonText: 'Okay',
+                                    background: '#fff'
+                                });
+                            }
+                        },
+                        error: function() {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Something went wrong while deleting.',
+                                icon: 'error',
+                                confirmButtonText: 'Okay',
+                                background: '#fff'
+                            });
+                        }
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Cancelled',
+                        text: 'Your record was not deleted.',
+                        icon: 'info',
+                        confirmButtonText: 'Okay',
+                        background: '#fff'
+                    });
+                }
+            });
+        }
     </script>
 @endsection
