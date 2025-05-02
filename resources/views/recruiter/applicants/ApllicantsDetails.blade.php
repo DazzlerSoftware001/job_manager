@@ -148,6 +148,32 @@
                                             </h6>
                                             <p class="text-muted ps-1">{{ $user->description }}</p>
                                         </div>
+
+                                        @php
+                                        $social_links = json_decode($user->social_links, true);
+                                    @endphp
+            
+                                    @if (!empty($social_links))
+                                        <div class="mt-4">
+                                            <h4 class="border-bottom border-success d-inline-block pb-1 mb-1 text-success">
+                                                <i class="bi bi-card-text me-2"></i>Social Profiles
+                                            </h4>
+                                            
+                                                <ul class="list-unstyled ms-2">
+                                                    @foreach($social_links as $platform => $url)
+                                                        <li class="mb-2">
+                                                            <a href="{{ $url }}" target="_blank" rel="noopener noreferrer"
+                                                            class="text-primary text-decoration-underline fw-medium"
+                                                            style="transition: color 0.2s ease;">
+                                                                {{ ucfirst($platform) }}
+                                                            </a>
+                                                        </li>
+                                                    @endforeach
+                                                </ul>
+            
+                                        </div>
+                                    @endif
+
                                     </div>
                                 </div>
                             </div>
@@ -224,28 +250,32 @@
                         @php
                             $candidateAward = $user->candidateAward;
                         @endphp
-                        @if ($candidateAward->isNotEmpty())
-                        <h3>Award</h3>
-                        @foreach ($candidateAward as $Award)
-                            <div class="card shadow-sm mb-4 border-0">
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-12">
-                                            <h4 class="border-bottom border-primary d-inline-block pb-1 mb-1 text-primary">{{ $Award->award_title }}</h4>
-                                        </div>
-                                        
-                                        <div class="col-12 mt-2">
-                                            <h6 class="mb-0">{{ $Award->award_desc }}</h6>
-                                        </div>
+                            @if ($candidateAward->isNotEmpty())
+                            <h3>Award</h3>
+                            @foreach ($candidateAward as $Award)
+                                <div class="card shadow-sm mb-4 border-0">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <h4 class="border-bottom border-primary d-inline-block pb-1 mb-1 text-primary">{{ $Award->award_title }}</h4>
+                                            </div>
+                                            
+                                            <div class="col-12 mt-2">
+                                                <h6 class="mb-0">{{ $Award->award_desc }}</h6>
+                                            </div>
 
-                                        <div class="col-12 mt-2">
-                                            <h6 class="mb-0">{{ $Award->award_date }}</h6>
+                                            <div class="col-12 mt-2">
+                                                <h6 class="mb-0">{{ $Award->award_date }}</h6>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        @endforeach
-                    @endif
+                            @endforeach
+                        @endif
+
+                      
+
+
 
                     </div>
                 </div>

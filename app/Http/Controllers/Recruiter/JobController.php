@@ -554,7 +554,7 @@ public function JobApllicants($job_id)
 
         // dd($application->recruiter_view);
 
-        // dd($user);
+        // dd($user->social_links);
         // dd($user->candidateProfile->resume);
 
         $JobPost = JobPost::findOrFail($DecJob_Id)->title;
