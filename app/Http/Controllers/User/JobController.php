@@ -38,6 +38,16 @@ class JobController extends Controller
             $query->whereDate('created_at', '=', $dateOnly);
         }
 
+        if($request->has('job_type') && $request->job_type !== '') {
+            // dd($request->job_type); 
+            $query->where('type', $request->job_type);
+        }
+
+        if ($request->has('experience') && $request->experience !== '') {
+            $query->where('max_exp', '<=', $request->experience);
+        }
+        
+
         $jobs = $query->paginate(1)->withQueryString(); // Adjust pagination as needed
                                                         // $JobCategory = JobCategory::all();
         $location = JobPost::select('location')->where('status', 1)->where('admin_verify', 1)->whereDate('jobexpiry', '>=', $today)->distinct()->get();
@@ -100,23 +110,53 @@ class JobController extends Controller
         }
     }
 
+    // public function JobDetails($id)
+    // {
+        
+
+    //     // dd($id);
+    //     $decryptedId = Crypt::decrypt($id);
+    //     $job         = JobPost::find($decryptedId);
+
+        
+    //     // dd($status, $userId,$decryptedId);
+    //     if (! $job) {
+    //         return redirect()->back()->with('error', 'Job not found!');
+    //     }
+        
+    //     if(Auth::user()->id) {
+    //         $userId = Auth::user()->id;
+    //         $status = JobApplication::where('job_id', $decryptedId)
+    //         ->where('user_id', $userId)
+    //         ->value('status');
+    //         return view('User.JobDetails', compact('job', 'status'));
+    //     } else {
+    //         return view('User.JobDetails', compact('job'));
+    //     }
+
+    // }
+
     public function JobDetails($id)
-    {
-        $userId = Auth::user()->id;
+{
+    $decryptedId = Crypt::decrypt($id);
+    $job = JobPost::find($decryptedId);
 
-        // dd($id);
-        $decryptedId = Crypt::decrypt($id);
-        $job         = JobPost::find($decryptedId);
+    if (! $job) {
+        return redirect()->back()->with('error', 'Job not found!');
+    }
 
+    $status = null;
+
+    if (Auth::check()) {
+        $userId = Auth::id();
         $status = JobApplication::where('job_id', $decryptedId)
             ->where('user_id', $userId)
             ->value('status');
-        // dd($status, $userId,$decryptedId);
-        if (! $job) {
-            return redirect()->back()->with('error', 'Job not found!');
-        }
-
         return view('User.JobDetails', compact('job', 'status'));
     }
+
+    return view('User.JobDetails', compact('job', 'status'));
+}
+
 
 }

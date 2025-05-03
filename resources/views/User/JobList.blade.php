@@ -171,36 +171,48 @@
 
                         <!-- job post time -->
                         <div class="search__item">
-                            <div class="mb-3 font-20 fw-medium text-dark text-capitalize">job type</div>
+                            <div class="mt-3 fs-5 fw-medium text-dark text-capitalize">Job Type</div>
                             <div class="search__item__list">
-                                @foreach ($type as $t)
-                                    <div class="d-flex align-items-center justify-content-between list">
-                                        <div class="d-flex gap-2 align-items-center checkbox">
-                                            <input type="checkbox" name="fulltime" id="fulltime">
-                                            <label for="fulltime">{{ $t->type }}</label>
+                                <form action="{{ route('User.JobList') }}" method="GET" class="type-select"
+                                    id="TypeForm">
+                                    <input type="hidden" name="job_type" id="job_type" value="">
+                                    @foreach ($type as $index => $t)
+                                        <div class="d-flex align-items-center justify-content-between py-2 border-bottom">
+                                            <div class="d-flex align-items-center gap-2 flex-shrink-1">
+                                                <input type="checkbox" id="job_type_{{ $index }}" name="job_type[]"
+                                                    value="{{ $t->type }}">
+                                                <label for="job_type_{{ $index }}"
+                                                    class="mb-0 text-nowrap">{{ $t->type }}</label>
+                                            </div>
+                                            <span class="text-muted text-nowrap">({{ $t->count }})</span>
                                         </div>
-                                        <span>({{ $t->count }})</span>
-                                    </div>
-                                @endforeach
-
+                                    @endforeach
+                                </form>
                             </div>
                         </div>
+
 
                         <!-- experience label -->
                         <div class="search__item">
-                            <div class="mb-3 font-20 fw-medium text-dark text-capitalize">experience Label</div>
+                            <div class="mt-3 font-20 fw-medium text-dark text-capitalize">Experience Label</div>
                             <div class="search__item__list">
-                                @foreach ($experience as $exp)
-                                    <div class="d-flex align-items-center justify-content-between list">
-                                        <div class="d-flex gap-2 align-items-center checkbox">
-                                            <input type="checkbox" name="exp" id="exp">
-                                            <label for="exp">{{ $exp->max_exp }} year</label>
+                                <form action="{{ route('User.JobList') }}" method="GET" class="experience-select"
+                                    id="ExperienceForm">
+                                    @foreach ($experience as $index => $exp)
+                                        <div class="d-flex align-items-center justify-content-between py-2 border-bottom">
+                                            <div class="d-flex gap-2 align-items-center flex-shrink-1">
+                                                <input type="checkbox" id="exp_{{ $index }}" name="experience[]"
+                                                    value="{{ $exp->max_exp }}">
+                                                <label for="exp_{{ $index }}"
+                                                    class="mb-0 text-nowrap">{{ $exp->max_exp }} year</label>
+                                            </div>
+                                            <span class="text-muted text-nowrap">({{ $exp->count }})</span>
                                         </div>
-                                        <span>({{ $exp->count }})</span>
-                                    </div>
-                                @endforeach
+                                    @endforeach
+                                </form>
                             </div>
                         </div>
+
 
                         <!-- salary label -->
                         <div class="search__item">
@@ -491,6 +503,23 @@
 
                 // Submit the form
                 $('#dateForm').submit();
+            });
+        });
+    </script>
+
+    <script>
+        document.querySelectorAll('.type-select input[type="checkbox"]').forEach(function(checkbox) {
+            checkbox.addEventListener('change', function() {
+                document.getElementById('TypeForm').submit();
+            });
+        });
+    </script>
+
+{{-- for Submit Experience --}}
+    <script>
+        document.querySelectorAll('.experience-select input[type="checkbox"]').forEach(function(checkbox) {
+            checkbox.addEventListener('change', function() {
+                document.getElementById('ExperienceForm').submit();
             });
         });
     </script>

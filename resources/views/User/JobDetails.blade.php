@@ -197,7 +197,15 @@
 @section('script')
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
+        const isLoggedIn = {{ Auth::check() ? 'true' : 'false' }};
+
         function ApplyJob(id) {
+
+            if (!isLoggedIn) {
+                window.location.href = "{{ route('User.login') }}";
+                return;
+            }
+
             let url = "{{ route('User.ApplyForJOb') }}";
             let formData = new FormData();
             formData.append('job_id', id);
