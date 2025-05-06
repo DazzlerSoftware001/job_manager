@@ -74,11 +74,11 @@ class DashboardController extends Controller
             'branch'          => 'nullable',
             'lang'            => 'required|array',
             'exp_year'        => 'required',
-            'exp_months'      => 'required',
+            // 'exp_months'      => 'nullable',
             'jobSearch'       => 'required',
             'description'     => 'required|string',
-            'social_link'     => 'required|array',
-            'social_name'     => 'required|array',
+            'social_link'     => 'nullable|array',
+            'social_name'     => 'nullable|array',
             'country'         => 'required',
             'address'         => 'required|string|min:10|max:255',
             'state'           => 'required',
@@ -184,7 +184,10 @@ class DashboardController extends Controller
     public function UploadResume(Request $request)
     {
         $rules = [
-            'resume' => ['required', 'mimes:pdf',
+            'resume' => [
+                'required',
+                'mimes:pdf',
+                'max:2048',
                 function ($attribute, $value, $fail) use ($request) {
                     if ($request->hasFile('resume')) {
                         $fileName = $request->file('resume')->getClientOriginalName();
@@ -367,8 +370,9 @@ class DashboardController extends Controller
     public function uploadDesignation(Request $request)
     {
         $rules = [
-            'designation' => 'required|string|max:255',
-            'expected'    => 'required|numeric',
+            'designation'     => 'required|string|max:255',
+            'currency'        => 'required',
+            'expected_salary' => 'required|numeric',
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -391,7 +395,8 @@ class DashboardController extends Controller
             }
 
             $candidateProfile->position   = $request->input('designation');
-            $candidateProfile->expect_sal = $request->input('expected');
+            $candidateProfile->currency   = $request->input('currency');
+            $candidateProfile->expect_sal = $request->input('expected_salary');
             $candidateProfile->updated_at = now(); // only needed if timestamps are off
             $candidateProfile->save();
 
@@ -499,7 +504,6 @@ class DashboardController extends Controller
     //     return response()->json(['status_code' => 1 ,'message' => 'Experience deleted successfully.'], 200);
     // }
 
-
     public function deleteExperience($id)
     {
         $experience = CandidateEmployment::find($id);
@@ -512,7 +516,6 @@ class DashboardController extends Controller
 
         return response()->json(['status_code' => 1, 'message' => 'Experience deleted successfully.'], 200);
     }
-
 
     public function CandidateEducation(Request $request)
     {
@@ -653,6 +656,7 @@ class DashboardController extends Controller
         $rules = [
             'award_title' => 'required|string|max:255',
             'award_date'  => 'required',
+            'certificate' => 'nullable|file|mimes:jpeg,png,jpg,gif,pdf|max:2048',
             'award_desc'  => 'required',
         ];
 
@@ -661,7 +665,15 @@ class DashboardController extends Controller
         if (! $validator->fails()) {
 
             // If not exists, create a new instance
-            $candidateAward              = new CandidateAward();
+            $candidateAward = new CandidateAward();
+
+            if ($request->hasFile('certificate')) {
+
+                $imageName = time() . '.' . $request->certificate->extension();
+                $request->certificate->move(public_path('user/assets/img/award_certificate/'), $imageName);
+                $candidateAward->certificate = 'user/assets/img/award_certificate/' . $imageName;
+            }
+
             $candidateAward->user_id     = Auth::user()->id;
             $candidateAward->award_title = $request->input('award_title');
             $candidateAward->award_date  = $request->input('award_date');
@@ -676,54 +688,119 @@ class DashboardController extends Controller
         }
     }
 
+    // public function updateAward(Request $request)
+    // {
+    //     // Step 1: Validate the request
+    //     $validator = Validator::make($request->all(), [
+    //         'award_id'    => 'required|exists:candidate_award,id',
+    //         'award_title' => 'required|string|max:255',
+    //         'award_date'  => 'required',
+    //         'award_desc'  => 'required',
+    //     ]);
+
+    //     if ($validator->fails()) {
+    //         return response()->json([
+    //             'status_code' => 0,
+    //             'message'     => 'Validation failed',
+    //             'errors'      => $validator->errors(),
+    //         ]);
+    //     }
+
+    //     try {
+    //         // Step 2: Get current user's education info
+    //         $award = CandidateAward::where('user_id', Auth::id())->where('id', $request->award_id)->first();
+
+    //         // If record not found, optionally create it
+    //         if (! $award) {
+    //             return response()->json([
+    //                 'status_code' => 0,
+    //                 'message'     => 'Education record not found.',
+    //             ]);
+    //         }
+
+    //         CandidateAward::where('id', $request->award_id)
+    //             ->update([
+    //                 'award_title' => $request->award_title,
+    //                 'award_date'  => $request->award_date,
+    //                 'award_desc'  => $request->award_desc,
+    //             ]);
+
+    //         return response()->json([
+    //             'status_code' => 1,
+    //             'message'     => 'Candidate Award updated successfully!',
+    //         ]);
+
+    //     } catch (\Exception $e) {
+    //         return response()->json([
+    //             'status_code' => 0,
+    //             'message'     => 'Error: ' . $e->getMessage(),
+    //         ]);
+    //     }
+    // }
+
     public function updateAward(Request $request)
     {
-        // Step 1: Validate the request
+        // dd($request->all());
         $validator = Validator::make($request->all(), [
             'award_id'    => 'required|exists:candidate_award,id',
             'award_title' => 'required|string|max:255',
             'award_date'  => 'required',
             'award_desc'  => 'required',
+            'edit_certificate' => 'nullable|file|mimes:jpeg,png,jpg,gif,pdf|max:2048',
         ]);
 
         if ($validator->fails()) {
             return response()->json([
                 'status_code' => 0,
-                'message'     => 'Validation failed',
-                'errors'      => $validator->errors(),
+                'message'     => $validator->errors()->first(),
             ]);
         }
 
-        try {
-            // Step 2: Get current user's education info
-            $award = CandidateAward::where('user_id', Auth::id())->where('id', $request->award_id)->first();
+        // try {
+            $award = CandidateAward::where('user_id', Auth::id())
+                ->where('id', $request->award_id)
+                ->first();
 
-            // If record not found, optionally create it
             if (! $award) {
                 return response()->json([
                     'status_code' => 0,
-                    'message'     => 'Education record not found.',
+                    'message'     => 'Award record not found.',
                 ]);
             }
 
-            CandidateAward::where('id', $request->award_id)
-                ->update([
-                    'award_title' => $request->award_title,
-                    'award_date'  => $request->award_date,
-                    'award_desc'  => $request->award_desc,
-                ]);
+            
+
+            // Handle certificate upload if present
+            if ($request->hasFile('edit_certificate')) {
+
+                if ($award->certificate && file_exists(public_path($award->certificate))) {
+                    unlink(public_path($award->certificate));
+                }
+
+                $imageName = time() . '.' . $request->edit_certificate->extension();
+                $request->edit_certificate->move(public_path('user/assets/award_certificate/'), $imageName);
+                $award->certificate = 'user/assets/award_certificate/' . $imageName;
+            }
+
+            // Update other fields
+            $award->award_title = $request->award_title;
+            $award->award_date  = $request->award_date;
+            $award->award_desc  = $request->award_desc;
+            $award->updated_at  = now();
+
+            $award->save();
 
             return response()->json([
                 'status_code' => 1,
                 'message'     => 'Candidate Award updated successfully!',
             ]);
 
-        } catch (\Exception $e) {
-            return response()->json([
-                'status_code' => 0,
-                'message'     => 'Error: ' . $e->getMessage(),
-            ]);
-        }
+        // } catch (\Exception $e) {
+        //     return response()->json([
+        //         'status_code' => 0,
+        //         'message'     => 'Error: ' . $e->getMessage(),
+        //     ]);
+        // }
     }
 
     public function deleteAward($id)
@@ -733,6 +810,10 @@ class DashboardController extends Controller
 
         if (! $award) {
             return response()->json(['status_code' => 0, 'message' => 'Award record not found.']);
+        }
+
+        if ($award->certificate && file_exists(public_path($award->certificate))) {
+            unlink(public_path($award->certificate));
         }
 
         $award->delete();

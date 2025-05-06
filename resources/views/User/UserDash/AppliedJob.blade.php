@@ -40,7 +40,7 @@
                             <div class="content__flex">
                                 <div class="content">
                                     <a href="#">
-                                        <h6>{{ $job->title }}</h6>
+                                        <h6><a href="{{ route('User.JobDetails', ['id' => encrypt($job->id)]) }}">{{ $job->title }}</a></h6>
                                     </a>
                                     <div class="content__info">
                                         <span><i class="fa-light fa-location-dot"></i> {{ $job->location }}</span>

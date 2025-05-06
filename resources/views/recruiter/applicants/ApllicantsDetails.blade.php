@@ -92,7 +92,18 @@
                                         <a href="{{ route('Recruiter.CandidateCVDownload', ['userId' => Crypt::encrypt($user->id)]) }}"
                                             class="btn btn-primary mt-1">Cv Download</a>
 
-
+                                            @if(session('error'))
+                                            <script>
+                                                Toastify({
+                                                    text: "{{ session('error') }}",
+                                                    duration: 3000,
+                                                    gravity: "top", // "top" or "bottom"
+                                                    position: "right", // "left", "center" or "right"
+                                                    backgroundColor: "#ff4d4f",
+                                                }).showToast();
+                                            </script>
+                                            @endif
+                                            
                                     </div>
                                 </div>
 

@@ -128,11 +128,17 @@
                                 </ul>
                             </nav>
                         </div>
-
+                        @php
+                            $user = Auth::user();
+                            
+                            // dd($user);
+                        @endphp
+                        @if(empty($user))
                         <div class="header__right__btn d-flex gap-3">
                             <a href="{{route('User.login')}}" class="small__btn d-none d-sm-flex no__fill__btn border-6 font-xs" aria-label="Login Button"> <i class="rt-login"></i>Sign In</a>
                             <button class="d-md-block d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvas" aria-controls="offcanvas"><i class="fa-sharp fa-regular fa-bars"></i></button>
                         </div>
+                        @endif
                     </div>
                 </div>
             </div>

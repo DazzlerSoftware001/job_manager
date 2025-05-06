@@ -16,6 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id');
             $table->string('award_title')->nullable();
             $table->date('award_date')->nullable();
+            $table->string('certificate')->nullable();
             $table->text('award_desc')->nullable();
             $table->timestamps();
 

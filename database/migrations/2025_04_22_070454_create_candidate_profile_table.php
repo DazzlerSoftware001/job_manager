@@ -18,6 +18,7 @@ return new class extends Migration
             $table->text('cover_letter')->nullable();
             $table->string('skill')->nullable();
             $table->string('position')->nullable();
+            $table->string('currency')->nullable();
             $table->integer('expect_sal')->nullable();
             $table->integer('view_profile')->nullable();
             $table->timestamps();

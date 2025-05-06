@@ -659,15 +659,25 @@ public function JobApllicants($job_id)
             // dd($decryptedId);
 
             $user = UserProfile::with('candidateProfile')->findOrFail($decryptedId);
-            $path = public_path($user->candidateProfile->resume);
-            // dd($path);
+            $resume = $user->candidateProfile->resume;
+            // dd($resume);
+            if($resume !== null) {
 
-            if (file_exists($path)) {
-                // dd('path');
+            
+                $path = public_path($resume);
 
-                return response()->download($path);
+
+                // dd($path);
+
+                if (file_exists($path)) {
+                    // dd('path');
+
+                    return response()->download($path);
+                } else {
+                    // dd('fdf');
+                    return back()->with('error', 'File not found.');
+                }
             } else {
-                dd('fdf');
                 return back()->with('error', 'File not found.');
             }
 

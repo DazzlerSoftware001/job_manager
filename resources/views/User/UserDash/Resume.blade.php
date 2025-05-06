@@ -102,7 +102,7 @@
                 <div class="col-md-6 mb-3">
                     <label for="resume" class="form-label">Resume<span class="text-danger">*</span></label>
                     <input type="file" class="form-control" id="resume" name="resume" required accept=".pdf">
-                    <small class="text-danger">Only PDF will be accepted</small>
+                    <small class="text-danger">Only PDF will be accepted | Size:2MB</small>
                 </div>
 
                 <div class="col-md-1 " style="margin-top: 36px;">
@@ -138,7 +138,8 @@
 
         <form id="uploadCoverLetter">
             <div class="mb-3">
-                <label for="cover_letter" class="form-label">Cover Letter</label>
+                <label for="cover_letter" class="form-label">Cover Letter <span
+                        class="text-danger d-inline">*</span></label>
 
                 @if ($candidate && $candidate->cover_letter)
                     <textarea class="form-control" id="cover_letter" name="cover_letter" rows="5"
@@ -164,20 +165,38 @@
                 @else
                     <input type="text" name="designation" class="form-control" placeholder="Type your Designation">
                 @endif
-                <label for="resume" class="form-label mt-3">Expect Salary<span class="text-danger">*</span></label>
-                @if ($candidate && $candidate->expect_sal)
-                    <input type="number" name="expected" class="form-control"
-                        value="{{ old('expected', $candidate->expect_sal) }}">
-                    <span class="fs-6 text-danger">Enter monthly Expected Salary</span>
+            </div>
+
+            <div class="col-6 col-sm-8">
+            </div>
+
+            <div class="col-2 col-sm-1">
+
+                <label for="currency" class="form-label mt-3">Currency<span class="text-danger">*</span></label>
+                @if ($candidate && $candidate->currency)
+                    <input type="text" placeholder="Ex. USD($)" name="currency" class="form-control" value="{{ $candidate->currency }}">
                 @else
-                    <input type="number" name="expected" class="form-control no-spinner" placeholder="Expected Salary">
-                    <span class="fs-6 text-danger">Enter monthly Expected Salary</span>
+                    <input type="text" placeholder="Ex. USD($)" name="currency" class="form-control">
                 @endif
 
                 <button type="submit" class="btn btn-primary w-10 d-block mt-3">
                     Submit
                 </button>
             </div>
+            <div class="col-4 col-sm-3">
+                <label for="resume" class="form-label mt-3">Expect Salary<span class="text-danger">*</span></label>
+                @if ($candidate && $candidate->expect_sal)
+                    <input type="number" name="expected_salary" class="form-control"
+                        value="{{ old('expected', $candidate->expect_sal) }}">
+                    <span class="fs-6 text-danger">Enter monthly Expected Salary</span>
+                @else
+                    <input type="number" name="expected_salary" class="form-control no-spinner"
+                        placeholder="Expected Salary">
+                    <span class="fs-6 text-danger">Enter monthly Expected Salary</span>
+                @endif
+
+            </div>
+
         </form>
     </div>
 
@@ -279,7 +298,9 @@
                         <p><strong class="text-dark">Company:</strong> {{ $exp->company_name }}</p>
                         <p><strong class="text-dark">Position:</strong> {{ $exp->position }}</p>
                         <p><strong class="text-dark">Experience (Years):</strong> {{ $years }}</p>
-                        <p><strong class="text-dark">Experience (Months):</strong> {{ $months }}</p>
+                        @if ($months !== '0')
+                            <p><strong class="text-dark">Experience (Months):</strong> {{ $months }}</p>
+                        @endif
                         <p><strong class="text-dark">Description:</strong> {{ $exp->description }}</p>
                         <hr>
                     </div>
@@ -369,7 +390,7 @@
                                             placeholder="Experience in years" required>
                                     </div>
                                     <div class="rt-input-group">
-                                        <label for="sd-4">Month<span class="text-danger d-inline">*</span></label>
+                                        <label for="sd-4">Month</label>
                                         <select name="exp_months" id="experience_months" class="form-select">
                                             <option value="">Select Months</option>
                                             <!-- Loop to generate months -->
@@ -652,6 +673,7 @@
                     <button type="button" class="btn btn-sm btn-light btn-outline-primary edit-award-btn"
                         data-bs-toggle="modal" data-bs-target="#editAwardModal" data-id="{{ $award->id }}"
                         data-award_title="{{ $award->award_title }}" data-award_date="{{ $award->award_date }}"
+                     
                         data-award_desc="{{ $award->award_desc }}" style="position: absolute; right:22%;">
                         <i class="fas fa-pen"></i> Edit
                     </button>
@@ -666,6 +688,13 @@
                     <p><strong class="text-dark">Title:</strong> {{ $award->award_title }}</p>
                     <p><strong class="text-dark">Date:</strong>
                         {{ \Carbon\Carbon::parse($award->award_date)->format('d M Y') }}</p>
+                        @if($award->certificate !== null)
+                        {{$award->certificate}}
+                        <p><strong class="text-dark">Certificate:</strong> <a href="{{ asset($award->certificate) }}" target="_blank"
+                            class="btn btn-outline-primary btn-sm">
+                            View
+                        </a></p>
+                        @endif
                     <p><strong class="text-dark">Description:</strong> {{ $award->award_desc }}</p>
                     </p>
                     <hr>
@@ -680,7 +709,7 @@
             aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <form id="editAwardForm">
+                    <form action="javascript:void(0)" method="POST" id="editAwardForm" enctype="multipart/form-data">
                         <div class="modal-header">
                             <h5 class="modal-title" id="editAwardModalLabel">Edit Award</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
@@ -695,6 +724,10 @@
                             <div class="mb-2">
                                 <label>Date<span class="text-danger d-inline">*</span></label>
                                 <input type="date" name="award_date" id="award_date" class="form-control" required>
+                            </div>
+                            <div class="mb-2">
+                                <label>Certificate<span class="text-danger d-inline">*</span></label>
+                                <input type="file" name="edit_certificate" id="edit_certificate" class="form-control">
                             </div>
                             <div class="mb-2">
                                 <label>Description<span class="text-danger d-inline">*</span></label>
@@ -727,6 +760,10 @@
                                     <label for="ye-7">Year<span class="text-danger d-inline">*</span></label>
                                     <input type="date" id="ye-7" name="award_date" placeholder="dd/mm/yy"
                                         required>
+                                </div>
+                                <div class="rt-input-group mt-3">
+                                    <label for="certificate">Certificate</label>
+                                    <input type="file" id="certificate" name="certificate" required>
                                 </div>
                             </div>
                             <div class="rt-input-group">
@@ -1832,7 +1869,7 @@
     </script>
 
     {{-- For Update Candidate Award --}}
-    <script>
+    {{-- <script>
         $(document).ready(function() {
             // Fill modal form with existing data
             $('.edit-award-btn').on('click', function() {
@@ -1898,7 +1935,80 @@
                 });
             });
         });
+    </script> --}}
+
+    <script>
+        $(document).ready(function () {
+            // Fill modal form with existing data
+            $('.edit-award-btn').on('click', function () {
+                $('#award_id').val($(this).data('id'));
+                $('#award_title').val($(this).data('award_title'));
+                $('#award_date').val($(this).data('award_date'));
+                $('#award_desc').val($(this).data('award_desc'));
+            });
+    
+            // Submit updated award via AJAX with file
+            $('#editAwardForm').on('submit', function (e) {
+                e.preventDefault();
+    
+                let formData = new FormData(this);
+    
+                $.ajax({
+                    url: "{{ route('User.UpdateAward') }}",
+                    method: "POST",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    success: function (response) {
+                        if (response.status_code === 1) {
+                            Toastify({
+                                text: response.message,
+                                duration: 3000,
+                                gravity: "top",
+                                position: "right",
+                                style: {
+                                    background: "green"
+                                }
+                            }).showToast();
+    
+                            setTimeout(() => {
+                                if (response.redirect_url) {
+                                    window.location.href = response.redirect_url;
+                                } else {
+                                    location.reload();
+                                }
+                            }, 750);
+                        } else {
+                            Toastify({
+                                text: response.message,
+                                duration: 3000,
+                                gravity: "top",
+                                position: "right",
+                                style: {
+                                    background: "orange"
+                                }
+                            }).showToast();
+                        }
+                    },
+                    error: function () {
+                        Toastify({
+                            text: "Something went wrong.",
+                            duration: 3000,
+                            gravity: "top",
+                            position: "right",
+                            style: {
+                                background: "red"
+                            }
+                        }).showToast();
+                    }
+                });
+            });
+        });
     </script>
+    
 
     {{-- For Delete Candidate Award --}}
     <script>

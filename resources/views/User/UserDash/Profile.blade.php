@@ -29,17 +29,17 @@
             <div class="info__field">
                 <div class="row row-cols-sm-2 row-cols-1 g-3">
                     <div class="rt-input-group">
-                        <label for="name">First Name</label>
+                        <label for="name">First Name <span class="text-danger d-inline">*</span> </label>
                         <input type="text" id="name" name="name" value="{{ $user->name }}"
                             placeholder="First Name" required>
                     </div>
                     <div class="rt-input-group">
-                        <label for="lname">Last Name</label>
+                        <label for="lname">Last Name <span class="text-danger d-inline">*</span></label>
                         <input type="text" id="lname" name="lname" value="{{ $user->lname }}"
                             placeholder="Last Name" required>
                     </div>
                     <div class="rt-input-group">
-                        <label for="email">Email</label>
+                        <label for="email">Email <span class="text-danger d-inline">*</span></label>
                         <input type="email" id="email" name="email" value="{{ $user->email }}"
                             placeholder="careernext@gmqail.com" required readonly>
                     </div>
@@ -57,11 +57,11 @@
                     </div>
 
                     <div class="rt-input-group">
-                        <label for="dob">Date of Birth</label>
+                        <label for="dob">Date of Birth <span class="text-danger d-inline">*</span></label>
                         <input type="date" id="dob" name="dob" value="{{ $user->date_of_birth }}" required>
                     </div>
                     <div class="rt-input-group">
-                        <label for="gender">Gender</label>
+                        <label for="gender">Gender <span class="text-danger d-inline">*</span></label>
                         <select name="gender" id="gender" class="form-select">
                             <option value="Male" {{ $user->gender == 'Male' ? 'selected' : '' }}>Male</option>
                             <option value="Female" {{ $user->gender == 'Female' ? 'selected' : '' }}>Female</option>
@@ -73,7 +73,7 @@
                 <!-- qualification -->
                 <div class="row row-cols-sm-3 row-cols-1 g-3">
                     <div class="rt-input-group">
-                        <label for="education_level">Education Level</label>
+                        <label for="education_level">Education Level <span class="text-danger d-inline">*</span></label>
                         <select name="education_level" id="education_level" class="form-select">
                             <option value="">Select Education Level</option>
                             <option value="Matric" {{ $user->education_level == 'Matric' ? 'selected' : '' }}>Secondary
@@ -94,7 +94,7 @@
                         </select>
                     </div>
                     <div class="rt-input-group">
-                        <label for="qualification">Qualification</label>
+                        <label for="qualification">Qualification <span class="text-danger d-inline">*</span></label>
                         <input type="text" name="qualification" id="qualification" class="form-control"
                             value="{{ $user->qualification }}" placeholder="Ex- B.Tech" required>
 
@@ -113,7 +113,7 @@
                     @endphp
 
                     <div class="rt-input-group">
-                        <label for="lang">Language</label>
+                        <label for="lang">Language <span class="text-danger d-inline">*</span></label>
                         <select name="lang[]" id="lang" class="form-select" multiple>
                             <option value="">Select Language</option>
                             {{-- Options will be injected by JS --}}
@@ -133,7 +133,7 @@
                     @endphp
 
                     <div class="rt-input-group">
-                        <label for="experience">Experience</label>
+                        <label for="experience">Experience <span class="text-danger d-inline">*</span></label>
                         <div style="display: flex; gap: 10px;">
                             <input type="number" name="exp_year" id="experience" class="no-spinner"
                                 placeholder="Years" value="{{ $exp_year }}">
@@ -151,7 +151,7 @@
 
 
                     <div class="rt-input-group">
-                        <label for="show">Looking for a job ? </label>
+                        <label for="show">Looking for a job ?  <span class="text-danger d-inline">*</span></label>
                         <select name="jobSearch" id="jobSearch" class="form-select">
                             <option value="">Select</option>
                             <option value="1" {{ $user->look_job == '1' ? 'selected' : '' }}>Yes</option>
@@ -163,7 +163,7 @@
                 <!-- experience end -->
                 <!-- editor area -->
                 <div class="rt-input-group">
-                    <label for="description">Candidate Description</label>
+                    <label for="description">Candidate Description <span class="text-danger d-inline">*</span></label>
                     <textarea name="description" id="description" class="form-control" placeholder="Enter Description" cols="10"
                         rows="5">{{ $user->description }}</textarea>
                 </div>
@@ -193,14 +193,14 @@
                                 <div class="col-sm-3">
                                     <div class="rt-input-group">
                                         <label>Media Name</label>
-                                        <input type="text" name="social_name[]" value="{{ $name }}" required>
+                                        <input type="text" name="social_name[]" value="{{ $name }}">
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="rt-input-group">
                                         <label>Media Link</label>
                                         <input type="url" name="social_link[]" value="{{ $link }}"
-                                            placeholder="https://{{ strtolower($name) }}.com/yourprofile" required>
+                                            placeholder="https://{{ strtolower($name) }}.com/yourprofile">
                                     </div>
                                 </div>
                                 <div class="col-sm-2">
@@ -221,7 +221,7 @@
 
 
             <!-- address area -->
-            <h6 class="fw-medium mt-4 mb-4">Address / Location</h6>
+            <h6 class="fw-medium mt-4 mb-4">Address / Location <span class="text-danger d-inline">*</span></h6>
             <div class="social__links radius-16 p-30 bg-white" id="address">
                 <div class="row row-cols-md-2 row-cols-lg-2 row-cols-1 g-30">
                     <div class="info__field">
@@ -229,21 +229,21 @@
                             $selectedCountry = $user->country;
                         @endphp
                         <div class="rt-input-group">
-                            <label for="Country">Country</label>
+                            <label for="Country">Country <span class="text-danger d-inline">*</span></label>
                             <select name="country" id="country" class="form-select">
                                 <option value="">Select Country</option>
                             </select>
                         </div>
 
                         <div class="rt-input-group">
-                            <label for="city">City</label>
+                            <label for="city">City <span class="text-danger d-inline">*</span></label>
                             <input type="text" name="city" id="city" value="{{ $user->city }}"
                                 class="form-control" placeholder="Enter Your City" required>
                         </div>
 
 
                         <div class="rt-input-group">
-                            <label for="pr">Present Address</label>
+                            <label for="pr">Present Address <span class="text-danger d-inline">*</span></label>
                             <input type="text" id="pr" name="address" value="{{ $user->address }}"
                                 placeholder="Enter Your Address " required>
                         </div>
@@ -251,14 +251,14 @@
                     <div>
                         <div class="info__field">
                             <div class="rt-input-group">
-                                <label for="state">State</label>
+                                <label for="state">State <span class="text-danger d-inline">*</span></label>
                                 <input type="text" name="state" id="state" value="{{ $user->state }}"
                                     class="form-control" placeholder="Enter Your State" required>
 
                             </div>
 
                             <div class="rt-input-group">
-                                <label for="postalCode">Postal Code</label>
+                                <label for="postalCode">Postal Code <span class="text-danger d-inline">*</span></label>
                                 <input type="text" id="postalCode" name="postalCode"
                                     value="{{ $user->postal_code }}" placeholder="Ex -128340" required>
                             </div>
@@ -700,7 +700,21 @@
 
     {{-- End country_code --}}
 
+    {{-- For Manage Date  --}}
+    <script>
+        const dateInput = document.getElementById('dob');
+        const today = new Date();
 
+        // Set max to yesterday
+        const yesterday = new Date(today);
+        yesterday.setDate(today.getDate());
+
+        // Format to YYYY-MM-DD
+        const yyyy = yesterday.getFullYear();
+        const mm = String(yesterday.getMonth() + 1).padStart(2, '0');
+        const dd = String(yesterday.getDate()).padStart(2, '0');
+        dateInput.max = `${yyyy}-${mm}-${dd}`;
+    </script>
 
 
     {{-- country --}}
