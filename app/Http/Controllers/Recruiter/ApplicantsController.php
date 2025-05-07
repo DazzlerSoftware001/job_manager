@@ -12,8 +12,11 @@ use Illuminate\Support\Facades\Crypt;
 
 class ApplicantsController extends Controller
 {
-    public function allApplicants()
+    public function allApplicants(Request $request)
     {
+        // dd($request->all());
+        $job_id = $request->job_id;
+        $decryptedId = Crypt::decrypt($job_id);
         $today   = Carbon::today();
         $joblist = JobPost::select('id', 'title')->where('status', 1)->where('admin_verify', 1)->whereDate('jobexpiry', '>=', $today)->get();
         $cities  = JobApplication::with('user')->get()->pluck('user.city')->filter()->unique()->values();
@@ -49,134 +52,8 @@ class ApplicantsController extends Controller
 
         // dd($data['qualifications']);
 
-        return view('recruiter.applicants.AllApplicants', compact('joblist', 'cities', 'skills', 'data'));
+        return view('recruiter.applicants.AllApplicants', compact('joblist', 'cities', 'skills', 'data', 'decryptedId'));
     }
-
-    // public function getAllApplicants(Request $request)
-    // {
-    //     $draw   = intval($request->input("draw"));
-    //     $offset = intval($request->input("start", 0));
-    //     $limit  = intval($request->input('length', 10));
-    //     $order  = $request->input("order");
-    //     $search = $request->input("search")['value'] ?? '';
-
-    //     // Column mapping
-    //     $columns = [
-    //         0 => 'job_applications.id',
-    //         1 => 'job_post.title',
-    //         2 => 'users.name',
-    //         3 => 'users.email',
-    //         4 => 'job_applications.status',
-    //         5 => 'job_applications.created_at',
-    //         6 => 'job_applications.id',
-    //     ];
-
-    //     // Base query with joins
-    //     $query = JobApplication::with([
-    //         'user:id,name,email',
-    //         'jobPost:id,title',
-    //     ])->select(['id', 'user_id', 'job_id', 'status', 'created_at']);
-
-    //     // Search filter
-    //     if (! empty($search)) {
-    //         $query->where(function ($q) use ($search) {
-    //             $q->where('users.name', 'like', '%' . $search . '%')
-    //                 ->orWhere('users.email', 'like', '%' . $search . '%')
-    //                 ->orWhere('job_post.title', 'like', '%' . $search . '%');
-    //         });
-    //     }
-
-    //     // Ordering
-    //     if ($order) {
-    //         $columnIndex = $order[0]['column'];
-    //         $columnName  = $columns[$columnIndex];
-    //         $dir         = $order[0]['dir'];
-    //         $query->orderBy($columnName, $dir);
-    //     } else {
-    //         $query->orderBy('job_applications.id', 'desc');
-    //     }
-
-    //     // Count total before pagination
-    //     $totalRecords = $query->count();
-
-    //     // Paginate
-    //     $records = $query->offset($offset)->limit($limit)->get();
-
-    //     $data = [];
-    //     foreach ($records as $record) {
-    //         $dataArray = [];
-
-    //         $dataArray[] = $record->id;
-    //         $dataArray[] = ucfirst($record->jobPost->title ?? 'N/A');
-    //         $dataArray[] = ucfirst($record->user->name ?? 'N/A');
-    //         $dataArray[] = $record->user->email ?? 'N/A';
-
-    //         $badgeClass = [
-    //             'pending'     => 'bg-warning',
-    //             'shortlisted' => 'bg-info',
-    //             'rejected'    => 'bg-danger',
-    //             'hired'       => 'bg-success',
-    //         ];
-
-    //         $badgeText  = ucfirst($record->status); // Capitalize first letter
-    //         $badgeColor = $badgeClass[$record->status] ?? 'bg-secondary';
-
-    //         $status = '<div class="d-flex">
-    //             <span onclick="toggleVerifyOptions(\'' . $record->id . '\');"
-    //                   class="badge ' . $badgeColor . ' text-uppercase"
-    //                   style="cursor: pointer;">' . $badgeText . '</span>
-    //         </div>';
-
-    //         if ($record->status == 'pending') {
-    //             $status .= '<div id="verify-options-' . $record->id . '" style="display: none; margin-top: 5px;">
-    //                             <div class="d-flex gap-2">
-    //                                 <button class="badge bg-info text-uppercase" style="cursor: pointer; border: none; padding: 5px 10px;" onclick="changeVerifyStatus(\'' . $record->id . '\', \'shortlisted\')">Shortlist</button>
-    //                                 <button class="badge bg-danger text-uppercase" style="cursor: pointer; border: none; padding: 5px 10px;" onclick="changeVerifyStatus(\'' . $record->id . '\', \'rejected\')">Reject</button>
-    //                             </div>
-    //                         </div>';
-    //         } elseif ($record->status == 'shortlisted') {
-    //             $status .= '<div id="verify-options-' . $record->id . '" style="display: none; margin-top: 5px;">
-    //                             <div class="d-flex gap-2">
-    //                                 <button class="badge bg-success text-uppercase" style="cursor: pointer; border: none; padding: 5px 10px;" onclick="changeVerifyStatus(\'' . $record->id . '\', \'hired\')">Hire</button>
-    //                                 <button class="badge bg-danger text-uppercase" style="cursor: pointer; border: none; padding: 5px 10px;" onclick="changeVerifyStatus(\'' . $record->id . '\', \'rejected\')">Reject</button>
-    //                             </div>
-    //                         </div>';
-    //         } elseif ($record->status == 'rejected') {
-    //             $status .= '<div id="verify-options-' . $record->id . '" style="display: none; margin-top: 5px;">
-    //                             <div class="d-flex gap-2">
-    //                                 <button class="badge bg-info text-uppercase" style="cursor: pointer; border: none; padding: 5px 10px;" onclick="changeVerifyStatus(\'' . $record->id . '\', \'shortlisted\')">Shortlist</button>
-    //                             </div>
-    //                         </div>';
-    //         }
-
-    //         $dataArray[] = $status;
-
-    //         $dataArray[] = date('d-M-Y', strtotime($record->created_at));
-
-    //         $dataArray[] = '<div class="d-flex gap-2">
-    //         <div class="edit">
-    //             <a href="' . route('Recruiter.ViewJobPost', ['id' => Crypt::encrypt($record->jobPost->id)]) . '" class="edit-item-btn text-primary">
-
-    //                 <i class="far fa-eye"></i>
-    //             </a>
-    //         </div>
-    //         <div class="remove">
-    //             <a href="javascript:void(0);" class="remove-item-btn text-danger" onclick="deleteRecord(' . $record->id . ');">
-    //                 <i class="far fa-trash-alt"></i>
-    //             </a>
-    //         </div>
-    //     </div>';
-
-    //         $data[] = $dataArray;
-    //     }
-
-    //     return response()->json([
-    //         "draw"            => $draw,
-    //         "recordsTotal"    => $totalRecords,
-    //         "recordsFiltered" => $totalRecords,
-    //         "data"            => $data,
-    //     ]);
-    // }
 
     public function getAllApplicants(Request $request)
     {
@@ -184,7 +61,9 @@ class ApplicantsController extends Controller
         $offset = intval($request->input("start", 0));
         $limit  = intval($request->input('length', 10));
         $order  = $request->input("order");
+        $decryptedId  = $request->input('decryptedId');
         $jobId  = $request->input('job_id');
+        // dd($jobId,$decryptedId);
 
         $education_level = $request->input('education_level');
         $Qualification   = $request->input('Qualification');
@@ -224,9 +103,10 @@ class ApplicantsController extends Controller
             'user.candidateProfile:skill',
             'jobPost:id,title',
         ])
-            ->where('job_id', $jobId)
-            ->select(['id', 'user_id', 'job_id', 'status', 'recruiter_view', 'created_at']);
-
+            ->where('job_id', $decryptedId)
+            ->orWhere('job_id', $jobId)
+            ->select(['id', 'user_id', 'job_id', 'status', 'recruiter_view', 'created_at'])->get();
+// dd($query);
         if (! empty($education_level)) {
             $query->whereHas('user', function ($q) use ($education_level) {
                 $q->where('education_level', $education_level);
@@ -284,7 +164,7 @@ class ApplicantsController extends Controller
 
         $totalRecords = $query->count();
         $records      = $query->offset($offset)->limit($limit)->get();
-
+        // dd($records);
         $data = [];
         foreach ($records as $record) {
             $dataArray = [];

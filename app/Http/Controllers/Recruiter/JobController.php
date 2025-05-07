@@ -263,7 +263,7 @@ class JobController extends Controller
             $dataArray[] = date('d-M-Y', strtotime($record->created_at));
             $dataArray[] = '<span style="color: red;">' . date('d-M-Y', strtotime($record->jobexpiry)) . '</span>';
             // $dataArray[] = '<span class="badge bg-warning">' . $record->applications_count . ' Applied</span>';
-            $dataArray[] = '<a href="' . route('Recruiter.JobApllicants', ['job_id' => Crypt::encrypt($record->id)]) . '" class="badge bg-warning text-decoration-none" style="cursor: pointer;">' . $record->applications_count . ' Applied</a>';
+            $dataArray[] = '<a href="' . route('Recruiter.AllApplicants', ['job_id' => Crypt::encrypt($record->id)]) . '" class="badge bg-warning text-decoration-none" style="cursor: pointer;">' . $record->applications_count . ' Applied</a>';
 
             $dataArray[] = '<div class="d-flex gap-2">
 

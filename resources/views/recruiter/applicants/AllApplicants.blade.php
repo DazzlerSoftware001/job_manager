@@ -15,7 +15,9 @@
                         <div class="card">
                             <div class="card-header">
                                 {{-- <h4 class="card-title">All Applicants</h4> --}}
+
                                 <div class="row">
+                                    <input type="text" name="decryptedId" id="decryptedId" value="{{ $decryptedId }}">
                                     <div class="col-10 mt-2">
                                         <label for="jobFilter" class="form-label">Select Job</label>
                                         <select id="jobFilter" class="form-select">
@@ -226,6 +228,7 @@
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
                         data: function(data) {
+                            data.decryptedId = $('#decryptedId').val(); // important
                             data.job_id = $('#jobFilter').val(); // important
 
                             data.education_level = $('#education_level').val();
@@ -244,8 +247,12 @@
                         "emptyTable": "<div><lord-icon src='https://cdn.lordicon.com/msoeawqm.json' trigger='loop' style='width:75px;height:75px'></div> <div class='mt-2 noresult'><b>Sorry! No Result Found</b></div>"
                     }
                 });
+                if ($('#decryptedId').val()) {
+                    $('#myTable').DataTable().draw();
+                }
 
-                $('#jobFilter, #education_level, #Qualification, #Branch, #cityFilter, #statusFilter, #skills').on('change',
+                $('#jobFilter, #education_level, #Qualification, #Branch, #cityFilter, #statusFilter, #skills').on(
+                    'change',
                     function() {
                         $('#myTable').DataTable().draw();
                     });
