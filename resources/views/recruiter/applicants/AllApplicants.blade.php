@@ -203,7 +203,7 @@
                 allowClear: true
             });
         });
-    </script>
+    </script>b vxc b
 
     @section('script')
         {{-- Get Job list --}}
