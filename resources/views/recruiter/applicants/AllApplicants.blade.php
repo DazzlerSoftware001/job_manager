@@ -108,6 +108,16 @@
                                     </div>
 
                                     <div class="col-2 mt-2">
+                                        <label for="ProfilestatusFilter" class="form-label">Select Profile Status</label>
+
+                                        <select id="ProfilestatusFilter" class="form-select">
+                                            <option value="">Status</option>
+                                            <option value="1">Viewed</option>
+                                            <option value="0">Not Viewed</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-2 mt-2">
                                         <label for="search" class="form-label">Search</label>
 
                                         <input type="text" id="search" class="form-control mb-3"
@@ -237,6 +247,7 @@
 
                             data.city = $('#cityFilter').val(); // optional
                             data.status = $('#statusFilter').val(); // optional
+                            data.Profilestatus = $('#ProfilestatusFilter').val(); // optional
                             data.search = $('#search').val();
                             data.skills = $('#skills').val();
 
@@ -251,7 +262,7 @@
                     $('#myTable').DataTable().draw();
                 }
 
-                $('#jobFilter, #education_level, #Qualification, #Branch, #cityFilter, #statusFilter, #skills').on(
+                $('#jobFilter, #education_level, #Qualification, #Branch, #cityFilter, #statusFilter, #ProfilestatusFilter, #skills').on(
                     'change',
                     function() {
                         $('#myTable').DataTable().draw();

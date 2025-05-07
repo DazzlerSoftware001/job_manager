@@ -16,7 +16,9 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id');
             $table->string('company_name'); // Company name
             $table->string('position'); // Job position
-            $table->string('experience'); // Experience
+            $table->date('starting_date');
+            $table->date('ending_date')->nullable();
+            $table->enum('currently_working', [0, 1])->default(0);
             $table->text('description'); 
             $table->timestamps();
 

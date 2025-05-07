@@ -14,7 +14,9 @@ class CandidateEmployment extends Model
         'user_id',
         'company_name',
         'position',
-        'experience',
+        'starting_date',
+        'ending_date',
+        'currently_working',
         'description',
     ];
 

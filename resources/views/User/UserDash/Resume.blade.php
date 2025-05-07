@@ -174,7 +174,8 @@
 
                 <label for="currency" class="form-label mt-3">Currency<span class="text-danger">*</span></label>
                 @if ($candidate && $candidate->currency)
-                    <input type="text" placeholder="Ex. USD($)" name="currency" class="form-control" value="{{ $candidate->currency }}">
+                    <input type="text" placeholder="Ex. USD($)" name="currency" class="form-control"
+                        value="{{ $candidate->currency }}">
                 @else
                     <input type="text" placeholder="Ex. USD($)" name="currency" class="form-control">
                 @endif
@@ -254,39 +255,25 @@
 
 
         <div class="accordion" id="rts-accordion-2">
+
             @if ($can_exp)
                 @foreach ($can_exp as $exp)
-                    @php
-                        $years = '0';
-                        $months = '0';
-
-                        if (!empty($exp->experience)) {
-                            if (preg_match('/(\d+)\s*years?\s*(\d*)\s*months?/', $exp->experience, $match)) {
-                                $years = $match[1] ?? '0';
-                                $months = $match[2] ?? '0';
-                            } elseif (preg_match('/(\d+)\s*years?/', $exp->experience, $match)) {
-                                $years = $match[1];
-                            } elseif (preg_match('/(\d+)\s*months?/', $exp->experience, $match)) {
-                                $months = $match[1];
-                            }
-                        }
-                    @endphp
-
                     <div class="submitted-education-info mb-3 position-relative" id="education-row-{{ $exp->id }}">
                         <!-- Edit Button -->
                         <button type="button" class="btn btn-sm btn-outline-primary btn-light edit-exp-btn"
                             data-bs-toggle="modal" data-bs-target="#editExpModal" data-id="{{ $exp->id }}"
                             data-company_name="{{ $exp->company_name }}" data-position="{{ $exp->position }}"
-                            data-exp_years="{{ $years }}" data-exp_months="{{ $months }}"
+                            data-starting_date="{{ $exp->starting_date }}" data-ending_date="{{ $exp->ending_date }}"
+                            data-currently_working= "{{ $exp->currently_working }}"
                             data-description="{{ $exp->description }}" style="position: absolute; left:20%;">
                             <i class="fas fa-pen"></i> Edit
                         </button>
 
                         <!-- Delete Button -->
                         {{-- <button type="button" class="btn btn-outline-danger btn-sm ms-2" id="deleteExpBtn"
-                            data-id="{{ $exp->id }}" style="position: absolute; left:25%;">
-                            <i class="fas fa-trash"></i> Delete
-                        </button> --}}
+                        data-id="{{ $exp->id }}" style="position: absolute; left:25%;">
+                        <i class="fas fa-trash"></i> Delete
+                    </button> --}}
 
                         <button type="button" class="btn btn-outline-danger btn-sm ms-2" id="deleteExpBtn"
                             style="position: absolute; left:25%;" onclick="deleteExperience({{ $exp->id }})">
@@ -297,11 +284,12 @@
                         <!-- Experience Info -->
                         <p><strong class="text-dark">Company:</strong> {{ $exp->company_name }}</p>
                         <p><strong class="text-dark">Position:</strong> {{ $exp->position }}</p>
-                        <p><strong class="text-dark">Experience (Years):</strong> {{ $years }}</p>
-                        @if ($months !== '0')
-                            <p><strong class="text-dark">Experience (Months):</strong> {{ $months }}</p>
-                        @endif
+                        <p><strong class="text-dark">Starting Date:</strong> {{ $exp->starting_date }}</p>
+                        <p><strong class="text-dark">Ending Date:</strong>
+                            {{ $exp->currently_working == 1 ? 'Currently Working' : $exp->ending_date }}
+                        </p>
                         <p><strong class="text-dark">Description:</strong> {{ $exp->description }}</p>
+
                         <hr>
                     </div>
                 @endforeach
@@ -327,27 +315,32 @@
                                     <input type="text" name="company_name" id="company_name" class="form-control"
                                         required>
                                 </div>
+                                <!-- Position -->
                                 <div class="mb-2">
                                     <label>Position<span class="text-danger d-inline">*</span></label>
-                                    <input type="text" id="position" name="position" placeholder="Software Engineer"
+                                    <input type="text" name="position" id="position" class="form-control" required>
+                                </div>
+
+                                <!-- Starting Date -->
+                                <div class="mb-2">
+                                    <label for="starting_date" class="form-label">Starting Date <span
+                                            class="text-danger">*</span></label>
+                                    <input type="date" name="starting_date" id="edit_starting_date"
                                         class="form-control" required>
                                 </div>
+
+                                <!-- Ending Date & Currently Working -->
                                 <div class="mb-2">
-                                    <label for="de-4">Experience<span class="text-danger d-inline">*</span></label>
-                                    <input type="number" class="no-spinner form-control" name="exp_years"
-                                        id="exp_years" placeholder="Experience in years" required>
-                                </div>
-                                <div class="mb-2">
-                                    <label for="sd-4">Month</label>
-                                    <select name="exp_months" id="exp_months" class="form-select">
-                                        <option value="">Select Months</option>
-                                        <!-- Loop to generate months -->
-                                        <script>
-                                            for (let i = 1; i < 12; i++) {
-                                                document.write(`<option value="${i}">${i} Month${i > 1 ? 's' : ''}</option>`);
-                                            }
-                                        </script>
-                                    </select>
+                                    <label for="ending_date" class="form-label">Ending Date</label>
+                                    <input type="date" name="ending_date" id="edit_ending_date"
+                                        placeholder="mm/dd/yyyy" class="form-control mb-2" disabled>
+
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="edit_currently_working"
+                                            name="currently_working" value="1" checked>
+                                        <label class="form-check-label" for="currently_working">Currently
+                                            Working</label>
+                                    </div>
                                 </div>
                                 <div class="mb-2">
                                     <label for="desc-4">Description<span class="text-danger d-inline">*</span></label>
@@ -382,24 +375,22 @@
                                     </div>
                                 </div>
 
-                                <div class="row row-cols-sm-2 row-cols-1">
+                                <div class="row row-cols-sm-2 row-cols-1 g-3">
                                     <div class="rt-input-group">
-                                        <label for="de-4">Experience<span
-                                                class="text-danger d-inline">*</span></label>
-                                        <input type="number" class="no-spinner" name="exp_years" id="de-4"
-                                            placeholder="Experience in years" required>
+                                        <label for="starting_date" class="form-label">Starting Date
+                                            <span class="text-danger d-inline">*</span>
+                                        </label>
+                                        <input type="date" name="starting_date" id="starting_date"
+                                            class="form-control" required>
                                     </div>
                                     <div class="rt-input-group">
-                                        <label for="sd-4">Month</label>
-                                        <select name="exp_months" id="experience_months" class="form-select">
-                                            <option value="">Select Months</option>
-                                            <!-- Loop to generate months -->
-                                            <script>
-                                                for (let i = 1; i < 12; i++) {
-                                                    document.write(`<option value="${i}">${i} Month${i > 1 ? 's' : ''}</option>`);
-                                                }
-                                            </script>
-                                        </select>
+                                        <label for="ending_date" class="form-label">Ending Date</label>
+                                        <input type="date" name="ending_date" id="ending_date"
+                                            class="form-control mb-2" disabled>
+
+
+                                        <input style="width:5%;" type="checkbox" id="currently_working"
+                                            name="currently_working" value="1" checked>Currently Working
                                     </div>
                                 </div>
 
@@ -673,7 +664,6 @@
                     <button type="button" class="btn btn-sm btn-light btn-outline-primary edit-award-btn"
                         data-bs-toggle="modal" data-bs-target="#editAwardModal" data-id="{{ $award->id }}"
                         data-award_title="{{ $award->award_title }}" data-award_date="{{ $award->award_date }}"
-                     
                         data-award_desc="{{ $award->award_desc }}" style="position: absolute; right:22%;">
                         <i class="fas fa-pen"></i> Edit
                     </button>
@@ -688,13 +678,13 @@
                     <p><strong class="text-dark">Title:</strong> {{ $award->award_title }}</p>
                     <p><strong class="text-dark">Date:</strong>
                         {{ \Carbon\Carbon::parse($award->award_date)->format('d M Y') }}</p>
-                        @if($award->certificate !== null)
-                        {{$award->certificate}}
-                        <p><strong class="text-dark">Certificate:</strong> <a href="{{ asset($award->certificate) }}" target="_blank"
-                            class="btn btn-outline-primary btn-sm">
-                            View
-                        </a></p>
-                        @endif
+                    @if ($award->certificate !== null)
+                        {{ $award->certificate }}
+                        <p><strong class="text-dark">Certificate:</strong> <a href="{{ asset($award->certificate) }}"
+                                target="_blank" class="btn btn-outline-primary btn-sm">
+                                View
+                            </a></p>
+                    @endif
                     <p><strong class="text-dark">Description:</strong> {{ $award->award_desc }}</p>
                     </p>
                     <hr>
@@ -727,7 +717,8 @@
                             </div>
                             <div class="mb-2">
                                 <label>Certificate<span class="text-danger d-inline">*</span></label>
-                                <input type="file" name="edit_certificate" id="edit_certificate" class="form-control">
+                                <input type="file" name="edit_certificate" id="edit_certificate"
+                                    class="form-control">
                             </div>
                             <div class="mb-2">
                                 <label>Description<span class="text-danger d-inline">*</span></label>
@@ -1192,6 +1183,16 @@
         });
     </script>
 
+    {{-- For Manage Date --}}
+    <script>
+        document.getElementById('currently_working').addEventListener('change', function() {
+            document.getElementById('ending_date').disabled = this.checked;
+        });
+        document.getElementById('edit_currently_working').addEventListener('change', function() {
+            document.getElementById('edit_ending_date').disabled = this.checked;
+        });
+    </script>
+
     {{-- For Submit Candidate Experience --}}
     <script type="text/javascript">
         $('#CandidateExp').on('submit', function(e) {
@@ -1274,15 +1275,38 @@
 
     {{-- For Update Candidate Experience --}}
     <script>
+        $(document).ready(function () {
+    // Handle checkbox toggle
+    $('#edit_currently_working').on('change', function () {
+        if ($(this).is(':checked')) {
+            $('#edit_ending_date').val('').prop('disabled', true); // Clear and disable
+        } else {
+            $('#edit_ending_date').prop('disabled', false); // Enable for input
+        }
+    });
+
+    // Trigger on page load to handle pre-checked case
+    $('#edit_currently_working').trigger('change');
+});
+
         $(document).ready(function() {
             // Fill modal form with existing data
             $('.edit-exp-btn').on('click', function() {
                 $('#exp_id').val($(this).data('id'));
                 $('#company_name').val($(this).data('company_name'));
                 $('#position').val($(this).data('position'));
-                $('#exp_years').val($(this).data('exp_years'));
-                $('#exp_months').val($(this).data('exp_months'));
+                $('#edit_starting_date').val($(this).data('starting_date'));
+                $('#edit_ending_date').val($(this).data('ending_date'));
                 $('#description').val($(this).data('description'));
+
+                let currentlyWorking = $(this).data('currently_working');
+                if (currentlyWorking == 1) {
+                    $('#edit_currently_working').prop('checked', true);
+                    $('#edit_ending_date').prop('disabled', true).val('');
+                } else {
+                    $('#edit_currently_working').prop('checked', false);
+                    $('#edit_ending_date').prop('disabled', false);
+                }
             });
 
             // Submit updated education via AJAX
@@ -1295,15 +1319,13 @@
                 // Create FormData object
                 let formData = new FormData(form);
 
-                // Combine exp_years and exp_months into one string like "2 years 5 months"
-                let years = formData.get('exp_years') || 0;
-                let months = formData.get('exp_months') || 0;
-                let experience = `${years} years ${months} months`;
-
-                // Append combined field and remove individual ones
-                formData.delete('exp_years');
-                formData.delete('exp_months');
-                formData.append('experience', experience);
+                if (!$('#edit_currently_working').is(':checked')) {
+                    formData.set('currently_working', 0);
+                    formData.set('ending_date', $('#edit_ending_date').val());
+                } else {
+                    formData.set('currently_working', 1);
+                    formData.set('ending_date', ''); // Clear date in data too
+                }
 
                 $.ajax({
                     url: url,
@@ -1785,6 +1807,10 @@
     <script>
         const dateInput = document.getElementById('ye-7');
         const dateInput1 = document.getElementById('award_date');
+        const dateInput2 = document.getElementById('starting_date');
+        const dateInput3 = document.getElementById('ending_date');
+        const dateInput4 = document.getElementById('edit_starting_date');
+        const dateInput5 = document.getElementById('edit_ending_date');
         const today = new Date();
 
         // Set max to yesterday
@@ -1797,6 +1823,10 @@
         const dd = String(yesterday.getDate()).padStart(2, '0');
         dateInput.max = `${yyyy}-${mm}-${dd}`;
         dateInput1.max = `${yyyy}-${mm}-${dd}`;
+        dateInput2.max = `${yyyy}-${mm}-${dd}`;
+        dateInput3.max = `${yyyy}-${mm}-${dd}`;
+        dateInput4.max = `${yyyy}-${mm}-${dd}`;
+        dateInput5.max = `${yyyy}-${mm}-${dd}`;
     </script>
 
     {{-- For Submit Candidate Award --}}
@@ -1938,21 +1968,21 @@
     </script> --}}
 
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             // Fill modal form with existing data
-            $('.edit-award-btn').on('click', function () {
+            $('.edit-award-btn').on('click', function() {
                 $('#award_id').val($(this).data('id'));
                 $('#award_title').val($(this).data('award_title'));
                 $('#award_date').val($(this).data('award_date'));
                 $('#award_desc').val($(this).data('award_desc'));
             });
-    
+
             // Submit updated award via AJAX with file
-            $('#editAwardForm').on('submit', function (e) {
+            $('#editAwardForm').on('submit', function(e) {
                 e.preventDefault();
-    
+
                 let formData = new FormData(this);
-    
+
                 $.ajax({
                     url: "{{ route('User.UpdateAward') }}",
                     method: "POST",
@@ -1962,7 +1992,7 @@
                     headers: {
                         'X-CSRF-TOKEN': '{{ csrf_token() }}'
                     },
-                    success: function (response) {
+                    success: function(response) {
                         if (response.status_code === 1) {
                             Toastify({
                                 text: response.message,
@@ -1973,7 +2003,7 @@
                                     background: "green"
                                 }
                             }).showToast();
-    
+
                             setTimeout(() => {
                                 if (response.redirect_url) {
                                     window.location.href = response.redirect_url;
@@ -1993,7 +2023,7 @@
                             }).showToast();
                         }
                     },
-                    error: function () {
+                    error: function() {
                         Toastify({
                             text: "Something went wrong.",
                             duration: 3000,
@@ -2008,7 +2038,7 @@
             });
         });
     </script>
-    
+
 
     {{-- For Delete Candidate Award --}}
     <script>

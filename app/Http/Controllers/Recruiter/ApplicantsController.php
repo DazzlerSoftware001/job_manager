@@ -75,6 +75,8 @@ class ApplicantsController extends Controller
         $city   = $request->input('city');
         $status = $request->input('status');
         $search = $request->input("search");
+        
+        $ProfileStatus = $request->input('Profilestatus');
 
         $skills = $request->input('skills'); // array
 
@@ -143,6 +145,10 @@ class ApplicantsController extends Controller
 
         if (! empty($status)) {
             $query->where('status', $status);
+        }
+
+        if (isset($ProfileStatus)) {
+            $query->where('recruiter_view', $ProfileStatus);
         }
 
         if (! empty($search)) {

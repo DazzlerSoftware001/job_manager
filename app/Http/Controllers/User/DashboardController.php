@@ -410,10 +410,12 @@ class DashboardController extends Controller
     public function candidateExp(Request $request)
     {
         $rules = [
-            'company'    => 'required|string|max:255',
-            'position'   => 'required|string|max:255',
-            'experience' => 'required|string|max:255',
-            'desc'       => 'required|string',
+            'company'           => 'required|string|max:255',
+            'position'          => 'required|string|max:255',
+            'starting_date'     => 'required|date',
+            'ending_date'       => 'nullable|date|after_or_equal:starting_date',
+            'currently_working' => 'nullable',
+            'desc'              => 'required|string',
         ];
 
         $validator = Validator::make($request->all(), $rules);
@@ -421,11 +423,13 @@ class DashboardController extends Controller
         if (! $validator->fails()) {
 
             CandidateEmployment::create([
-                'user_id'      => Auth::user()->id, // or your custom user_profile_id if needed
-                'company_name' => $request->company,
-                'position'     => $request->position,
-                'experience'   => $request->experience,
-                'description'  => $request->desc,
+                'user_id'           => Auth::user()->id, // or your custom user_profile_id if needed
+                'company_name'      => $request->company,
+                'position'          => $request->position,
+                'starting_date'     => $request->starting_date,
+                'ending_date'       => $request->ending_date ?? null,
+                'currently_working' => $request->currently_working ?? '0',
+                'description'       => $request->desc,
             ]);
 
             return response()->json([
@@ -438,57 +442,100 @@ class DashboardController extends Controller
         }
     }
 
+    // public function UpdateExperience(Request $request)
+    // {
+    //     // dd($request->all());
+    //     // Step 1: Validate the request
+    //     $validator = Validator::make($request->all(), [
+    //         'exp_id'       => 'required|exists:candidate_employment,id',
+    //         'company_name' => 'required|string|max:255',
+    //         'position'     => 'required|string|max:255',
+    //         'experience'   => 'required|string|max:255',
+    //         'desc'         => 'nullable|string',
+    //     ]);
+
+    //     if ($validator->fails()) {
+    //         return response()->json([
+    //             'status_code' => 0,
+    //             'message'     => 'Validation failed',
+    //             'errors'      => $validator->errors(),
+    //         ]);
+    //     }
+
+    //     try {
+    //         // Step 2: Get current user's education info
+    //         $experience = CandidateEmployment::where('user_id', Auth::id())->where('id', $request->exp_id)->first();
+
+    //         // If record not found, optionally create it
+    //         if (! $experience) {
+    //             return response()->json([
+    //                 'status_code' => 0,
+    //                 'message'     => 'Experience record not found.',
+    //             ]);
+    //         }
+
+    //         CandidateEmployment::where('id', $request->exp_id)
+    //             ->update([
+    //                 'company_name' => $request->company_name,
+    //                 'position'     => $request->position,
+    //                 'experience'   => $request->experience,
+    //                 'description'  => $request->desc,
+    //             ]);
+
+    //         return response()->json([
+    //             'status_code' => 1,
+    //             'message'     => 'Candidate Experience updated successfully!',
+    //         ]);
+
+    //     } catch (\Exception $e) {
+    //         return response()->json([
+    //             'status_code' => 0,
+    //             'message'     => 'Error: ' . $e->getMessage(),
+    //         ]);
+    //     }
+    // }
+
     public function UpdateExperience(Request $request)
     {
-        // dd($request->all());
-        // Step 1: Validate the request
         $validator = Validator::make($request->all(), [
-            'exp_id'       => 'required|exists:candidate_employment,id',
-            'company_name' => 'required|string|max:255',
-            'position'     => 'required|string|max:255',
-            'experience'   => 'required|string|max:255',
-            'desc'         => 'nullable|string',
+            'exp_id'            => 'required|exists:candidate_employment,id',
+            'company_name'      => 'required|string|max:255',
+            'position'          => 'required|string|max:255',
+            'starting_date'     => 'required|date',
+            'ending_date'       => 'nullable|date|after_or_equal:starting_date',
+            'currently_working' => 'nullable|in:0,1',
+            'desc'              => 'nullable|string',
         ]);
 
         if ($validator->fails()) {
             return response()->json([
                 'status_code' => 0,
-                'message'     => 'Validation failed',
-                'errors'      => $validator->errors(),
+                'message'     => $validator->errors()->first(),
             ]);
         }
 
-        try {
-            // Step 2: Get current user's education info
-            $experience = CandidateEmployment::where('user_id', Auth::id())->where('id', $request->exp_id)->first();
+        $experience = CandidateEmployment::where('user_id', Auth::id())->where('id', $request->exp_id)->first();
 
-            // If record not found, optionally create it
-            if (! $experience) {
-                return response()->json([
-                    'status_code' => 0,
-                    'message'     => 'Experience record not found.',
-                ]);
-            }
-
-            CandidateEmployment::where('id', $request->exp_id)
-                ->update([
-                    'company_name' => $request->company_name,
-                    'position'     => $request->position,
-                    'experience'   => $request->experience,
-                    'description'  => $request->desc,
-                ]);
-
-            return response()->json([
-                'status_code' => 1,
-                'message'     => 'Candidate Experience updated successfully!',
-            ]);
-
-        } catch (\Exception $e) {
+        if (! $experience) {
             return response()->json([
                 'status_code' => 0,
-                'message'     => 'Error: ' . $e->getMessage(),
+                'message'     => 'Experience record not found.',
             ]);
         }
+
+        $experience->update([
+            'company_name'      => $request->company_name,
+            'position'          => $request->position,
+            'starting_date'     => $request->starting_date,
+            'ending_date'       => $request->currently_working ? null : $request->ending_date,
+            'currently_working' => $request->currently_working ?? 0,
+            'description'       => $request->desc,
+        ]);
+
+        return response()->json([
+            'status_code' => 1,
+            'message'     => 'Candidate Experience updated successfully!',
+        ]);
     }
 
     // public function deleteExperience($id)
@@ -742,10 +789,10 @@ class DashboardController extends Controller
     {
         // dd($request->all());
         $validator = Validator::make($request->all(), [
-            'award_id'    => 'required|exists:candidate_award,id',
-            'award_title' => 'required|string|max:255',
-            'award_date'  => 'required',
-            'award_desc'  => 'required',
+            'award_id'         => 'required|exists:candidate_award,id',
+            'award_title'      => 'required|string|max:255',
+            'award_date'       => 'required',
+            'award_desc'       => 'required',
             'edit_certificate' => 'nullable|file|mimes:jpeg,png,jpg,gif,pdf|max:2048',
         ]);
 
@@ -757,43 +804,41 @@ class DashboardController extends Controller
         }
 
         // try {
-            $award = CandidateAward::where('user_id', Auth::id())
-                ->where('id', $request->award_id)
-                ->first();
+        $award = CandidateAward::where('user_id', Auth::id())
+            ->where('id', $request->award_id)
+            ->first();
 
-            if (! $award) {
-                return response()->json([
-                    'status_code' => 0,
-                    'message'     => 'Award record not found.',
-                ]);
-            }
-
-            
-
-            // Handle certificate upload if present
-            if ($request->hasFile('edit_certificate')) {
-
-                if ($award->certificate && file_exists(public_path($award->certificate))) {
-                    unlink(public_path($award->certificate));
-                }
-
-                $imageName = time() . '.' . $request->edit_certificate->extension();
-                $request->edit_certificate->move(public_path('user/assets/award_certificate/'), $imageName);
-                $award->certificate = 'user/assets/award_certificate/' . $imageName;
-            }
-
-            // Update other fields
-            $award->award_title = $request->award_title;
-            $award->award_date  = $request->award_date;
-            $award->award_desc  = $request->award_desc;
-            $award->updated_at  = now();
-
-            $award->save();
-
+        if (! $award) {
             return response()->json([
-                'status_code' => 1,
-                'message'     => 'Candidate Award updated successfully!',
+                'status_code' => 0,
+                'message'     => 'Award record not found.',
             ]);
+        }
+
+        // Handle certificate upload if present
+        if ($request->hasFile('edit_certificate')) {
+
+            if ($award->certificate && file_exists(public_path($award->certificate))) {
+                unlink(public_path($award->certificate));
+            }
+
+            $imageName = time() . '.' . $request->edit_certificate->extension();
+            $request->edit_certificate->move(public_path('user/assets/award_certificate/'), $imageName);
+            $award->certificate = 'user/assets/award_certificate/' . $imageName;
+        }
+
+        // Update other fields
+        $award->award_title = $request->award_title;
+        $award->award_date  = $request->award_date;
+        $award->award_desc  = $request->award_desc;
+        $award->updated_at  = now();
+
+        $award->save();
+
+        return response()->json([
+            'status_code' => 1,
+            'message'     => 'Candidate Award updated successfully!',
+        ]);
 
         // } catch (\Exception $e) {
         //     return response()->json([

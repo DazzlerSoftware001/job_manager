@@ -13,12 +13,12 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <h3 class="border-bottom border-primary d-inline-block pb-1 mb-4 text-primary">
-                            <i class="bi bi-person-circle me-2"></i> {{$JobPost}}
+                            <i class="bi bi-person-circle me-2"></i> {{ $JobPost }}
                         </h3>
                         <div class="card">
-                           
 
-                          
+
+
 
                             <div class="card-body">
                                 <div class="row align-items-center">
@@ -92,7 +92,7 @@
                                         <a href="{{ route('Recruiter.CandidateCVDownload', ['userId' => Crypt::encrypt($user->id)]) }}"
                                             class="btn btn-primary mt-1">Cv Download</a>
 
-                                            @if(session('error'))
+                                        @if (session('error'))
                                             <script>
                                                 Toastify({
                                                     text: "{{ session('error') }}",
@@ -102,8 +102,8 @@
                                                     backgroundColor: "#ff4d4f",
                                                 }).showToast();
                                             </script>
-                                            @endif
-                                            
+                                        @endif
+
                                     </div>
                                 </div>
 
@@ -128,7 +128,7 @@
                             <h3 class="border-bottom border-primary d-inline-block pb-1 mb-4 text-primary">
                                 <i class="bi bi-person-circle me-2"></i> About Candidate
                             </h3>
-                            
+
                             <div class="card shadow-lg border-0 rounded-4">
                                 <div class="card-body p-4">
                                     <div class="row g-4">
@@ -147,8 +147,9 @@
                                             </p>
                                             <p class="mb-2">
                                                 <i class="bi bi-briefcase-fill text-info me-2"></i>
-                                                <strong>Looking for Job:</strong> 
-                                                <span class="badge {{ $user->look_job == 1 ? 'bg-success' : 'bg-danger' }}">
+                                                <strong>Looking for Job:</strong>
+                                                <span
+                                                    class="badge {{ $user->look_job == 1 ? 'bg-success' : 'bg-danger' }}">
                                                     {{ $user->look_job == 1 ? 'Yes' : 'No' }}
                                                 </span>
                                             </p>
@@ -161,34 +162,36 @@
                                         </div>
 
                                         @php
-                                        $social_links = json_decode($user->social_links, true);
-                                    @endphp
-            
-                                    @if (!empty($social_links))
-                                        <div class="mt-4">
-                                            <h4 class="border-bottom border-success d-inline-block pb-1 mb-1 text-success">
-                                                <i class="bi bi-card-text me-2"></i>Social Profiles
-                                            </h4>
-                                            
+                                            $social_links = json_decode($user->social_links, true);
+                                        @endphp
+
+                                        @if (!empty($social_links))
+                                            <div class="mt-4">
+                                                <h4
+                                                    class="border-bottom border-success d-inline-block pb-1 mb-1 text-success">
+                                                    <i class="bi bi-card-text me-2"></i>Social Profiles
+                                                </h4>
+
                                                 <ul class="list-unstyled ms-2">
-                                                    @foreach($social_links as $platform => $url)
+                                                    @foreach ($social_links as $platform => $url)
                                                         <li class="mb-2">
-                                                            <a href="{{ $url }}" target="_blank" rel="noopener noreferrer"
-                                                            class="text-primary text-decoration-underline fw-medium"
-                                                            style="transition: color 0.2s ease;">
+                                                            <a href="{{ $url }}" target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                class="text-primary text-decoration-underline fw-medium"
+                                                                style="transition: color 0.2s ease;">
                                                                 {{ ucfirst($platform) }}
                                                             </a>
                                                         </li>
                                                     @endforeach
                                                 </ul>
-            
-                                        </div>
-                                    @endif
+
+                                            </div>
+                                        @endif
 
                                     </div>
                                 </div>
                             </div>
-                            
+
 
                         @endif
 
@@ -197,9 +200,8 @@
                             $educations = $user->candidateQualification; // or whatever relationship you set
                         @endphp
                         {{-- {{$educations}} --}}
+                        <h3>Education</h3>
                         @if ($educations->isNotEmpty())
-
-                            <h3>Education</h3>
                             @foreach ($educations as $education)
                                 <div class="card shadow-sm mb-4 border-0">
                                     <div class="card-body">
@@ -213,10 +215,10 @@
                                             <div class="col-12 mb-2">
                                                 <h6 class="mb-0">{{ $education->school_college }}</h6>
                                             </div>
-                                            @if($education->stream)
-                                            <div class="col-12 mb-2">
-                                                <h6 class="mb-0">{{ $education->stream }}</h6>
-                                            </div>
+                                            @if ($education->stream)
+                                                <div class="col-12 mb-2">
+                                                    <h6 class="mb-0">{{ $education->stream }}</h6>
+                                                </div>
                                             @endif
                                             <div class="col-12 mb-2">
                                                 <h6 class="mb-0">{{ $education->passing_year }}</h6>
@@ -228,13 +230,26 @@
                                     </div>
                                 </div>
                             @endforeach
+                        @else
+                            <div class="card shadow-sm mb-4 border-0 px-4 py-4">
+                                <div class="d-flex align-items-center">
+                                    <div class="me-3">
+                                        <i class="bi bi-briefcase-fill text-secondary fs-2"></i>
+                                    </div>
+                                    <div>
+                                        <h5 class="mb-1 text-dark">No Qualification Details Added</h5>
+                                        <p class="mb-0 text-muted">This candidate hasn't shared any Qualification details
+                                            yet.</p>
+                                    </div>
+                                </div>
+                            </div>
                         @endif
 
                         @php
                             $employments = $user->candidateEmployment; // or whatever relationship you set
                         @endphp
+                        <h3>Experience</h3>
                         @if ($employments->isNotEmpty())
-                            <h3>Experience</h3>
                             @foreach ($employments as $employment)
                                 <div class="card shadow-sm mb-4 border-0">
                                     <div class="card-body">
@@ -246,7 +261,10 @@
                                                 <h6 class="mb-0">{{ $employment->company_name }}</h6>
                                             </div>
                                             <div class="col-12 mb-2">
-                                                <h6 class="mb-0">{{ $employment->experience }}</h6>
+                                                <h6 class="mb-0">{{ $employment->starting_date }}</h6>
+                                            </div>
+                                            <div class="col-12 mb-2">
+                                                <h6 class="mb-0">{{ $employment->currently_working == 1 ? 'Currently Working' : $employment->ending_date }}</h6>
                                             </div>
                                             <div class="col-12 mb-2">
                                                 <h6 class="mb-0">{{ $employment->description }}</h6>
@@ -255,22 +273,37 @@
                                     </div>
                                 </div>
                             @endforeach
+                        @else
+                            <div class="card shadow-sm mb-4 border-0 px-4 py-4">
+                                <div class="d-flex align-items-center">
+                                    <div class="me-3">
+                                        <i class="bi bi-briefcase-fill text-secondary fs-2"></i>
+                                    </div>
+                                    <div>
+                                        <h5 class="mb-1 text-dark">No Experience Added</h5>
+                                        <p class="mb-0 text-muted">This candidate hasn't shared any work experience yet.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
                         @endif
 
 
                         @php
                             $candidateAward = $user->candidateAward;
                         @endphp
-                            @if ($candidateAward->isNotEmpty())
-                            <h3>Award</h3>
+                        <h3>Award</h3>
+                        @if ($candidateAward->isNotEmpty())
                             @foreach ($candidateAward as $Award)
                                 <div class="card shadow-sm mb-4 border-0">
                                     <div class="card-body">
                                         <div class="row">
                                             <div class="col-12">
-                                                <h4 class="border-bottom border-primary d-inline-block pb-1 mb-1 text-primary">{{ $Award->award_title }}</h4>
+                                                <h4
+                                                    class="border-bottom border-primary d-inline-block pb-1 mb-1 text-primary">
+                                                    {{ $Award->award_title }}</h4>
                                             </div>
-                                            
+
                                             <div class="col-12 mt-2">
                                                 <h6 class="mb-0">{{ $Award->award_desc }}</h6>
                                             </div>
@@ -282,11 +315,19 @@
                                     </div>
                                 </div>
                             @endforeach
+                        @else
+                            <div class="card shadow-sm mb-4 border-0 px-4 py-4">
+                                <div class="d-flex align-items-center">
+                                    <div class="me-3">
+                                        <i class="bi bi-briefcase-fill text-secondary fs-2"></i>
+                                    </div>
+                                    <div>
+                                        <h5 class="mb-1 text-dark">No Award Added</h5>
+                                        <p class="mb-0 text-muted">This candidate hasn't shared any award yet.</p>
+                                    </div>
+                                </div>
+                            </div>
                         @endif
-
-                      
-
-
 
                     </div>
                 </div>
