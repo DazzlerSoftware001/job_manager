@@ -106,11 +106,17 @@ class ApplicantsController extends Controller
             'user:id,name,lname,email,logo,education_level,city',
             'user.candidateProfile:skill',
             'jobPost:id,title',
-        ])
-            ->where('job_id', $decryptedId)
-            ->orWhere('job_id', $jobId)
+        ]) 
             ->select(['id', 'user_id', 'job_id', 'status', 'recruiter_view', 'created_at']);
-            
+
+            if (!empty($jobId)) {
+                $query->where('job_id', $jobId);
+            } else {
+                $query->where('job_id', $decryptedId);
+            }
+
+            // ->where('job_id', !empty($jobId) ? $jobId : $decryptedId);
+
         if (! empty($education_level)) {
             $query->whereHas('user', function ($q) use ($education_level) {
                 $q->where('education_level', $education_level);
