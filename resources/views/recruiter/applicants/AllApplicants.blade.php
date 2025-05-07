@@ -17,7 +17,7 @@
                                 {{-- <h4 class="card-title">All Applicants</h4> --}}
 
                                 <div class="row">
-                                    <input type="text" name="decryptedId" id="decryptedId" value="{{ $decryptedId }}">
+                                    <input type="hidden" name="decryptedId" id="decryptedId" value="{{ $decryptedId }}">
                                     <div class="col-10 mt-2">
                                         <label for="jobFilter" class="form-label">Select Job</label>
                                         <select id="jobFilter" class="form-select">
@@ -203,7 +203,7 @@
                 allowClear: true
             });
         });
-    </script>b vxc b
+    </script>
 
     @section('script')
         {{-- Get Job list --}}
@@ -255,6 +255,7 @@
                     'change',
                     function() {
                         $('#myTable').DataTable().draw();
+                        
                     });
 
                 // 🔍 Trigger search if search box exists

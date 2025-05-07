@@ -15,12 +15,15 @@ class ApplicantsController extends Controller
     public function allApplicants(Request $request)
     {
         // dd($request->all());
-        $job_id = $request->job_id;
-        $decryptedId = Crypt::decrypt($job_id);
-        $today   = Carbon::today();
-        $joblist = JobPost::select('id', 'title')->where('status', 1)->where('admin_verify', 1)->whereDate('jobexpiry', '>=', $today)->get();
-        $cities  = JobApplication::with('user')->get()->pluck('user.city')->filter()->unique()->values();
-        $skills  = CandidateProfile::pluck('skill')
+        $job_id      = $request->job_id;
+        $decryptedId = null;
+        if(!empty($job_id)) {
+            $decryptedId = Crypt::decrypt($job_id);
+        }
+        $today       = Carbon::today();
+        $joblist     = JobPost::select('id', 'title')->where('status', 1)->where('admin_verify', 1)->whereDate('jobexpiry', '>=', $today)->get();
+        $cities      = JobApplication::with('user')->get()->pluck('user.city')->filter()->unique()->values();
+        $skills      = CandidateProfile::pluck('skill')
             ->filter()
             ->flatMap(function ($item) {
                 // Remove square brackets and quotes
@@ -57,12 +60,12 @@ class ApplicantsController extends Controller
 
     public function getAllApplicants(Request $request)
     {
-        $draw   = intval($request->input("draw"));
-        $offset = intval($request->input("start", 0));
-        $limit  = intval($request->input('length', 10));
-        $order  = $request->input("order");
-        $decryptedId  = $request->input('decryptedId');
-        $jobId  = $request->input('job_id');
+        $draw        = intval($request->input("draw"));
+        $offset      = intval($request->input("start", 0));
+        $limit       = intval($request->input('length', 10));
+        $order       = $request->input("order");
+        $decryptedId = $request->input('decryptedId');
+        $jobId       = $request->input('job_id');
         // dd($jobId,$decryptedId);
 
         $education_level = $request->input('education_level');
@@ -77,14 +80,14 @@ class ApplicantsController extends Controller
 
         // dd($Qualification);
         // If no job is selected, return empty result
-        if (empty($jobId)) {
-            return response()->json([
-                "draw"            => $draw,
-                "recordsTotal"    => 0,
-                "recordsFiltered" => 0,
-                "data"            => [],
-            ]);
-        }
+        // if (empty($jobId)) {
+        //     return response()->json([
+        //         "draw"            => $draw,
+        //         "recordsTotal"    => 0,
+        //         "recordsFiltered" => 0,
+        //         "data"            => [],
+        //     ]);
+        // }
 
         $columns = [
             0 => 'job_applications.id',
@@ -98,6 +101,7 @@ class ApplicantsController extends Controller
 
         ];
 
+        // dd($decryptedId);
         $query = JobApplication::with([
             'user:id,name,lname,email,logo,education_level,city',
             'user.candidateProfile:skill',
@@ -105,8 +109,8 @@ class ApplicantsController extends Controller
         ])
             ->where('job_id', $decryptedId)
             ->orWhere('job_id', $jobId)
-            ->select(['id', 'user_id', 'job_id', 'status', 'recruiter_view', 'created_at'])->get();
-// dd($query);
+            ->select(['id', 'user_id', 'job_id', 'status', 'recruiter_view', 'created_at']);
+            
         if (! empty($education_level)) {
             $query->whereHas('user', function ($q) use ($education_level) {
                 $q->where('education_level', $education_level);
@@ -232,6 +236,7 @@ class ApplicantsController extends Controller
             "data"            => $data,
         ]);
     }
+
     public function getQualifications(Request $request)
     {
         $education_level = $request->input('education_level');
