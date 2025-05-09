@@ -102,6 +102,25 @@
                         </a>
                     </li>
 
+                    <li class="menu-title" data-key="t-applications">Apperiance</li>
+
+                    <li>
+                        <a href="javascript: void(0);" class="has-arrow">
+                            <i class="icon nav-icon" data-eva="settings-outline"></i>
+                            <span class="menu-item" data-key="t-projects">Settings</span>
+                        </a>
+                        <ul class="sub-menu" aria-expanded="false">
+                            <li><a href="#" data-key="t-p-grid">Menus</a></li>
+                            <li><a href="#" data-key="t-p-grid">Pages</a></li>
+                            <li><a href="#" data-key="t-p-grid">Widgets</a></li>
+                            <li><a href="#" data-key="t-p-grid">Custom CSS</a></li>
+                            <li><a href="#" data-key="t-p-grid">Custom Js</a></li>
+                            <li><a href="#" data-key="t-p-grid">Themes</a></li>
+                            <li><a href="#" data-key="t-p-grid">Header</a></li>
+                            <li><a href="#" data-key="t-p-grid">Footer</a></li>
+                        </ul>
+                    </li>
+
                     <li class="menu-title" data-key="t-applications">Settings</li>
 
                     <li>
@@ -110,7 +129,16 @@
                             <span class="menu-item" data-key="t-projects">Settings</span>
                         </a>
                         <ul class="sub-menu" aria-expanded="false">
-                            <li><a href="{{route('Admin.PageSettings')}}" data-key="t-p-grid">Page Setting</a></li>
+                            <li><a href="{{route('Admin.PageSettings')}}" data-key="t-p-grid">General Setting</a></li>
+                            <li><a href="#" data-key="t-p-grid">Email Setting</a></li>
+                            <li><a href="#" data-key="t-p-grid">Email Templates</a></li>
+                            <li><a href="#" data-key="t-p-grid">Site Setting</a></li>
+                            <li><a href="#" data-key="t-p-grid">Language</a></li>
+                            <li><a href="#" data-key="t-p-grid">Cache</a></li>
+                            <li><a href="#" data-key="t-p-grid">Import/Export</a></li>
+                            <li><a href="#" data-key="t-p-grid">Website Tracking</a></li>
+                            <li><a href="#" data-key="t-p-grid">SEO</a></li>
+                            <li><a href="#" data-key="t-p-grid">Maintanence Mode</a></li>
                         </ul>
                     </li>
 
