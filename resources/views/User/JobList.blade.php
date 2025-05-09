@@ -411,7 +411,7 @@
 
     <!-- app center -->
 
-    <div class="rts__section pb-120">
+    {{-- <div class="rts__section pb-120">
         <div class="container">
             <div class="row">
                 <div class="rts__appcenter">
@@ -446,7 +446,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 
     <!-- app center end -->
 @endsection
