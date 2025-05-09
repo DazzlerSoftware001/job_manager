@@ -266,6 +266,11 @@
                                             <div class="col-12 mb-2">
                                                 <h6 class="mb-0">{{ $employment->currently_working == 1 ? 'Currently Working' : $employment->ending_date }}</h6>
                                             </div>
+                                            @if($employment->notice_period !== null)
+                                            <div class="col-12 mb-2">
+                                                <h6 class="mb-0">{{$employment->notice_period}}</h6>
+                                            </div>
+                                            @endif
                                             <div class="col-12 mb-2">
                                                 <h6 class="mb-0">{{ $employment->description }}</h6>
                                             </div>

@@ -415,6 +415,7 @@ class DashboardController extends Controller
             'starting_date'     => 'required|date',
             'ending_date'       => 'nullable|date|after_or_equal:starting_date',
             'currently_working' => 'nullable',
+            'notice_period'     => 'nullable|string|max:50',
             'desc'              => 'required|string',
         ];
 
@@ -429,6 +430,7 @@ class DashboardController extends Controller
                 'starting_date'     => $request->starting_date,
                 'ending_date'       => $request->ending_date ?? null,
                 'currently_working' => $request->currently_working ?? '0',
+                'notice_period'     => $request->notice_period ?? null,
                 'description'       => $request->desc,
             ]);
 
@@ -504,6 +506,7 @@ class DashboardController extends Controller
             'starting_date'     => 'required|date',
             'ending_date'       => 'nullable|date|after_or_equal:starting_date',
             'currently_working' => 'nullable|in:0,1',
+            'notice_period'     => 'nullable|string|max:255',
             'desc'              => 'nullable|string',
         ]);
 
@@ -523,12 +526,25 @@ class DashboardController extends Controller
             ]);
         }
 
+        if($request->ending_date == null && $request->currently_working == '0') {
+            return response()->json([
+                'status_code' => 2,
+            'message'     => 'Please select your ending date',
+            ]);
+        } elseif($request->currently_working == '1' && $request->notice_period == null) {
+            return response()->json([
+                'status_code' => 2,
+            'message'     => 'Select your notice period.',
+            ]);
+        }
+
         $experience->update([
             'company_name'      => $request->company_name,
             'position'          => $request->position,
             'starting_date'     => $request->starting_date,
             'ending_date'       => $request->currently_working ? null : $request->ending_date,
             'currently_working' => $request->currently_working ?? 0,
+            'notice_period'     => $request->currently_working ? $request->notice_period : null,
             'description'       => $request->desc,
         ]);
 

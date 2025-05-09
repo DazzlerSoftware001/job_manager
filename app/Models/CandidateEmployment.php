@@ -17,6 +17,7 @@ class CandidateEmployment extends Model
         'starting_date',
         'ending_date',
         'currently_working',
+        'notice_period',
         'description',
     ];
 

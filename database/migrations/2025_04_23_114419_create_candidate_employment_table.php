@@ -19,6 +19,7 @@ return new class extends Migration
             $table->date('starting_date');
             $table->date('ending_date')->nullable();
             $table->enum('currently_working', [0, 1])->default(0);
+            $table->string('notice_period');
             $table->text('description'); 
             $table->timestamps();
 

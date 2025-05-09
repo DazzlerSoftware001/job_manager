@@ -264,7 +264,7 @@
                             data-bs-toggle="modal" data-bs-target="#editExpModal" data-id="{{ $exp->id }}"
                             data-company_name="{{ $exp->company_name }}" data-position="{{ $exp->position }}"
                             data-starting_date="{{ $exp->starting_date }}" data-ending_date="{{ $exp->ending_date }}"
-                            data-currently_working= "{{ $exp->currently_working }}"
+                            data-currently_working= "{{ $exp->currently_working }}" data-notice_period="{{ $exp->notice_period }}"
                             data-description="{{ $exp->description }}" style="position: absolute; left:20%;">
                             <i class="fas fa-pen"></i> Edit
                         </button>
@@ -288,6 +288,9 @@
                         <p><strong class="text-dark">Ending Date:</strong>
                             {{ $exp->currently_working == 1 ? 'Currently Working' : $exp->ending_date }}
                         </p>
+                        @if ($exp->notice_period !== null)
+                            <p><strong class="text-dark">Notice Period:</strong> {{ $exp->notice_period }}</p>
+                        @endif
                         <p><strong class="text-dark">Description:</strong> {{ $exp->description }}</p>
 
                         <hr>
@@ -296,6 +299,75 @@
             @else
                 <p>No experience found.</p>
             @endif
+
+            <div class="accordion-item">
+                <div id="c1" class="accordion-collapse collapse" data-bs-parent="#rts-accordion-2">
+                    <form action="javascript:void(0)" id="CandidateExp">
+                        <div class="accordion-body p-0 mt-3 mb-20">
+                            <div class="info__field">
+                                <div class="row row-cols-sm-2 row-cols-1">
+                                    <div class="rt-input-group">
+                                        <label for="cm-4">Company<span class="text-danger d-inline">*</span></label>
+                                        <input type="text" id="cm-4" name="company" placeholder="Company Name"
+                                            required>
+                                    </div>
+                                    <div class="rt-input-group">
+                                        <label for="title-4">Position<span class="text-danger d-inline">*</span></label>
+                                        <input type="text" id="title-4" name="position"
+                                            placeholder="Software Engineer" required>
+                                    </div>
+                                </div>
+
+                                <div class="row row-cols-sm-2 row-cols-1 g-3">
+                                    <div class="rt-input-group">
+                                        <label for="starting_date" class="form-label">Starting Date
+                                            <span class="text-danger d-inline">*</span>
+                                        </label>
+                                        <input type="date" name="starting_date" id="starting_date"
+                                            class="form-control" required>
+                                    </div>
+                                    <div class="rt-input-group">
+                                        <label for="ending_date" class="form-label">Ending Date</label>
+                                        <input type="date" name="ending_date" id="ending_date"
+                                            class="form-control mb-2">
+
+
+                                        <input style="width:5%;" type="checkbox" id="currently_working"
+                                            name="currently_working" value="1">Currently Working
+                                    </div>
+                                </div>
+
+                                <div class="row row-cols-sm-2 row-cols-1 g-3" id="notice_period_wrapper"
+                                    style="display: none;">
+                                    <div class="rt-input-group">
+                                        <label for="notice_period">Notice Period Duration</label>
+                                        <select id="notice_period" name="notice_period" class="form-control">
+                                            <option value="">Select notice period</option>
+                                            <option value="15 days">15 days</option>
+                                            <option value="1 month">1 month</option>
+                                            <option value="2 months">2 months</option>
+                                            <option value="3 months">3 months</option>
+                                            <option value="more then 3 months">more then 3 months</option>
+                                            <option value="Serving Notice Period">Serving Notice Period</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+
+                                <div class="rt-input-group">
+                                    <label for="desc-4">Description<span class="text-danger d-inline">*</span></label>
+                                    <textarea name="desc" id="desc-4" cols="30" rows="5" placeholder="Description"></textarea>
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-end mt-30">
+                                <button type="submit" class="btn">Add Experience</button>
+                                <a href="#" class="removeExperience added__social__link ms-3">Remove Experience</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
 
             <!-- Edit Education Modal -->
             <div class="modal fade" id="editExpModal" tabindex="-1" aria-labelledby="editExpModalLabel"
@@ -330,7 +402,7 @@
                                 </div>
 
                                 <!-- Ending Date & Currently Working -->
-                                <div class="mb-2">
+                                <div>
                                     <label for="ending_date" class="form-label">Ending Date</label>
                                     <input type="date" name="ending_date" id="edit_ending_date"
                                         placeholder="mm/dd/yyyy" class="form-control mb-2" disabled>
@@ -341,6 +413,19 @@
                                         <label class="form-check-label" for="currently_working">Currently
                                             Working</label>
                                     </div>
+                                </div>
+
+                                <div class="mb-2" id="edit_notice_period_wrapper" style="display: none;">
+                                    <label for="notice_period">Notice Period Duration</label>
+                                    <select id="edit_notice_period" name="notice_period" class="form-control">
+                                        <option value="">Select notice period</option>
+                                        <option value="15 days">15 days</option>
+                                        <option value="1 month">1 month</option>
+                                        <option value="2 months">2 months</option>
+                                        <option value="3 months">3 months</option>
+                                        <option value="more then 3 months">more then 3 months</option>
+                                        <option value="Serving Notice Period">Serving Notice Period</option>
+                                    </select>
                                 </div>
                                 <div class="mb-2">
                                     <label for="desc-4">Description<span class="text-danger d-inline">*</span></label>
@@ -357,57 +442,6 @@
                 </div>
             </div>
 
-            <div class="accordion-item">
-                <div id="c1" class="accordion-collapse collapse" data-bs-parent="#rts-accordion-2">
-                    <form action="javascript:void(0)" id="CandidateExp">
-                        <div class="accordion-body p-0 mt-3 mb-20">
-                            <div class="info__field">
-                                <div class="row row-cols-sm-2 row-cols-1">
-                                    <div class="rt-input-group">
-                                        <label for="cm-4">Company<span class="text-danger d-inline">*</span></label>
-                                        <input type="text" id="cm-4" name="company" placeholder="Company Name"
-                                            required>
-                                    </div>
-                                    <div class="rt-input-group">
-                                        <label for="title-4">Position<span class="text-danger d-inline">*</span></label>
-                                        <input type="text" id="title-4" name="position"
-                                            placeholder="Software Engineer" required>
-                                    </div>
-                                </div>
-
-                                <div class="row row-cols-sm-2 row-cols-1 g-3">
-                                    <div class="rt-input-group">
-                                        <label for="starting_date" class="form-label">Starting Date
-                                            <span class="text-danger d-inline">*</span>
-                                        </label>
-                                        <input type="date" name="starting_date" id="starting_date"
-                                            class="form-control" required>
-                                    </div>
-                                    <div class="rt-input-group">
-                                        <label for="ending_date" class="form-label">Ending Date</label>
-                                        <input type="date" name="ending_date" id="ending_date"
-                                            class="form-control mb-2" disabled>
-
-
-                                        <input style="width:5%;" type="checkbox" id="currently_working"
-                                            name="currently_working" value="1" checked>Currently Working
-                                    </div>
-                                </div>
-
-                                <div class="rt-input-group">
-                                    <label for="desc-4">Description<span class="text-danger d-inline">*</span></label>
-                                    <textarea name="desc" id="desc-4" cols="30" rows="5" placeholder="Description"></textarea>
-                                </div>
-                            </div>
-
-                            <div class="d-flex justify-content-end mt-30">
-                                <button type="submit" class="btn">Add Experience</button>
-                                <a href="#" class="removeExperience added__social__link ms-3">Remove Experience</a>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
             <div class="d-flex justify-content-start" id="addExperienceContainer">
                 <a href="#" id="addExperienceBtn" class="added__social__link">Add Experience</a>
             </div>
@@ -1191,6 +1225,15 @@
         document.getElementById('edit_currently_working').addEventListener('change', function() {
             document.getElementById('edit_ending_date').disabled = this.checked;
         });
+
+        $('#currently_working').on('change', function() {
+            if ($(this).is(':checked')) {
+                $('#notice_period_wrapper').show();
+            } else {
+                $('#notice_period_wrapper').hide();
+                $('#notice_period').val(''); // Optional: clear the selection if unchecked
+            }
+        });
     </script>
 
     {{-- For Submit Candidate Experience --}}
@@ -1203,16 +1246,6 @@
 
             // Create FormData object
             let formData = new FormData(form);
-
-            // Combine exp_years and exp_months into one string like "2 years 5 months"
-            let years = formData.get('exp_years') || 0;
-            let months = formData.get('exp_months') || 0;
-            let experience = `${years} years ${months} months`;
-
-            // Append combined field and remove individual ones
-            formData.delete('exp_years');
-            formData.delete('exp_months');
-            formData.append('experience', experience);
 
             $.ajax({
                 url: url,
@@ -1275,19 +1308,23 @@
 
     {{-- For Update Candidate Experience --}}
     <script>
-        $(document).ready(function () {
-    // Handle checkbox toggle
-    $('#edit_currently_working').on('change', function () {
-        if ($(this).is(':checked')) {
-            $('#edit_ending_date').val('').prop('disabled', true); // Clear and disable
-        } else {
-            $('#edit_ending_date').prop('disabled', false); // Enable for input
-        }
-    });
+        $(document).ready(function() {
+            // Handle checkbox toggle
+            $('#edit_currently_working').on('change', function() {
+                if ($(this).is(':checked')) {
+                    $('#edit_ending_date').val('').prop('disabled', true); // Clear and disable
+                    $('#edit_notice_period_wrapper').show();
+                    $('#notice_period').val('')
+                } else {
+                    $('#edit_ending_date').prop('disabled', false); // Enable for input
+                    $('#edit_notice_period_wrapper').hide();
 
-    // Trigger on page load to handle pre-checked case
-    $('#edit_currently_working').trigger('change');
-});
+                }
+            });
+
+            // Trigger on page load to handle pre-checked case
+            $('#edit_currently_working').trigger('change');
+        });
 
         $(document).ready(function() {
             // Fill modal form with existing data
@@ -1297,15 +1334,20 @@
                 $('#position').val($(this).data('position'));
                 $('#edit_starting_date').val($(this).data('starting_date'));
                 $('#edit_ending_date').val($(this).data('ending_date'));
+                $('#edit_notice_period').val($(this).data('notice_period'));
                 $('#description').val($(this).data('description'));
 
                 let currentlyWorking = $(this).data('currently_working');
                 if (currentlyWorking == 1) {
                     $('#edit_currently_working').prop('checked', true);
                     $('#edit_ending_date').prop('disabled', true).val('');
+                    $('#edit_notice_period_wrapper').show();
+
                 } else {
                     $('#edit_currently_working').prop('checked', false);
                     $('#edit_ending_date').prop('disabled', false);
+                    $('#edit_notice_period_wrapper').hide();
+
                 }
             });
 
