@@ -102,6 +102,18 @@
                         </a>
                     </li>
 
+                    <li class="menu-title" data-key="t-applications">Settings</li>
+
+                    <li>
+                        <a href="javascript: void(0);" class="has-arrow">
+                            <i class="icon nav-icon" data-eva="settings-outline"></i>
+                            <span class="menu-item" data-key="t-projects">Settings</span>
+                        </a>
+                        <ul class="sub-menu" aria-expanded="false">
+                            <li><a href="{{route('Admin.PageSettings')}}" data-key="t-p-grid">Page Setting</a></li>
+                        </ul>
+                    </li>
+
                     {{-- <li>
                         <a href="apps-calendar.html">
                             <i class="icon nav-icon" data-eva="calendar-outline"></i>

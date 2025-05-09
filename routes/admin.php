@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\JobController;
 use App\Http\Controllers\Admin\CompanyController;
 use App\Http\Controllers\Admin\RecruiterController;
 use App\Http\Controllers\Admin\AuthController;
+use App\Http\Controllers\Admin\SettingsController;
 
 Route::prefix('Admin')->group(function () {
     Route::get('/login', [AuthController::class, 'login'])->name('Admin.login');
@@ -189,6 +190,9 @@ Route::prefix('Admin')->group(function () {
         Route::get('/PendingJobPost',[JobController::class,'showpendingjobs'])->name('Admin.ShowPendingJobs');
         Route::post('/PendingJobs',[JobController::class, 'pendingJobs'])->name('Admin.PendingJobs');
 
+        // settings 
+
+        Route::get('/PageSettings',[SettingsController::class,'PageSettings'])->name('Admin.PageSettings');
 
 
 
