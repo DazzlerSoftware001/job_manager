@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\CompanyController;
 use App\Http\Controllers\Admin\RecruiterController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\SettingsController;
+use App\Http\Controllers\Admin\MenuController;
 
 Route::prefix('Admin')->group(function () {
     Route::get('/login', [AuthController::class, 'login'])->name('Admin.login');
@@ -191,6 +192,11 @@ Route::prefix('Admin')->group(function () {
         Route::post('/PendingJobs',[JobController::class, 'pendingJobs'])->name('Admin.PendingJobs');
 
         // settings 
+
+        Route::get('/menu-builder', [MenuController::class, 'menu'])->name('Admin.menu');
+        Route::post('/menu-builder/save', [MenuController::class, 'save'])->name('Admin.menusave');
+        Route::post('/admin/menu/save', [AdminController::class, 'saveMenuOrder'])->name('admin.menu.save');
+
 
         Route::get('/PageSettings',[SettingsController::class,'PageSettings'])->name('Admin.PageSettings');
 
