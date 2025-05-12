@@ -3,11 +3,11 @@
     Admin-Page Setting
 @endsection
 @section('page-title')
-Page Setting
+    Page Setting
 @endsection
 
 @section('main-container')
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nestable2@1.6.0/jquery.nestable.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/nestable2@1.6.0/jquery.nestable.min.css">
 
 
     <style>
@@ -82,13 +82,52 @@ Page Setting
         <div class="page-content">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-lg-12">
-                        <div class="card">
+
+                    <div class="col-4">
+                        <div class="card p-3">
+                            <h5>Pages</h5>
+                            <form action="{{ route('menu.add') }}" method="POST">
+                                @csrf
+                                <div class="mb-3" style="max-height: 300px; overflow-y: auto;">
+                                    @php
+                                        $menuOptions = [
+                                            ['title' => 'Home', 'url' => url('/')],
+                                            ['title' => 'Jobs', 'url' => url('/JobList')],
+                                            ['title' => 'Candidate', 'url' => url('/Dashboard')],
+                                            ['title' => 'Profile', 'url' => url('/Profile')],
+                                            ['title' => 'Resume', 'url' => url('/Resume')],
+                                            ['title' => 'Applied Job', 'url' => url('/AppliedJob')],
+                                            ['title' => 'Shortlisted', 'url' => url('/ShortList')],
+                                            ['title' => 'Saved Job', 'url' => url('/GetSavedJob')],
+                                        ];
+                                    @endphp
+                            
+                                    @foreach ($menuOptions as $index => $option)
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="menu_items[{{ $index }}][selected]" value="1">
+                                            <input type="hidden" name="menu_items[{{ $index }}][title]" value="{{ $option['title'] }}">
+                                            <input type="hidden" name="menu_items[{{ $index }}][url]" value="{{ $option['url'] }}">
+                                            <label class="form-check-label">
+                                                {{ $option['title'] }}
+                                            </label>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            
+                                <button type="submit" class="btn btn-primary mt-2">+ Add to menu</button>
+                            </form>
+                            
+                        </div>
+                    </div>
+
+
+                    <div class="col-lg-8">
+                        <div class="card p-3">
                             {{-- <div class="card-header">
                                 <h4 class="card-title">Job List</h4>
                             </div> --}}
 
-                            <div class="dd" id="menu">
+                            {{-- <div class="dd" id="menu">
                                 <ol class="dd-list">
                                     @foreach ($menuItems as $item)
                                         <li class="dd-item" data-id="{{ $item->id }}">
@@ -96,10 +135,38 @@ Page Setting
                                         </li>
                                     @endforeach
                                 </ol>
+                            </div> --}}
+
+                            <div class="dd" id="menu">
+                                <ol class="dd-list">
+                                    @php
+                                        function renderMenu($items, $parentId = null)
+                                        {
+                                            $filtered = $items->where('parent_id', $parentId);
+
+                                            foreach ($filtered as $item) {
+                                                echo '<li class="dd-item" data-id="' . $item->id . '">';
+                                                echo '<div class="dd-handle">' . $item->title . '</div>';
+
+                                                if ($items->where('parent_id', $item->id)->isNotEmpty()) {
+                                                    echo '<ol class="dd-list">';
+                                                    renderMenu($items, $item->id); // recursive call
+                                                    echo '</ol>';
+                                                }
+
+                                                echo '</li>';
+                                            }
+                                        }
+
+                                        renderMenu($menuItems);
+                                    @endphp
+                                </ol>
                             </div>
-                            
+
+
+
                             <button id="saveBtn" class="btn btn-success mt-3">Save Menu</button>
-                            
+
                         </div>
                     </div>
                 </div>
@@ -108,11 +175,11 @@ Page Setting
         </div>
         <!-- End Page-content -->
     @endsection
-        
+
     @section('script')
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/nestable2@1.6.0/jquery.nestable.min.js"></script>
-       
+
         {{-- Get Job list --}}
         {{-- <script>
             $(document).ready(function() {
@@ -217,24 +284,24 @@ Page Setting
 
 
         <script>
-            $(document).ready(function () {
+            $(document).ready(function() {
                 $('#menu').nestable();
-    
-                $('#saveBtn').click(function () {
+
+                $('#saveBtn').click(function() {
                     var order = $('#menu').nestable('serialize');
-    
+
                     $.ajax({
-                        url: '{{ route("Admin.menusave") }}',
+                        url: '{{ route('Admin.menusave') }}',
                         type: 'POST',
                         data: {
                             order: order,
                             _token: '{{ csrf_token() }}'
                         },
-                        success: function (data) {
+                        success: function(data) {
                             alert('Menu order saved successfully!');
                             location.reload();
                         },
-                        error: function () {
+                        error: function() {
                             alert('Error saving menu order!');
                         }
                     });

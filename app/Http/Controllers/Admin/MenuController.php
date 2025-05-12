@@ -1,15 +1,13 @@
 <?php
-
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\MenuItem;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class MenuController extends Controller
 {
-    
+
     public function menu()
     {
         $menuItems = DB::table('menu_items')->orderBy('order')->get();
@@ -30,13 +28,35 @@ class MenuController extends Controller
             DB::table('menu_items')
                 ->where('id', $item['id'])
                 ->update([
-                    'order' => $index,
+                    'order'     => $index,
                     'parent_id' => $parentId,
                 ]);
 
-            if (!empty($item['children'])) {
+            if (! empty($item['children'])) {
                 $this->saveOrder($item['children'], $item['id']);
             }
         }
     }
+
+    public function add(Request $request)
+    {
+        $menuItems = $request->input('menu_items', []);
+
+        foreach ($menuItems as $item) {
+            if (isset($item['selected']) && $item['selected']) {
+                DB::table('menu_items')->insert([
+                    'title'      => $item['title'],
+                    'type'       => 'page',
+                    'url'        => $item['url'],
+                    'parent_id'  => null,
+                    'order'      => 0,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
+        }
+
+        return redirect()->back()->with('success', 'Menu items added successfully.');
+    }
+
 }

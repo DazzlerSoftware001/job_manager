@@ -110,7 +110,7 @@
                             <span class="menu-item" data-key="t-projects">Settings</span>
                         </a>
                         <ul class="sub-menu" aria-expanded="false">
-                            <li><a href="#" data-key="t-p-grid">Menus</a></li>
+                            <li><a href="{{route('Admin.menu')}}" data-key="t-p-grid">Menus</a></li>
                             <li><a href="#" data-key="t-p-grid">Pages</a></li>
                             <li><a href="#" data-key="t-p-grid">Widgets</a></li>
                             <li><a href="#" data-key="t-p-grid">Custom CSS</a></li>

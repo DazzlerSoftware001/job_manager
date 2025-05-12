@@ -194,6 +194,8 @@ Route::prefix('Admin')->group(function () {
         // settings 
 
         Route::get('/menu-builder', [MenuController::class, 'menu'])->name('Admin.menu');
+        Route::post('/admin/menu/add', [MenuController::class, 'add'])->name('menu.add');
+
         Route::post('/menu-builder/save', [MenuController::class, 'save'])->name('Admin.menusave');
         Route::post('/admin/menu/save', [AdminController::class, 'saveMenuOrder'])->name('admin.menu.save');
 
