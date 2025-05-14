@@ -43,6 +43,7 @@
                                     <a href="#">
                                         <h6>{{ $job->title }}</h6>
                                     </a>
+                                    <p>{{$job->com_name}}</p>
                                     <div class="content__info">
                                         <span><i class="fa-light fa-location-dot"></i> {{ $job->location }}</span>
                                         <span><i class="fa-light fa-briefcase"></i>{{ $job->type }}</span>

@@ -27,6 +27,7 @@
                                     <a href="#">
                                         <h6>{{ $job['title'] ?? 'No Title' }}</h6>
                                     </a>
+                                    <p>{{$job['com_name']}}</p>
                                     <div class="content__info">
                                         <span><i class="fa-light fa-location-dot"></i>
                                             {{ $job['location'] ?? 'N/A' }}</span>
