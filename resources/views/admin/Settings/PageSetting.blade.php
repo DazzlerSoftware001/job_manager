@@ -88,9 +88,7 @@ Page Setting
                             <div class="px-3 mt-3 d-flex align-items-center gap-2">
                                 <input type="text" id="search" name="search"
                                     class="form-control form-control-sm bg-light rounded w-25" placeholder="Search...">
-                                    <button class="btn btn-primary btn-sm" onclick="window.location.href='#'">
-                                        + Create
-                                    </button>
+                                    <a href="{{ route('Admin.CreatePage') }}" class="btn btn-primary">+ Create New Page</a>
                             </div>
 
                             <div class="card-body">
@@ -100,14 +98,35 @@ Page Setting
                                             <tr>
                                                 <th>#</th>
                                                 <th>Title</th>
-                                                <th>Admin Verify</th>
-                                                <th>Status</th>
-                                                <th>Create Date</th>
-                                                <th>Job Expiry</th>
-                                                <th>Action</th>
+                                                <th>Slug</th>
+                                                <th>Created At</th>
+                                                <th>Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            @forelse ($pages as $page)
+                                            <tr>
+                                                <td>{{ $loop->iteration }}</td>
+                                                <td>{{ $page->title }}</td>
+                                                <td>{{ $page->slug }}</td>
+                                                <td>{{ $page->created_at->format('Y-m-d') }}</td>
+                                                <td>
+                                                    <a href="{{ route('Admin.EditPage', $page->id) }}" class="btn btn-sm btn-warning">Edit</a>
+                            
+                                                    <form action="{{ route('Admin.DeletePage', $page->id) }}" method="POST" class="d-inline-block" onsubmit="return confirm('Are you sure?')">
+                                                        @csrf
+                                                        <button class="btn btn-sm btn-danger">Delete</button>
+                                                    </form>
+                            
+                                                    <a href="{{ route('Admin.ViewPage', $page->slug) }}" target="_blank" class="btn btn-sm btn-info">View</a>
+
+                                                </td>
+                                            </tr>
+                                        @empty
+                                            <tr>
+                                                <td colspan="5" class="text-center">No custom pages found.</td>
+                                            </tr>
+                                        @endforelse
                                         </tbody>
                                     </table>
                                 </div>
@@ -124,7 +143,7 @@ Page Setting
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     @section('script')
         {{-- Get Job list --}}
-        <script>
+        {{-- <script>
             $(document).ready(function() {
                 $('#myTable').DataTable({
                     // DataTable options
@@ -158,13 +177,13 @@ Page Setting
                     $('#myTable').DataTable().draw();
                 });
             });
-        </script>
+        </script> --}}
 
 
 
 
         {{-- DeleteJobCategory --}}
-        <script>
+        {{-- <script>
             function deleteRecord(id) {
                 // First AJAX to show confirmation modal
                 Swal.fire({
@@ -223,5 +242,5 @@ Page Setting
                     }
                 });
             }
-        </script>
+        </script> --}}
     @endsection

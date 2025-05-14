@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\RecruiterController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\MenuController;
+use App\Http\Controllers\Admin\CustomPageController;
 
 Route::prefix('Admin')->group(function () {
     Route::get('/login', [AuthController::class, 'login'])->name('Admin.login');
@@ -200,7 +201,16 @@ Route::prefix('Admin')->group(function () {
         Route::post('/admin/menu/save', [AdminController::class, 'saveMenuOrder'])->name('admin.menu.save');
 
 
-        Route::get('/PageSettings',[SettingsController::class,'PageSettings'])->name('Admin.PageSettings');
+
+
+        Route::get('/PageSettings',[CustomPageController::class,'PageSettings'])->name('Admin.PageSettings');
+        Route::get('/CreatePage',[CustomPageController::class,'CreatePage'])->name('Admin.CreatePage');
+        Route::post('/InsertPage',[CustomPageController::class,'InsertPage'])->name('Admin.InsertPage');
+        Route::get('/EditPage/{id}',[CustomPageController::class,'EditPage'])->name('Admin.EditPage');
+        Route::post('/UpdatePage/{id}',[CustomPageController::class,'UpdatePage'])->name('Admin.UpdatePage');
+        Route::post('/DeletePage/{id}',[CustomPageController::class,'DeletePage'])->name('Admin.DeletePage');
+
+        Route::get('/{slug}', [CustomPageController::class, 'ViewPage'])->name('Admin.ViewPage');
 
 
 
