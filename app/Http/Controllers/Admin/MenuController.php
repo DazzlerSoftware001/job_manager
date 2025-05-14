@@ -2,16 +2,25 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\CustomPage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class MenuController extends Controller
 {
 
+    // public function menu()
+    // {
+    //     $menuItems = DB::table('menu_items')->orderBy('order')->get();
+    //     $custom = CustomPage::get();
+    //     dd($custom);
+    //     return view('admin.settings.menu', compact('menuItems'));
+    // }
     public function menu()
     {
-        $menuItems = DB::table('menu_items')->orderBy('order')->get();
-        return view('admin.settings.menu', compact('menuItems'));
+        $menuItems   = DB::table('menu_items')->orderBy('order')->get();
+        $customPages = CustomPage::get();
+        return view('admin.settings.menu', compact('menuItems', 'customPages'));
     }
 
     public function save(Request $request)

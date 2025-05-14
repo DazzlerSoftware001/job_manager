@@ -91,32 +91,49 @@
                                 <div class="mb-3" style="max-height: 300px; overflow-y: auto;">
                                     @php
                                         $menuOptions = [
-                                            ['title' => 'Home', 'url' => url('/')],
-                                            ['title' => 'Jobs', 'url' => url('/JobList')],
-                                            ['title' => 'Candidate', 'url' => url('/Dashboard')],
-                                            ['title' => 'Profile', 'url' => url('/Profile')],
-                                            ['title' => 'Resume', 'url' => url('/Resume')],
-                                            ['title' => 'Applied Job', 'url' => url('/AppliedJob')],
-                                            ['title' => 'Shortlisted', 'url' => url('/ShortList')],
-                                            ['title' => 'Saved Job', 'url' => url('/GetSavedJob')],
+                                            ['title' => 'Home', 'url' => "url('/')"],
+                                            ['title' => 'Jobs', 'url' => "url('/JobList')"],
+                                            ['title' => 'Candidate', 'url' => "url('/Dashboard')"],
+                                            ['title' => 'Profile', 'url' => "url('/Profile')"],
+                                            ['title' => 'Resume', 'url' => "url('/Resume')"],
+                                            ['title' => 'Applied Job', 'url' => "url('/AppliedJob')"],
+                                            ['title' => 'Shortlisted', 'url' => "url('/ShortList')"],
+                                            ['title' => 'Saved Job', 'url' => "url('/GetSavedJob')"],
                                         ];
                                     @endphp
-                            
+
                                     @foreach ($menuOptions as $index => $option)
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="menu_items[{{ $index }}][selected]" value="1">
-                                            <input type="hidden" name="menu_items[{{ $index }}][title]" value="{{ $option['title'] }}">
-                                            <input type="hidden" name="menu_items[{{ $index }}][url]" value="{{ $option['url'] }}">
+                                            <input class="form-check-input" type="checkbox"
+                                                name="menu_items[{{ $index }}][selected]" value="1">
+                                            <input type="hidden" name="menu_items[{{ $index }}][title]"
+                                                value="{{ $option['title'] }}">
+                                            <input type="hidden" name="menu_items[{{ $index }}][url]"
+                                                value="{{ $option['url'] }}">
                                             <label class="form-check-label">
                                                 {{ $option['title'] }}
                                             </label>
                                         </div>
                                     @endforeach
+
+                                    {{-- Dynamic custom pages --}}
+                                    @foreach ($customPages as $customIndex => $custom)
+                                        @php $dynamicIndex = count($menuOptions) + $customIndex; @endphp
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox"
+                                                name="menu_items[{{ $dynamicIndex }}][selected]" value="1">
+                                            <input type="hidden" name="menu_items[{{ $dynamicIndex }}][title]"
+                                                value="{{ $custom->title }}">
+                                            <input type="hidden" name="menu_items[{{ $dynamicIndex }}][url]"
+                                                value="url('/{{$custom->slug}}')">
+                                            <label class="form-check-label">{{ $custom->title }}</label>
+                                        </div>
+                                    @endforeach
                                 </div>
-                            
+
                                 <button type="submit" class="btn btn-primary mt-2">+ Add to menu</button>
                             </form>
-                            
+
                         </div>
                     </div>
 
