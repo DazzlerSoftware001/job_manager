@@ -213,6 +213,8 @@ Route::prefix('Admin')->group(function () {
 
         Route::get('/{slug}', [CustomPageController::class, 'ViewPage'])->name('Admin.ViewPage');
 
+        Route::get('/Footer', [SettingsController::class, 'footer'])->name('Admin.Footer');
+
 
 
         Route::post('/logout', [AuthController::class, 'logout'])->name('Admin.logout');
