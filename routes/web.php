@@ -1,12 +1,11 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\User\HomeController;
 use App\Http\Controllers\User\AuthController;
+use App\Http\Controllers\User\DashboardController;
+use App\Http\Controllers\User\HomeController;
 use App\Http\Controllers\User\JobController;
 use App\Http\Controllers\User\UserJobController;
-use App\Http\Controllers\User\DashboardController;
-
+use Illuminate\Support\Facades\Route;
 
 require base_path('routes/admin.php');
 require base_path('routes/recruiter.php');
@@ -20,6 +19,8 @@ Route::post('loginInsert', [AuthController::class, 'loginInsert'])->name('User.l
 
 Route::get('JobList', [JobController::class, 'JobList'])->name('User.JobList');
 Route::get('JobDetails/{id}', [JobController::class, 'JobDetails'])->name('User.JobDetails');
+
+Route::get('/{slug}', [HomeController::class, 'ViewPage'])->name('User.ViewPage');
 
 // Candidate Dashboard
 Route::prefix('User')->group(function () {
@@ -44,14 +45,13 @@ Route::prefix('User')->group(function () {
         Route::post('/UpdateAward', [DashboardController::class, 'updateAward'])->name('User.UpdateAward');
         Route::delete('/DeleteAward/{id}', [DashboardController::class, 'deleteAward'])->name('User.DeleteAward');
 
-        
         Route::get('ChangePassword', [DashboardController::class, 'ChangePassword'])->name('User.ChangePassword');
         Route::post('UpdatePassword', [DashboardController::class, 'UpdatePassword'])->name('User.UpdatePassword');
 
         Route::post('/ApplyForJOb', [UserJobController::class, 'applyjob'])->name('User.ApplyForJOb');
         Route::get('/AppliedJob', [UserJobController::class, 'appliedjob'])->name('User.AplliedJob');
         Route::get('/ShortList', [UserJobController::class, 'ShortList'])->name('User.ShortList');
-       
+
         Route::get('/SavedJob', [UserJobController::class, 'SavedJob'])->name('User.SavedJob');
         Route::get('/GetSavedJob', [UserJobController::class, 'GetSavedJob'])->name('User.GetSavedJob');
         Route::get('/UnsaveJob', [UserJobController::class, 'UnsaveJob'])->name('User.UnsaveJob');
@@ -59,7 +59,8 @@ Route::prefix('User')->group(function () {
         Route::post('/SaveJob', [JobController::class, 'saveJob'])->name('User.SaveJob');
         Route::post('/removeSavedJob', [JobController::class, 'removeSavedJob'])->name('User.RemoveSavedJob');
 
-
         Route::post('/logout', [AuthController::class, 'logout'])->name('User.logout');
     });
+
+
 });

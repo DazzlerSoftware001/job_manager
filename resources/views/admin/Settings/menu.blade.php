@@ -86,19 +86,18 @@
                     <div class="col-4">
                         <div class="card p-3">
                             <h5>Pages</h5>
-                            <form action="{{ route('menu.add') }}" method="POST">
-                                @csrf
+                            <form method="POST" id="AddMenu">
                                 <div class="mb-3" style="max-height: 300px; overflow-y: auto;">
                                     @php
                                         $menuOptions = [
-                                            ['title' => 'Home', 'url' => "url('/')"],
-                                            ['title' => 'Jobs', 'url' => "url('/JobList')"],
-                                            ['title' => 'Candidate', 'url' => "url('/Dashboard')"],
-                                            ['title' => 'Profile', 'url' => "url('/Profile')"],
-                                            ['title' => 'Resume', 'url' => "url('/Resume')"],
-                                            ['title' => 'Applied Job', 'url' => "url('/AppliedJob')"],
-                                            ['title' => 'Shortlisted', 'url' => "url('/ShortList')"],
-                                            ['title' => 'Saved Job', 'url' => "url('/GetSavedJob')"],
+                                            ['title' => 'Home', 'url' => '/'],
+                                            ['title' => 'Jobs', 'url' => 'JobList'],
+                                            ['title' => 'Candidate', 'url' => 'User/Dashboard'],
+                                            ['title' => 'Profile', 'url' => 'User/Profile'],
+                                            ['title' => 'Resume', 'url' => 'User/Resume'],
+                                            ['title' => 'Applied Job', 'url' => 'User/AppliedJob'],
+                                            ['title' => 'Shortlisted', 'url' => 'User/ShortList'],
+                                            ['title' => 'Saved Job', 'url' => 'User/GetSavedJob'],
                                         ];
                                     @endphp
 
@@ -125,7 +124,7 @@
                                             <input type="hidden" name="menu_items[{{ $dynamicIndex }}][title]"
                                                 value="{{ $custom->title }}">
                                             <input type="hidden" name="menu_items[{{ $dynamicIndex }}][url]"
-                                                value="url('/{{$custom->slug}}')">
+                                                value="{{ $custom->slug }}">
                                             <label class="form-check-label">{{ $custom->title }}</label>
                                         </div>
                                     @endforeach
@@ -140,20 +139,6 @@
 
                     <div class="col-lg-8">
                         <div class="card p-3">
-                            {{-- <div class="card-header">
-                                <h4 class="card-title">Job List</h4>
-                            </div> --}}
-
-                            {{-- <div class="dd" id="menu">
-                                <ol class="dd-list">
-                                    @foreach ($menuItems as $item)
-                                        <li class="dd-item" data-id="{{ $item->id }}">
-                                            <div class="dd-handle">{{ $item->title }}</div>
-                                        </li>
-                                    @endforeach
-                                </ol>
-                            </div> --}}
-
                             <div class="dd" id="menu">
                                 <ol class="dd-list">
                                     @php
@@ -162,12 +147,24 @@
                                             $filtered = $items->where('parent_id', $parentId);
 
                                             foreach ($filtered as $item) {
-                                                echo '<li class="dd-item" data-id="' . $item->id . '">';
+                                                echo '<li class="dd-item menu-item-' .
+                                                    $item->id .
+                                                    '" data-id="' .
+                                                    $item->id .
+                                                    '">';
                                                 echo '<div class="dd-handle">' . $item->title . '</div>';
 
+                                                // Delete Form (AJAX)
+                                                echo '<form class="delete-menu-form" style="position: absolute;top:0;right:0;">';
+                                                echo csrf_field();
+                                                echo method_field('DELETE');
+                                                echo '<button type="button" class="btn btn-sm btn-danger" onclick="deleteMenuItem(' . $item->id . ')">Delete</button>';
+                                                echo '</form>';
+
+                                                // Recursive Children
                                                 if ($items->where('parent_id', $item->id)->isNotEmpty()) {
                                                     echo '<ol class="dd-list">';
-                                                    renderMenu($items, $item->id); // recursive call
+                                                    renderMenu($items, $item->id);
                                                     echo '</ol>';
                                                 }
 
@@ -180,9 +177,8 @@
                                 </ol>
                             </div>
 
-
-
                             <button id="saveBtn" class="btn btn-success mt-3">Save Menu</button>
+
 
                         </div>
                     </div>
@@ -233,9 +229,6 @@
                 });
             });
         </script> --}}
-
-
-
 
         {{-- DeleteJobCategory --}}
         {{-- <script>
@@ -299,7 +292,7 @@
             }
         </script> --}}
 
-
+        {{-- For Sava Order --}}
         <script>
             $(document).ready(function() {
                 $('#menu').nestable();
@@ -315,14 +308,164 @@
                             _token: '{{ csrf_token() }}'
                         },
                         success: function(data) {
-                            alert('Menu order saved successfully!');
-                            location.reload();
+                            Toastify({
+                                text: "Menu order saved successfully!",
+                                duration: 3000,
+                                gravity: "top",
+                                position: "right",
+                                style: {
+                                    background: "#28a745",
+                                },
+                            }).showToast();
+
+                            setTimeout(function() {
+                                location.reload();
+                            }, 750);
                         },
                         error: function() {
-                            alert('Error saving menu order!');
+                            Toastify({
+                                text: "Error saving menu order!",
+                                duration: 3000,
+                                gravity: "top",
+                                position: "right",
+                                style: {
+                                    background: "#dc3545",
+                                },
+                            }).showToast();
                         }
                     });
                 });
             });
+        </script>
+
+        {{-- For Add Menu --}}
+        <script>
+            $(document).ready(function() {
+                $('#AddMenu').on('submit', function(event) {
+                    event.preventDefault(); // prevent default submit
+
+                    var url = "{{ route('menu.add') }}";
+
+                    $.ajax({
+                        url: url,
+                        type: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        data: new FormData(this),
+                        contentType: false,
+                        cache: false,
+                        processData: false,
+                        dataType: 'json',
+                        success: function(result) {
+                            console.log(result); // debug
+
+                            if (result.status_code === 1) {
+                                $('#AddMenu')[0].reset(); // reset form
+                                Toastify({
+                                    text: result.message,
+                                    duration: 3000,
+                                    gravity: "top",
+                                    position: "right",
+                                    style: {
+                                        background: "#28a745",
+                                    },
+                                }).showToast();
+
+                                setTimeout(function() {
+                                    location.reload();
+                                }, 750);
+                            } else if (result.status_code === 2) {
+                                Toastify({
+                                    text: result.message,
+                                    duration: 3000,
+                                    gravity: "top",
+                                    position: "right",
+                                    style: {
+                                        background: "#ffc107",
+                                    },
+                                }).showToast();
+                                $('#AddMenu')[0].reset();
+                            } else {
+                                Toastify({
+                                    text: result.message,
+                                    duration: 3000,
+                                    gravity: "top",
+                                    position: "right",
+                                    style: {
+                                        background: "#dc3545",
+                                    },
+                                }).showToast();
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('AJAX Error:', error);
+                            Toastify({
+                                text: 'An error occurred. Please try again.',
+                                duration: 3000,
+                                gravity: "top",
+                                position: "right",
+                                style: {
+                                    background: "#dc3545",
+                                },
+                            }).showToast();
+                        }
+                    });
+                });
+
+            });
+        </script>
+
+        <script>
+            function deleteMenuItem(id) {
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: 'Do you really want to delete this menu item?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes, delete it!',
+                    cancelButtonText: 'No, cancel!',
+                    background: '#fff',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: "{{ route('menu.delete', ':id') }}".replace(':id', id),
+                            type: 'POST',
+                            data: {
+                                _method: 'DELETE',
+                                _token: '{{ csrf_token() }}'
+                            },
+                            success: function(response) {
+                                Swal.fire({
+                                    title: 'Deleted!',
+                                    text: 'Menu item deleted successfully!',
+                                    icon: 'success',
+                                    confirmButtonText: 'Okay',
+                                    background: '#fff'
+                                }).then(() => {
+                                    location.reload();
+                                });
+                            },
+                            error: function() {
+                                Swal.fire({
+                                    title: 'Error!',
+                                    text: 'Something went wrong while deleting.',
+                                    icon: 'error',
+                                    confirmButtonText: 'Okay',
+                                    background: '#fff'
+                                });
+                            }
+                        });
+                    } else if (result.dismiss === Swal.DismissReason.cancel) {
+                        Swal.fire({
+                            title: 'Cancelled',
+                            text: 'Your menu item was not deleted.',
+                            icon: 'info',
+                            confirmButtonText: 'Okay',
+                            background: '#fff'
+                        });
+                    }
+                });
+            }
         </script>
     @endsection

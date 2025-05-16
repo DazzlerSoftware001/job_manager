@@ -49,23 +49,75 @@ class MenuController extends Controller
 
     public function add(Request $request)
     {
-        $menuItems = $request->input('menu_items', []);
+        $menuItems  = $request->input('menu_items', []);
+        $duplicates = [];
 
         foreach ($menuItems as $item) {
             if (isset($item['selected']) && $item['selected']) {
+                $customPage = CustomPage::where('title', $item['title'])->first();
+
+                $exists = DB::table('menu_items')
+                    ->where('title', $item['title'])
+                    ->orWhere(function ($query) use ($customPage) {
+                        if ($customPage) {
+                            $query->where('custom_page_id', $customPage->id);
+                        }
+                    })
+                    ->exists();
+
+                if ($exists) {
+                    $duplicates[] = $item['title'];
+                    continue;
+                }
+
                 DB::table('menu_items')->insert([
-                    'title'      => $item['title'],
-                    'type'       => 'page',
-                    'url'        => $item['url'],
-                    'parent_id'  => null,
-                    'order'      => 0,
-                    'created_at' => now(),
-                    'updated_at' => now(),
+                    'custom_page_id' => $customPage->id ?? null,
+                    'title'          => $item['title'],
+                    'type'           => 'page',
+                    'url'            => $item['url'],
+                    'parent_id'      => null,
+                    'order'          => 0,
+                    'created_at'     => now(),
+                    'updated_at'     => now(),
                 ]);
             }
         }
 
-        return redirect()->back()->with('success', 'Menu items added successfully.');
+        // Return JSON only, not redirect
+        if (! empty($duplicates)) {
+            return response()->json([
+                'status_code' => 2,
+                'message'     => 'Some items were skipped (already added): ' . implode(', ', $duplicates),
+            ]);
+        }
+
+        return response()->json([
+            'status_code' => 1,
+            'message'     => 'Menu items added successfully.',
+        ]);
     }
+
+    public function delete($id)
+{
+    $this->deleteWithChildren($id);
+
+    if (request()->ajax()) {
+        return response()->json(['status' => 'success']);
+    }
+
+    return redirect()->back()->with('success', 'Menu item and its children deleted successfully.');
+}
+
+private function deleteWithChildren($id)
+{
+    $children = DB::table('menu_items')->where('parent_id', $id)->pluck('id');
+
+    foreach ($children as $childId) {
+        $this->deleteWithChildren($childId);
+    }
+
+    DB::table('menu_items')->where('id', $id)->delete();
+}
+
 
 }
