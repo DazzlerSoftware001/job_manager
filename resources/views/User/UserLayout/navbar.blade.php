@@ -223,11 +223,8 @@
                             </div>
                             @php
                                 $user = Auth::user();
-
-                                // dd($user);
-
                             @endphp
-                            @if (empty($user))
+                            @if (empty($user) || $user->user_type != '0')
                                 <div class="header__right__btn d-flex gap-3">
                                     <a href="{{ route('User.login') }}"
                                         class="small__btn d-none d-sm-flex no__fill__btn border-6 font-xs"

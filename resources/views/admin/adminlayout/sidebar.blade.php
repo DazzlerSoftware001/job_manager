@@ -117,7 +117,7 @@
                             <li><a href="#" data-key="t-p-grid">Custom Js</a></li>
                             <li><a href="#" data-key="t-p-grid">Themes</a></li>
                             <li><a href="#" data-key="t-p-grid">Header</a></li>
-                            <li><a href="#" data-key="t-p-grid">Footer</a></li>
+                            <li><a href="{{route('Admin.Footer')}}" data-key="t-p-grid">Footer</a></li>
                         </ul>
                     </li>
 
