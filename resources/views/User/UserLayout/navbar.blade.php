@@ -165,10 +165,6 @@
                                         {{-- <ul class="list-unstyled"> --}}
                                         <ul class="navigation__menu">
                                             @php
-                                                // $menuItems = DB::table('menu_items')
-                                                //     ->orderBy('order')
-                                                //     ->get()
-                                                //     ->groupBy('parent_id');
 
                                                 function renderMenu($items, $menuItems, $isTopLevel = true)
                                                 {

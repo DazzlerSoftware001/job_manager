@@ -9,6 +9,8 @@ use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\MenuController;
 use App\Http\Controllers\Admin\CustomPageController;
+use App\Http\Controllers\Admin\FooterController;
+// 
 
 Route::prefix('Admin')->group(function () {
     Route::get('/login', [AuthController::class, 'login'])->name('Admin.login');
@@ -211,12 +213,10 @@ Route::prefix('Admin')->group(function () {
         Route::post('/UpdatePage/{id}',[CustomPageController::class,'UpdatePage'])->name('Admin.UpdatePage');
         Route::post('/DeletePage/{id}',[CustomPageController::class,'DeletePage'])->name('Admin.DeletePage');
 
-        Route::get('/{slug}', [CustomPageController::class, 'ViewPage'])->name('Admin.ViewPage');
+        Route::get('/Page/{slug}', [CustomPageController::class, 'ViewPage'])->name('Admin.ViewPage');
 
-        Route::get('/Footer', [SettingsController::class, 'footer'])->name('Admin.Footer');
-
-
-
+        Route::get('/Footer', [FooterController::class, 'footer'])->name('Admin.Footer');
+        
         Route::post('/logout', [AuthController::class, 'logout'])->name('Admin.logout');
 
     });
