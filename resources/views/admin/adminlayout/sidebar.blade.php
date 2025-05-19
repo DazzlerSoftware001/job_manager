@@ -135,7 +135,7 @@
                             <li><a href="#" data-key="t-p-grid">Site Setting</a></li>
                             <li><a href="#" data-key="t-p-grid">Language</a></li>
                             <li><a href="#" data-key="t-p-grid">Cache</a></li>
-                            <li><a href="#" data-key="t-p-grid">Import/Export</a></li>
+                            <li><a href="{{route('Admin.Database')}}" data-key="t-p-grid">Import/Export</a></li>
                             <li><a href="#" data-key="t-p-grid">Website Tracking</a></li>
                             <li><a href="#" data-key="t-p-grid">SEO</a></li>
                             <li><a href="#" data-key="t-p-grid">Maintanence Mode</a></li>
