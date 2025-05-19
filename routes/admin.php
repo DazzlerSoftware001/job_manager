@@ -216,6 +216,8 @@ Route::prefix('Admin')->group(function () {
         Route::get('/Page/{slug}', [CustomPageController::class, 'ViewPage'])->name('Admin.ViewPage');
 
         Route::get('/Footer', [FooterController::class, 'footer'])->name('Admin.Footer');
+
+        Route::get('/Database', [SettingsController::class, 'database'])->name('Admin.Database');
         
         Route::post('/logout', [AuthController::class, 'logout'])->name('Admin.logout');
 
