@@ -33,11 +33,11 @@ Database
                                                     {{ str_replace('_', ' ', $table) }}
                                                 </h5>
                                                 <p class="card-text mb-2">Export data for <strong>{{ str_replace('_', ' ', $table) }}</strong> to a CSV/Excel file.</p>
-                                            <a href="#" class="btn btn-sm btn-success mt-2"><i class="fas fa-file-csv"></i>
+                                            <a href="{{ route('export.csv', ['table' => $table]) }}" class="btn btn-sm btn-success mt-2"><i class="fas fa-file-csv"></i>
                                                 Export CSV
                                             </a>
 
-                                            <a href="#" class="btn btn-sm btn-primary mt-2"><i class="mdi mdi-file-excel"></i>
+                                            <a href="{{ route('export.excel', ['table' => $table]) }}" class="btn btn-sm btn-primary mt-2"><i class="mdi mdi-file-excel"></i>
                                                 Export Excel
                                             </a>
 

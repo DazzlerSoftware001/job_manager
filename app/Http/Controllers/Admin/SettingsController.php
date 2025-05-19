@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
+use App\Exports\TableExport;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;
 
 class SettingsController extends Controller
@@ -66,6 +68,17 @@ class SettingsController extends Controller
          // dd($tableNames);
 
          return view('admin.Settings.database', compact('tableNames'));
+   }
+
+
+   public function exportExcel($table)
+   {
+      return Excel::download(new TableExport($table), $table . '.xlsx');
+   }
+
+   public function exportCsv($table)
+   {
+      return Excel::download(new TableExport($table), $table . '.csv', \Maatwebsite\Excel\Excel::CSV);
    }
 
 }
