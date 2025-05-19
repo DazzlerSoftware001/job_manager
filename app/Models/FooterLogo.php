@@ -9,6 +9,8 @@ class FooterLogo extends Model
 {
     use HasFactory;
     
+    protected $table = 'footer_logo';
+
     protected $fillable = ['logo', 'light_logo', 'dark_logo'];
 
 }

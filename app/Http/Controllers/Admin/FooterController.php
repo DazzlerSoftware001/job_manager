@@ -9,44 +9,62 @@ use App\Models\FooterLogo;
 class FooterController extends Controller
 {
     public function footer() {
-        return view('admin.Settings.footer');
+
+        $footerLogo = FooterLogo::first();
+        return view('admin.Settings.footer', compact('footerLogo'));
     }
 
 
 public function FooterProfilelogo(Request $request)
 {
-
-    // Validate inputs (you can make them optional if needed)
+    // Validate inputs
     $request->validate([
         'image1' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
         'image2' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
         'image3' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
     ]);
 
-    $paths = [];
+    // Get or create the FooterLogo record (assuming only one)
+    $FooterLogo = FooterLogo::first() ?? new FooterLogo();
 
-    foreach (['image1', 'image2', 'image3'] as $imageField) {
-        if ($request->hasFile($imageField)) {
-            $imageFile = $request->file($imageField);
-            $imageName = time() . '_' . $imageField . '.' . $imageFile->extension();
-            $imageFile->move(public_path('settings/footer/logo/'), $imageName);
-            $paths[$imageField] = 'settings/footer/logo/' . $imageName;
+    // Image handling
+    foreach ([
+        'image1' => 'logo',
+        'image2' => 'light_logo',
+        'image3' => 'dark_logo'
+    ] as $inputName => $dbColumn) {
+
+        if ($request->hasFile($inputName)) {
+            // Delete the old image if it exists
+            $oldPath = public_path($FooterLogo->$dbColumn);
+            if (!empty($FooterLogo->$dbColumn) && file_exists($oldPath)) {
+                if (!unlink($oldPath)) {
+                    \Log::error("Failed to delete old image at: " . $oldPath);
+                }
+            }
+
+            // Save the new image
+            $image = $request->file($inputName);
+            $imageName = time() . '_' . $inputName . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path('settings/footer/logo/'), $imageName);
+            $FooterLogo->$dbColumn = 'settings/footer/logo/' . $imageName;
         }
     }
 
-    // Save to user_images table
-    $FooterLogo = new FooterLogo();
-    $FooterLogo->logo = $paths['image1'] ?? null;
-    $FooterLogo->loght_logo = $paths['image2'] ?? null;
-    $FooterLogo->dark_logo = $paths['image3'] ?? null;
     $FooterLogo->save();
 
     return response()->json([
         'status_code' => 1,
         'message' => 'Images uploaded successfully',
-        'data' => $paths,
+        'data' => [
+            'logo' => $FooterLogo->logo,
+            'light_logo' => $FooterLogo->light_logo,
+            'dark_logo' => $FooterLogo->dark_logo,
+        ],
     ]);
 }
+
+
 
 
 
