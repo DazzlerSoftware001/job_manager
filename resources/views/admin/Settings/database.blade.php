@@ -25,8 +25,29 @@ Database
 
                             <div class="card-body">
                                 
+                                <div class="row">
+                                    @foreach($tableNames as $table)
+                                        <div class="col-12 col-md-6 col-lg-4 mb-3">
+                                            <div class="border rounded p-3 h-100">
+                                                <h5 class="card-title text-primary text-capitalize">
+                                                    {{ str_replace('_', ' ', $table) }}
+                                                </h5>
+                                                <p class="card-text mb-2">Export data for <strong>{{ str_replace('_', ' ', $table) }}</strong> to a CSV/Excel file.</p>
+                                            <a href="#" class="btn btn-sm btn-success mt-2"><i class="fas fa-file-csv"></i>
+                                                Export CSV
+                                            </a>
 
+                                            <a href="#" class="btn btn-sm btn-primary mt-2"><i class="mdi mdi-file-excel"></i>
+                                                Export Excel
+                                            </a>
+
+
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
                             </div>
+
                         </div>
                     </div>
                 </div>
@@ -50,6 +71,9 @@ Database
                     </div>
                 </div>
             </div>
+
+           
+
             <!-- container-fluid -->
         </div>
         <!-- End Page-content -->

@@ -23,9 +23,6 @@ class SettingsController extends Controller
    //  return view('admin.Settings.database');
    // }
 
-
-
-   
    public function database() {
       $tables = DB::select('SHOW TABLES');
       $database = env('DB_DATABASE');
@@ -46,7 +43,19 @@ class SettingsController extends Controller
          'education',
          'job_applications',
          'interview_type',
-         // Add more table names if needed
+         'job_category',
+         'job_department',
+         'job_role',
+         'job_experience',
+         'job_location',
+         'job_mode',
+         'job_post',
+         'job_shift',
+         'job_skill',
+         'job_types',
+         'jobs',
+         'menu_items',
+         'users',
       ];
 
       // Step 3: Filter the table names
@@ -54,7 +63,9 @@ class SettingsController extends Controller
          return in_array($name, $allowedTables);
       });
 
-      return view('admin.Settings.database', compact('tableNames'));
+         // dd($tableNames);
+
+         return view('admin.Settings.database', compact('tableNames'));
    }
 
 }
