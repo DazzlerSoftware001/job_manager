@@ -223,6 +223,7 @@ Route::prefix('Admin')->group(function () {
         Route::get('/export/csv/{table}', [SettingsController::class, 'exportCsv'])->name('export.csv');
 
         Route::post('/FooterProfilelogo', [FooterController::class, 'FooterProfilelogo'])->name('Admin.FooterProfilelogo');
+        Route::post('/FooterProfilelogo', [FooterController::class, 'FooterProfilelogo'])->name('Admin.FooterProfilelogo');
         
         Route::post('/logout', [AuthController::class, 'logout'])->name('Admin.logout');
 
