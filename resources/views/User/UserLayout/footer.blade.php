@@ -1,12 +1,20 @@
+@php use App\Models\FooterLogo; @endphp
+@php
+    $footerLogo = FooterLogo::value('logo'); // ✅ correct
+@endphp
+
 <footer class="rts__section  footer__home__one">
     <div class="container">
         <div class="row">
-            <div class="footer__wrapper d-flex flex-wrap flex-column flex-sm-row gap-4 gap-md-0 gap-sm-3 justify-content-between pt-60 pb-60">
+            <div
+                class="footer__wrapper d-flex flex-wrap flex-column flex-sm-row gap-4 gap-md-0 gap-sm-3 justify-content-between pt-60 pb-60">
                 <div class="rts__footer__widget max-320">
                     <a href="index.html" class="footer__logo" aria-label="logo">
-                        <img src="{{url('user/assets/img/logo/header__one.png')}}" width="160" height="40" alt="logo">
+                        <img src="{{ asset($footerLogo) }}" width="160" height="40"
+                            alt="logo">
                     </a>
-                    <p class="mt-4">Whether you're an experienced professional or a fresh graduate eager to dive into the workforce, we have something for everyone.
+                    <p class="mt-4">Whether you're an experienced professional or a fresh graduate eager to dive into
+                        the workforce, we have something for everyone.
                     </p>
                 </div>
 
@@ -29,25 +37,26 @@
                     <ul class="list-unstyled mb-3">
                         <li><a href="#"><i class="fa-light fa-location-dot"></i>2715 Ash Dr. San Jose,USA</a></li>
                         <li><a href="callto:+880171234578"><i class="fa-light fa-phone"></i>+(61) 545-432-234</a></li>
-                        <li><a href="mailto:careernext@gmail.com"><i class="fa-light fa-envelope"></i> careernext@gmail.com</a></li>
+                        <li><a href="mailto:careernext@gmail.com"><i class="fa-light fa-envelope"></i>
+                                careernext@gmail.com</a></li>
                     </ul>
                     <div class="font-20 fw-medium mb-20 text-dark">
                         Social Link
                     </div>
                     <div class="rts__social d-flex gap-4">
-                        <a target="_blank" href="https://facebook.com/"  aria-label="facebook">
+                        <a target="_blank" href="https://facebook.com/" aria-label="facebook">
                             <i class="fa-brands fa-facebook"></i>
                         </a>
-                        <a target="_blank" href="https://instagram.com/"  aria-label="instagram">
+                        <a target="_blank" href="https://instagram.com/" aria-label="instagram">
                             <i class="fa-brands fa-instagram"></i>
                         </a>
-                        <a target="_blank" href="https://linkedin.com/"  aria-label="linkedin">
+                        <a target="_blank" href="https://linkedin.com/" aria-label="linkedin">
                             <i class="fa-brands fa-linkedin"></i>
                         </a>
-                        <a target="_blank" href="https://pinterest.com/"  aria-label="pinterest">
+                        <a target="_blank" href="https://pinterest.com/" aria-label="pinterest">
                             <i class="fa-brands fa-pinterest"></i>
                         </a>
-                        <a target="_blank" href="https://youtube.com/"  aria-label="youtube">
+                        <a target="_blank" href="https://youtube.com/" aria-label="youtube">
                             <i class="fa-brands fa-youtube"></i>
                         </a>
                     </div>
@@ -55,12 +64,12 @@
 
                 <!-- newsletter form -->
                 <div class="rts__footer__widget max-320">
-                <div class="font-20 fw-medium mb-3 h6 ">Subscribe Our Newsletter</div>
-                <p class="br-sm-none">Subscribe Our Newsletter get <br> Update our New Course</p>
-                <form action="#" class="d-flex align-items-center justify-content-between mt-4 newsletter">
-                    <input type="email" name="semail" id="semail" placeholder="Enter your email" required>
-                    <button type="submit" class="rts__btn fill__btn">Subscribe</button>
-                </form>
+                    <div class="font-20 fw-medium mb-3 h6 ">Subscribe Our Newsletter</div>
+                    <p class="br-sm-none">Subscribe Our Newsletter get <br> Update our New Course</p>
+                    <form action="#" class="d-flex align-items-center justify-content-between mt-4 newsletter">
+                        <input type="email" name="semail" id="semail" placeholder="Enter your email" required>
+                        <button type="submit" class="rts__btn fill__btn">Subscribe</button>
+                    </form>
                 </div>
                 <!-- newsletter form end -->
 
@@ -81,39 +90,41 @@
 
 <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvas" aria-labelledby="offcanvasLabel">
     <div class="offcanvas-header p-0 mb-5 mt-4">
-    <a href="index.html" class="offcanvas-title" id="offcanvasLabel">
-        <img src="{{url('user/assets/img/logo/header__one.png')}}" alt="logo">
-    </a> 
-    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        <a href="index.html" class="offcanvas-title" id="offcanvasLabel">
+            <img src="{{ asset($footerLogo) }}" width="160" height="40" alt="logo">
+        </a>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
     <!-- login offcanvas -->
     <div class="mb-4 d-block d-sm-none">
         <div class="header__right__btn d-flex justify-content-center gap-3">
-            <a href="#" class="small__btn no__fill__btn border-6 font-xs" aria-label="Login Button" data-bs-toggle="modal" data-bs-target="#loginModal"> <i class="rt-login"></i>Sign In</a>
-            <a href="#" class="small__btn d-xl-flex fill__btn border-6 font-xs" aria-label="Job Posting Button">Add Job</a>
+            <a href="#" class="small__btn no__fill__btn border-6 font-xs" aria-label="Login Button"
+                data-bs-toggle="modal" data-bs-target="#loginModal"> <i class="rt-login"></i>Sign In</a>
+            <a href="#" class="small__btn d-xl-flex fill__btn border-6 font-xs"
+                aria-label="Job Posting Button">Add Job</a>
         </div>
     </div>
 
     <div class="offcanvas-body p-0">
-    <div class="rts__offcanvas__menu overflow-hidden">
-        <div class="offcanvas__menu"></div>
-    </div>
+        <div class="rts__offcanvas__menu overflow-hidden">
+            <div class="offcanvas__menu"></div>
+        </div>
 
-    <p class="max-auto font-20 fw-medium text-center text-decoration-underline mt-4">Our Social Links</p>
+        <p class="max-auto font-20 fw-medium text-center text-decoration-underline mt-4">Our Social Links</p>
         <div class="rts__social d-flex justify-content-center gap-3 mt-3">
-            <a target="_blank" href="https://facebook.com/"  aria-label="facebook">
+            <a target="_blank" href="https://facebook.com/" aria-label="facebook">
                 <i class="fa-brands fa-facebook"></i>
             </a>
-            <a target="_blank" href="https://instagram.com/"  aria-label="instagram">
+            <a target="_blank" href="https://instagram.com/" aria-label="instagram">
                 <i class="fa-brands fa-instagram"></i>
             </a>
-            <a target="_blank" href="https://linkedin.com/"  aria-label="linkedin">
+            <a target="_blank" href="https://linkedin.com/" aria-label="linkedin">
                 <i class="fa-brands fa-linkedin"></i>
             </a>
-            <a target="_blank" href="https://pinterest.com/"  aria-label="pinterest">
+            <a target="_blank" href="https://pinterest.com/" aria-label="pinterest">
                 <i class="fa-brands fa-pinterest"></i>
             </a>
-            <a target="_blank" href="https://youtube.com/"  aria-label="youtube">
+            <a target="_blank" href="https://youtube.com/" aria-label="youtube">
                 <i class="fa-brands fa-youtube"></i>
             </a>
         </div>
@@ -121,18 +132,18 @@
 </div>
 <!-- THEME PRELOADER START -->
 <div class="loader-wrapper">
-<div class="loader">
-</div>
-<div class="loader-section section-left"></div>
-<div class="loader-section section-right"></div>
+    <div class="loader">
+    </div>
+    <div class="loader-section section-left"></div>
+    <div class="loader-section section-right"></div>
 </div>
 <!-- THEME PRELOADER END -->
 <button type="button" class="rts__back__top" id="rts-back-to-top">
-<i class="fas fa-arrow-up"></i>
+    <i class="fas fa-arrow-up"></i>
 </button>
 <!-- all plugin js -->
-<script src="{{url('user/assets/js/plugins.min.js')}}"></script>
-<script src="{{url('user/assets/js/main.js')}}"></script>
+<script src="{{ url('user/assets/js/plugins.min.js') }}"></script>
+<script src="{{ url('user/assets/js/main.js') }}"></script>
 <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
@@ -140,4 +151,5 @@
 </body>
 
 <!--  index.html   11:17:54 GMT -->
+
 </html>
