@@ -218,6 +218,7 @@ Route::prefix('Admin')->group(function () {
         Route::get('/Footer', [FooterController::class, 'footer'])->name('Admin.Footer');
 
         Route::get('/Database', [SettingsController::class, 'database'])->name('Admin.Database');
+        Route::post('/FooterProfilelogo', [FooterController::class, 'FooterProfilelogo'])->name('Admin.FooterProfilelogo');
         
         Route::post('/logout', [AuthController::class, 'logout'])->name('Admin.logout');
 

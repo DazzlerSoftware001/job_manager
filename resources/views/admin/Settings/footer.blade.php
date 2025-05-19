@@ -58,26 +58,53 @@
         width: 160px;
         border-radius: 6px;
     }
+
+    .select__image {
+        position: relative;
+    }
 </style>
 @section('main-container')
     <div class="main-content">
         <div class="page-content">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="my__details" id="info">
-                        <div class="info__top">
-                            <div class="author__image">
-                                <img id="profileImage" src=""
-                                    onerror="this.onerror=null; this.src='{{ url('user/assets/img/profile/default.png') }}';"
-                                    alt="">
+                    <form id="multiImageForm" enctype="multipart/form-data">
+                        @csrf
+                        <div class="row" id="info">
+                            <!-- Image 1 -->
+                            <div class="col-md-4 text-center">
+                                <div class="author__image mb-2">
+                                    <img id="preview1" src="{{ url('user/assets/img/profile/default.png') }}"
+                                        width="150" height="150" alt="">
+                                </div>
+                                <input type="file" name="image1" id="image1" accept="image/*" class="form-control">
                             </div>
-                            <div class="select__image">
-                                <button for="imageInput" id="editImageButton" class="file-upload__label">Upload New
-                                    Photo</button>
-                                <input type="file" id="imageInput" class="d-none" accept="image/*">
+
+                            <!-- Image 2 -->
+                            <div class="col-md-4 text-center">
+                                <div class="author__image mb-2">
+                                    <img id="preview2" src="{{ url('user/assets/img/profile/default.png') }}"
+                                        width="150" height="150" alt="">
+                                </div>
+                                <input type="file" name="image2" id="image2" accept="image/*" class="form-control">
+                            </div>
+
+                            <!-- Image 3 -->
+                            <div class="col-md-4 text-center">
+                                <div class="author__image mb-2">
+                                    <img id="preview3" src="{{ url('user/assets/img/profile/default.png') }}"
+                                        width="150" height="150" alt="">
+                                </div>
+                                <input type="file" name="image3" id="image3" accept="image/*" class="form-control">
                             </div>
                         </div>
-                    </div>
+
+                        <div class="text-center mt-4">
+                            <button type="submit" class="btn btn-success">Submit All Images</button>
+                        </div>
+                    </form>
+
+
                     <div class="col-md-6">
                         <div class="widget-box">
                             <div class="widget-title">Top Footer Sidebar</div>
@@ -113,4 +140,74 @@
             </div>
         </div>
     </div>
+@endsection
+@section('script')
+    {{-- Update Profile Image --}}
+    <script>
+    $(document).ready(function () {
+        // Preview handlers
+        function readURL(input, previewId) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    $(previewId).attr('src', e.target.result);
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        $('#image1').change(function () {
+            readURL(this, '#preview1');
+        });
+
+        $('#image2').change(function () {
+            readURL(this, '#preview2');
+        });
+
+        $('#image3').change(function () {
+            readURL(this, '#preview3');
+        });
+
+        // Form submit handler
+        $('#multiImageForm').submit(function (e) {
+            e.preventDefault();
+
+            const formData = new FormData(this);
+
+            $.ajax({
+                url: "{{ route('Admin.FooterProfilelogo') }}", // Your route
+                type: "POST",
+                data: formData,
+                contentType: false,
+                processData: false,
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                success: function (response) {
+                    Toastify({
+                        text: response.message,
+                        duration: 3000,
+                        gravity: "top",
+                        position: "right",
+                        style: {
+                            background: "#28a745",
+                        },
+                    }).showToast();
+                },
+                error: function () {
+                    Toastify({
+                        text: "Upload failed. Please try again.",
+                        duration: 3000,
+                        gravity: "top",
+                        position: "right",
+                        style: {
+                            background: "#dc3545",
+                        },
+                    }).showToast();
+                }
+            });
+        });
+    });
+</script>
+
 @endsection
