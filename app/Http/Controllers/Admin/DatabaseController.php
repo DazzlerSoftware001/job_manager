@@ -111,8 +111,6 @@ class DatabaseController extends Controller
       ]);
    }
 
-
-
    public function exportExcel($table)
    {
       return Excel::download(new TableExport($table), $table . '.xlsx');
@@ -121,5 +119,11 @@ class DatabaseController extends Controller
    public function exportCsv($table)
    {
       return Excel::download(new TableExport($table), $table . '.csv', \Maatwebsite\Excel\Excel::CSV);
+   }
+
+
+   Public function AnnualSalaryBulkUpload()
+   {
+      return view('admin.Settings.AnnualSalaryBulk');
    }
 }
