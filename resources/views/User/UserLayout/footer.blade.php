@@ -10,7 +10,7 @@
                 class="footer__wrapper d-flex flex-wrap flex-column flex-sm-row gap-4 gap-md-0 gap-sm-3 justify-content-between pt-60 pb-60">
                 <div class="rts__footer__widget max-320">
                     <a href="index.html" class="footer__logo" aria-label="logo">
-                        <img src="{{ asset($footerLogo) }}" width="160" height="40"
+                        <img src="{{ asset($footerLogo) }}" onerror="this.onerror=null; this.src='{{ url('settings/footer/logo/default.png') }}';" width="160" height="40"
                             alt="logo">
                     </a>
                     <p class="mt-4">Whether you're an experienced professional or a fresh graduate eager to dive into
