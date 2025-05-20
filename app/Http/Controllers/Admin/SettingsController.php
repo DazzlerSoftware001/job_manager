@@ -10,20 +10,7 @@ use Illuminate\Http\Request;
 
 class SettingsController extends Controller
 {
-   // public function database() {
-   
-   //    $tables = DB::select('SHOW TABLES');
-
-   //    $database = env('DB_DATABASE'); // Get current DB name
-   //    $key = "Tables_in_$database";   // Column key depends on DB name
-
-   //    $tableNames = array_map(function ($table) use ($key) {
-   //       return $table->$key;
-   //    }, $tables);
-
-   //  dd($tableNames);
-   //  return view('admin.Settings.database');
-   // }
+ 
 
    public function database() {
       $tables = DB::select('SHOW TABLES');
