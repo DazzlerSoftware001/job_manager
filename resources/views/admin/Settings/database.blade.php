@@ -26,7 +26,7 @@ Database
                             <div class="card-body">
                                 
                                 <div class="row">
-                                    @foreach($tableNames as $table)
+                                    @foreach($exportTables as $table)
                                         <div class="col-12 col-md-6 col-lg-4 mb-3">
                                             <div class="border rounded p-3 h-100">
                                                 <h5 class="card-title text-primary text-capitalize">
@@ -64,7 +64,20 @@ Database
                             </div>
 
                             <div class="card-body">
-                                
+                                 <div class="row">
+                                    @foreach($importTables as $table)
+                                        <div class="col-12 col-md-6 col-lg-4 mb-3">
+                                            <div class="border rounded p-3 h-100">
+                                                <h5 class="card-title text-primary text-capitalize">
+                                                    {{ str_replace('_', ' ', $table) }}
+                                                </h5>
+                                                <p class="card-text mb-2">Import data into <strong>{{ str_replace('_', ' ', $table) }}</strong> from a CSV/Excel file.</p>
+
+                                                
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
 
                             </div>
                         </div>
