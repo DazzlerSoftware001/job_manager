@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use App\Exports\TableExport;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -132,7 +133,7 @@ class DatabaseController extends Controller
    public function AnnualSalarySubmit(Request $request)
    {
       $rules =[
-         'annualSalary' => 'required|mimes:xlsx,csv',
+         // 'annualSalary' => 'required|mimes:xlsx,csv',
       ];
 
       $validate = Validator::make($request->all(),$rules);

@@ -28,10 +28,11 @@ Annual Salary
                                 <div class="row">
                                     <div class="col-12">
 
-                                        <form action="" method="POST" enctype="multipart/form-data">
+                                        <form action="{{route('Admin.AnnualSalarySubmit')}}" method="POST" enctype="multipart/form-data">
+                                            @csrf
                                             <label for="annualSalary" class="form-label">Upload Annual Salary File <span class="text-danger">*</span></label>
                                             <input type="file" class="form-control" name="annualSalary" id="annualSalary" required>
-                                            <button class="btn btn-primary">Import</button>
+                                            <button type="submit" class="btn btn-primary">Import</button>
                                         </form>
 
 
