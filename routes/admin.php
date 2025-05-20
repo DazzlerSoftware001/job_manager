@@ -218,7 +218,6 @@ Route::prefix('Admin')->group(function () {
 
         Route::get('/Footer', [FooterController::class, 'footer'])->name('Admin.Footer');
         Route::post('/FooterProfilelogo', [FooterController::class, 'FooterProfilelogo'])->name('Admin.FooterProfilelogo');
-        Route::post('/FooterProfilelogo', [FooterController::class, 'FooterProfilelogo'])->name('Admin.FooterProfilelogo');
           Route::post('/FooterSettings', [FooterController::class, 'FooterSettings'])->name('Admin.FooterSettings');
 
         Route::get('/Database', [DatabaseController::class, 'database'])->name('Admin.Database');
