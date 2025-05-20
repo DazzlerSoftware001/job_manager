@@ -1,6 +1,8 @@
 @php use App\Models\FooterLogo; @endphp
+@php use App\Models\FooterSetting; @endphp
 @php
     $footerLogo = FooterLogo::value('logo');
+    $footerSettings = FooterSetting::first();
 @endphp
 
 <footer class="rts__section  footer__home__one">
@@ -10,12 +12,18 @@
                 class="footer__wrapper d-flex flex-wrap flex-column flex-sm-row gap-4 gap-md-0 gap-sm-3 justify-content-between pt-60 pb-60">
                 <div class="rts__footer__widget max-320">
                     <a href="index.html" class="footer__logo" aria-label="logo">
-                        <img src="{{ asset($footerLogo) }}" onerror="this.onerror=null; this.src='{{ url('settings/footer/logo/default.png') }}';" width="160" height="40"
-                            alt="logo">
+                        <img src="{{ asset($footerLogo) }}"
+                            onerror="this.onerror=null; this.src='{{ url('settings/footer/logo/default.png') }}';"
+                            width="160" height="40" alt="logo">
                     </a>
-                    <p class="mt-4">Whether you're an experienced professional or a fresh graduate eager to dive into
-                        the workforce, we have something for everyone.
-                    </p>
+                    @if ($footerSettings->description != null)
+                        <p class="mt-4">{{ $footerSettings->description }}</p>
+                    @else
+                        <p class="mt-4">Whether you're an experienced professional or a fresh graduate eager to dive
+                            into
+                            the workforce, we have something for everyone.
+                        </p>
+                    @endif
                 </div>
 
                 <!-- footer menu -->
@@ -35,10 +43,30 @@
                         Contact Us
                     </div>
                     <ul class="list-unstyled mb-3">
-                        <li><a href="#"><i class="fa-light fa-location-dot"></i>2715 Ash Dr. San Jose,USA</a></li>
-                        <li><a href="callto:+880171234578"><i class="fa-light fa-phone"></i>+(61) 545-432-234</a></li>
+                        <li><a href="#"><i class="fa-light fa-location-dot"></i>
+                                @if ($footerSettings->address != null)
+                                    {{ $footerSettings->address }}
+                                @else
+                                    2715 Ash Dr. San Jose,USA
+                                @endif
+                            </a></li>
+
+                        <li><a href="callto:+880171234578"><i class="fa-light fa-phone"></i>+
+                                @if ($footerSettings->phone != null)
+                                    {{ $footerSettings->phone }}
+                                @else
+                                    (61)
+                                    545-432-234
+                                @endif
+                            </a>
+                        </li>
                         <li><a href="mailto:careernext@gmail.com"><i class="fa-light fa-envelope"></i>
-                                careernext@gmail.com</a></li>
+                                @if ($footerSettings->email != null)
+                                    {{ $footerSettings->email }}
+                                @else
+                                    careernext@gmail.com
+                                @endif
+                            </a></li>
                     </ul>
                     <div class="font-20 fw-medium mb-20 text-dark">
                         Social Link
@@ -79,7 +107,12 @@
     <div class="rts__copyright">
         <div class="container">
             <p class="text-center fw-medium py-4">
-                Copyright &copy; 2024 All Rights Reserved by careernext
+                @if ($footerSettings->copyright != null)
+                    {{ $footerSettings->copyright }}
+                @else
+                    Copyright &copy; 2024 All Rights Reserved by careernext
+                @endif
+
             </p>
         </div>
     </div>

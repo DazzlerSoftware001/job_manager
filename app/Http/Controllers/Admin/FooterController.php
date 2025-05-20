@@ -5,13 +5,15 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\FooterLogo;
+use App\Models\FooterSetting;
 
 class FooterController extends Controller
 {
     public function footer() {
 
         $footerLogo = FooterLogo::first();
-        return view('admin.Settings.footer', compact('footerLogo'));
+        $footer = FooterSetting::first();
+        return view('admin.Settings.footer', compact('footerLogo','footer'));
     }
 
 
@@ -63,6 +65,22 @@ public function FooterProfilelogo(Request $request)
         ],
     ]);
 }
+
+ public function FooterSettings(Request $request)
+    {
+        $footer = FooterSetting::firstOrNew([]);
+
+        $data = $request->only([
+            'description', 'address', 'phone', 'email', 'copyright'
+        ]);
+
+        $data['links'] = json_decode($request->input('links'), true);
+        $data['social_links'] = json_decode($request->input('social_links'), true);
+
+        $footer->fill($data)->save();
+
+        return redirect()->back()->with('success', 'Footer settings updated.');
+    }
 
 
 
