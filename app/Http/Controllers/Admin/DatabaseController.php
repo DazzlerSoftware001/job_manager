@@ -130,25 +130,54 @@ class DatabaseController extends Controller
       return view('admin.Settings.AnnualSalaryBulk');
    }
 
-   public function AnnualSalarySubmit(Request $request)
-   {
-      $rules =[
-         // 'annualSalary' => 'required|mimes:xlsx,csv',
-      ];
+   // public function AnnualSalarySubmit(Request $request)
+   // {
+   //    $rules =[
+   //       'annualSalary' => 'required|mimes:xlsx,csv',
+   //    ];
 
-      $validate = Validator::make($request->all(),$rules);
+   //    $validate = Validator::make($request->all(),$rules);
 
-      if(!$validate->fails())
-      {
+   //    if(!$validate->fails())
+   //    {
+
+   //       // if ($request->hasFile('annualSalary')) {
+   //       //    dd($request->file('annualSalary')->getClientOriginalExtension());
+   //       // }
+
+   //       Excel::import(new AnnualSalaryImport, $request->file('file'));
 
 
-         Excel::import(new AnnualSalaryImport, $request->file('file'));
 
-        return response()->json(['status_code'=>1, 'message'=>'Annual Salary Imported Successfully']);
-      }else{
-         return response()->json(['status_code'=>0, 'message'=>$validate->errors()->first()]);
-      }
 
-   }
+   //      return response()->json(['status_code'=>1, 'message'=>'Annual Salary Imported Successfully']);
+   //    }else{
+   //       return response()->json(['status_code'=>0, 'message'=>$validate->errors()->first()]);
+   //    }
+
+   // }
+
+
+
+ public function AnnualSalarySubmit(Request $request)
+{
+    $rules = [
+        'annualSalary' => 'required|mimes:xlsx,csv,xls',
+    ];
+
+    $validate = Validator::make($request->all(), $rules);
+
+    if (!$validate->fails()) {
+
+        // Read and import directly without storing
+        Excel::import(new AnnualSalaryImport, $request->file('annualSalary'));
+
+        return response()->json(['status_code' => 1, 'message' => 'Annual Salary Imported Successfully']);
+    } else {
+        return response()->json(['status_code' => 0, 'message' => $validate->errors()->first()]);
+    }
+}
+
+
 
 }
