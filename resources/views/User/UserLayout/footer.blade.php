@@ -1,6 +1,6 @@
 @php use App\Models\FooterLogo; @endphp
 @php
-    $footerLogo = FooterLogo::value('logo'); // ✅ correct
+    $footerLogo = FooterLogo::value('logo');
 @endphp
 
 <footer class="rts__section  footer__home__one">
@@ -62,7 +62,7 @@
                     </div>
                 </div>
 
-                <!-- newsletter form -->
+                {{-- <!-- newsletter form -->
                 <div class="rts__footer__widget max-320">
                     <div class="font-20 fw-medium mb-3 h6 ">Subscribe Our Newsletter</div>
                     <p class="br-sm-none">Subscribe Our Newsletter get <br> Update our New Course</p>
@@ -71,7 +71,7 @@
                         <button type="submit" class="rts__btn fill__btn">Subscribe</button>
                     </form>
                 </div>
-                <!-- newsletter form end -->
+                <!-- newsletter form end --> --}}
 
             </div>
         </div>

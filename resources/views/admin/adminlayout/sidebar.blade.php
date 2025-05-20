@@ -107,7 +107,7 @@
                     <li>
                         <a href="javascript: void(0);" class="has-arrow">
                             <i class="icon nav-icon" data-eva="settings-outline"></i>
-                            <span class="menu-item" data-key="t-projects">Settings</span>
+                            <span class="menu-item" data-key="t-projects">Appereance</span>
                         </a>
                         <ul class="sub-menu" aria-expanded="false">
                             <li><a href="{{route('Admin.menu')}}" data-key="t-p-grid">Menus</a></li>

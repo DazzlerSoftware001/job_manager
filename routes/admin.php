@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\MenuController;
 use App\Http\Controllers\Admin\CustomPageController;
 use App\Http\Controllers\Admin\FooterController;
+use App\Http\Controllers\Admin\DatabaseController;
 // 
 
 Route::prefix('Admin')->group(function () {
@@ -216,14 +217,14 @@ Route::prefix('Admin')->group(function () {
         Route::get('/Page/{slug}', [CustomPageController::class, 'ViewPage'])->name('Admin.ViewPage');
 
         Route::get('/Footer', [FooterController::class, 'footer'])->name('Admin.Footer');
+        Route::post('/FooterProfilelogo', [FooterController::class, 'FooterProfilelogo'])->name('Admin.FooterProfilelogo');
+        Route::post('/FooterProfilelogo', [FooterController::class, 'FooterProfilelogo'])->name('Admin.FooterProfilelogo');
 
-        Route::get('/Database', [SettingsController::class, 'database'])->name('Admin.Database');
+        Route::get('/Database', [DatabaseController::class, 'database'])->name('Admin.Database');
         
-        Route::get('/export/excel/{table}', [SettingsController::class, 'exportExcel'])->name('export.excel');
-        Route::get('/export/csv/{table}', [SettingsController::class, 'exportCsv'])->name('export.csv');
-
-        Route::post('/FooterProfilelogo', [FooterController::class, 'FooterProfilelogo'])->name('Admin.FooterProfilelogo');
-        Route::post('/FooterProfilelogo', [FooterController::class, 'FooterProfilelogo'])->name('Admin.FooterProfilelogo');
+        Route::get('/export/excel/{table}', [DatabaseController::class, 'exportExcel'])->name('export.excel');
+        Route::get('/export/csv/{table}', [DatabaseController::class, 'exportCsv'])->name('export.csv');
+                
         
         Route::post('/logout', [AuthController::class, 'logout'])->name('Admin.logout');
 
