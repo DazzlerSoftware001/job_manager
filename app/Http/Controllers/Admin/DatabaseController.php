@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use App\Exports\TableExport;
 use Maatwebsite\Excel\Facades\Excel;
+
+use App\Imports\AnnualSalaryImport;
 use Illuminate\Http\Request;
 
 class DatabaseController extends Controller
@@ -122,8 +124,30 @@ class DatabaseController extends Controller
    }
 
 
-   Public function AnnualSalaryBulkUpload()
+   public function AnnualSalaryBulkUpload()
    {
       return view('admin.Settings.AnnualSalaryBulk');
    }
+
+   public function AnnualSalarySubmit(Request $request)
+   {
+      $rules =[
+         'annualSalary' => 'required|mimes:xlsx,csv',
+      ];
+
+      $validate = Validator::make($request->all(),$rules);
+
+      if(!$validate->fails())
+      {
+
+
+         Excel::import(new AnnualSalaryImport, $request->file('file'));
+
+        return response()->json(['status_code'=>1, 'message'=>'Annual Salary Imported Successfully']);
+      }else{
+         return response()->json(['status_code'=>0, 'message'=>$validate->errors()->first()]);
+      }
+
+   }
+
 }

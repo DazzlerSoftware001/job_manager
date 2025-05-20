@@ -1,9 +1,9 @@
 @extends('admin.adminlayout.main')
 @section('title')
-    Admin-Database
+    Admin-Annual Salary
 @endsection
 @section('page-title')
-Database
+Annual Salary
 @endsection
 
 @section('main-container')
@@ -16,7 +16,7 @@ Database
                     <div class="col-lg-12">
                         <div class="card">
                             <div class="card-header">
-                                <h4 class="card-title">Export</h4>
+                                <h4 class="card-title">Import Annual Salary</h4>
                             </div>
 
                             <div class="px-3 mt-3 d-flex align-items-center gap-2">
@@ -26,11 +26,91 @@ Database
                             <div class="card-body">
                                 
                                 <div class="row">
-                                 
+                                    <div class="col-12">
+
+                                        <form action="" method="POST" enctype="multipart/form-data">
+                                            <label for="annualSalary" class="form-label">Upload Annual Salary File <span class="text-danger">*</span></label>
+                                            <input type="file" class="form-control" name="annualSalary" id="annualSalary" required>
+                                            <button class="btn btn-primary">Import</button>
+                                        </form>
+
+
+                                      
+                                    </div>
                                 </div>
                             </div>
 
                         </div>
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="col-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">Example</h4>
+                            </div>
+
+                            <div class="px-3 mt-3 d-flex align-items-center gap-2">
+                                
+                            </div>
+
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table id="myTable" class="table mb-0">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>salary</th>
+                                                <th>status</th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                            <td>1000</td>
+                                            <td>0</td>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-6">
+
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">Rules</h4>
+                            </div>
+
+                            <div class="px-3 mt-3 d-flex align-items-center gap-2">
+                                
+                            </div>
+
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table id="myTable" class="table mb-0">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>salary</th>
+                                                <th>status</th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                            <td>1000</td>
+                                            <td>0</td>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+
                     </div>
                 </div>
 

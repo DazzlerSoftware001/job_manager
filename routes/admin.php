@@ -226,6 +226,7 @@ Route::prefix('Admin')->group(function () {
         Route::get('/export/csv/{table}', [DatabaseController::class, 'exportCsv'])->name('export.csv');
                 
         Route::get('/AnnualSalary/BulkUpload',[DatabaseController::class, 'AnnualSalaryBulkUpload'])->name('Admin.AnnualSalary');
+        Route::post('/AnnualSalary-Submit', [DatabaseController::class, 'AnnualSalarySubmit'])->name('Admin.AnnualSalarySubmit');
 
         
         Route::post('/logout', [AuthController::class, 'logout'])->name('Admin.logout');
