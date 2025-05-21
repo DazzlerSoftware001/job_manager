@@ -159,24 +159,55 @@ class DatabaseController extends Controller
 
 
 
- public function AnnualSalarySubmit(Request $request)
+   public function AnnualSalarySubmit(Request $request)
+   {
+      $rules = [
+         'annualSalary' => 'required|mimes:xlsx,csv,xls',
+      ];
+
+      $validate = Validator::make($request->all(), $rules);
+
+      if (!$validate->fails()) {
+
+         // Read and import directly without storing
+         Excel::import(new AnnualSalaryImport, $request->file('annualSalary'));
+
+         return response()->json(['status_code' => 1, 'message' => 'Annual Salary Imported Successfully']);
+      } else {
+         return response()->json(['status_code' => 0, 'message' => $validate->errors()->first()]);
+      }
+   }
+
+
+   public function companiesBulkUpload()
+   {
+     return view('admin.Settings.CompaniesBulkUpload');
+   }
+
+public function job_postBulkUpload()
 {
-    $rules = [
-        'annualSalary' => 'required|mimes:xlsx,csv,xls',
-    ];
-
-    $validate = Validator::make($request->all(), $rules);
-
-    if (!$validate->fails()) {
-
-        // Read and import directly without storing
-        Excel::import(new AnnualSalaryImport, $request->file('annualSalary'));
-
-        return response()->json(['status_code' => 1, 'message' => 'Annual Salary Imported Successfully']);
-    } else {
-        return response()->json(['status_code' => 0, 'message' => $validate->errors()->first()]);
-    }
+   dd('job_postBulkUpload');
 }
+
+
+
+public function job_skillBulkUpload()
+{
+   dd('job_skillBulkUpload');
+}
+
+public function job_locationBulkUpload()
+{
+   dd('job_locationBulkUpload');
+}
+
+
+public function usersBulkUpload()
+{
+   dd('usersBulkUpload');
+}
+
+
 
 
 

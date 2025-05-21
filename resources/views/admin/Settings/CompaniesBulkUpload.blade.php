@@ -1,9 +1,9 @@
 @extends('admin.adminlayout.main')
 @section('title')
-    Admin-Annual Salary
+    Admin-Companies
 @endsection
 @section('page-title')
-Annual Salary
+Companies
 @endsection
 
 @section('main-container')
@@ -16,7 +16,7 @@ Annual Salary
                     <div class="col-lg-12">
                         <div class="card">
                             <div class="card-header">
-                                <h4 class="card-title">Import Annual Salary</h4>
+                                <h4 class="card-title">Import Companies</h4>
                             </div>
 
                             <div class="px-3 mt-3 d-flex align-items-center gap-2">

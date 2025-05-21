@@ -225,8 +225,16 @@ Route::prefix('Admin')->group(function () {
         Route::get('/export/excel/{table}', [DatabaseController::class, 'exportExcel'])->name('export.excel');
         Route::get('/export/csv/{table}', [DatabaseController::class, 'exportCsv'])->name('export.csv');
         
-        Route::get('/AnnualSalary/BulkUpload',[DatabaseController::class, 'AnnualSalaryBulkUpload'])->name('Admin.AnnualSalary');
+        Route::get('/AnnualSalary/BulkUpload',[DatabaseController::class, 'AnnualSalaryBulkUpload'])->name('Admin.Import.annual_salary');
         Route::post('/AnnualSalary-Submit', [DatabaseController::class, 'AnnualSalarySubmit'])->name('Admin.AnnualSalarySubmit');
+
+        Route::get('/companies/BulkUpload',[DatabaseController::class, 'companiesBulkUpload'])->name('Admin.Import.companies');
+
+
+        Route::get('/job_post/BulkUpload',[DatabaseController::class, 'job_postBulkUpload'])->name('Admin.Import.job_post');
+        Route::get('/job_skill/BulkUpload',[DatabaseController::class, 'job_skillBulkUpload'])->name('Admin.Import.job_skill');
+        Route::get('/job_location/BulkUpload',[DatabaseController::class, 'job_locationBulkUpload'])->name('Admin.Import.job_location');
+        Route::get('/users/BulkUpload',[DatabaseController::class, 'usersBulkUpload'])->name('Admin.Import.users');
 
         
         Route::post('/logout', [AuthController::class, 'logout'])->name('Admin.logout');

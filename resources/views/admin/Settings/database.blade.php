@@ -71,7 +71,11 @@ Database
                                                 <h5 class="card-title text-primary text-capitalize">
                                                     {{ str_replace('_', ' ', $table) }}
                                                 </h5>
-                                                <p class="card-text mb-2">Import data into <strong>{{ str_replace('_', ' ', $table) }}</strong> from a CSV/Excel file.</p>
+                                                <p class="card-text mb-2">Import data into <strong>{{ $table}}</strong> from a CSV/Excel file.</p>
+
+                                                <a href="{{ route('Admin.Import.' . $table) }}" class="btn btn-sm btn-primary mt-2">
+                                                    </i> Import data
+                                                </a>
 
                                                 
                                             </div>
