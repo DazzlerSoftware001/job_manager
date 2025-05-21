@@ -7,7 +7,7 @@
                 <div class="d-flex align-items-center justify-content-between">
                     <div class="rts__logo">
                         <a href="index.html">
-                            <img class="logo__image" src="assets/img/logo/header__one.png" width="160" height="40" alt="logo">
+                            <img class="logo__image" src="{{url('user/assets/img/logo/header__one.png')}}" width="160" height="40" alt="logo">
                         </a>
                     </div>
                     <div class="navigation d-none d-lg-block">

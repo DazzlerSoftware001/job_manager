@@ -11,7 +11,7 @@
 <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvas" aria-labelledby="offcanvasLabel">
     <div class="offcanvas-header p-0 mb-5 mt-4">
       <a href="index.html" class="offcanvas-title" id="offcanvasLabel">
-        <img src="assets/img/logo/header__one.png" alt="logo">
+        <img src="{{url('user/assets/img/logo/header__one.png')}}" alt="logo">
       </a> 
       <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
@@ -58,8 +58,8 @@
     <i class="fas fa-arrow-up"></i>
 </button>
 <!-- all plugin js -->
-<script src="assets/js/plugins.min.js"></script>
-<script src="assets/js/main.js"></script>
+<script src="{{url('user/assets/js/plugins.min.js')}}"></script>
+<script src="{{url('user/assets/js/main.js')}}"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
 

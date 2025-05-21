@@ -217,7 +217,7 @@
                         </div>
 
                         <div class="mb-3">
-                            <label>Links (JSON)</label>
+                            <label>Links</label>
                             <textarea name="links" class="form-control" rows="5">{{ json_encode($footer->links ?? [], JSON_PRETTY_PRINT) }}</textarea>
                         </div>
 
@@ -240,7 +240,7 @@
                         </div>
 
                         <div class="mb-3">
-                            <label>Social Links (JSON)</label>
+                            <label>Social Links</label>
 
                             @php
                                 $socialLinks = [];
