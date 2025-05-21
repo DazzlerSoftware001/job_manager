@@ -6,11 +6,11 @@
 
         @php
         use App\Models\GeneralSetting;
-            $title = GeneralSetting::value('site_title');
+        $title = GeneralSetting::value('site_title');
         @endphp
 
         <meta charset="utf-8" />
-        <title>{{ $GeneralSetting->site_title ?? 'CareerNest' }} -
+        <title>{{ $title ?? 'CareerNest' }} -
             @yield('title')
         </title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">

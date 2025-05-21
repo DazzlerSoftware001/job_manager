@@ -29,7 +29,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200..800&amp;display=swap" rel="stylesheet">
     <link rel="shortcut icon" href="{{url('user/assets/img/favicon.ico')}}" type="image/x-icon">
     {{-- <title>careernest - Job Seeker &amp; Job Holder HTML Template</title> --}}
-    <title>careernest -  @yield('title')</title>
+     @php
+        use App\Models\GeneralSetting;
+        $title = GeneralSetting::value('site_title');
+        @endphp
+
+    <title>{{ $title ?? 'CareerNest' }} -  @yield('title')</title>
     <!-- rt icons -->
     <link rel="stylesheet" href="{{url('user/assets/fonts/icon/css/rt-icons.css')}}">
     <!-- fontawesome -->
