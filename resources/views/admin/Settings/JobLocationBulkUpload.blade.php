@@ -244,7 +244,7 @@ Job Location
                 reverseButtons: true
             }).then((result) => {
                 if (result.isConfirmed) {
-                    var url = "{{ route('Admin.AnnualSalarySubmit') }}";
+                    var url = "{{ route('Admin.JobLocationSubmit') }}";
                     var form = this;
 
                     Swal.fire({
