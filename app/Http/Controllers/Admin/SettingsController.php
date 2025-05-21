@@ -78,7 +78,27 @@ class SettingsController extends Controller
 
         return response()->json([
             'status_code' => 1,
-            'message'    => 'Site title updated successfully.',
+            'message'     => 'Site title updated successfully.',
+        ]);
+    }
+
+    public function updateTimezone(Request $request)
+    {
+        $request->validate([
+            'timezone' => 'required|in:' . implode(',', timezone_identifiers_list()),
+        ]);
+
+        $setting = GeneralSetting::first();
+        if (! $setting) {
+            $setting = new GeneralSetting();
+        }
+
+        $setting->timezone = $request->timezone;
+        $setting->save();
+
+        return response()->json([
+            'status_code' => 1,
+            'message'  => 'Timezone updated successfully.',
         ]);
     }
 

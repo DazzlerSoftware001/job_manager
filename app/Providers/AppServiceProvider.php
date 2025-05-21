@@ -1,7 +1,8 @@
 <?php
-
 namespace App\Providers;
 
+use App\Models\GeneralSetting;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -19,6 +20,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        $timezone = GeneralSetting::first()->timezone ?? 'Asia/Kolkata';
+        Config::set('app.timezone', $timezone);
+        date_default_timezone_set($timezone);
     }
 }

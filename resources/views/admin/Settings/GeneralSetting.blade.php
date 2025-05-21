@@ -74,7 +74,6 @@
 
             <div class="col-12">
                 <div class="card">
-
                     <div class="card-header">
                         <h4 class="card-title">Site Title</h4>
                     </div>
@@ -92,8 +91,39 @@
                         </div>
                     </form>
                 </div>
-
             </div>
+
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Timezone</h4>
+                        <p>Current Server Time: {{ now() }}</p>
+
+                    </div>
+                    <div class="col-12 mt-3 p-3 radius-2 bg-white">
+                        <form id="timezoneForm" method="POST" action="javascript:void(0)">
+                            @csrf
+                            <div class="row align-items-center">
+                                <div class="col-md-9">
+                                    <select name="timezone" id="timezone" class="form-select" required>
+                                        @foreach (timezone_identifiers_list() as $tz)
+                                            <option value="{{ $tz }}"
+                                                {{ isset($GeneralSetting) && $GeneralSetting->timezone === $tz ? 'selected' : '' }}>
+                                                {{ $tz }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-3 mt-md-0 d-flex align-items-end">
+                                    <button type="submit" class="btn btn-success w-100">Update Timezone</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+
         </div>
     @endsection
 
@@ -176,6 +206,80 @@
                     event.preventDefault(); // Prevent default form submission
 
                     var url = "{{ route('Admin.SiteTitle') }}";
+                    $.ajax({
+                        url: url,
+                        type: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        data: new FormData(this),
+                        contentType: false,
+                        cache: false,
+                        processData: false,
+                        dataType: 'json',
+                        success: function(result) {
+                            if (result.status_code === 1) {
+                                $('#EditModal').modal('hide');
+                                $('#EditCompany').trigger("reset");
+                                $('#myTable').DataTable().ajax.reload(null, false);
+                                Toastify({
+                                    text: result.message,
+                                    duration: 3000,
+                                    gravity: "top",
+                                    position: "right",
+                                    style: {
+                                        background: "#28a745",
+                                    },
+                                }).showToast();
+                                setTimeout(function() {
+                                    location.reload();
+                                }, 750);
+                            } else if (result.status_code === 2) {
+                                Toastify({
+                                    text: result.message,
+                                    duration: 3000,
+                                    gravity: "top",
+                                    position: "right",
+                                    style: {
+                                        background: "#c7ac14",
+                                    },
+                                }).showToast();
+                            } else {
+                                Toastify({
+                                    text: result.message,
+                                    duration: 3000,
+                                    gravity: "top",
+                                    position: "right",
+                                    style: {
+                                        background: "#c7ac14",
+                                    },
+                                }).showToast();
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('AJAX Error:', error);
+                            Toastify({
+                                text: 'An error occurred. Please try again.',
+                                duration: 3000,
+                                gravity: "top",
+                                position: "right",
+                                style: {
+                                    background: "#dc3545",
+                                },
+                            }).showToast();
+                        }
+                    });
+                });
+            });
+        </script>
+
+        {{-- Update Site Title --}}
+        <script>
+            $(document).ready(function() {
+                $('#timezoneForm').on('submit', function(event) {
+                    event.preventDefault(); // Prevent default form submission
+
+                    var url = "{{ route('Admin.Timezone') }}";
                     $.ajax({
                         url: url,
                         type: 'POST',

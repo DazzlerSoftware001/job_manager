@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('logo')->nullable();
             $table->string('light_logo')->nullable();
             $table->string('dark_logo')->nullable();
+            $table->string('timezone')->default('Asia/Kolkata');
             $table->timestamps();
         });
     }
