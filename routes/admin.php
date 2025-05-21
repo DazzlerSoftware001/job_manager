@@ -228,12 +228,12 @@ Route::prefix('Admin')->group(function () {
         Route::get('/AnnualSalary/BulkUpload',[DatabaseController::class, 'AnnualSalaryBulkUpload'])->name('Admin.Import.annual_salary');
         Route::post('/AnnualSalary-Submit', [DatabaseController::class, 'AnnualSalarySubmit'])->name('Admin.AnnualSalarySubmit');
 
-        Route::get('/companies/BulkUpload',[DatabaseController::class, 'companiesBulkUpload'])->name('Admin.Import.companies');
+        Route::get('/JobLocation/BulkUpload',[DatabaseController::class, 'JobLocationBulkUpload'])->name('Admin.Import.job_location');
+        Route::post('/JobLocation-Submit', [DatabaseController::class, 'JobLocationSubmit'])->name('Admin.JobLocationSubmit');
 
 
         Route::get('/job_post/BulkUpload',[DatabaseController::class, 'job_postBulkUpload'])->name('Admin.Import.job_post');
         Route::get('/job_skill/BulkUpload',[DatabaseController::class, 'job_skillBulkUpload'])->name('Admin.Import.job_skill');
-        Route::get('/job_location/BulkUpload',[DatabaseController::class, 'job_locationBulkUpload'])->name('Admin.Import.job_location');
         Route::get('/users/BulkUpload',[DatabaseController::class, 'usersBulkUpload'])->name('Admin.Import.users');
 
         

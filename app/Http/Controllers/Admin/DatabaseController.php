@@ -98,7 +98,6 @@ class DatabaseController extends Controller
       $importTables = [
          'annual_salary',
          'job_post',
-         'companies',
          'job_skill',
          'job_location',
          'users',
@@ -179,9 +178,28 @@ class DatabaseController extends Controller
    }
 
 
-   public function companiesBulkUpload()
+   public function JobLocationBulkUpload()
    {
-     return view('admin.Settings.CompaniesBulkUpload');
+     return view('admin.Settings.JobLocationBulkUpload');
+   }
+
+   public function JobLocationSubmit(Request $request)
+   {
+      $rules = [
+         'JobLocation' => 'required|mimes:xlsx,csv,xls',
+      ];
+
+      $validate = Validator::make($request->all(), $rules);
+
+      if (!$validate->fails()) {
+
+         // Read and import directly without storing
+         Excel::import(new JobLocationImport, $request->file('JobLocation'));
+
+         return response()->json(['status_code' => 1, 'message' => 'Job Location Imported Successfully']);
+      } else {
+         return response()->json(['status_code' => 0, 'message' => $validate->errors()->first()]);
+      }
    }
 
 public function job_postBulkUpload()

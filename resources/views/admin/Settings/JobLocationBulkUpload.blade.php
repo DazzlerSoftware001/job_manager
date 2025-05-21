@@ -1,9 +1,9 @@
 @extends('admin.adminlayout.main')
 @section('title')
-    Admin-Companies
+    Admin-Job Location
 @endsection
 @section('page-title')
-Companies
+Job Location
 @endsection
 
 @section('main-container')
@@ -16,7 +16,7 @@ Companies
                     <div class="col-lg-12">
                         <div class="card">
                             <div class="card-header">
-                                <h4 class="card-title">Import Companies</h4>
+                                <h4 class="card-title">Import Job Location</h4>
                             </div>
 
                             <div class="px-3 mt-3 d-flex align-items-center gap-2">
@@ -27,17 +27,14 @@ Companies
                                 
                                 <div class="row">
                                     <div class="col-12">
-{{-- {{route('Admin.AnnualSalarySubmit')}} --}}
-
 
                                         <form action="javascript:void(0)" id="AnnualSalaryImport" method="POST" enctype="multipart/form-data">
                                             @csrf
-                                            <label for="annualSalary" class="form-label">Upload Annual Salary File <span class="text-danger">*</span></label>
-                                            <input type="file" class="form-control" name="annualSalary" id="annualSalary" required>
+                                            <label for="JobLocation" class="form-label">Upload Job Location File <span class="text-danger">*</span></label>
+                                            <input type="file" class="form-control" name="JobLocation" id="JobLocation" required accept=".xlsx,.xls,.csv">
+                                            <small class="text-danger d-block">Upload only .xlsx, .xls, or .csv files</small>
                                             <button type="submit" class="btn btn-primary">Import</button>
                                         </form>
-
-
                                       
                                     </div>
                                 </div>
@@ -64,14 +61,33 @@ Companies
                                     <table id="myTable" class="table mb-0">
                                         <thead class="table-light">
                                             <tr>
-                                                <th>salary</th>
+                                                <th>country</th>
+                                                <th>city</th>
                                                 <th>status</th>
+                                                
+
                                             </tr>
                                         </thead>
 
                                         <tbody>
-                                            <td>1000</td>
-                                            <td>0</td>
+                                            <tr>
+                                                <td>India</td>
+                                                <td>Mumbai</td>
+                                                <td>1</td>
+                                            </tr>
+
+                                            <tr>
+                                                <td>India</td>
+                                                <td>Jaipur</td>
+                                                <td>1</td>
+                                            </tr>
+
+                                            <tr>
+                                                <td>USA</td>
+                                                <td>New York</td>
+                                                <td>0</td>
+                                            </tr>
+                                            
                                         </tbody>
                                     </table>
                                 </div>
@@ -97,14 +113,26 @@ Companies
                                     <table id="myTable" class="table mb-0">
                                         <thead class="table-light">
                                             <tr>
-                                                <th>salary</th>
-                                                <th>status</th>
+                                                <th>column</th>
+                                                <th>rules</th>
                                             </tr>
                                         </thead>
 
                                         <tbody>
-                                            <td>1000</td>
-                                            <td>0</td>
+                                            <tr>
+                                                <td>country</th>
+                                                <td>The name of the country is mandatory and should not exceed 100 characters.
+                                            </tr>
+
+                                            <tr>
+                                                <td>city</th>
+                                                <td>The name of the city is mandatory and should not exceed 100 characters.
+                                            </tr>
+
+                                            <tr>
+                                                <td>status</th>
+                                                <td>The status is mandatory it must be 0 or 1.
+                                            </tr>
                                         </tbody>
                                     </table>
                                 </div>
