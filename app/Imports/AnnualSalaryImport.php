@@ -27,13 +27,13 @@ class AnnualSalaryImport implements ToCollection
 
          foreach ($collection as $index => $row) {
             // Skip the header row if present
-            if ($index === 0 && $row[0] === 'range') {
+            if ($index === 0 && $row[0] === 'salary') {
                 continue;
             }
 
             JobSalary::create([
                 'salary'  => $row[0],
-                'status' => $row[1],
+                'status' => $row[1] !== null && $row[1] !== '' ? $row[1] : 0,
             ]);
         }
     }
