@@ -1,4 +1,4 @@
-@php use App\Models\FooterLogo; @endphp
+@php use App\Models\GeneralSetting; @endphp
 @php use App\Models\FooterSetting; @endphp
 @php
     $footerLogo = FooterLogo::value('logo');

@@ -5,12 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class FooterLogo extends Model
+class GeneralSetting extends Model
 {
     use HasFactory;
     
-    protected $table = 'footer_logo';
+    protected $table = 'general_setting';
 
-    protected $fillable = ['logo', 'light_logo', 'dark_logo'];
+    protected $fillable = ['site_title', 'logo', 'light_logo', 'dark_logo'];
 
 }

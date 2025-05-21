@@ -3,7 +3,7 @@
     Admin-Page Setting
 @endsection
 @section('page-title')
-    Page Setting
+    Footer Setting
 @endsection
 <style>
     .widget-box {
@@ -147,7 +147,7 @@
 @section('main-container')
     <div class="main-content">
         <div class="page-content">
-            <div class="col-md-12">
+            {{-- <div class="col-md-12">
                 <div class="widget-box">
                     <form id="multiImageForm" enctype="multipart/form-data" method="POST">
                         @csrf
@@ -203,7 +203,7 @@
                         </div>
                     </form>
                 </div>
-            </div>
+            </div> --}}
 
             <!-- Inner Footer Sidebar -->
             <div class="col-md-12">
@@ -262,21 +262,18 @@
                                             <div class="col-sm-3">
                                                 <div class="rt-input-group">
                                                     <label>Media Name</label>
-                                                    <input type="text" name="social_name[]"
-                                                        value="{{ $name }}">
+                                                    <input type="text" name="social_name[]" value="{{ $name }}">
                                                 </div>
                                             </div>
                                             <div class="col-sm-6">
                                                 <div class="rt-input-group">
                                                     <label>Media Link</label>
-                                                    <input type="url" name="social_link[]"
-                                                        value="{{ $link }}"
+                                                    <input type="url" name="social_link[]" value="{{ $link }}"
                                                         placeholder="https://{{ strtolower($name) }}.com/yourprofile">
                                                 </div>
                                             </div>
                                             <div class="col-sm-2">
-                                                <button type="button"
-                                                    class="btn btn-danger remove-social">Remove</button>
+                                                <button type="button" class="btn btn-danger remove-social">Remove</button>
                                             </div>
                                         </div>
                                     @endforeach
@@ -323,76 +320,6 @@
     </div>
 @endsection
 @section('script')
-    {{-- Update Profile Image --}}
-    <script>
-        $(document).ready(function() {
-            // Preview handlers
-            function readURL(input, previewId) {
-                if (input.files && input.files[0]) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        $(previewId).attr('src', e.target.result);
-                    };
-                    reader.readAsDataURL(input.files[0]);
-                }
-            }
-
-            $('#image1').change(function() {
-                readURL(this, '#preview1');
-            });
-
-            $('#image2').change(function() {
-                readURL(this, '#preview2');
-            });
-
-            $('#image3').change(function() {
-                readURL(this, '#preview3');
-            });
-
-            // Form submit handler
-            $('#multiImageForm').submit(function(e) {
-                e.preventDefault();
-
-                const formData = new FormData(this);
-
-                $.ajax({
-                    url: "{{ route('Admin.FooterProfilelogo') }}", // Your route
-                    type: "POST",
-                    data: formData,
-                    contentType: false,
-                    processData: false,
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    },
-                    success: function(response) {
-                        Toastify({
-                            text: response.message,
-                            duration: 3000,
-                            gravity: "top",
-                            position: "right",
-                            style: {
-                                background: "#28a745",
-                            },
-                        }).showToast();
-                        setTimeout(function() {
-                            location.reload();
-                        }, 750);
-                    },
-                    error: function() {
-                        Toastify({
-                            text: "Upload failed. Please try again.",
-                            duration: 3000,
-                            gravity: "top",
-                            position: "right",
-                            style: {
-                                background: "#dc3545",
-                            },
-                        }).showToast();
-                    }
-                });
-            });
-        });
-    </script>
 
     {{-- Add Social Links Fields --}}
     <script>
