@@ -9,6 +9,8 @@ use App\Exports\TableExport;
 use Maatwebsite\Excel\Facades\Excel;
 
 use App\Imports\AnnualSalaryImport;
+use App\Imports\JobLocationImport;
+
 use Illuminate\Http\Request;
 
 class DatabaseController extends Controller
