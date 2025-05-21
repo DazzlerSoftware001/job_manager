@@ -10,6 +10,7 @@ use Maatwebsite\Excel\Facades\Excel;
 
 use App\Imports\AnnualSalaryImport;
 use App\Imports\JobLocationImport;
+use App\Imports\CurrencyImport;
 
 use Illuminate\Http\Request;
 
@@ -99,6 +100,7 @@ class DatabaseController extends Controller
       // Tables allowed for import (you can adjust this list)
       $importTables = [
          'annual_salary',
+         'currency',
          'job_post',
          'job_skill',
          'job_location',
@@ -131,32 +133,7 @@ class DatabaseController extends Controller
       return view('admin.Settings.AnnualSalaryBulk');
    }
 
-   // public function AnnualSalarySubmit(Request $request)
-   // {
-   //    $rules =[
-   //       'annualSalary' => 'required|mimes:xlsx,csv',
-   //    ];
-
-   //    $validate = Validator::make($request->all(),$rules);
-
-   //    if(!$validate->fails())
-   //    {
-
-   //       // if ($request->hasFile('annualSalary')) {
-   //       //    dd($request->file('annualSalary')->getClientOriginalExtension());
-   //       // }
-
-   //       Excel::import(new AnnualSalaryImport, $request->file('file'));
-
-
-
-
-   //      return response()->json(['status_code'=>1, 'message'=>'Annual Salary Imported Successfully']);
-   //    }else{
-   //       return response()->json(['status_code'=>0, 'message'=>$validate->errors()->first()]);
-   //    }
-
-   // }
+ 
 
 
 
@@ -174,6 +151,30 @@ class DatabaseController extends Controller
          Excel::import(new AnnualSalaryImport, $request->file('annualSalary'));
 
          return response()->json(['status_code' => 1, 'message' => 'Annual Salary Imported Successfully']);
+      } else {
+         return response()->json(['status_code' => 0, 'message' => $validate->errors()->first()]);
+      }
+   }
+
+   public function CurrencyBulkUpload()
+   {
+      return view('admin.Settings.CurrencyBulkUpload');
+   }
+
+   public function CurrencySubmit(Request $request)
+   {
+      $rules = [
+         'Currency' => 'required|mimes:xlsx,csv,xls',
+      ];
+
+      $validate = Validator::make($request->all(), $rules);
+
+      if (!$validate->fails()) {
+
+         // Read and import directly without storing
+         Excel::import(new CurrencyImport, $request->file('Currency'));
+
+         return response()->json(['status_code' => 1, 'message' => 'Currency Imported Successfully']);
       } else {
          return response()->json(['status_code' => 0, 'message' => $validate->errors()->first()]);
       }
@@ -204,10 +205,10 @@ class DatabaseController extends Controller
       }
    }
 
-public function job_postBulkUpload()
-{
-   dd('job_postBulkUpload');
-}
+   public function job_postBulkUpload()
+   {
+      dd('job_postBulkUpload');
+   }
 
 
 

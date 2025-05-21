@@ -2015,7 +2015,7 @@ class JobController extends Controller
   
         // Define validation rules
         $rules = [
-            'currency' => 'required|string|unique:currency,currency',
+            'currency' => 'required|string|max:50|unique:currency,currency',
         ];
 
         // Validate the request
