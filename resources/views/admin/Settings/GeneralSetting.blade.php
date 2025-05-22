@@ -97,14 +97,13 @@
                 <div class="card">
                     <div class="card-header">
                         <h4 class="card-title">Timezone</h4>
-                        <p>Current Server Time: {{ now() }}</p>
 
                     </div>
-                    <div class="col-12 mt-3 p-3 radius-2 bg-white">
+                    <div class="col-12 mt-2 p-3 radius-2 bg-white">
                         <form id="timezoneForm" method="POST" action="javascript:void(0)">
                             @csrf
                             <div class="row align-items-center">
-                                <div class="col-md-9">
+                                <div class="col-md-2">
                                     <select name="timezone" id="timezone" class="form-select" required>
                                         @foreach (timezone_identifiers_list() as $tz)
                                             <option value="{{ $tz }}"
@@ -114,9 +113,10 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="col-md-3 mt-md-0 d-flex align-items-end">
+                                <div class="col-md-2 mt-md-0 d-flex align-items-end">
                                     <button type="submit" class="btn btn-success w-100">Update Timezone</button>
                                 </div>
+                                <p class="mt-3">Current Server Time: {{ now() }}</p>
                             </div>
                         </form>
                     </div>
