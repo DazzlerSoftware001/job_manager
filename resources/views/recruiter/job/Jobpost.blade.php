@@ -8,6 +8,8 @@
     Job Post
 @endsection
 @section('main-container')
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-lite.min.css" rel="stylesheet">
+
     {{-- <script src="https://cdn.tiny.cloud/1/k73iszd3tzdamw58yk6fmdzasoe86nkkbzktvgqtvxvcrr17/tinymce/6/tinymce.min.js"
         referrerpolicy="origin"></script>
     <script>
@@ -21,7 +23,7 @@
         });
     </script> --}}
 
-  
+
 
 
     <style>
@@ -432,7 +434,7 @@
                                                 <div class="col-12 col-md-12 mt-3">
                                                     <label for="company_details">Company Details <span
                                                             class="text-danger">*</span></label>
-                                                    <textarea class="form-control" id="company_details" name="company_details" ></textarea>
+                                                    <textarea class="form-control" id="company_details" name="company_details"></textarea>
                                                 </div>
                                             </div>
                                         </div>
@@ -443,7 +445,9 @@
                                         <div class="col-xl-6 text-center mt-3">
                                             <label for="job_image">Job Image <span class="text-danger">*</span></label>
                                             <div class="mt-3">
-                                                <img id="imagePreview" src="{{url('recruiter/logo/default.png')}}" onerror="this.onerror=null; this.src='{{ url('recruiter/logo/default.png') }}';" alt="Image Preview"
+                                                <img id="imagePreview" src="{{ url('recruiter/logo/default.png') }}"
+                                                    onerror="this.onerror=null; this.src='{{ url('recruiter/logo/default.png') }}';"
+                                                    alt="Image Preview"
                                                     style="width: 150px; height: 150px; object-fit: cover; border-radius: 10px;">
                                                 <input type="hidden" id="company_logo" name="company_logo"
                                                     value="">
@@ -452,32 +456,46 @@
 
                                         <div class="col-6 mt-3">
                                             <label for="jobExp">Job Expiry<span class="text-danger">*</span></label>
-                                            <input type="Date" class="form-control" id="jobExp" name="jobExp" ></input>
+                                            <input type="Date" class="form-control" id="jobExp"
+                                                name="jobExp"></input>
                                         </div>
 
 
 
                                         <div class="d-flex justify-content-center mt-3">
-                                            <div class="col-xl-12 text-center">
+                                            <div class="col-xl-12">
                                                 <label for="job_description">Job Description <span
                                                         class="text-danger">*</span></label>
-                                                <textarea class="form-control" id="job_description" name="job_description"></textarea>
+                                                {{-- <textarea class="form-control" id="job_description" name="job_description"></textarea> --}}
+                                                <textarea id="job_description" name="job_description" rows="10" class="form-control"></textarea>
+
                                             </div>
                                         </div>
 
+                                        {{-- <div class="mb-3">
+                                            <label for="content" class="form-label">Content</label>
+                                            @error('content')
+                                                <small class="text-danger">{{ $message }}</small>
+                                            @enderror
+                                        </div> --}}
+
                                         <div class="d-flex justify-content-center mt-3">
-                                            <div class="col-xl-12 text-center">
+                                            <div class="col-xl-12">
                                                 <label for="job_resp">Responsibilities <span
                                                         class="text-danger">*</span></label>
-                                                <textarea class="form-control" id="job_resp" name="job_resp"></textarea>
+                                                {{-- <textarea class="form-control" id="job_resp" name="job_resp"></textarea> --}}
+                                                <textarea id="job_resp" name="job_resp" rows="10" class="form-control"></textarea>
+
                                             </div>
                                         </div>
 
                                         <div class="d-flex justify-content-center mt-3">
-                                            <div class="col-xl-12 text-center">
+                                            <div class="col-xl-12">
                                                 <label for="job_req">Requirements <span
                                                         class="text-danger">*</span></label>
-                                                <textarea class="form-control" id="job_req" name="job_req"></textarea>
+                                                {{-- <textarea class="form-control" id="job_req" name="job_req"></textarea> --}}
+                                                <textarea id="job_req" name="job_req" rows="10" class="form-control"></textarea>
+
                                             </div>
                                         </div>
 
@@ -503,14 +521,41 @@
             <!-- container-fluid -->
         </div>
         <!-- End Page-content -->
-@endsection
+    @endsection
 
     @section('script')
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-        <script src="https://cdn.ckeditor.com/ckeditor5/41.1.0/classic/ckeditor.js"></script>
-     
+        {{-- <script src="https://cdn.ckeditor.com/ckeditor5/41.1.0/classic/ckeditor.js"></script> --}}
+
+        <!-- Summernote JS -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-lite.min.js"></script>
         <script>
+            $(document).ready(function() {
+                $('#job_description').summernote({
+                    height: 300, // set editor height
+                    placeholder: 'Write your content here...'
+                });
+            });
+        </script>
+        <script>
+            $(document).ready(function() {
+                $('#job_resp').summernote({
+                    height: 300, // set editor height
+                    placeholder: 'Write your content here...'
+                });
+            });
+        </script>
+        <script>
+            $(document).ready(function() {
+                $('#job_req').summernote({
+                    height: 300, // set editor height
+                    placeholder: 'Write your content here...'
+                });
+            });
+        </script>
+
+        {{-- <script>
         ClassicEditor
             .create(document.querySelector('#job_description'))
             .catch(error => {
@@ -528,7 +573,7 @@
             .catch(error => {
                 console.error(error);
             });
-        </script>
+        </script> --}}
 
         <script>
             // Set tomorrow's date as the minimum
@@ -895,7 +940,7 @@
                     }
                 });
 
-               
+
 
             });
         </script>
@@ -1053,6 +1098,4 @@
                 });
             });
         </script>
-
-
     @endsection
