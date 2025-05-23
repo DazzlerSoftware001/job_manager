@@ -13,10 +13,10 @@
                 <div class="rts__footer__widget max-320">
                     <a href="index.html" class="footer__logo" aria-label="logo">
                         <img src="{{ asset($footerLogo) }}"
-                            onerror="this.onerror=null; this.src='{{ url('settings/footer/logo/default.png') }}';"
+                            onerror="this.onerror=null; this.src='{{ url('settings/logo/default.png') }}';"
                             width="160" height="40" alt="logo">
                     </a>
-                    @if ($footerSettings->description != null)
+                    @if ($footerSettings !== null && $footerSettings->description !== null)
                         <p class="mt-4">{{ $footerSettings->description }}</p>
                     @else
                         <p class="mt-4">Whether you're an experienced professional or a fresh graduate eager to dive
@@ -44,7 +44,7 @@
                     </div>
                     <ul class="list-unstyled mb-3">
                         <li><a href="#"><i class="fa-light fa-location-dot"></i>
-                                @if ($footerSettings->address != null)
+                                @if ($footerSettings !== null && $footerSettings->address != null)
                                     {{ $footerSettings->address }}
                                 @else
                                     2715 Ash Dr. San Jose,USA
@@ -52,7 +52,7 @@
                             </a></li>
 
                         <li><a href="callto:+880171234578"><i class="fa-light fa-phone"></i>+
-                                @if ($footerSettings->phone != null)
+                                @if ($footerSettings !== null && $footerSettings->phone != null)
                                     {{ $footerSettings->phone }}
                                 @else
                                     (61)
@@ -61,7 +61,7 @@
                             </a>
                         </li>
                         <li><a href="mailto:careernext@gmail.com"><i class="fa-light fa-envelope"></i>
-                                @if ($footerSettings->email != null)
+                                @if ($footerSettings !== null && $footerSettings->email != null)
                                     {{ $footerSettings->email }}
                                 @else
                                     careernext@gmail.com
@@ -107,10 +107,11 @@
     <div class="rts__copyright">
         <div class="container">
             <p class="text-center fw-medium py-4">
-                @if ($footerSettings->copyright != null)
+                @if ($footerSettings !== null && $footerSettings->copyright != null)
                     {{ $footerSettings->copyright }}
                 @else
-                    Copyright &copy; 2024 All Rights Reserved by careernext
+                    {{-- Copyright &copy; 2024 All Rights Reserved by careernext --}}
+                    2025 © CareerNest Design & Develop by Dazzler Software
                 @endif
 
             </p>
