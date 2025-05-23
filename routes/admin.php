@@ -245,9 +245,8 @@ Route::prefix('Admin')->group(function () {
         Route::post('/JobLocation-Submit', [DatabaseController::class, 'JobLocationSubmit'])->name('Admin.JobLocationSubmit');
 
 
-        Route::get('/job_post/BulkUpload',[DatabaseController::class, 'job_postBulkUpload'])->name('Admin.Import.job_post');
-        Route::get('/job_skill/BulkUpload',[DatabaseController::class, 'job_skillBulkUpload'])->name('Admin.Import.job_skill');
-        Route::get('/users/BulkUpload',[DatabaseController::class, 'usersBulkUpload'])->name('Admin.Import.users');
+        Route::get('/JobSkill/BulkUpload',[DatabaseController::class, 'JobSkillBulkUpload'])->name('Admin.Import.job_skill');
+        Route::post('/JobSkill-Submit', [DatabaseController::class, 'JobSkillSubmit'])->name('Admin.JobSkillSubmit');
 
         
         Route::post('/logout', [AuthController::class, 'logout'])->name('Admin.logout');

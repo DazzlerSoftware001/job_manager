@@ -12,6 +12,7 @@ use App\Imports\AnnualSalaryImport;
 use App\Imports\JobLocationImport;
 use App\Imports\CurrencyImport;
 use App\Imports\JobCategoryImport;
+use App\Imports\SkillImport;
 
 use Illuminate\Http\Request;
 
@@ -103,10 +104,8 @@ class DatabaseController extends Controller
          'annual_salary',
          'currency',
          'job_category',
-         'job_post',
          'job_skill',
          'job_location',
-         'users',
       ];
 
       // Filter table names
@@ -129,16 +128,13 @@ class DatabaseController extends Controller
       return Excel::download(new TableExport($table), $table . '.csv', \Maatwebsite\Excel\Excel::CSV);
    }
 
-
+   // annual salary for admin area 
    public function AnnualSalaryBulkUpload()
    {
       return view('admin.Settings.AnnualSalaryBulk');
    }
 
- 
-
-
-
+   // annual salary import for admin area 
    public function AnnualSalarySubmit(Request $request)
    {
       $rules = [
@@ -158,11 +154,13 @@ class DatabaseController extends Controller
       }
    }
 
+   // Currency for admin area 
    public function CurrencyBulkUpload()
    {
       return view('admin.Settings.CurrencyBulkUpload');
    }
 
+   // Currency import for admin area 
    public function CurrencySubmit(Request $request)
    {
       $rules = [
@@ -182,12 +180,14 @@ class DatabaseController extends Controller
       }
    }
 
+
+   // Job category for admin area 
    public function JobCategoryBulkUpload()
    {
       return view('admin.Settings.JobCategoryBulkUpload');
    }
 
-
+   // Job category import for admin area 
    public function JobCategorySubmit(Request $request)
    {
       $rules = [
@@ -207,12 +207,13 @@ class DatabaseController extends Controller
       }
    }
 
-
+   // Job Location for admin area 
    public function JobLocationBulkUpload()
    {
      return view('admin.Settings.JobLocationBulkUpload');
    }
 
+   // Job category import for admin area 
    public function JobLocationSubmit(Request $request)
    {
       $rules = [
@@ -232,31 +233,33 @@ class DatabaseController extends Controller
       }
    }
 
-   public function job_postBulkUpload()
+
+   // Job Location for admin area 
+   public function JobSkillBulkUpload()
    {
-      dd('job_postBulkUpload');
+      return view('admin.Settings.JobSkillBulkUpload');
    }
 
 
+    // Job Location import for admin area 
+   public function JobSkillSubmit(Request $request)
+   {
+      $rules = [
+         'JobSkill' => 'required|mimes:xlsx,csv,xls',
+      ];
 
-public function job_skillBulkUpload()
-{
-   dd('job_skillBulkUpload');
-}
+      $validate = Validator::make($request->all(), $rules);
 
-public function job_locationBulkUpload()
-{
-   dd('job_locationBulkUpload');
-}
+      if (!$validate->fails()) {
 
+         // Read and import directly without storing
+         Excel::import(new SkillImport, $request->file('JobSkill'));
 
-public function usersBulkUpload()
-{
-   dd('usersBulkUpload');
-}
-
-
-
+         return response()->json(['status_code' => 1, 'message' => 'Job Skill Imported Successfully']);
+      } else {
+         return response()->json(['status_code' => 0, 'message' => $validate->errors()->first()]);
+      }
+   }
 
 
 }
