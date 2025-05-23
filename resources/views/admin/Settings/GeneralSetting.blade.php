@@ -22,9 +22,15 @@
                             <div class="col-md-4 my__details">
                                 <div class="info__top d-flex align-items-center justify-content-center">
                                     <div class="author__image me-3">
-                                        <img id="preview1" src="{{ asset($GeneralSetting->logo) }}"
-                                            onerror="this.onerror=null; this.src='{{ url('settings/footer/logo/default.png') }}';"
-                                            alt="" width="150" height="150">
+                                        @if ($GeneralSetting !== null)
+                                            <img id="preview1" src="{{ asset($GeneralSetting->logo) }}"
+                                                onerror="this.onerror=null; this.src='{{ url('settings/logo/default.png') }}';"
+                                                alt="" width="150" height="150">
+                                        @else
+                                            <img id="preview1" src="{{ url('settings/logo/default.png') }}" width="150"
+                                                height="150">
+                                        @endif
+
                                     </div>
                                     <div class="select__image">
                                         <label for="image1" class="btn btn-primary">Upload Logo</label>
@@ -38,9 +44,14 @@
                             <div class="col-md-4 my__details">
                                 <div class="info__top d-flex align-items-center justify-content-center">
                                     <div class="author__image me-3">
-                                        <img id="preview2" src="{{ asset($GeneralSetting->light_logo) }}"
-                                            onerror="this.onerror=null; this.src='{{ url('settings/footer/logo/default.png') }}';"
-                                            alt="" width="150" height="150">
+                                        @if ($GeneralSetting !== null)
+                                            <img id="preview2" src="{{ asset($GeneralSetting->light_logo) }}"
+                                                onerror="this.onerror=null; this.src='{{ url('settings/logo/default.png') }}';"
+                                                alt="" width="150" height="150">
+                                        @else
+                                            <img id="preview2" src="{{ url('settings/logo/default.png') }}" alt=""
+                                                width="150" height="150">
+                                        @endif
                                     </div>
                                     <div class="select__image">
                                         <label for="image2" class="btn btn-primary">Upload Light Logo</label>
@@ -53,9 +64,14 @@
                             <div class="col-md-4 my__details">
                                 <div class="info__top d-flex align-items-center justify-content-center">
                                     <div class="author__image me-3">
-                                        <img id="preview3" src="{{ asset($GeneralSetting->dark_logo) }}"
-                                            onerror="this.onerror=null; this.src='{{ url('settings/footer/logo/default.png') }}';"
-                                            alt="" width="150" height="150">
+                                        @if ($GeneralSetting !== null)
+                                            <img id="preview3" src="{{ asset($GeneralSetting->dark_logo) }}"
+                                                onerror="this.onerror=null; this.src='{{ url('settings/logo/default.png') }}';"
+                                                alt="" width="150" height="150">
+                                        @else
+                                            <img id="preview3" src="{{ url('settings/logo/default.png') }}" alt=""
+                                                width="150" height="150">
+                                        @endif
                                     </div>
                                     <div class="select__image">
                                         <label for="image3" class="btn btn-primary">Upload Dark Logo</label>
@@ -105,14 +121,22 @@
                             <div class="row align-items-center">
                                 <div class="col-md-2">
                                     <select name="timezone" id="timezone" class="form-select" required>
+                                        @php
+                                            $currentTz = old(
+                                                'timezone',
+                                                $GeneralSetting->timezone ?? config('app.timezone'),
+                                            );
+                                        @endphp
+
                                         @foreach (timezone_identifiers_list() as $tz)
                                             <option value="{{ $tz }}"
-                                                {{ isset($GeneralSetting) && $GeneralSetting->timezone === $tz ? 'selected' : '' }}>
+                                                {{ $currentTz === $tz ? 'selected' : '' }}>
                                                 {{ $tz }}
                                             </option>
                                         @endforeach
                                     </select>
                                 </div>
+
                                 <div class="col-md-2 mt-md-0 d-flex align-items-end">
                                     <button type="submit" class="btn btn-success w-100">Update Timezone</button>
                                 </div>

@@ -44,8 +44,8 @@ class SettingsController extends Controller
                 // Save the new image
                 $image     = $request->file($inputName);
                 $imageName = time() . '_' . $inputName . '.' . $image->getClientOriginalExtension();
-                $image->move(public_path('settings/footer/logo/'), $imageName);
-                $GeneralSetting->$dbColumn = 'settings/footer/logo/' . $imageName;
+                $image->move(public_path('settings/logo/'), $imageName);
+                $GeneralSetting->$dbColumn = 'settings/logo/' . $imageName;
             }
         }
 

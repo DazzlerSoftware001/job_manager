@@ -9,7 +9,7 @@
 @endsection
 @section('main-container')
    
-
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-lite.min.css" rel="stylesheet">
     <style>
         .choices {
             border: var(--bs-border-width) solid var(--bs-border-color);
@@ -436,7 +436,7 @@
                                         
 
                                         <div class="d-flex justify-content-center mt-3">
-                                            <div class="col-xl-12 text-center">
+                                            <div class="col-xl-12">
                                                 <label for="job_description">Job Description <span
                                                         class="text-danger">*</span></label>
                                                 <textarea class="form-control" id="job_description" name="job_description">{{ $jobPost->job_desc }}</textarea>
@@ -444,7 +444,7 @@
                                         </div>
 
                                         <div class="d-flex justify-content-center mt-3">
-                                            <div class="col-xl-12 text-center">
+                                            <div class="col-xl-12">
                                                 <label for="job_resp">Responsibilities <span
                                                         class="text-danger">*</span></label>
                                                 <textarea class="form-control" id="job_resp" name="job_resp">{{ $jobPost->job_resp }}</textarea>
@@ -452,7 +452,7 @@
                                         </div>
 
                                         <div class="d-flex justify-content-center mt-3">
-                                            <div class="col-xl-12 text-center">
+                                            <div class="col-xl-12">
                                                 <label for="job_req">Requirements <span
                                                         class="text-danger">*</span></label>
                                                 <textarea class="form-control" id="job_req" name="job_req">{{ $jobPost->job_req }}</textarea>
@@ -488,7 +488,7 @@
     @section('script')
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-        <script src="https://cdn.ckeditor.com/ckeditor5/41.1.0/classic/ckeditor.js"></script>
+        {{-- <script src="https://cdn.ckeditor.com/ckeditor5/41.1.0/classic/ckeditor.js"></script>
      
         <script>
             ClassicEditor
@@ -507,6 +507,33 @@
             .create(document.querySelector('#job_req'))
             .catch(error => {
                 console.error(error);
+            });
+        </script> --}}
+
+         <!-- Summernote JS -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-lite.min.js"></script>
+        <script>
+            $(document).ready(function() {
+                $('#job_description').summernote({
+                    height: 300, // set editor height
+                    placeholder: 'Write your content here...'
+                });
+            });
+        </script>
+        <script>
+            $(document).ready(function() {
+                $('#job_resp').summernote({
+                    height: 300, // set editor height
+                    placeholder: 'Write your content here...'
+                });
+            });
+        </script>
+        <script>
+            $(document).ready(function() {
+                $('#job_req').summernote({
+                    height: 300, // set editor height
+                    placeholder: 'Write your content here...'
+                });
             });
         </script>
 
