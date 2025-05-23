@@ -140,7 +140,7 @@ Job Category
 
         <script>
     $(document).ready(function () {
-        $('#CurrencyImport').on('submit', function (event) {
+        $('#JobCategoryImport').on('submit', function (event) {
             event.preventDefault();
 
             Swal.fire({
@@ -181,7 +181,7 @@ Job Category
                             Swal.close(); // Hide loading
 
                             if (result.status_code === 1) {
-                                $('#CurrencyImport').trigger("reset");
+                                $('#JobCategoryImport').trigger("reset");
 
                                 Toastify({
                                     text: result.message,
