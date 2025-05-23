@@ -11,6 +11,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\AnnualSalaryImport;
 use App\Imports\JobLocationImport;
 use App\Imports\CurrencyImport;
+use App\Imports\JobCategoryImport;
 
 use Illuminate\Http\Request;
 
@@ -101,6 +102,7 @@ class DatabaseController extends Controller
       $importTables = [
          'annual_salary',
          'currency',
+         'job_category',
          'job_post',
          'job_skill',
          'job_location',
@@ -175,6 +177,31 @@ class DatabaseController extends Controller
          Excel::import(new CurrencyImport, $request->file('Currency'));
 
          return response()->json(['status_code' => 1, 'message' => 'Currency Imported Successfully']);
+      } else {
+         return response()->json(['status_code' => 0, 'message' => $validate->errors()->first()]);
+      }
+   }
+
+   public function JobCategoryBulkUpload()
+   {
+      return view('admin.Settings.JobCategoryBulkUpload');
+   }
+
+
+   public function JobCategorySubmit(Request $request)
+   {
+      $rules = [
+         'JobCategory' => 'required|mimes:xlsx,csv,xls',
+      ];
+
+      $validate = Validator::make($request->all(), $rules);
+
+      if (!$validate->fails()) {
+
+         // Read and import directly without storing
+         Excel::import(new JobCategoryImport, $request->file('JobCategory'));
+
+         return response()->json(['status_code' => 1, 'message' => 'Category Imported Successfully']);
       } else {
          return response()->json(['status_code' => 0, 'message' => $validate->errors()->first()]);
       }

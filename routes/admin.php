@@ -236,6 +236,10 @@ Route::prefix('Admin')->group(function () {
 
         Route::get('/Currency/BulkUpload',[DatabaseController::class, 'CurrencyBulkUpload'])->name('Admin.Import.currency');
         Route::post('/Currency-Submit', [DatabaseController::class, 'CurrencySubmit'])->name('Admin.CurrencySubmit');
+
+        Route::get('/JobCategory/BulkUpload',[DatabaseController::class, 'JobCategoryBulkUpload'])->name('Admin.Import.job_category');
+        Route::post('/JobCategory-Submit', [DatabaseController::class, 'JobCategorySubmit'])->name('Admin.JobCategorySubmit');
+        
         
         Route::get('/JobLocation/BulkUpload',[DatabaseController::class, 'JobLocationBulkUpload'])->name('Admin.Import.job_location');
         Route::post('/JobLocation-Submit', [DatabaseController::class, 'JobLocationSubmit'])->name('Admin.JobLocationSubmit');
