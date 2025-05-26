@@ -73,7 +73,7 @@
     @endsection
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     @section('script')
-        {{-- Get Job list --}}
+        {{-- Get User list --}}
         <script>
             $(document).ready(function() {
                 $('#myTable').DataTable({
@@ -119,21 +119,6 @@
                 $('#imageModal').modal('show');
             }
         </script>
-
-
-
-        {{-- To Show Verify & Reject Button --}}
-        <script>
-            function toggleVerifyOptions(id) {
-                let optionsDiv = document.getElementById("verify-options-" + id);
-                if (optionsDiv.style.display === "none") {
-                    optionsDiv.style.display = "block";
-                } else {
-                    optionsDiv.style.display = "none";
-                }
-            }
-        </script>
-
 
 
         {{-- change Status --}}
