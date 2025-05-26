@@ -2966,12 +2966,13 @@ class JobController extends Controller
             1 => 'title',
             2 => 'admin_verify',
             3 => 'status',
-            4 => 'created_at',
-            5 => 'jobexpiry',
-            6 => 'id',
+            4 => 'recruiter_id',
+            5 => 'created_at',
+            6 => 'jobexpiry',
+            7 => 'id',
         );
 
-        $query = JobPost::query();
+        $query = JobPost::with('recruiter');
         // Count Data
 
         if (!empty($search)) {
@@ -2987,6 +2988,7 @@ class JobController extends Controller
         $totalRecords = $query->count();
 
         $records = $query->offset($offset)->limit($limit)->orderBy('id', 'desc')->get();
+        // dd($records);
 
 
         $data = [];
@@ -3037,6 +3039,9 @@ class JobController extends Controller
                 : '<div class="d-flex "><span onclick="changeStatus(' . $record->id . ');" class="badge bg-danger text-uppercase" style="cursor: pointer;">Inactive</span></div>';
 
             $dataArray[] = $status;
+
+            // $dataArray[] = $record->recruiter->name ?? 'N/A' - $record->recruiter->email ?? 'N/A';
+            $dataArray[] = ($record->recruiter->name ?? 'N/A') . ' - ' . ($record->recruiter->email ?? 'N/A');
 
 
             $dataArray[] = date('d-M-Y', strtotime($record->created_at));

@@ -515,26 +515,51 @@
 
         <script>
             function deleteRecord(id) {
-                // Fetch recruiter list first (you can load this with an AJAX call or inline)
                 let recruiterOptions = `
-        <select id="newRecruiterId" class="swal2-select">
-            <option value="">Select a new recruiter</option>
-            @foreach ($recruiters as $r)
-                <option value="{{ $r->id }}">{{ $r->name }}</option>
-            @endforeach
-        </select>
+        <div style="text-align: left; margin-top: 10px;">
+            <label for="newRecruiterId" style="font-weight:600; display:block; margin-bottom:5px;">
+                Select New Recruiter:
+            </label>
+            <select id="newRecruiterId" class="swal2-select" style="width:100%; padding:8px;">
+                <option value="">-- Choose Recruiter --</option>
+                @foreach ($recruiters as $r)
+                    <option value="{{ $r->id }}">{{ $r->name }}</option>
+                @endforeach
+            </select>
+        </div>
     `;
 
                 Swal.fire({
-                    title: 'Reassign Jobs',
+                    title: 'Reassign Jobs Before Deletion',
+                    icon: 'warning',
                     html: `
-            <p>Before deleting, please select another recruiter to transfer jobs.</p>
+            <p style="font-size:15px; color:#333;">
+                This recruiter has assigned jobs. Please select another recruiter to transfer the jobs before deletion.
+            </p>
             ${recruiterOptions}
         `,
                     showCancelButton: true,
-                    confirmButtonText: 'Reassign & Delete',
+                    confirmButtonText: 'Transfer & Delete',
+                    cancelButtonText: 'Cancel',
+                    buttonsStyling: false,
+                    customClass: {
+                        confirmButton: 'btn btn-danger',
+                        cancelButton: 'btn btn-secondary',
+                        popup: 'swal2-popup swal2-border-radius',
+                        title: 'swal2-title',
+                    },
+                    didOpen: () => {
+                        const element = document.getElementById('newRecruiterId');
+                        if (element) {
+                            new Choices(element, {
+                                shouldSort: false,
+                                searchEnabled: true,
+                                itemSelectText: '',
+                            });
+                        }
+                    },
                     preConfirm: () => {
-                        const selected = $('#newRecruiterId').val();
+                        const selected = document.getElementById('newRecruiterId').value;
                         if (!selected) {
                             Swal.showValidationMessage('Please select a recruiter to reassign jobs.');
                         }
@@ -542,8 +567,6 @@
                     }
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        const newRecruiterId = result.value;
-
                         $.ajax({
                             type: 'POST',
                             headers: {
@@ -552,16 +575,28 @@
                             url: "{{ route('Admin.DeleteRecruiter') }}",
                             data: {
                                 id: id,
-                                new_recruiter_id: newRecruiterId
+                                new_recruiter_id: result.value
                             },
                             dataType: 'json',
                             success: function(response) {
                                 if (response.status_code == 1) {
                                     $('#myTable').DataTable().ajax.reload(null, false);
-                                    Swal.fire('Deleted!', response.message, 'success');
+                                    Swal.fire({
+                                        title: 'Deleted!',
+                                        text: response.message,
+                                        icon: 'success',
+                                        confirmButtonText: 'OK',
+                                        buttonsStyling: false,
+                                        customClass: {
+                                            confirmButton: 'btn btn-success'
+                                        }
+                                    });
                                 } else {
                                     Swal.fire('Error!', response.message, 'error');
                                 }
+                            },
+                            error: function() {
+                                Swal.fire('Error!', 'Something went wrong. Please try again.', 'error');
                             }
                         });
                     }

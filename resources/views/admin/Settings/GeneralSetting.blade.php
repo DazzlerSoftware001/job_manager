@@ -88,65 +88,73 @@
                 </div>
             </div>
 
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h4 class="card-title">Site Title</h4>
-                    </div>
-                    <form action="javascript:void(0)" id="SiteTitle" class="p-3">
-                        @csrf
-                        <div class="row align-items-center">
-                            <div class="col-md-3">
-                                <input type="text" name="site_title" id="site_title" class="form-control"
-                                    placeholder="Enter your site title" value="{{ $GeneralSetting->site_title ?? '' }}"
-                                    required>
-                            </div>
-                            <div class="col-md-1 d-flex align-items-end">
-                                <button type="submit" class="btn btn-success w-100">Update Title</button>
-                            </div>
+            <div class="row g-4">
+                <!-- Site Title Section -->
+                <div class="col-lg-6">
+                    <div class="card shadow-sm border-0">
+                        <div class="card-header bg-light border-bottom">
+                            <h5 class="mb-0">Site Title</h5>
                         </div>
-                    </form>
-                </div>
-            </div>
-
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h4 class="card-title">Timezone</h4>
-
-                    </div>
-                    <div class="col-12 mt-2 p-3 radius-2 bg-white">
-                        <form id="timezoneForm" method="POST" action="javascript:void(0)">
+                        <form id="SiteTitle" action="javascript:void(0)" method="POST">
                             @csrf
-                            <div class="row align-items-center">
-                                <div class="col-md-2">
-                                    <select name="timezone" id="timezone" class="form-select" required>
-                                        @php
-                                            $currentTz = old(
-                                                'timezone',
-                                                $GeneralSetting->timezone ?? config('app.timezone'),
-                                            );
-                                        @endphp
-
-                                        @foreach (timezone_identifiers_list() as $tz)
-                                            <option value="{{ $tz }}"
-                                                {{ $currentTz === $tz ? 'selected' : '' }}>
-                                                {{ $tz }}
-                                            </option>
-                                        @endforeach
-                                    </select>
+                            <div class="card-body">
+                                <div class="row align-items-end">
+                                    <div class="col-md-8">
+                                        <label for="site_title" class="form-label">Enter Site Title</label>
+                                        <input type="text" name="site_title" id="site_title" class="form-control"
+                                            placeholder="e.g. CareerNest"
+                                            value="{{ $GeneralSetting->site_title ?? '' }}" required>
+                                    </div>
+                                    <div class="col-md-4 mt-md-0 mt-3">
+                                        <button type="submit" class="btn btn-success w-100">Update Title</button>
+                                    </div>
                                 </div>
-
-                                <div class="col-md-2 mt-md-0 d-flex align-items-end">
-                                    <button type="submit" class="btn btn-success w-100">Update Timezone</button>
-                                </div>
-                                <p class="mt-3">Current Server Time: {{ now() }}</p>
                             </div>
                         </form>
                     </div>
+                </div>
 
+                <!-- Timezone Section -->
+                <div class="col-lg-6">
+                    <div class="card shadow-sm border-0">
+                        <div class="card-header bg-light border-bottom">
+                            <h5 class="mb-0">Timezone</h5>
+                        </div>
+                        <form id="timezoneForm" method="POST" action="javascript:void(0)">
+                            @csrf
+                            <div class="card-body">
+                                <div class="row align-items-end">
+                                    <div class="col-md-8">
+                                        <label for="timezone" class="form-label">Select Timezone</label>
+                                        <select name="timezone" id="timezone" class="form-select" required>
+                                            @php
+                                                $currentTz = old(
+                                                    'timezone',
+                                                    $GeneralSetting->timezone ?? config('app.timezone'),
+                                                );
+                                            @endphp
+                                            @foreach (timezone_identifiers_list() as $tz)
+                                                <option value="{{ $tz }}"
+                                                    {{ $currentTz === $tz ? 'selected' : '' }}>
+                                                    {{ $tz }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4 mt-md-0 mt-3">
+                                        <button type="submit" class="btn btn-success w-100">Update Timezone</button>
+                                    </div>
+                                </div>
+                                {{-- <div class="mt-3">
+                                    <p class="text-muted mb-0">Current Server Time: <strong>{{ now() }}</strong>
+                                    </p>
+                                </div> --}}
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
+
 
             {{-- Clear Cache --}}
             <div class="col-12">
@@ -391,7 +399,7 @@
         </script>
 
 
-         {{--Clear Cache --}}
+        {{-- Clear Cache --}}
         <script>
             $(document).ready(function() {
                 $('#clearCacheBtn').on('click', function(event) {

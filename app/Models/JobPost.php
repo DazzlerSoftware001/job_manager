@@ -54,8 +54,8 @@ class Jobpost extends Model
         return $this->hasMany(SaveJob::class, 'job_id');
     }
 
-    public function user() {
-        return $this->hasOne(Recruiter::class, 'id');
+    public function recruiter() {
+        return $this->belongsTo(Recruiter::class, 'recruiter_id');
     }
 
     
