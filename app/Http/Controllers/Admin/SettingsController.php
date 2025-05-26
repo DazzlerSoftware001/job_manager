@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 use App\Models\GeneralSetting;
 use App\Models\MaintenanceMode;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 
 class SettingsController extends Controller
 {
@@ -140,5 +141,26 @@ class SettingsController extends Controller
             'message'     => $message,
         ]);
     }
+
+    	public function clearCache()
+    {
+        try {
+            $cacheCleared = Artisan::call('cache:clear');
+            $viewCleared = Artisan::call('view:clear');
+            $routeCleared = Artisan::call('route:clear');
+
+            // You can optionally check the exit code (0 means success)
+            if ($cacheCleared === 0 && $viewCleared === 0 && $routeCleared === 0) {
+
+                return response()->json(['status_code'=>1,'message'=>'Cache, views, and routes cleared successfully']);
+            } else {
+                return response()->json(['status_code'=>0, 'Unable to Clear Cache']);
+            }
+
+        } catch (\Exception $e) {
+            return response()->json(['status_code'=>0, 'message'=>'Unable to Clear Cache']);
+        }
+    }
+
 
 }

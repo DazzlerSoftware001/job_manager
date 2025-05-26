@@ -148,6 +148,25 @@
                 </div>
             </div>
 
+            {{-- Clear Cache --}}
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Clear Cache</h4>
+
+                    </div>
+                    <div class="col-12 mt-2 p-3 radius-2 bg-white">
+                        <div class="row align-items-center">
+
+                            <div class="col-md-2 mt-md-0 d-flex align-items-end">
+                                <button class="btn btn-success w-80" id="clearCacheBtn">Clear Cache</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
         </div>
     @endsection
 
@@ -297,7 +316,7 @@
             });
         </script>
 
-        {{-- Update Site Title --}}
+        {{-- Update Time Zone --}}
         <script>
             $(document).ready(function() {
                 $('#timezoneForm').on('submit', function(event) {
@@ -341,6 +360,72 @@
                                     style: {
                                         background: "#c7ac14",
                                     },
+                                }).showToast();
+                            } else {
+                                Toastify({
+                                    text: result.message,
+                                    duration: 3000,
+                                    gravity: "top",
+                                    position: "right",
+                                    style: {
+                                        background: "#c7ac14",
+                                    },
+                                }).showToast();
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('AJAX Error:', error);
+                            Toastify({
+                                text: 'An error occurred. Please try again.',
+                                duration: 3000,
+                                gravity: "top",
+                                position: "right",
+                                style: {
+                                    background: "#dc3545",
+                                },
+                            }).showToast();
+                        }
+                    });
+                });
+            });
+        </script>
+
+
+         {{--Clear Cache --}}
+        <script>
+            $(document).ready(function() {
+                $('#clearCacheBtn').on('click', function(event) {
+
+                    var url = "{{ route('Admin.clearCache') }}";
+                    $.ajax({
+                        url: url,
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function(result) {
+                            if (result.status_code === 1) {
+                                Toastify({
+                                    text: result.message,
+                                    duration: 3000,
+                                    gravity: "top",
+                                    position: "right",
+                                    style: {
+                                        background: "green",
+                                        color: "white"
+                                    }
+                                }).showToast();
+                                // setTimeout(function() {
+                                //     location.reload();
+                                // }, 750);
+                            } else if (result.status_code === 0) {
+                                Toastify({
+                                    text: result.message,
+                                    duration: 3000,
+                                    gravity: "top",
+                                    position: "right",
+                                    style: {
+                                        background: "#c7ac14",
+                                        color: "white"
+                                    }
                                 }).showToast();
                             } else {
                                 Toastify({
