@@ -138,7 +138,7 @@
                             <li><a href="{{route('Admin.Database')}}" data-key="t-p-grid">Import/Export</a></li>
                             <li><a href="#" data-key="t-p-grid">Website Tracking</a></li>
                             <li><a href="#" data-key="t-p-grid">SEO</a></li>
-                            <li><a href="#" data-key="t-p-grid">Maintanence Mode</a></li>
+                            <li><a href="{{route('Admin.Maintenance')}}" data-key="t-p-grid">Maintanence Mode</a></li>
                         </ul>
                     </li>
 

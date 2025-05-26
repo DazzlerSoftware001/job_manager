@@ -225,6 +225,7 @@ Route::prefix('Admin')->group(function () {
         Route::post('/SiteTitle', [SettingsController::class, 'SiteTitle'])->name('Admin.SiteTitle');
         Route::post('/update-timezone', [SettingsController::class, 'updateTimezone'])->name('Admin.Timezone');
 
+        Route::get('/Clear_Cache', [SettingsController::class, 'clear_cache'])->name('Admin.ClearCache');
 
         Route::get('/Database', [DatabaseController::class, 'database'])->name('Admin.Database');
         
@@ -247,6 +248,12 @@ Route::prefix('Admin')->group(function () {
 
         Route::get('/JobSkill/BulkUpload',[DatabaseController::class, 'JobSkillBulkUpload'])->name('Admin.Import.job_skill');
         Route::post('/JobSkill-Submit', [DatabaseController::class, 'JobSkillSubmit'])->name('Admin.JobSkillSubmit');
+
+        Route::get('/Maintenance', [SettingsController::class, 'Maintenance'])->name('Admin.Maintenance');
+        Route::post('/ChangeMaintenanceStatus', [SettingsController::class, 'ChangeMaintenanceStatus'])->name('Admin.ChangeMaintenanceStatus');
+
+
+
 
         
         Route::post('/logout', [AuthController::class, 'logout'])->name('Admin.logout');

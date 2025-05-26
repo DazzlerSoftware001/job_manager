@@ -51,11 +51,11 @@
                                                             <p class="text-muted mt-2">Sign in to continue to Borex.</p>
                                                         </div>
 
-                                                        @if(session('error'))
+                                                        {{-- @if(session('error'))
                                                             <div class="alert alert-danger">
                                                                 {{ session('error') }}
                                                             </div>
-                                                        @endif
+                                                        @endif --}}
 
 
                                                         <form class="mt-4 pt-2" method="POST"

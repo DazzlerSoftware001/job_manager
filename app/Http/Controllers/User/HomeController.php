@@ -19,4 +19,8 @@ class HomeController extends Controller
 
         return view('user.CustomPage', compact('page'));
     }
+
+    public function maintenanceMode() {
+        return view('User.MaintenanceMode');
+    }
 }

@@ -3,6 +3,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\GeneralSetting;
+use App\Models\MaintenanceMode;
 use Illuminate\Http\Request;
 
 class SettingsController extends Controller
@@ -98,7 +99,45 @@ class SettingsController extends Controller
 
         return response()->json([
             'status_code' => 1,
-            'message'  => 'Timezone updated successfully.',
+            'message'     => 'Timezone updated successfully.',
+        ]);
+    }
+
+    public function Maintenance()
+    {
+        return view('admin.Settings.MaintenanceMode');
+    }
+
+    public function ChangeMaintenanceStatus(Request $request)
+    {
+
+        $mode = MaintenanceMode::first();
+        //  dd($mode);
+        // dd($mode->maintenance);
+
+        if (! $mode) {
+            MaintenanceMode::create(['maintenance' => '1']);
+            $message = 'Maintenance mode enabled.';
+        } else {
+            $mode->maintenance = $mode->maintenance ? '0' : '1';
+            $mode->save();
+            $message = $mode->maintenance ? 'Maintenance mode enabled.' : 'Maintenance mode disabled.';
+        }
+
+        $status = $request->status ? 1 : 0;
+
+        $mode = MaintenanceMode::first();
+
+        if (! $mode) {
+            MaintenanceMode::create(['maintenance' => $status]);
+        } else {
+            $mode->maintenance = $status;
+            $mode->save();
+        }
+
+        return response()->json([
+            'status_code' => 1,
+            'message'     => $message,
         ]);
     }
 
