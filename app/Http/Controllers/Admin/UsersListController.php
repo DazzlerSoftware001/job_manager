@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\UserProfile;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Validator;
 
 
 class UsersListController extends Controller
@@ -135,4 +136,135 @@ class UsersListController extends Controller
         $user = UserProfile::findOrFail($decryptedId);
         return view('admin.Users.EditUser',compact('user'));
     }
+
+  
+
+    // public function UpdateUser(Request $request)
+    // {
+    //     // dd($request->img);
+    //     // Define validation rules
+    //     $rules = [
+    //         'edit_id'   => 'required|exists:users,id',
+    //         'fname'    => 'required|string|max:100',
+    //         'lname'    => 'required|string|max:100',
+    //         'img'    =>  'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+    //         'dob' => 'required',
+    //         'gender' => 'required|in:Male,Female,Other',
+    //     ];
+
+    //     // Validate the input
+    //     $validator = Validator::make($request->all(), $rules);
+    //     if ($validator->fails()) {
+    //         return response()->json([
+    //             'status_code' => 2,
+    //             'message'     => $validator->errors()->first()
+    //         ]);
+    //     }
+
+    //     try {
+
+    //         $profile = UserProfile::where('id', $request->edit_id)->first();
+
+    //         if (! $profile) {
+    //             return response()->json(['status_code' => 0, 'message' => 'Profile not found']);
+    //         }
+
+    //         if ($request->hasFile('img')) {
+    //             if ($profile->logo && file_exists(public_path($profile->logo))) {
+    //                 unlink(public_path($profile->logo));
+    //             }
+
+    //             $imageName = time() . '.' . $request->img->extension();
+    //             $request->image->move(public_path('user/assets/img/profile/'), $imageName);
+    //             $profile->logo = 'user/assets/img/profile/' . $imageName;
+    //             $profile->save();
+    //         }
+
+
+
+    //         // Save the user
+    //         $profile->name     = $request->fname;
+    //         $profile->lname    = $request->lname;
+    //         $profile->date_of_birth    = $request->dob;
+    //         $profile->gender =$request->gender; // Hash the password
+    //         $profile->updated_at = now();
+    //         $profile->save();
+
+    //         return response()->json([
+    //             'status_code' => 1,
+    //             'message'     => 'Updated successful',
+    //         ]);
+
+
+    //     } catch (\Exception $e) {
+    //         return response()->json([
+    //             'status_code' => 0,
+    //             'message'     => 'Something went wrong while registering.'
+    //         ]);
+    //     }
+    // }
+
+    public function UpdateUser(Request $request)
+{
+    // Define validation rules
+    $rules = [
+        'edit_id' => 'required|exists:users,id', // corrected
+        'fname'   => 'required|string|max:100',
+        'lname'   => 'required|string|max:100',
+        'img'     => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+        'dob'     => 'required|date',
+        'gender'  => 'required|in:Male,Female,Other',
+    ];
+
+    // Validate the input
+    $validator = Validator::make($request->all(), $rules);
+    if ($validator->fails()) {
+        return response()->json([
+            'status_code' => 2,
+            'message'     => $validator->errors()->first()
+        ]);
+    }
+
+    try {
+        $profile = UserProfile::find($request->edit_id);
+
+        if (!$profile) {
+            return response()->json(['status_code' => 0, 'message' => 'Profile not found']);
+        }
+
+        // Handle image upload
+        if ($request->hasFile('img')) {
+            if ($profile->logo && file_exists(public_path($profile->logo))) {
+                unlink(public_path($profile->logo));
+            }
+
+            $imageName = time() . '.' . $request->img->extension();
+            $request->img->move(public_path('user/assets/img/profile/'), $imageName);
+            $profile->logo = 'user/assets/img/profile/' . $imageName;
+        }
+
+        // Update profile fields
+        $profile->name           = $request->fname;
+        $profile->lname          = $request->lname;
+        $profile->date_of_birth  = $request->dob;
+        $profile->gender         = $request->gender;
+        $profile->updated_at     = now();
+        $profile->save();
+
+        return response()->json([
+            'status_code' => 1,
+            'message'     => 'Updated successfully',
+        ]);
+
+    } catch (\Exception $e) {
+        return response()->json([
+            'status_code' => 0,
+            'message'     => 'Something went wrong while updating.'
+        ]);
+    }
 }
+
+
+
+}
+

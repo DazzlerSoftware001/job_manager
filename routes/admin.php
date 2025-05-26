@@ -149,7 +149,7 @@ Route::prefix('Admin')->group(function () {
         Route::post('/EditRecruiter',[RecruiterController::class,'editRecruiter'])->name('Admin.EditRecruiter');
         Route::post('/UpdateRecruiter',[RecruiterController::class,'updateRecruiter'])->name('Admin.UpdateRecruiter');
 
-
+        // Users List
         Route::get('UserList', [UsersListController::class, 'userList'])->name('Admin.UserList');
         Route::post('/GetUsersList', [UsersListController::class, 'getUsersList'])->name('Admin.GetUsersList');
         Route::post('/ChangeUserStatus', [UsersListController::class, 'ChangeUserStatus'])->name('Admin.ChangeUserStatus');

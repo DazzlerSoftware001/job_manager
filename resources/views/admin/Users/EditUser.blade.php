@@ -19,26 +19,26 @@
                                 <form method="POST" action="javascript:void(0)" id="UpdateUser" enctype="multipart/form-data">
                                     @csrf
                                     <div class="row mb-3">
-                                        <input type="hidden" name="edit-id" id="edit-id" value="{{ $user->id }}">
+                                        <input type="hidden" name="edit_id" id="edit_id" value="{{ $user->id }}">
                                         <div class="col-4">
 
                                             <label for="fname">Name<span class="text-danger">*</span></label>
-                                            <input type="text" class="form-control" id="fname" name="fname"value="{{ $user->name ?? '' }}" placeholder="Enter First Name">
+                                            <input type="text" class="form-control" id="fname" name="fname"value="{{ $user->name ?? '' }}" placeholder="Enter First Name" required>
                                         </div>
 
                                         <div class="col-4">
                                             <label for="lname">Last Name<span class="text-danger">*</span></label>
-                                            <input type="text" class="form-control" id="lname" name="lname"value="{{ $user->lname ?? '' }}" placeholder="Enter Last Name">
+                                            <input type="text" class="form-control" id="lname" name="lname"value="{{ $user->lname ?? '' }}" placeholder="Enter Last Name" required>
                                         </div>
 
                                         <div class="col-4">
                                             <label for="img">Profile Image<span class="text-danger">*</span></label>
-                                            <input type="file" class="form-control" id="img" name="img">
+                                            <input type="file" class="form-control" id="img" name="img" accept=".jpeg,.jpg,.png,.gif,.svg,.webp">
                                         </div>
 
                                         <div class="col-4">
                                             <label for="dob">Date of Birth<span class="text-danger">*</span></label>
-                                            <input type="text" class="form-control" id="dob" name="dob" value="{{$user->date_of_birth ?? ''}}"  placeholder="Enter  DOB">
+                                            <input type="text" class="form-control" id="dob" name="dob" value="{{$user->date_of_birth ?? ''}}"  placeholder="Enter  DOB" required>
                                         </div>
 
                                         <div class="col-4">
@@ -68,43 +68,83 @@
     @endsection
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     @section('script')
-        {{-- Get Job list --}}
-        <script>
+
+
+        {{-- Update User --}}
+        
+         <script>
             $(document).ready(function() {
-                $('#myTable').DataTable({
-                    // DataTable options
-                    "paging": true,
-                    "lengthMenu": [10, 25, 50, 100],
-                    "serverSide": true,
-                    "processing": true,
-                    "searching": false,
-                    "lengthChange": true,
-                    "fixedHeader": true,
-                    "order": [
-                        [0, "desc"]
-                    ],
-                    "ajax": {
-                        url: "{{ route('Admin.GetUsersList') }}",
+                $('#UpdateUser').on('submit', function(event) {
+                    event.preventDefault(); // Prevent default form submission
+
+                    var url = "{{ route('Admin.UpdateUser') }}";
+                    $.ajax({
+                        url: url,
                         type: 'POST',
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
-                        data: function(data) {
-                            data.search = $('#search').val();
-                        }
-                    },
-                    "language": {
-                        "emptyTable": "<div><lord-icon src='https://cdn.lordicon.com/msoeawqm.json' trigger='loop' style='width:75px;height:75px'></div> <div class='mt-2 noresult'><b>Sorry! No Result Found</b></div>"
-                    }
-                });
+                        data: new FormData(this),
+                        contentType: false,
+                        cache: false,
+                        processData: false,
+                        dataType: 'json',
+                        success: function(result) {
+                            if (result.status_code === 1) {
+                                $('#UpdateUser').trigger("reset");
+                                Toastify({
+                                    text: result.message,
+                                    duration: 3000,
+                                    gravity: "top",
+                                    position: "right",
+                                    style: {
+                                        background: "#28a745",
+                                    },
+                                }).showToast();
 
-                $('#search').on('keyup', function(e) {
-                    e.preventDefault();
-                    $('#myTable').DataTable().draw();
+                                setTimeout(function() {
+            window.location.reload();
+        }, 1000);
+                            } else if (result.status_code === 2) {
+                                Toastify({
+                                    text: result.message,
+                                    duration: 3000,
+                                    gravity: "top",
+                                    position: "right",
+                                    style: {
+                                        background: "#c7ac14",
+                                        color: "white",
+                                    }
+                                }).showToast();
+                            } else {
+                                Toastify({
+                                    text: result.message,
+                                    duration: 3000,
+                                    gravity: "top",
+                                    position: "right",
+                                    style: {
+                                        background: "#c7ac14",
+                                        color: "white",
+                                    }
+                                }).showToast();
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('AJAX Error:', error);
+                            Toastify({
+                                text: 'An error occurred. Please try again.',
+                                duration: 3000,
+                                gravity: "top",
+                                position: "right",
+                                style: {
+                                    background: "#dc3545",
+                                },
+                            }).showToast();
+                        }
+                    });
                 });
             });
         </script>
-
       
 
 
