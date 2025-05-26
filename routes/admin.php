@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\MenuController;
 use App\Http\Controllers\Admin\CustomPageController;
 use App\Http\Controllers\Admin\FooterController;
 use App\Http\Controllers\Admin\DatabaseController;
+use App\Http\Controllers\Admin\UsersListController;
 // 
 
 Route::prefix('Admin')->group(function () {
@@ -147,6 +148,12 @@ Route::prefix('Admin')->group(function () {
         Route::post('/DeleteRecruiter',[RecruiterController::class,'deleteRecruiter'])->name('Admin.DeleteRecruiter');
         Route::post('/EditRecruiter',[RecruiterController::class,'editRecruiter'])->name('Admin.EditRecruiter');
         Route::post('/UpdateRecruiter',[RecruiterController::class,'updateRecruiter'])->name('Admin.UpdateRecruiter');
+
+
+        Route::get('UserList', [UsersListController::class, 'userList'])->name('Admin.UserList');
+        Route::post('/GetUsersList', [UsersListController::class, 'getUsersList'])->name('Admin.GetUsersList');
+        // Route::post('/ChangeStatus')
+
 
 
         // Interview Type
