@@ -50,6 +50,16 @@
                                             </select>
                                         </div>
 
+                                        <div class="col-4">
+                                            <label for="dob">Date of Birth<span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control" id="dob" name="dob" value="{{$user->date_of_birth ?? ''}}"  placeholder="Enter  DOB" required>
+                                        </div>
+
+                                        <div class="col-4">
+                                            <label for="dob">Date of Birth<span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control" id="dob" name="dob" value="{{$user->date_of_birth ?? ''}}"  placeholder="Enter  DOB" required>
+                                        </div>
+
                                     </div>
 
                                     <button type="submit" class="btn btn-primary">Submit</button>
