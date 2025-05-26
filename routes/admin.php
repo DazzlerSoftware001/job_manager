@@ -155,6 +155,7 @@ Route::prefix('Admin')->group(function () {
         Route::post('/ChangeUserStatus', [UsersListController::class, 'ChangeUserStatus'])->name('Admin.ChangeUserStatus');
         Route::get('/EditUser/{id}', [UsersListController::class, 'EditUser'])->name('Admin.EditUser');
         Route::post('/UpdateUser', [UsersListController::class, 'UpdateUser'])->name('Admin.UpdateUser');
+        Route::post('/DeleteUser', [UsersListController::class, 'DeleteUser'])->name('Admin.DeleteUser');
 
 
 

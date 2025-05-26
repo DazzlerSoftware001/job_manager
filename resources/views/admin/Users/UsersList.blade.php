@@ -220,7 +220,7 @@
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                             },
-                            url: "{{ route('Admin.DeleteJobPost') }}",
+                            url: "{{ route('Admin.DeleteUser') }}",
                             data: {
                                 id: id
                             },

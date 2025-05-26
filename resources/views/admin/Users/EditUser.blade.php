@@ -51,13 +51,13 @@
                                         </div>
 
                                         <div class="col-4">
-                                            <label for="dob">Date of Birth<span class="text-danger">*</span></label>
-                                            <input type="text" class="form-control" id="dob" name="dob" value="{{$user->date_of_birth ?? ''}}"  placeholder="Enter  DOB" required>
+                                            <label for="password">Password<span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control" id="password" name="password"  placeholder="Enter Password">
                                         </div>
 
                                         <div class="col-4">
-                                            <label for="dob">Date of Birth<span class="text-danger">*</span></label>
-                                            <input type="text" class="form-control" id="dob" name="dob" value="{{$user->date_of_birth ?? ''}}"  placeholder="Enter  DOB" required>
+                                            <label for="confirm_password">Confirm Password<span class="text-danger">*</span></label>
+                                            <input type="text" class="form-control" id="confirm_password" name="confirm_password"  placeholder="Enter Confirm Password">
                                         </div>
 
                                     </div>
