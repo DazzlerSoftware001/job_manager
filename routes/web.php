@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Route;
 require base_path('routes/admin.php');
 require base_path('routes/recruiter.php');
 
+Route::get('MaintenanceMode', [HomeController::class, 'maintenanceMode'])->name('User.MaintenanceMode');
 Route::middleware('maintenance')->group(function (){
 Route::get('/', [HomeController::class, 'Home'])->name('User.Home');
 
@@ -21,7 +22,6 @@ Route::post('loginInsert', [AuthController::class, 'loginInsert'])->name('User.l
 Route::get('JobList', [JobController::class, 'JobList'])->name('User.JobList');
 Route::get('JobDetails/{id}', [JobController::class, 'JobDetails'])->name('User.JobDetails');
 
-Route::get('MaintenanceMode', [HomeController::class, 'maintenanceMode'])->name('User.MaintenanceMode');
 Route::get('/{slug}', [HomeController::class, 'ViewPage'])->name('User.ViewPage');
 
 

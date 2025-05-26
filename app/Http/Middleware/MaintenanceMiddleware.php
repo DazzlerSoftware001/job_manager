@@ -18,11 +18,10 @@ class MaintenanceMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         // Check if the user is authenticated
-        if(Auth::check() && Auth::user()->user_type==1) {
+        if(Auth::check() && (Auth::user()->user_type==1 || Auth::user()->user_type==2)) {
             
             return $next($request);
         }
-
         return redirect()->route('User.MaintenanceMode');
     }
 }
