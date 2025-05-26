@@ -152,7 +152,9 @@ Route::prefix('Admin')->group(function () {
 
         Route::get('UserList', [UsersListController::class, 'userList'])->name('Admin.UserList');
         Route::post('/GetUsersList', [UsersListController::class, 'getUsersList'])->name('Admin.GetUsersList');
-        // Route::post('/ChangeStatus')
+        Route::post('/ChangeUserStatus', [UsersListController::class, 'ChangeUserStatus'])->name('Admin.ChangeUserStatus');
+        Route::get('/EditUser/{id}', [UsersListController::class, 'EditUser'])->name('Admin.EditUser');
+        Route::post('/UpdateUser', [UsersListController::class, 'UpdateUser'])->name('Admin.UpdateUser');
 
 
 

@@ -102,6 +102,13 @@
                         </a>
                     </li>
 
+                     <li>
+                        <a href="{{route('Admin.UserList')}}">
+                            <i class="far fas fa-user-tie"></i>
+                            <span class="menu-item" data-key="t-projects">Users List</span>
+                        </a>
+                    </li>
+
                     <li class="menu-title" data-key="t-applications">Apperiance</li>
 
                     <li>
