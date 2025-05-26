@@ -6,13 +6,14 @@ use App\Models\Recruiter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use App\Models\Jobpost;
 
 class RecruiterController extends Controller
 {
     public function recruiters()
     {
-        // $recruiters = Recruiter::where()
-        return view('admin.recruiter.recruiters');
+        $recruiters = Recruiter::where('user_type', 2)->get();
+        return view('admin.recruiter.recruiters', compact('recruiters'));
     }
 
     public function getRecruiters(Request $request)
