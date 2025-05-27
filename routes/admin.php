@@ -159,8 +159,8 @@ Route::prefix('Admin')->group(function () {
 
         Route::get('All-Applicants', [UsersListController::class, 'AllApplicants'])->name('Admin.AllApplicants');
         Route::get('GetRecruiterJobs', [UsersListController::class, 'getJobsByRecruiter'])->name('Admin.getJobsByRecruiter');
-
         Route::post('Get-Applicants', [UsersListController::class, 'GetApplicants'])->name('Admin.GetApplicants');
+        Route::get('/ApllicantsDetails/{userId}/{jobId}', [UsersListController::class, 'ApllicantsDetails'])->name('Admin.ApllicantsDetails');
 
 
 

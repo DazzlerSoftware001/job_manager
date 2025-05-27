@@ -260,14 +260,14 @@ class UsersListController extends Controller
 
         $JobFilter  = $request->input("JobFilter");
 
-         if (empty($JobFilter)) {
-        return response()->json([
-            "draw"            => $draw,
-            "recordsTotal"    => 0,
-            "recordsFiltered" => 0,
-            "data"            => [],
-        ]);
-    }
+        if (empty($JobFilter)) {
+            return response()->json([
+                "draw"            => $draw,
+                "recordsTotal"    => 0,
+                "recordsFiltered" => 0,
+                "data"            => [],
+            ]);
+        }
 
         $columns = [
             0 => 'id',
@@ -308,7 +308,7 @@ class UsersListController extends Controller
         foreach ($records as $record) {
             $dataArray = [];
 
-            $dataArray[] = $record->user_id;
+            $dataArray[] = $record->user->id;
             // $dataArray[] = ucfirst($record->name . ' ' . $record->lname);
             $dataArray[] = ucfirst($record->user->name) .' '.$record->user->lname;
 
@@ -322,19 +322,26 @@ class UsersListController extends Controller
 
             // $dataArray[] = $status;
 
-            $dataArray[] = date('d-M-Y', strtotime($record->user->created_at));
+            // $dataArray[] = date('d-M-Y', strtotime($record->user->created_at));
+
+            // $dataArray[] = '<div class="d-flex gap-2">
+            //                     <div class="edit">
+            //                         <a href="' . route('Admin.EditUser', ['id' => Crypt::encrypt($record->id)]) . '" class="edit-item-btn text-primary">
+            //                             <i class="far fa-edit"></i>
+            //                         </a>
+            //                     </div>
+            //                     <div class="remove">
+            //                         <a href="javascript:void(0);" class="remove-item-btn text-danger" onclick="deleteRecord(' . $record->id . ');">
+            //                             <i class="far fa-trash-alt"></i>
+            //                         </a>
+            //                     </div>
+            //                 </div>';
 
             $dataArray[] = '<div class="d-flex gap-2">
-                                <div class="edit">
-                                    <a href="' . route('Admin.EditUser', ['id' => Crypt::encrypt($record->id)]) . '" class="edit-item-btn text-primary">
-                                        <i class="far fa-edit"></i>
-                                    </a>
-                                </div>
-                                <div class="remove">
-                                    <a href="javascript:void(0);" class="remove-item-btn text-danger" onclick="deleteRecord(' . $record->id . ');">
-                                        <i class="far fa-trash-alt"></i>
-                                    </a>
-                                </div>
+                                <a href="' . route('Admin.ApllicantsDetails', [
+                                    'userId' => Crypt::encrypt($record->user->id),
+                                    'jobId'  => Crypt::encrypt($record->jobPost->id),
+                                ]) . '" class="badge bg-success">View Profile</a>
                             </div>';
 
             $data[] = $dataArray;
@@ -346,6 +353,51 @@ class UsersListController extends Controller
             "recordsFiltered" => $totalRecords,
             "data"            => $data,
         ]);
+    }
+
+    public function ApllicantsDetails($userId,$jobId)
+    { 
+        
+        try {
+            $decryptedId = Crypt::decrypt($userId);
+            $DecJob_Id   = Crypt::decrypt($jobId);
+        } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
+            abort(404, 'Invalid User ID');
+        }
+
+        // Load user with candidate profile
+        $user = UserProfile::with('candidateProfile', 'candidateQualification', 'candidateEmployment','candidateAward')->find($decryptedId);
+
+        $application = JobApplication::where('user_id', $decryptedId)
+            ->where('job_id', $DecJob_Id)
+            ->first();
+
+        // dd($user->candidateEmployment);
+
+        // Check and increment view_profile if candidate profile exists
+        if ($user && $user->candidateProfile) {
+            if (is_null($user->candidateProfile->view_profile)) {
+                $user->candidateProfile->view_profile = 1;
+                $user->candidateProfile->save();
+            } else {
+                $user->candidateProfile->increment('view_profile');
+            }
+        }
+
+        // dd($application);
+
+        // if ($application) {
+        //     $application->update(['recruiter_view' => '1']);
+        // }
+
+        // dd($application->recruiter_view);
+
+        // dd($user->social_links);
+        // dd($user->candidateProfile->resume);
+
+        $JobPost = JobPost::findOrFail($DecJob_Id)->title;
+
+        return view('admin.Users.ApllicantsDetails', compact('user', 'DecJob_Id', 'application','JobPost'));
     }
 
 }
