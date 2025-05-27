@@ -18,10 +18,6 @@
                             <i class="bi bi-person-circle me-2">{{ $JobPost }}</i> 
                         </h3>
                         <div class="card">
-
-
-
-
                             <div class="card-body">
                                 <div class="row align-items-center">
                                     <!-- Profile Image -->
@@ -91,7 +87,7 @@
                                         {{-- $user->id
                                     $DecJob_Id --}}
 
-                                        <a href="{{ route('Recruiter.CandidateCVDownload', ['userId' => Crypt::encrypt($user->id)]) }}"
+                                        <a href="{{ route('Admin.CandidateCVDownload', ['userId' => Crypt::encrypt($user->id)]) }}"
                                             class="btn btn-primary mt-1">Cv Download</a>
 
                                         @if (session('error'))
@@ -347,5 +343,221 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     @section('script')
 
+         <script>
+        $(document).ready(function() {
+            $('#shortlistBtn').on('click', function() {
+                var url =
+                    "{{ route('Admin.CandidateShortlist', [
+                        'userId' => Crypt::encrypt($user->id),
+                        'jobId' => Crypt::encrypt($DecJob_Id),
+                    ]) }}";
+
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    dataType: 'json',
+                    success: function(result) {
+                        if (result.status_code === 1) {
+                            Toastify({
+                                text: result.message,
+                                duration: 3000,
+                                gravity: "top",
+                                position: "right",
+                                style: {
+                                    background: "green",
+                                    color: "white"
+                                }
+                            }).showToast();
+                            setTimeout(function() {
+                                location.reload();
+                            }, 1000);
+
+                        } else if (result.status_code === 2) {
+                            Toastify({
+                                text: result.message,
+                                duration: 3000,
+                                gravity: "top",
+                                position: "right",
+                                style: {
+                                    background: "#c7ac14",
+                                    color: "white"
+                                }
+                            }).showToast();
+                        } else {
+                            Toastify({
+                                text: result.message,
+                                duration: 3000,
+                                gravity: "top",
+                                position: "right",
+                                style: {
+                                    background: "red",
+                                    color: "white"
+                                }
+                            }).showToast();
+                        }
+                    },
+                    error: function() {
+                        Toastify({
+                            text: 'An error occurred. Please try again.',
+                            duration: 3000,
+                            gravity: "top",
+                            position: "right",
+                            style: {
+                                background: "red",
+                                color: "white"
+                            }
+                        }).showToast();
+                    }
+                });
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            $('#RejectBtn').on('click', function() {
+                var url =
+                    "{{ route('Admin.CandidateReject', [
+                        'userId' => Crypt::encrypt($user->id),
+                        'jobId' => Crypt::encrypt($DecJob_Id),
+                    ]) }}";
+
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    dataType: 'json',
+                    success: function(result) {
+                        if (result.status_code === 1) {
+                            Toastify({
+                                text: result.message,
+                                duration: 3000,
+                                gravity: "top",
+                                position: "right",
+                                style: {
+                                    background: "green",
+                                    color: "white"
+                                }
+                            }).showToast();
+                            setTimeout(function() {
+                                location.reload();
+                            }, 1000);
+                        } else if (result.status_code === 2) {
+                            Toastify({
+                                text: result.message,
+                                duration: 3000,
+                                gravity: "top",
+                                position: "right",
+                                style: {
+                                    background: "#c7ac14",
+                                    color: "white"
+                                }
+                            }).showToast();
+                        } else {
+                            Toastify({
+                                text: result.message,
+                                duration: 3000,
+                                gravity: "top",
+                                position: "right",
+                                style: {
+                                    background: "red",
+                                    color: "white"
+                                }
+                            }).showToast();
+                        }
+                    },
+                    error: function() {
+                        Toastify({
+                            text: 'An error occurred. Please try again.',
+                            duration: 3000,
+                            gravity: "top",
+                            position: "right",
+                            style: {
+                                background: "red",
+                                color: "white"
+                            }
+                        }).showToast();
+                    }
+                });
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            $('#HireBtn').on('click', function() {
+                var url =
+                    "{{ route('Admin.CandidateHire', [
+                        'userId' => Crypt::encrypt($user->id),
+                        'jobId' => Crypt::encrypt($DecJob_Id),
+                    ]) }}";
+
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    dataType: 'json',
+                    success: function(result) {
+                        if (result.status_code === 1) {
+                            Toastify({
+                                text: result.message,
+                                duration: 3000,
+                                gravity: "top",
+                                position: "right",
+                                style: {
+                                    background: "green",
+                                    color: "white"
+                                }
+                            }).showToast();
+                            setTimeout(function() {
+                                location.reload();
+                            }, 1000);
+                        } else if (result.status_code === 2) {
+                            Toastify({
+                                text: result.message,
+                                duration: 3000,
+                                gravity: "top",
+                                position: "right",
+                                style: {
+                                    background: "#c7ac14",
+                                    color: "white"
+                                }
+                            }).showToast();
+                        } else {
+                            Toastify({
+                                text: result.message,
+                                duration: 3000,
+                                gravity: "top",
+                                position: "right",
+                                style: {
+                                    background: "red",
+                                    color: "white"
+                                }
+                            }).showToast();
+                        }
+                    },
+                    error: function() {
+                        Toastify({
+                            text: 'An error occurred. Please try again.',
+                            duration: 3000,
+                            gravity: "top",
+                            position: "right",
+                            style: {
+                                background: "red",
+                                color: "white"
+                            }
+                        }).showToast();
+                    }
+                });
+            });
+        });
+    </script>
     
     @endsection

@@ -162,6 +162,11 @@ Route::prefix('Admin')->group(function () {
         Route::post('Get-Applicants', [UsersListController::class, 'GetApplicants'])->name('Admin.GetApplicants');
         Route::get('/ApllicantsDetails/{userId}/{jobId}', [UsersListController::class, 'ApllicantsDetails'])->name('Admin.ApllicantsDetails');
 
+         Route::get('/CandidateShortlist/{userId}/{jobId}', [UsersListController::class, 'CandidateShortlist'])->name('Admin.CandidateShortlist');
+        Route::get('/CandidateReject/{userId}/{jobId}', [UsersListController::class, 'CandidateReject'])->name('Admin.CandidateReject');
+        Route::get('/CandidateHire/{userId}/{jobId}', [UsersListController::class, 'CandidateHire'])->name('Admin.CandidateHire');
+
+        Route::get('/CandidateCVDownload/{userId}', [UsersListController::class, 'CandidateCVDownload'])->name('Admin.CandidateCVDownload');
 
 
         // Interview Type
