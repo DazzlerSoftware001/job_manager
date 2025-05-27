@@ -2,10 +2,16 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\UserProfile;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Validator;
+use App\Models\UserProfile;
+use App\Models\Recruiter;
+use App\Models\Jobpost;
+use App\Models\JobApplication;
+use Illuminate\Support\Carbon;
+
 
 class UsersListController extends Controller
 {
@@ -131,67 +137,7 @@ class UsersListController extends Controller
         return view('admin.Users.EditUser', compact('user'));
     }
 
-    // public function UpdateUser(Request $request)
-    // {
-    //     // dd($request->img);
-    //     // Define validation rules
-    //     $rules = [
-    //         'edit_id'   => 'required|exists:users,id',
-    //         'fname'    => 'required|string|max:100',
-    //         'lname'    => 'required|string|max:100',
-    //         'img'    =>  'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
-    //         'dob' => 'required',
-    //         'gender' => 'required|in:Male,Female,Other',
-    //     ];
-
-    //     // Validate the input
-    //     $validator = Validator::make($request->all(), $rules);
-    //     if ($validator->fails()) {
-    //         return response()->json([
-    //             'status_code' => 2,
-    //             'message'     => $validator->errors()->first()
-    //         ]);
-    //     }
-
-    //     try {
-
-    //         $profile = UserProfile::where('id', $request->edit_id)->first();
-
-    //         if (! $profile) {
-    //             return response()->json(['status_code' => 0, 'message' => 'Profile not found']);
-    //         }
-
-    //         if ($request->hasFile('img')) {
-    //             if ($profile->logo && file_exists(public_path($profile->logo))) {
-    //                 unlink(public_path($profile->logo));
-    //             }
-
-    //             $imageName = time() . '.' . $request->img->extension();
-    //             $request->image->move(public_path('user/assets/img/profile/'), $imageName);
-    //             $profile->logo = 'user/assets/img/profile/' . $imageName;
-    //             $profile->save();
-    //         }
-
-    //         // Save the user
-    //         $profile->name     = $request->fname;
-    //         $profile->lname    = $request->lname;
-    //         $profile->date_of_birth    = $request->dob;
-    //         $profile->gender =$request->gender; // Hash the password
-    //         $profile->updated_at = now();
-    //         $profile->save();
-
-    //         return response()->json([
-    //             'status_code' => 1,
-    //             'message'     => 'Updated successful',
-    //         ]);
-
-    //     } catch (\Exception $e) {
-    //         return response()->json([
-    //             'status_code' => 0,
-    //             'message'     => 'Something went wrong while registering.'
-    //         ]);
-    //     }
-    // }
+    
 
     public function UpdateUser(Request $request)
     {
@@ -276,6 +222,130 @@ class UsersListController extends Controller
         } else {
             return response()->json(['status_code' => 2, 'message' => 'Id is required']);
         }
+    }
+
+
+    public function AllApplicants()
+    {
+
+        $Recruiters = Recruiter::select('id', 'name','email')->where('user_type',2)->where('status', 1)->get();
+        $today       = Carbon::today();
+
+        $joblist     = JobPost::select('id', 'title')->where('status', 1)->where('admin_verify', 1)->whereDate('jobexpiry', '>=', $today)->get();
+
+        return view('admin.Users.AllApplicants',compact('Recruiters'));
+    }
+
+
+    public function getJobsByRecruiter(Request $request)
+    {
+        $jobs = JobPost::select('id', 'title')
+                    ->where('status', 1)
+                    ->where('admin_verify', 1)
+                    ->where('recruiter_id', $request->recruiter_id)
+                    ->whereDate('jobexpiry', '>=', now())
+                    ->get();
+        return response()->json($jobs);
+    }
+
+
+    public function GetApplicants(Request $request)
+    {
+        
+        $draw   = intval($request->input("draw"));
+        $offset = trim($request->input('start'));
+        $limit  = intval($request->input('length', 10));
+
+        $order   = $request->input("order");
+
+        $JobFilter  = $request->input("JobFilter");
+
+         if (empty($JobFilter)) {
+        return response()->json([
+            "draw"            => $draw,
+            "recordsTotal"    => 0,
+            "recordsFiltered" => 0,
+            "data"            => [],
+        ]);
+    }
+
+        $columns = [
+            0 => 'id',
+            1 => 'name',
+            2 => 'email',
+            3 => 'phone',
+            4 => 'logo',
+            5 => 'status',
+            6 => 'created_at',
+        ];
+
+        // $query = Jobpost::where('id', $JobFilter)->get();
+
+        $query = JobApplication::with([
+            'user:id,name,lname,email,logo,education_level,city',
+            'user.candidateProfile:skill',
+            'jobPost:id,title',
+        ]) 
+            ->select(['id', 'user_id', 'job_id', 'status', 'recruiter_view', 'created_at']);
+
+
+            if (!empty($JobFilter)) {
+                $query->where('job_id', $JobFilter);
+            }
+
+
+        if ($order) {
+            $column = $columns[$order[0]['column']];
+            $dir    = $order[0]['dir'];
+            $query->orderBy($column, $dir);
+        }
+
+        $totalRecords = $query->count();
+
+        $records = $query->offset($offset)->limit($limit)->orderBy('id', 'desc')->get();
+
+        $data = [];
+        foreach ($records as $record) {
+            $dataArray = [];
+
+            $dataArray[] = $record->user_id;
+            // $dataArray[] = ucfirst($record->name . ' ' . $record->lname);
+            $dataArray[] = ucfirst($record->user->name) .' '.$record->user->lname;
+
+            $dataArray[] = $record->user->email;
+            $dataArray[] = $record->user->phone;
+            $dataArray[] = '<img src="' . asset($record->user->logo) . '" alt="Logo" style="height: 50px; width: 50px; border-radius:50%; object-fit: cover; cursor: pointer;" onclick="openImageModal(\'' . asset($record->logo) . '\')">';
+
+            // $status = $record->status == 1
+            // ? '<div class="d-flex"><span onclick="changeStatus(' . $record->user->id . ');" class="badge bg-success text-uppercase"  style="cursor: pointer;">Active</span></div>'
+            // : '<div class="d-flex"><span onclick="changeStatus(' . $record->user->id . ');" class="badge bg-danger text-uppercase" style="cursor: pointer;">Inactive</span></div>';
+
+            // $dataArray[] = $status;
+
+            $dataArray[] = date('d-M-Y', strtotime($record->user->created_at));
+
+            $dataArray[] = '<div class="d-flex gap-2">
+                                <div class="edit">
+                                    <a href="' . route('Admin.EditUser', ['id' => Crypt::encrypt($record->id)]) . '" class="edit-item-btn text-primary">
+                                        <i class="far fa-edit"></i>
+                                    </a>
+                                </div>
+                                <div class="remove">
+                                    <a href="javascript:void(0);" class="remove-item-btn text-danger" onclick="deleteRecord(' . $record->id . ');">
+                                        <i class="far fa-trash-alt"></i>
+                                    </a>
+                                </div>
+                            </div>';
+
+            $data[] = $dataArray;
+        }
+
+        return response()->json([
+            "draw"            => $draw,
+            "recordsTotal"    => $totalRecords,
+            "recordsFiltered" => $totalRecords,
+            "data"            => $data,
+        ]);
     }
 
 }

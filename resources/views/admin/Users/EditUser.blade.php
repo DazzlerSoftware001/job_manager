@@ -13,35 +13,36 @@
         <div class="page-content">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-lg-12">
+                    <div class="col-12">
                         <div class="card">
                            <div class="card-body pb-0">
                                 <form method="POST" action="javascript:void(0)" id="UpdateUser" enctype="multipart/form-data">
                                     @csrf
                                     <div class="row mb-3">
                                         <input type="hidden" name="edit_id" id="edit_id" value="{{ $user->id }}">
-                                        <div class="col-4">
+                                      
+                                        <div class="col-6">
 
                                             <label for="fname">Name<span class="text-danger">*</span></label>
                                             <input type="text" class="form-control" id="fname" name="fname"value="{{ $user->name ?? '' }}" placeholder="Enter First Name" required>
                                         </div>
 
-                                        <div class="col-4">
+                                        <div class="col-6">
                                             <label for="lname">Last Name<span class="text-danger">*</span></label>
                                             <input type="text" class="form-control" id="lname" name="lname"value="{{ $user->lname ?? '' }}" placeholder="Enter Last Name" required>
                                         </div>
 
-                                        <div class="col-4">
+                                        <div class="col-6">
                                             <label for="img">Profile Image<span class="text-danger">*</span></label>
                                             <input type="file" class="form-control" id="img" name="img" accept=".jpeg,.jpg,.png,.gif,.svg,.webp">
                                         </div>
 
-                                        <div class="col-4">
+                                        <div class="col-6">
                                             <label for="dob">Date of Birth<span class="text-danger">*</span></label>
                                             <input type="text" class="form-control" id="dob" name="dob" value="{{$user->date_of_birth ?? ''}}"  placeholder="Enter  DOB" required>
                                         </div>
 
-                                        <div class="col-4">
+                                        <div class="col-6">
                                             <label for="gender">Gender<span class="text-danger">*</span></label>
                                             <select class="form-control" id="gender" name="gender" required>
                                                 <option value="Male" {{ (isset($user->gender) && $user->gender == 'Male') ? 'selected' : '' }}>Male</option>
@@ -50,12 +51,12 @@
                                             </select>
                                         </div>
 
-                                        <div class="col-4">
+                                        <div class="col-6">
                                             <label for="password">Password<span class="text-danger">*</span></label>
                                             <input type="text" class="form-control" id="password" name="password"  placeholder="Enter Password">
                                         </div>
 
-                                        <div class="col-4">
+                                        <div class="col-6">
                                             <label for="confirm_password">Confirm Password<span class="text-danger">*</span></label>
                                             <input type="text" class="form-control" id="confirm_password" name="confirm_password"  placeholder="Enter Confirm Password">
                                         </div>

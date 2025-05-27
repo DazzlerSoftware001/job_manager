@@ -157,6 +157,11 @@ Route::prefix('Admin')->group(function () {
         Route::post('/UpdateUser', [UsersListController::class, 'UpdateUser'])->name('Admin.UpdateUser');
         Route::post('/DeleteUser', [UsersListController::class, 'DeleteUser'])->name('Admin.DeleteUser');
 
+        Route::get('All-Applicants', [UsersListController::class, 'AllApplicants'])->name('Admin.AllApplicants');
+        Route::get('GetRecruiterJobs', [UsersListController::class, 'getJobsByRecruiter'])->name('Admin.getJobsByRecruiter');
+
+        Route::post('Get-Applicants', [UsersListController::class, 'GetApplicants'])->name('Admin.GetApplicants');
+
 
 
         // Interview Type
