@@ -16,7 +16,7 @@
             </div>
         </div>
         <div class="container">
-            <div class="row">
+            <div class="row pb-5">
                 <div class="rts__banner__wrapper d-flex gap-4 justify-content-between ">
                     <div class="rts__banner__content">
                         <h1 class="rts__banner__title wow animated fadeInUp ">
@@ -32,28 +32,28 @@
                             @endif
 
                         </p>
-                        @if ($HomeSection === null || $HomeSection->banner_filter == 1 )
-                            <div class="rts__job__search wow animated fadeInUp" data-wow-delay=".2s">
-                                <form action="#"
+                        @if ($HomeSection === null || $HomeSection->banner_filter == 1)
+                            <div class="rts__job__search wow animated fadeInUp mb-5" data-wow-delay=".2s">
+                                <form action="{{ route('User.JobList') }}" method="GET"
                                     class="d-flex align-items-center flex-wrap flex-md-nowrap flex-lg-wrap flex-xl-nowrap gap-4 gap-xl-0 justify-content-between">
                                     <div class="input-group flex-wrap d-flex gap-4">
                                         <div class="single__input d-flex flex-column">
                                             <label for="location">location</label>
                                             <select name="location" class="select-nice" id="location">
-                                                <option value="1">Select Location</option>
-                                                <option value="2">Dhaka</option>
-                                                <option value="3">Barisal</option>
-                                                <option value="4">Chittagong</option>
+                                                <option value="Nothing" selected disabled>Search Location</option>
+                                                @foreach ($location as $value)
+                                                    <option value="{{ $value->location }}">{{ $value->location }}</option>
+                                                @endforeach
                                             </select>
                                         </div>
                                         <div class="vr d-none d-sm-block"></div>
                                         <div class="single__input d-flex flex-column">
                                             <label for="job__type">job type</label>
-                                            <select name="job__type" class="select-nice" id="job__type">
-                                                <option value="1">Select Job Type</option>
-                                                <option value="2">Full Time</option>
-                                                <option value="3">Part Time</option>
-                                                <option value="4">Internship</option>
+                                            <select name="job_type" class="select-nice" id="job__type">
+                                                <option value="Nothing" selected disabled>Select Job Type</option>
+                                                @foreach ($type as $value)
+                                                    <option value="{{ $value->type }}">{{ $value->type }}</option>
+                                                @endforeach
                                             </select>
                                         </div>
                                     </div>
@@ -66,10 +66,11 @@
                     </div>
                     <div class="rts__banner__image position-relative">
                         <figure class="banner__image">
-                            @if($HomeSection !== null && $HomeSection->banner_image !== null)
-                                <img src="{{asset($HomeSection->banner_image)}}" alt="">
+                            @if ($HomeSection !== null && $HomeSection->banner_image !== null)
+                                <img src="{{ asset($HomeSection->banner_image) }}" alt="">
                             @else
-                            <img src="{{ url('user/assets/img/home-1/banner/image_2x.webp') }}" alt="banner" width="100%" height="100%">
+                                <img src="{{ url('user/assets/img/home-1/banner/image_2x.webp') }}" alt="banner"
+                                    width="100%" height="100%">
                             @endif
                         </figure>
                         <div class="banner__image__shape">
