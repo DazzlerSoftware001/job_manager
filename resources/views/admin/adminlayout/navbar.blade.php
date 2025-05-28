@@ -47,10 +47,16 @@
 
                     <div class="d-flex">
                         <div class="dropdown">
-                            <button type="button" class="btn header-item"
+                           <a href="{{ route('User.Home') }}" target="_blank"> <button type="button" class="btn header-item"
+                                 aria-haspopup="true" aria-expanded="false">
+                                <i class="icon-sm" data-eva="globe-outline"></i>View Website
+                            </button></a>
+
+                              <button type="button" class="btn header-item"
                                 data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="icon-sm" data-eva="search-outline"></i>
                             </button>
+
                             <div class="dropdown-menu dropdown-menu-end dropdown-menu-md p-0">
                                 <form class="p-2">
                                     <div class="search-box">
