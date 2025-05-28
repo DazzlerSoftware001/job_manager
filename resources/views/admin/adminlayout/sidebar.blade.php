@@ -14,7 +14,7 @@
 
             <a href="{{route('Admin.dashboard')}}" class="logo logo-light">
                 <span class="logo-lg">
-                    <img src="assets/images/logo-light.png" alt="" height="22">
+                    <img src="{{url('admin/assets/images/logo-light.png')}}" alt="" height="22">
                 </span>
                 <span class="logo-sm">
                     <img src="assets/images/logo-light-sm.png" alt="" height="22">
@@ -450,19 +450,19 @@
                 <div class="navbar-brand-box">
                     <a href="{{route('Admin.dashboard')}}" class="logo logo-dark">
                         <span class="logo-sm">
-                            <img src="assets/images/logo-dark-sm.png" alt="" height="22">
+                            <img src="{{url('admin/assets/images/logo-dark-sm.png')}}" alt="" height="22">
                         </span>
                         <span class="logo-lg">
-                            <img src="assets/images/logo-dark.png" alt="" height="22">
+                            <img src="{{url('admin/assets/images/logo-dark.png')}}" alt="" height="22">
                         </span>
                     </a>
 
                     <a href="{{route('Admin.dashboard')}}" class="logo logo-light">
                         <span class="logo-sm">
-                            <img src="assets/images/logo-light-sm.png" alt="" height="22">
+                            <img src="{{url('admin/assets/images/logo-light-sm.png')}}" alt="" height="22">
                         </span>
                         <span class="logo-lg">
-                            <img src="assets/images/logo-light.png" alt="" height="22">
+                            <img src="{{url('admin/assets/images/logo-light.png')}}" alt="" height="22">
                         </span>
                     </a>
                 </div>
