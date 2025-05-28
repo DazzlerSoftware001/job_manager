@@ -125,7 +125,8 @@
                         </a>
                         <ul class="sub-menu" aria-expanded="false">
                             <li><a href="{{route('Admin.menu')}}" data-key="t-p-grid">Menus</a></li>
-                            <li><a href="{{route('Admin.PageSettings')}}" data-key="t-p-grid">Pages</a></li>
+                            <li><a href="{{route('Admin.FrontPageSettings')}}" data-key="t-p-grid">Front Page Settings</a></li>
+                            <li><a href="{{route('Admin.PageSettings')}}" data-key="t-p-grid">Custom Pages</a></li>
                             <li><a href="#" data-key="t-p-grid">Widgets</a></li>
                             <li><a href="#" data-key="t-p-grid">Custom CSS</a></li>
                             <li><a href="#" data-key="t-p-grid">Custom Js</a></li>

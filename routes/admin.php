@@ -273,6 +273,12 @@ Route::prefix('Admin')->group(function () {
         Route::get('/Maintenance', [SettingsController::class, 'Maintenance'])->name('Admin.Maintenance');
         Route::post('/ChangeMaintenanceStatus', [SettingsController::class, 'ChangeMaintenanceStatus'])->name('Admin.ChangeMaintenanceStatus');
 
+
+        // Front Page Settings
+        Route::get('/FrontPageSettings', [SettingsController::class, 'frontPageSettings'])->name('Admin.FrontPageSettings');
+        Route::get('/HomeSectionSettings', [SettingsController::class, 'homeSectionSettings'])->name('Admin.HomeSectionSettings');
+        Route::post('SubmitHomeSection', [SettingsController::class, 'submitHomeSection'])->name('Admin.SubmitHomeSection');
+
         
         Route::post('/logout', [AuthController::class, 'logout'])->name('Admin.logout');
 

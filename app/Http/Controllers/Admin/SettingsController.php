@@ -3,9 +3,11 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\GeneralSetting;
+use App\Models\HomePageSettings;
 use App\Models\MaintenanceMode;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Validator;
 
 class SettingsController extends Controller
 {
@@ -142,25 +144,88 @@ class SettingsController extends Controller
         ]);
     }
 
-    	public function clearCache()
+    public function clearCache()
     {
         try {
             $cacheCleared = Artisan::call('cache:clear');
-            $viewCleared = Artisan::call('view:clear');
+            $viewCleared  = Artisan::call('view:clear');
             $routeCleared = Artisan::call('route:clear');
 
             // You can optionally check the exit code (0 means success)
             if ($cacheCleared === 0 && $viewCleared === 0 && $routeCleared === 0) {
 
-                return response()->json(['status_code'=>1,'message'=>'Cache, views, and routes cleared successfully']);
+                return response()->json(['status_code' => 1, 'message' => 'Cache, views, and routes cleared successfully']);
             } else {
-                return response()->json(['status_code'=>0, 'Unable to Clear Cache']);
+                return response()->json(['status_code' => 0, 'Unable to Clear Cache']);
             }
 
         } catch (\Exception $e) {
-            return response()->json(['status_code'=>0, 'message'=>'Unable to Clear Cache']);
+            return response()->json(['status_code' => 0, 'message' => 'Unable to Clear Cache']);
         }
     }
 
+    // Front Page Settings
+    public function frontPageSettings()
+    {
+        return view('admin.Settings.FrontPageSettings');
+    }
+
+    public function homeSectionSettings()
+    {
+        $HomeSection = HomePageSettings::first();
+        return view('admin.Settings.HomeSectionSettings', compact('HomeSection'));
+    }
+
+    public function submitHomeSection(Request $request)
+    {
+        $rules = [
+            'banner_title'  => 'required|string|max:255',
+            'banner_desc'   => 'required|string|max:500',
+            'banner_filter' => 'required|max:255',
+            'banner_image'  => 'image|mimes:jpg,jpeg,png,gif,svg|max:2048',
+            // 'banner_image'  => 'image|mimes:png,svg|max:2048',
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status_code' => 2,
+                'message'     => $validator->errors()->first(),
+            ]);
+        }
+
+        $HomePageSettings = HomePageSettings::first() ?? new HomePageSettings();
+
+        // Assign other fields
+        $HomePageSettings->banner_title  = $request->banner_title;
+        $HomePageSettings->banner_desc   = $request->banner_desc;
+        $HomePageSettings->banner_filter = $request->banner_filter;
+
+        // Handle image upload
+        $inputName = 'banner_image';
+        $dbColumn  = 'banner_image';
+
+        if ($request->hasFile($inputName)) {
+            // Delete old image
+            $oldPath = public_path($HomePageSettings->$dbColumn);
+            if (! empty($HomePageSettings->$dbColumn) && file_exists($oldPath)) {
+                @unlink($oldPath); // Suppressed error handling, optional logging can be added
+            }
+
+            // Save new image
+            $image     = $request->file($inputName);
+            $imageName = time() . '_' . $inputName . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path('settings/Banner/'), $imageName);
+            $HomePageSettings->$dbColumn = 'settings/Banner/' . $imageName;
+        }
+
+        $HomePageSettings->save();
+
+        return response()->json([
+            'status_code' => 1,
+            'message'     => 'Home section updated successfully!',
+        ]);
+    }
 
 }

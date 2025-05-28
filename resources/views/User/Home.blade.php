@@ -20,47 +20,57 @@
                 <div class="rts__banner__wrapper d-flex gap-4 justify-content-between ">
                     <div class="rts__banner__content">
                         <h1 class="rts__banner__title wow animated fadeInUp ">
-                            Find Your Perfect
-                            Dream Job With
+                            {{ $HomeSection->banner_title ?? 'Find Your Perfect Dream Job With' }}
                             <span>careernext</span>
                         </h1>
                         <p class="rts__banner__desc my-40 wow animated fadeInUp" data-wow-delay=".1s">
-                            Looking for a new job can be both exciting and daunting. Navigating the job market involves
-                            exploring various avenues, including online job boards.
-                        </p>
-                        <div class="rts__job__search wow animated fadeInUp" data-wow-delay=".2s">
-                            <form action="#"
-                                class="d-flex align-items-center flex-wrap flex-md-nowrap flex-lg-wrap flex-xl-nowrap gap-4 gap-xl-0 justify-content-between">
-                                <div class="input-group flex-wrap d-flex gap-4">
-                                    <div class="single__input d-flex flex-column">
-                                        <label for="location">location</label>
-                                        <select name="location" class="select-nice" id="location">
-                                            <option value="1">Select Location</option>
-                                            <option value="2">Dhaka</option>
-                                            <option value="3">Barisal</option>
-                                            <option value="4">Chittagong</option>
-                                        </select>
-                                    </div>
-                                    <div class="vr d-none d-sm-block"></div>
-                                    <div class="single__input d-flex flex-column">
-                                        <label for="job__type">job type</label>
-                                        <select name="job__type" class="select-nice" id="job__type">
-                                            <option value="1">Select Job Type</option>
-                                            <option value="2">Full Time</option>
-                                            <option value="3">Part Time</option>
-                                            <option value="4">Internship</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <button type="submit" class="rts__btn gap-2 fill__btn job__search" aria-label="Search"><i
-                                        class="fa-light fa-magnifying-glass"></i> Search Job</button>
+                            @if ($HomeSection !== null && $HomeSection->banner_desc !== null)
+                                {{ $HomeSection->banner_desc }}
+                            @else
+                                Looking for a new job can be both exciting and daunting. Navigating the job market involves
+                                exploring various avenues, including online job boards.
+                            @endif
 
-                            </form>
-                        </div>
+                        </p>
+                        @if ($HomeSection === null || $HomeSection->banner_filter == 1 )
+                            <div class="rts__job__search wow animated fadeInUp" data-wow-delay=".2s">
+                                <form action="#"
+                                    class="d-flex align-items-center flex-wrap flex-md-nowrap flex-lg-wrap flex-xl-nowrap gap-4 gap-xl-0 justify-content-between">
+                                    <div class="input-group flex-wrap d-flex gap-4">
+                                        <div class="single__input d-flex flex-column">
+                                            <label for="location">location</label>
+                                            <select name="location" class="select-nice" id="location">
+                                                <option value="1">Select Location</option>
+                                                <option value="2">Dhaka</option>
+                                                <option value="3">Barisal</option>
+                                                <option value="4">Chittagong</option>
+                                            </select>
+                                        </div>
+                                        <div class="vr d-none d-sm-block"></div>
+                                        <div class="single__input d-flex flex-column">
+                                            <label for="job__type">job type</label>
+                                            <select name="job__type" class="select-nice" id="job__type">
+                                                <option value="1">Select Job Type</option>
+                                                <option value="2">Full Time</option>
+                                                <option value="3">Part Time</option>
+                                                <option value="4">Internship</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="rts__btn gap-2 fill__btn job__search"
+                                        aria-label="Search"><i class="fa-light fa-magnifying-glass"></i> Search Job</button>
+
+                                </form>
+                            </div>
+                        @endif
                     </div>
                     <div class="rts__banner__image position-relative">
                         <figure class="banner__image">
-                            <img src="{{ url('user/assets/img/home-1/banner/image_2x.webp') }}" alt="banner">
+                            @if($HomeSection !== null && $HomeSection->banner_image !== null)
+                                <img src="{{asset($HomeSection->banner_image)}}" alt="">
+                            @else
+                            <img src="{{ url('user/assets/img/home-1/banner/image_2x.webp') }}" alt="banner" width="100%" height="100%">
+                            @endif
                         </figure>
                         <div class="banner__image__shape">
                             <div class="facebook">
@@ -358,7 +368,7 @@
             </div>
         </div>
     </div> --}}
-    <!-- cat slider end --> 
+    <!-- cat slider end -->
 
     <!-- current open position -->
     {{-- <section class="rts__section section__padding">
@@ -957,7 +967,7 @@
     </div>
     <!-- blog section end -->
 
-{{-- 
+    {{-- 
     <div class="rts__section pb-120">
         <div class="container">
             <div class="row">

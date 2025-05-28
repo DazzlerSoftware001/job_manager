@@ -5,12 +5,14 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\CustomPage;
+use App\Models\HomePageSettings;
 
 class HomeController extends Controller
 {
     public function Home()
     {
-        return view('User.Home');
+        $HomeSection = HomePageSettings::first();
+        return view('User.Home', compact('HomeSection'));
     }
 
     public function ViewPage($slug)
