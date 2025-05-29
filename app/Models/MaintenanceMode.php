@@ -10,5 +10,5 @@ class MaintenanceMode extends Model
      use HasFactory;
 
     protected $table = 'maintenance_mode'; 
-    protected $fillable = ['maintenance'];
+    protected $fillable = ['maintenance','title','description','additional_message','image'];
 }

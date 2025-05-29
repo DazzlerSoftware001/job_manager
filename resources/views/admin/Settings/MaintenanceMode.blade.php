@@ -103,6 +103,45 @@
                             </label>
                         </form>
                     </div>
+                </div>
+
+                <div class="card">
+                    <div class="container mt-4">
+                        <h2>Maintenance Settings</h2>
+                        <form action="#" method="POST" enctype="multipart/form-data">
+                            @csrf
+                            @method('PUT')
+
+                            <div class="mb-3">
+                                <label class="form-label">Title</label>
+                                {{-- <input type="text" name="title" class="form-control" value="{{ $settings->title }}"> --}}
+                                <input type="text" name="title" class="form-control" value="">
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Description</label>
+                                {{-- <textarea name="description" class="form-control" rows="4">{{ $settings->description }}</textarea> --}}
+                                <textarea name="description" class="form-control" rows="4"></textarea>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Additional Message</label>
+                                <input type="text" name="additional_message" class="form-control" value="">
+                                {{-- <input type="text" name="additional_message" class="form-control"
+                                    value="{{ $settings->additional_message }}"> --}}
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Upload Image</label>
+                                <input type="file" name="image" class="form-control">
+                                {{-- @if ($settings->image)
+                                    <img src="{{ asset('storage/' . $settings->image) }}" width="100" class="mt-2" />
+                                @endif --}}
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                        </form>
+                    </div>
 
                 </div>
             </div>

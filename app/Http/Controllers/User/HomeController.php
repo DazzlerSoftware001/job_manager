@@ -9,6 +9,7 @@ use App\Models\HomePageSettings;
 use App\Models\JobPost;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use App\Models\MaintenanceMode;
 
 class HomeController extends Controller
 {
@@ -31,6 +32,7 @@ class HomeController extends Controller
     }
 
     public function maintenanceMode() {
-        return view('User.MaintenanceMode');
+        $maintenance = MaintenanceMode::first();
+        return view('User.MaintenanceMode', compact('maintenance'));
     }
 }

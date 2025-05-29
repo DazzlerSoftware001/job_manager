@@ -14,6 +14,10 @@ return new class extends Migration
         Schema::create('maintenance_mode', function (Blueprint $table) {
             $table->id();
             $table->enum('maintenance', [0, 1])->default(0);
+            $table->string('title')->default("We are Under Maintenance");
+            $table->text('description')->nullable();
+            $table->string('additional_message')->nullable();
+            $table->string('image')->nullable();
             $table->timestamps();
         });
     }
