@@ -82,7 +82,8 @@ class ApplicantsController extends Controller
         $ProfileStatus = $request->input('Profilestatus');
 
         $skills = $request->input('skills'); // array
-        $experience = $request->input('experience'); // array
+        // $experience = $request->input('experience'); // array
+        $experience = $request->input('experience', []);
 
         // dd($Qualification);
         // If no job is selected, return empty result
@@ -171,10 +172,19 @@ class ApplicantsController extends Controller
             });
         }
 
-        if (! empty($experience)) {
-            $query->whereHas('user', function ($q) use ($experience) {
-                $q->where('experience', '<=', $experience);
-            });
+        // if (! empty($experience)) {
+        //     $query->whereHas('user', function ($q) use ($experience) {
+        //         $q->where('experience', '<=', $experience);
+        //     });
+        // }
+        if (! empty($experience) && is_array($experience)) {
+            // Clean and cast to int
+            $experience = array_map('intval', $experience);
+
+            $min = min($experience);
+            $max = max($experience);
+
+            $query->whereBetween('experience', [$min, $max]);
         }
 
         if ($order) {

@@ -124,7 +124,7 @@
                                         </select>
                                     </div> --}}
 
-                                    <div class="col-2 mt-2">
+                                    {{-- <div class="col-2 mt-2">
                                         <label for="ExperienceFilter" class="form-label">Select Experience</label>
 
                                         <select id="ExperienceFilter" class="form-select">
@@ -133,7 +133,23 @@
                                                 <option value="{{ $exp }}">{{ $exp }}</option>
                                             @endforeach
                                         </select>
+                                    </div> --}}
+
+                                    <div class="col-12 col-md-4 mt-2">
+                                        <label class="form-label fw-bold">Select Experience</label>
+                                        <div class="border rounded p-2" style="max-height: 180px; overflow-y: auto;">
+                                            @foreach ($experience as $exp)
+                                                <div class="form-check mb-1">
+                                                    <input class="form-check-input" type="checkbox" name="experience[]"
+                                                        value="{{ $exp }}" id="exp_{{ $loop->index }}">
+                                                    <label class="form-check-label" for="exp_{{ $loop->index }}">
+                                                        {{ $exp }}
+                                                    </label>
+                                                </div>
+                                            @endforeach
+                                        </div>
                                     </div>
+
 
                                     {{-- <div class="col-2 mt-2">
                                         <label for="search" class="form-label">Search</label>
@@ -234,7 +250,11 @@
                             data.Qualification = $('#Qualification').val();
                             data.Branch = $('#Branch').val();
 
-                            data.experience = $('#ExperienceFilter').val();
+                            data.experience = $('input[name="experience[]"]:checked')
+                                .map(function() {
+                                    return this.value;
+                                }).get();
+
                         }
                     },
                     "language": {
@@ -242,12 +262,13 @@
                     }
                 });
 
-                $('#jobFilter, #education_level, #Qualification, #Branch, #cityFilter, #statusFilter, #ProfilestatusFilter, #skills, #ExperienceFilter').on(
-                    'change',
-                    function() {
-                        $('#myTable').DataTable().draw();
-                        
-                    });
+                $('#jobFilter, #education_level, #Qualification, #Branch, #cityFilter, #statusFilter, #ProfilestatusFilter, #skills, input[name="experience[]"]')
+                    .on(
+                        'change',
+                        function() {
+                            $('#myTable').DataTable().draw();
+
+                        });
 
                 $('#search').on('keyup', function(e) {
                     e.preventDefault();

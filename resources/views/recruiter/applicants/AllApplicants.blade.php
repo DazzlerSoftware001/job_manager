@@ -274,7 +274,7 @@
                     $('#myTable').DataTable().draw();
                 }
 
-                $('#jobFilter, #education_level, #Qualification, #Branch, #cityFilter, #statusFilter, #ProfilestatusFilter, #skills, #ExperienceFilter').on(
+                $('#jobFilter, #education_level, #Qualification, #Branch, #cityFilter, #statusFilter, #ProfilestatusFilter, #skills, input[name="experience[]"]').on(
                     'change',
                     function() {
                         $('#myTable').DataTable().draw();

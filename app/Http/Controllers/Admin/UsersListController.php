@@ -72,7 +72,11 @@ class UsersListController extends Controller
         $Qualification   = $request->input('Qualification');
         $Branch          = $request->input('Branch');
 
-        $experience = $request->input('experience');
+        // $experience = $request->input('experience');
+        // $experience = array_map(function ($val) {
+        //     return (int) filter_var($val, FILTER_SANITIZE_NUMBER_INT);
+        // }, $request->input('experience') ?? []);
+        $experience = $request->input('experience', []);
 
         // $query = UserProfile::where('user_type', 0);
 
@@ -103,8 +107,21 @@ class UsersListController extends Controller
             $query->where('branch', 'like', '%' . $Branch . '%');
         }
 
-        if (! empty($experience)) {
-            $query->where('experience', '<=', $experience);
+        // if (! empty($experience) && is_array($experience)) {
+        //     $maxExperience = max($experience); // Assumes numeric values
+        //     $query->where('experience', '<=', $maxExperience);
+        // }
+        // if (! empty($experience)) {
+        //     $query->whereIn('experience', $experience);
+        // }
+        if (! empty($experience) && is_array($experience)) {
+            // Clean and cast to int
+            $experience = array_map('intval', $experience);
+
+            $min = min($experience);
+            $max = max($experience);
+
+            $query->whereBetween('experience', [$min, $max]);
         }
 
         // Apply search if provided

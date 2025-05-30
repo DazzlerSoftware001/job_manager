@@ -152,6 +152,8 @@ Route::prefix('Admin')->group(function () {
         // Users List
         Route::get('UserList', [UsersListController::class, 'userList'])->name('Admin.UserList');
         Route::post('/GetUsersList', [UsersListController::class, 'getUsersList'])->name('Admin.GetUsersList');
+        Route::post('/GetQualifications', [UsersListController::class, 'getQualifications'])->name('Admin.GetQualifications');
+        Route::post('/GetBranches', [UsersListController::class, 'getBranches'])->name('Admin.GetBranches');
         Route::post('/ChangeUserStatus', [UsersListController::class, 'ChangeUserStatus'])->name('Admin.ChangeUserStatus');
         Route::get('/EditUser/{id}', [UsersListController::class, 'EditUser'])->name('Admin.EditUser');
         Route::post('/UpdateUser', [UsersListController::class, 'UpdateUser'])->name('Admin.UpdateUser');
@@ -159,6 +161,8 @@ Route::prefix('Admin')->group(function () {
 
         Route::get('All-Applicants', [UsersListController::class, 'AllApplicants'])->name('Admin.AllApplicants');
         Route::get('GetRecruiterJobs', [UsersListController::class, 'getJobsByRecruiter'])->name('Admin.getJobsByRecruiter');
+        Route::post('/GetApplicantsQualifications', [UsersListController::class, 'getApplicantsQualifications'])->name('Admin.GetApplicantsQualifications');
+        Route::post('/GetApplicantsBranches', [UsersListController::class, 'getApplicantsBranches'])->name('Admin.GetApplicantsBranches');
         Route::post('Get-Applicants', [UsersListController::class, 'GetApplicants'])->name('Admin.GetApplicants');
         Route::get('/ApllicantsDetails/{userId}/{jobId}', [UsersListController::class, 'ApllicantsDetails'])->name('Admin.ApllicantsDetails');
 
@@ -167,9 +171,6 @@ Route::prefix('Admin')->group(function () {
         Route::get('/CandidateHire/{userId}/{jobId}', [UsersListController::class, 'CandidateHire'])->name('Admin.CandidateHire');
 
         Route::get('/CandidateCVDownload/{userId}', [UsersListController::class, 'CandidateCVDownload'])->name('Admin.CandidateCVDownload');
-
-        Route::post('/GetQualifications', [UsersListController::class, 'getQualifications'])->name('Admin.GetQualifications');
-        Route::post('/GetBranches', [UsersListController::class, 'getBranches'])->name('Admin.GetBranches');
 
 
         // Interview Type
