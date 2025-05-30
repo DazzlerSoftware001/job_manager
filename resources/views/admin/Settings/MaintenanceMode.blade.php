@@ -108,35 +108,31 @@
                 <div class="card">
                     <div class="container mt-4">
                         <h2>Maintenance Settings</h2>
-                        <form action="#" method="POST" enctype="multipart/form-data">
-                            @csrf
-                            @method('PUT')
-
+                        <form action="javascript:void(0)" id="MaintenanceForm" method="POST" enctype="multipart/form-data">
                             <div class="mb-3">
                                 <label class="form-label">Title</label>
-                                {{-- <input type="text" name="title" class="form-control" value="{{ $settings->title }}"> --}}
-                                <input type="text" name="title" class="form-control" value="">
+                                <input type="text" name="title" class="form-control" value="{{$settings && $settings->title ? $settings->title : '' }}">
+                                {{-- <input type="text" name="title" class="form-control" value=""> --}}
                             </div>
 
                             <div class="mb-3">
                                 <label class="form-label">Description</label>
-                                {{-- <textarea name="description" class="form-control" rows="4">{{ $settings->description }}</textarea> --}}
-                                <textarea name="description" class="form-control" rows="4"></textarea>
+                                <textarea name="description" class="form-control" rows="4">{{ $settings && $settings->description ? $settings->description : '' }}</textarea>
+                                {{-- <textarea name="description" class="form-control" rows="4"></textarea> --}}
                             </div>
 
                             <div class="mb-3">
                                 <label class="form-label">Additional Message</label>
-                                <input type="text" name="additional_message" class="form-control" value="">
-                                {{-- <input type="text" name="additional_message" class="form-control"
-                                    value="{{ $settings->additional_message }}"> --}}
+                                {{-- <input type="text" name="additional_message" class="form-control" value=""> --}}
+                                <input type="text" name="additional_message" class="form-control" value="{{ $settings && $settings->additional_message ? $settings->additional_message : '' }}">
                             </div>
 
                             <div class="mb-3">
                                 <label class="form-label">Upload Image</label>
                                 <input type="file" name="image" class="form-control">
-                                {{-- @if ($settings->image)
-                                    <img src="{{ asset('storage/' . $settings->image) }}" width="100" class="mt-2" />
-                                @endif --}}
+                                @if ($settings && $settings->image)
+                                    <img src="{{ asset($settings->image) }}" width="100" class="mt-2" />
+                                @endif
                             </div>
 
                             <button type="submit" class="btn btn-primary">Save Changes</button>
@@ -198,6 +194,65 @@
                         }
                     });
                 }
+            });
+        });
+    </script>
+
+    {{-- For Submit the form --}}
+    <script>
+        $(document).ready(function() {
+            $('#MaintenanceForm').submit(function(e) {
+                e.preventDefault();
+
+                let formData = new FormData(this);
+
+                $.ajax({
+                    url: "{{ route('Admin.SaveMaintenanceSettings') }}", // Adjust this route
+                    type: "POST",
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function(result) {
+                        if (result.status_code == 1) {
+                            Toastify({
+                                text: result.message,
+                                duration: 3000,
+                                gravity: "top",
+                                position: "right",
+                                className: "bg-success",
+                                style: "style",
+                            }).showToast();
+
+                            // Redirect to login or home page & Reload after 0.7 seconds (750 ms)
+                            setTimeout(function() {
+                                location.reload();
+                            }, 750);
+
+                        } else if (result.status_code == 2) {
+                            Toastify({
+                                text: result.message,
+                                duration: 3000,
+                                gravity: "top",
+                                position: "right",
+                                className: "bg-warning",
+                                style: "style",
+                            }).showToast();
+
+                        } else {
+                            Toastify({
+                                text: result.message,
+                                duration: 3000,
+                                gravity: "top",
+                                position: "right",
+                                className: "bg-danger",
+                                style: "style",
+                            }).showToast();
+                        }
+                    }
+                });
             });
         });
     </script>

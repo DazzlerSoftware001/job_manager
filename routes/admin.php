@@ -168,6 +168,9 @@ Route::prefix('Admin')->group(function () {
 
         Route::get('/CandidateCVDownload/{userId}', [UsersListController::class, 'CandidateCVDownload'])->name('Admin.CandidateCVDownload');
 
+        Route::post('/GetQualifications', [UsersListController::class, 'getQualifications'])->name('Admin.GetQualifications');
+        Route::post('/GetBranches', [UsersListController::class, 'getBranches'])->name('Admin.GetBranches');
+
 
         // Interview Type
         Route::get('/JobIntType', [JobController::class, 'JobIntType'])->name('Admin.JobIntType');
@@ -272,6 +275,7 @@ Route::prefix('Admin')->group(function () {
 
         Route::get('/Maintenance', [SettingsController::class, 'Maintenance'])->name('Admin.Maintenance');
         Route::post('/ChangeMaintenanceStatus', [SettingsController::class, 'ChangeMaintenanceStatus'])->name('Admin.ChangeMaintenanceStatus');
+        Route::post('/SaveMaintenanceSettings', [SettingsController::class, 'saveMaintenanceSettings'])->name('Admin.SaveMaintenanceSettings');
 
 
         // Front Page Settings

@@ -118,6 +118,17 @@
                                     </div>
 
                                     <div class="col-2 mt-2">
+                                        <label for="ExperienceFilter" class="form-label">Select Experience</label>
+
+                                        <select id="ExperienceFilter" class="form-select">
+                                            <option value="">Experience</option>
+                                            @foreach ($experience as $exp)
+                                                <option value="{{ $exp }}">{{ $exp }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+
+                                    <div class="col-2 mt-2">
                                         <label for="search" class="form-label">Search</label>
 
                                         <input type="text" id="search" class="form-control mb-3"
@@ -250,6 +261,7 @@
                             data.Profilestatus = $('#ProfilestatusFilter').val(); // optional
                             data.search = $('#search').val();
                             data.skills = $('#skills').val();
+                            data.experience = $('#ExperienceFilter').val();
 
                         }
 
@@ -262,7 +274,7 @@
                     $('#myTable').DataTable().draw();
                 }
 
-                $('#jobFilter, #education_level, #Qualification, #Branch, #cityFilter, #statusFilter, #ProfilestatusFilter, #skills').on(
+                $('#jobFilter, #education_level, #Qualification, #Branch, #cityFilter, #statusFilter, #ProfilestatusFilter, #skills, #ExperienceFilter').on(
                     'change',
                     function() {
                         $('#myTable').DataTable().draw();

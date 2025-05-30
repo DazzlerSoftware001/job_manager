@@ -9,6 +9,7 @@ use App\Models\UserProfile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Crypt;
+use App\Models\JobExperience;
 
 class ApplicantsController extends Controller
 {
@@ -53,9 +54,11 @@ class ApplicantsController extends Controller
             'branches'       => UserProfile::select('branch')->distinct()->pluck('branch')->filter(),
         ];
 
+        $experience = JobExperience::pluck('experience');
+
         // dd($data['qualifications']);
 
-        return view('recruiter.applicants.AllApplicants', compact('joblist', 'cities', 'skills', 'data', 'decryptedId'));
+        return view('recruiter.applicants.AllApplicants', compact('joblist', 'cities', 'skills', 'data', 'decryptedId', 'experience'));
     }
 
     public function getAllApplicants(Request $request)
@@ -79,6 +82,7 @@ class ApplicantsController extends Controller
         $ProfileStatus = $request->input('Profilestatus');
 
         $skills = $request->input('skills'); // array
+        $experience = $request->input('experience'); // array
 
         // dd($Qualification);
         // If no job is selected, return empty result
@@ -105,7 +109,7 @@ class ApplicantsController extends Controller
 
         // dd($decryptedId);
         $query = JobApplication::with([
-            'user:id,name,lname,email,logo,education_level,city',
+            'user:id,name,lname,email,logo,education_level,city,experience',
             'user.candidateProfile:skill',
             'jobPost:id,title',
         ]) 
@@ -164,6 +168,12 @@ class ApplicantsController extends Controller
                 foreach ($skills as $skill) {
                     $q->where('skill', 'like', '%' . $skill . '%');
                 }
+            });
+        }
+
+        if (! empty($experience)) {
+            $query->whereHas('user', function ($q) use ($experience) {
+                $q->where('experience', '<=', $experience);
             });
         }
 

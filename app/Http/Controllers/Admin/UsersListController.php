@@ -2,22 +2,49 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-
+use App\Models\CandidateProfile;
+use App\Models\JobApplication;
+use App\Models\JobExperience;
+use App\Models\Jobpost;
+use App\Models\Recruiter;
+use App\Models\UserProfile;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Validator;
-use App\Models\UserProfile;
-use App\Models\Recruiter;
-use App\Models\Jobpost;
-use App\Models\JobApplication;
-use Illuminate\Support\Carbon;
-
 
 class UsersListController extends Controller
 {
     public function userList()
     {
-        return view('admin.Users.UsersList');
+        $cities = JobApplication::with('user')->get()->pluck('user.city')->filter()->unique()->values();
+        $skills = CandidateProfile::pluck('skill')
+            ->filter()
+            ->flatMap(function ($item) {
+                // Remove square brackets and quotes
+                $item = str_replace(['[', ']', '"'], '', $item);
+
+                // Split and clean each skill
+                $skills  = explode(',', $item);
+                $cleaned = [];
+
+                foreach ($skills as $skill) {
+                    $skill = strtolower(trim($skill));
+                    if (! empty($skill)) {
+                        $cleaned[] = $skill;
+                    }
+                }
+
+                return $cleaned;
+            })
+            ->unique()
+            ->sort()
+            ->values();
+
+        $experience = JobExperience::pluck('experience');
+        // dd($experience);
+
+        return view('admin.Users.UsersList', compact('cities', 'skills', 'experience'));
     }
 
     public function getUsersList(Request $request)
@@ -38,7 +65,47 @@ class UsersListController extends Controller
             6 => 'created_at',
         ];
 
-        $query = UserProfile::where('user_type', 0);
+        $city   = $request->input('city');
+        $skills = $request->input('skills'); // should be an array
+
+        $education_level = $request->input('education_level');
+        $Qualification   = $request->input('Qualification');
+        $Branch          = $request->input('Branch');
+
+        $experience = $request->input('experience');
+
+        // $query = UserProfile::where('user_type', 0);
+
+        $query = UserProfile::with('candidateProfile')
+            ->where('user_type', 0);
+
+        if (! empty($city)) {
+            $query->where('city', $city);
+        }
+
+        if (! empty($skills) && is_array($skills)) {
+            $query->whereHas('candidateProfile', function ($q) use ($skills) {
+                foreach ($skills as $skill) {
+                    $q->where('skill', 'like', '%' . $skill . '%');
+                }
+            });
+        }
+
+        if (! empty($education_level)) {
+            $query->where('education_level', $education_level);
+        }
+
+        if (! empty($Qualification)) {
+            $query->where('qualification', 'like', '%' . $Qualification . '%');
+        }
+
+        if (! empty($Branch)) {
+            $query->where('branch', 'like', '%' . $Branch . '%');
+        }
+
+        if (! empty($experience)) {
+            $query->where('experience', '<=', $experience);
+        }
 
         // Apply search if provided
         if (! empty($search)) {
@@ -101,6 +168,32 @@ class UsersListController extends Controller
         ]);
     }
 
+    public function getQualifications(Request $request)
+    {
+        $education_level = $request->input('education_level');
+
+        // Replace with your actual logic for fetching qualifications
+        $qualifications = UserProfile::where('education_level', $education_level)
+            ->pluck('qualification')
+            ->unique()
+            ->values();
+
+        return response()->json($qualifications);
+    }
+
+    public function getBranches(Request $request)
+    {
+        $qualification = $request->input('qualification');
+
+        $branches = UserProfile::where('qualification', $qualification)
+            ->pluck('branch')
+            ->unique()
+            ->filter() // optional: removes null values
+            ->values();
+
+        return response()->json($branches);
+    }
+
     public function ChangeUserStatus(Request $request)
     {
         $id = $request->input('id');
@@ -136,8 +229,6 @@ class UsersListController extends Controller
         $user = UserProfile::findOrFail($decryptedId);
         return view('admin.Users.EditUser', compact('user'));
     }
-
-    
 
     public function UpdateUser(Request $request)
     {
@@ -224,30 +315,27 @@ class UsersListController extends Controller
         }
     }
 
-
     public function AllApplicants()
     {
 
-        $Recruiters = Recruiter::select('id', 'name','email')->where('user_type',2)->where('status', 1)->get();
-        $today       = Carbon::today();
+        $Recruiters = Recruiter::select('id', 'name', 'email')->where('user_type', 2)->where('status', 1)->get();
+        $today      = Carbon::today();
 
-        $joblist     = JobPost::select('id', 'title')->where('status', 1)->where('admin_verify', 1)->whereDate('jobexpiry', '>=', $today)->get();
+        $joblist = JobPost::select('id', 'title')->where('status', 1)->where('admin_verify', 1)->whereDate('jobexpiry', '>=', $today)->get();
 
-        return view('admin.Users.AllApplicants',compact('Recruiters'));
+        return view('admin.Users.AllApplicants', compact('Recruiters'));
     }
-
 
     public function getJobsByRecruiter(Request $request)
     {
         $jobs = JobPost::select('id', 'title')
-                    ->where('status', 1)
-                    ->where('admin_verify', 1)
-                    ->where('recruiter_id', $request->recruiter_id)
-                    ->whereDate('jobexpiry', '>=', now())
-                    ->get();
+            ->where('status', 1)
+            ->where('admin_verify', 1)
+            ->where('recruiter_id', $request->recruiter_id)
+            ->whereDate('jobexpiry', '>=', now())
+            ->get();
         return response()->json($jobs);
     }
-
 
     public function GetApplicants(Request $request)
     {
@@ -255,9 +343,9 @@ class UsersListController extends Controller
         $offset = trim($request->input('start'));
         $limit  = intval($request->input('length', 10));
 
-        $order   = $request->input("order");
+        $order = $request->input("order");
 
-        $JobFilter  = $request->input("JobFilter");
+        $JobFilter = $request->input("JobFilter");
 
         if (empty($JobFilter)) {
             return response()->json([
@@ -284,14 +372,12 @@ class UsersListController extends Controller
             'user:id,name,lname,email,logo,education_level,city',
             'user.candidateProfile:skill',
             'jobPost:id,title',
-        ]) 
+        ])
             ->select(['id', 'user_id', 'job_id', 'status', 'recruiter_view', 'created_at']);
 
-
-            if (!empty($JobFilter)) {
-                $query->where('job_id', $JobFilter);
-            }
-
+        if (! empty($JobFilter)) {
+            $query->where('job_id', $JobFilter);
+        }
 
         if ($order) {
             $column = $columns[$order[0]['column']];
@@ -309,7 +395,7 @@ class UsersListController extends Controller
 
             $dataArray[] = $record->user->id;
             // $dataArray[] = ucfirst($record->name . ' ' . $record->lname);
-            $dataArray[] = ucfirst($record->user->name) .' '.$record->user->lname;
+            $dataArray[] = ucfirst($record->user->name) . ' ' . $record->user->lname;
 
             $dataArray[] = $record->user->email;
             $dataArray[] = $record->user->phone;
@@ -338,9 +424,9 @@ class UsersListController extends Controller
 
             $dataArray[] = '<div class="d-flex gap-2">
                                 <a href="' . route('Admin.ApllicantsDetails', [
-                                    'userId' => Crypt::encrypt($record->user->id),
-                                    'jobId'  => Crypt::encrypt($record->jobPost->id),
-                                ]) . '" class="badge bg-success">View Profile</a>
+                'userId' => Crypt::encrypt($record->user->id),
+                'jobId'  => Crypt::encrypt($record->jobPost->id),
+            ]) . '" class="badge bg-success">View Profile</a>
                             </div>';
 
             $data[] = $dataArray;
@@ -354,8 +440,8 @@ class UsersListController extends Controller
         ]);
     }
 
-    public function ApllicantsDetails($userId,$jobId)
-    { 
+    public function ApllicantsDetails($userId, $jobId)
+    {
         try {
             $decryptedId = Crypt::decrypt($userId);
             $DecJob_Id   = Crypt::decrypt($jobId);
@@ -364,7 +450,7 @@ class UsersListController extends Controller
         }
 
         // Load user with candidate profile
-        $user = UserProfile::with('candidateProfile', 'candidateQualification', 'candidateEmployment','candidateAward')->find($decryptedId);
+        $user = UserProfile::with('candidateProfile', 'candidateQualification', 'candidateEmployment', 'candidateAward')->find($decryptedId);
 
         $application = JobApplication::where('user_id', $decryptedId)
             ->where('job_id', $DecJob_Id)
@@ -395,9 +481,8 @@ class UsersListController extends Controller
 
         $JobPost = JobPost::findOrFail($DecJob_Id)->title;
 
-        return view('admin.Users.ApllicantsDetails', compact('user', 'DecJob_Id', 'application','JobPost'));
+        return view('admin.Users.ApllicantsDetails', compact('user', 'DecJob_Id', 'application', 'JobPost'));
     }
-
 
     public function CandidateShortlist($userId, $Job_Id)
     {
@@ -430,7 +515,7 @@ class UsersListController extends Controller
     }
 
     public function CandidateReject($userId, $Job_Id)
-    { 
+    {
         try {
             $decryptedId = Crypt::decrypt($userId);
             $DecJob_Id   = Crypt::decrypt($Job_Id);
@@ -494,14 +579,12 @@ class UsersListController extends Controller
             $decryptedId = Crypt::decrypt($userId);
             // dd($decryptedId);
 
-            $user = UserProfile::with('candidateProfile')->findOrFail($decryptedId);
+            $user   = UserProfile::with('candidateProfile')->findOrFail($decryptedId);
             $resume = $user->candidateProfile->resume;
             // dd($resume);
-            if($resume !== null) {
+            if ($resume !== null) {
 
-            
                 $path = public_path($resume);
-
 
                 // dd($path);
 

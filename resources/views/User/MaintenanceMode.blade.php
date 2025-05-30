@@ -51,16 +51,20 @@
 <body>
     <div class="maintenance-box">
         <div class="logo">
+            @if($maintenance && $maintenance->image)
+            <img src="{{ asset($maintenance->image) }}" alt="">
+            @else
             <img src="https://cdn-icons-png.flaticon.com/512/565/565547.png" alt="Under Maintenance" />
+            @endif
         </div>
         @if ($maintenance !== null && $maintenance->title)
           <h1>{{$maintenance->title}}</h1>
         @else
           <h1>We're Under Maintenance</h1>
         @endif
-        <p>Sorry for the inconvenience. We're performing some maintenance at the moment.<br>
-            We'll be back online shortly!</p>
-        <p class="mt-4">Thank you for your patience. 😊</p>
+        <p>{{$maintenance && $maintenance->description ? $maintenance->description : 'Sorry for the inconvenience. We\'re performing some maintenance at the moment.
+            We\'ll be back online shortly!'}}</p>
+        <p class="mt-4">{{$maintenance && $maintenance->additional_message ? $maintenance->additional_message : 'Thank you for your patience. 😊'}}</p>
     </div>
 </body>
 

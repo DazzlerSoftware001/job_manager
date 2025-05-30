@@ -108,7 +108,8 @@ class SettingsController extends Controller
 
     public function Maintenance()
     {
-        return view('admin.Settings.MaintenanceMode');
+        $settings = MaintenanceMode::first();
+        return view('admin.Settings.MaintenanceMode', compact('settings'));
     }
 
     public function ChangeMaintenanceStatus(Request $request)
@@ -141,6 +142,55 @@ class SettingsController extends Controller
         return response()->json([
             'status_code' => 1,
             'message'     => $message,
+        ]);
+    }
+
+    public function saveMaintenanceSettings(Request $request)
+    {
+        $rules = [
+            'title'              => 'required|string|max:255',
+            'description'        => 'nullable|string',
+            'additional_message' => 'nullable|string',
+            'image'              => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status_code' => 2,
+                'message'     => $validator->errors()->first(),
+            ]);
+        }
+
+        // Get existing or new instance
+        $settings = MaintenanceMode::first() ?? new MaintenanceMode();
+
+        $settings->title              = $request->title;
+        $settings->description        = $request->description;
+        $settings->additional_message = $request->additional_message;
+
+        // Handle image
+        if ($request->hasFile('image')) {
+            // Delete old image if it exists
+            $oldPath = public_path($settings->image);
+            if (! empty($settings->image) && file_exists($oldPath)) {
+                @unlink($oldPath);
+            }
+
+            // Save new image
+            $image     = $request->file('image');
+            $imageName = time() . '_maintenance.' . $image->getClientOriginalExtension();
+            $image->move(public_path('settings/maintenance/'), $imageName);
+
+            $settings->image = 'settings/maintenance/' . $imageName;
+        }
+
+        $settings->save();
+
+        return response()->json([
+            'status_code' => 1,
+            'message'     => 'Settings saved successfully!',
         ]);
     }
 

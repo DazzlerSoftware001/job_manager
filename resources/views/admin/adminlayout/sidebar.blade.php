@@ -102,7 +102,7 @@
                         </a>
                     </li>
 
-                    <li>
+                    {{-- <li>
                         <a href="{{route('Admin.UserList')}}">
                             <i class="far fas fa-user-tie"></i>
                             <span class="menu-item" data-key="t-projects">Users List</span>
@@ -114,6 +114,24 @@
                             <i class="far fas fa-user-tie"></i>
                             <span class="menu-item" data-key="t-projects">All Applicants</span>
                         </a>
+                    </li> --}}
+
+                     <li>
+                        <a href="javascript: void(0);" class="has-arrow">
+                            <i class="icon nav-icon" data-eva="settings-outline"></i>
+                            <span class="menu-item" data-key="t-projects">Candidate DataBase</span>
+                        </a>
+                        <ul class="sub-menu" aria-expanded="false">
+                            <li><a href="{{route('Admin.UserList')}}" data-key="t-p-grid">Users List</a></li>
+                            <li><a href="{{route('Admin.AllApplicants')}}" data-key="t-p-grid">All Applicants</a></li>
+                            {{-- <li><a href="{{route('Admin.PageSettings')}}" data-key="t-p-grid">Custom Pages</a></li>
+                            <li><a href="#" data-key="t-p-grid">Widgets</a></li>
+                            <li><a href="#" data-key="t-p-grid">Custom CSS</a></li>
+                            <li><a href="#" data-key="t-p-grid">Custom Js</a></li>
+                            <li><a href="#" data-key="t-p-grid">Themes</a></li>
+                            <li><a href="#" data-key="t-p-grid">Header</a></li>
+                            <li><a href="{{route('Admin.Footer')}}" data-key="t-p-grid">Footer</a></li> --}}
+                        </ul>
                     </li>
 
                     <li class="menu-title" data-key="t-applications">Apperiance</li>

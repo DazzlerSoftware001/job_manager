@@ -1,29 +1,24 @@
 <?php
-
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Models\JobSkill;
-use App\Models\JobDepartment;
-use App\Models\JobRole;
-use App\Models\JobLocation;
-use App\Models\JobCategory;
-use App\Models\JobTypes;
-use App\Models\JobShift;
-use App\Models\JobExperience;
-use App\Models\JobCurrency;
-use App\Models\JobSalary;
-use App\Models\JobMode;
-use App\Models\JobIntType;
-use App\Models\JobEducation;
-use App\Models\JobPost;
 use App\Models\Companies;
+use App\Models\JobCategory;
+use App\Models\JobCurrency;
+use App\Models\JobDepartment;
+use App\Models\JobEducation;
+use App\Models\JobExperience;
+use App\Models\JobIntType;
+use App\Models\JobLocation;
+use App\Models\JobMode;
+use App\Models\JobPost;
+use App\Models\JobRole;
+use App\Models\JobSalary;
+use App\Models\JobShift;
+use App\Models\JobSkill;
+use App\Models\JobTypes;
 use App\Models\Recruiter;
-
-
-
-use Illuminate\Support\Str;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Validator;
 
@@ -38,38 +33,37 @@ class JobController extends Controller
     public function getJobSkill(Request $request)
     {
         // dd($request->all());
-        $draw = intval($request->input("draw"));
+        $draw   = intval($request->input("draw"));
         $offset = trim($request->input('start'));
         // $limit = 10;
         $limit = intval($request->input('length', 10));
 
-        $order = $request->input("order");
-        $search = $request->input("search");
-        $columns = array(
+        $order   = $request->input("order");
+        $search  = $request->input("search");
+        $columns = [
             0 => 'id',
             1 => 'skill',
             2 => 'status',
             3 => 'created_at',
             4 => 'id',
-        );
+        ];
 
         $query = JobSkill::query();
         // Count Data
 
-        if (!empty($search)) {
+        if (! empty($search)) {
             $query->where('skill', 'like', '%' . $search . '%');
         }
-    
+
         if ($order) {
             $column = $columns[$order[0]['column']];
-            $dir = $order[0]['dir'];
+            $dir    = $order[0]['dir'];
             $query->orderBy($column, $dir);
         }
 
         $totalRecords = $query->count();
 
         $records = $query->offset($offset)->limit($limit)->orderBy('id', 'desc')->get();
-
 
         $data = [];
         foreach ($records as $record) {
@@ -79,11 +73,10 @@ class JobController extends Controller
             $dataArray[] = ucfirst($record->skill);
 
             $status = $record->status == 1
-                ? '<div class="d-flex"><span onclick="changeStatus(' . $record->id . ');" class="badge bg-success text-uppercase"  style="cursor: pointer;">Active</span></div>'
-                : '<div class="d-flex"><span onclick="changeStatus(' . $record->id . ');" class="badge bg-danger text-uppercase" style="cursor: pointer;">Inactive</span></div>';
+            ? '<div class="d-flex"><span onclick="changeStatus(' . $record->id . ');" class="badge bg-success text-uppercase"  style="cursor: pointer;">Active</span></div>'
+            : '<div class="d-flex"><span onclick="changeStatus(' . $record->id . ');" class="badge bg-danger text-uppercase" style="cursor: pointer;">Inactive</span></div>';
 
             $dataArray[] = $status;
-
 
             $dataArray[] = date('d-M-Y', strtotime($record->created_at));
 
@@ -102,16 +95,16 @@ class JobController extends Controller
         }
 
         return response()->json([
-            "draw" => $draw,
-            "recordsTotal" => $totalRecords,
+            "draw"            => $draw,
+            "recordsTotal"    => $totalRecords,
             "recordsFiltered" => $totalRecords,
-            "data" => $data
+            "data"            => $data,
         ]);
     }
 
     public function addJobSkill(Request $request)
     {
-  
+
         // Define validation rules
         $rules = [
             'skill' => 'required|string|max:100|unique:job_skill,skill',
@@ -121,11 +114,11 @@ class JobController extends Controller
         // Validate the request
         $validator = Validator::make($request->all(), $rules);
 
-        if (!$validator->fails()) {
+        if (! $validator->fails()) {
             try {
-                $JobSkill = new JobSkill();
-                $JobSkill->skill = $request->input('skill');
-                $JobSkill->status = 0;
+                $JobSkill             = new JobSkill();
+                $JobSkill->skill      = $request->input('skill');
+                $JobSkill->status     = 0;
                 $JobSkill->created_at = now();
 
                 $JobSkill->save();
@@ -144,16 +137,15 @@ class JobController extends Controller
     public function changeJobSkillStatus(Request $request)
     {
         $id = $request->input('id');
-    
-        if (!empty($id)) {
+
+        if (! empty($id)) {
             // Find the record by ID
             $JobSkill = JobSkill::find($id);
-    
-           
+
             if ($JobSkill) {
                 // Toggle the status
                 $JobSkill->status = $JobSkill->status == 1 ? 0 : 1;
-    
+
                 // Save the updated record
                 if ($JobSkill->save()) {
                     return response()->json(['status_code' => 1, 'message' => 'Status successfully changed']);
@@ -167,15 +159,15 @@ class JobController extends Controller
             return response()->json(['status_code' => 2, 'message' => 'Id is required']);
         }
     }
-    
+
     public function deleteJobSkill(Request $request)
     {
         $id = $request->input('id');
-    
-        if (!empty($id)) {
+
+        if (! empty($id)) {
             // Attempt to find and delete the record
             $JobSkill = JobSkill::find($id);
-    
+
             if ($JobSkill) {
                 $JobSkill->delete();
                 return response()->json(['status_code' => 1, 'message' => 'Skill deleted successfully ']);
@@ -191,9 +183,9 @@ class JobController extends Controller
     {
         $id = $request->input('id');
 
-        if (!empty($id)) {
+        if (! empty($id)) {
             // Find the record by ID
-         
+
             $JobSkill = JobSkill::find($id);
 
             if ($JobSkill) {
@@ -209,21 +201,20 @@ class JobController extends Controller
     public function updateJobSkill(Request $request)
     {
         $rules = [
-            'edit-id' => 'required|exists:job_skill,id',
+            'edit-id'   => 'required|exists:job_skill,id',
             'EditSkill' => 'required|max:100|unique:job_skill,skill',
         ];
 
         $validator = Validator::make($request->all(), $rules);
 
-        if (!$validator->fails()) {
+        if (! $validator->fails()) {
             $id = $request->input('edit-id');
-
 
             // Find the record by ID
             $JobSkill = JobSkill::find($id);
 
             if ($JobSkill) {
-                $JobSkill->skill = $request->input('EditSkill');
+                $JobSkill->skill      = $request->input('EditSkill');
                 $JobSkill->updated_at = now();
 
                 if ($JobSkill->save()) {
@@ -239,50 +230,48 @@ class JobController extends Controller
         }
     }
 
-
-
     // Department
-    public function JobDepartment() {
-        $data['JobCategory'] = JobCategory::select('name')->get(); 
-        return view('admin.job.Jobdepartment',$data);
+    public function JobDepartment()
+    {
+        $data['JobCategory'] = JobCategory::select('name')->get();
+        return view('admin.job.Jobdepartment', $data);
     }
 
     public function getJobDepartment(Request $request)
     {
         // dd($request->all());
-        $draw = intval($request->input("draw"));
+        $draw   = intval($request->input("draw"));
         $offset = trim($request->input('start'));
         // $limit = 10;
         $limit = intval($request->input('length', 10));
 
-        $order = $request->input("order");
-        $search = $request->input("search");
-        $columns = array(
+        $order   = $request->input("order");
+        $search  = $request->input("search");
+        $columns = [
             0 => 'id',
             1 => 'category_name',
             2 => 'department',
             3 => 'status',
             4 => 'created_at',
             5 => 'id',
-        );
+        ];
 
         $query = JobDepartment::query();
         // Count Data
 
-        if (!empty($search)) {
+        if (! empty($search)) {
             $query->where('department', 'like', '%' . $search . '%');
         }
-    
+
         if ($order) {
             $column = $columns[$order[0]['column']];
-            $dir = $order[0]['dir'];
+            $dir    = $order[0]['dir'];
             $query->orderBy($column, $dir);
         }
 
         $totalRecords = $query->count();
 
         $records = $query->offset($offset)->limit($limit)->orderBy('id', 'desc')->get();
-
 
         $data = [];
         foreach ($records as $record) {
@@ -293,11 +282,10 @@ class JobController extends Controller
             $dataArray[] = ucfirst($record->department);
 
             $status = $record->status == 1
-                ? '<div class="d-flex "><span onclick="changeStatus(' . $record->id . ');" class="badge bg-success text-uppercase"  style="cursor: pointer;">Active</span></div>'
-                : '<div class="d-flex "><span onclick="changeStatus(' . $record->id . ');" class="badge bg-danger text-uppercase" style="cursor: pointer;">Inactive</span></div>';
+            ? '<div class="d-flex "><span onclick="changeStatus(' . $record->id . ');" class="badge bg-success text-uppercase"  style="cursor: pointer;">Active</span></div>'
+            : '<div class="d-flex "><span onclick="changeStatus(' . $record->id . ');" class="badge bg-danger text-uppercase" style="cursor: pointer;">Inactive</span></div>';
 
             $dataArray[] = $status;
-
 
             $dataArray[] = date('d-M-Y', strtotime($record->created_at));
 
@@ -316,32 +304,32 @@ class JobController extends Controller
         }
 
         return response()->json([
-            "draw" => $draw,
-            "recordsTotal" => $totalRecords,
+            "draw"            => $draw,
+            "recordsTotal"    => $totalRecords,
             "recordsFiltered" => $totalRecords,
-            "data" => $data
+            "data"            => $data,
         ]);
     }
 
     public function addJobDepartment(Request $request)
     {
-  
+
         // Define validation rules
         $rules = [
-            'category' => 'required',
+            'category'   => 'required',
             'department' => 'required|string|max:100|unique:job_department,department',
         ];
 
         // Validate the request
         $validator = Validator::make($request->all(), $rules);
 
-        if (!$validator->fails()) {
+        if (! $validator->fails()) {
             try {
-                $JobDepartment = new JobDepartment();
+                $JobDepartment                = new JobDepartment();
                 $JobDepartment->category_name = $request->input('category');
-                $JobDepartment->department = $request->input('department');
-                $JobDepartment->status = 0;
-                $JobDepartment->created_at = now();
+                $JobDepartment->department    = $request->input('department');
+                $JobDepartment->status        = 0;
+                $JobDepartment->created_at    = now();
 
                 $JobDepartment->save();
 
@@ -359,16 +347,15 @@ class JobController extends Controller
     public function changeJobDepartmentStatus(Request $request)
     {
         $id = $request->input('id');
-    
-        if (!empty($id)) {
+
+        if (! empty($id)) {
             // Find the record by ID
             $JobDepartment = JobDepartment::find($id);
-    
-           
+
             if ($JobDepartment) {
                 // Toggle the status
                 $JobDepartment->status = $JobDepartment->status == 1 ? 0 : 1;
-    
+
                 // Save the updated record
                 if ($JobDepartment->save()) {
                     return response()->json(['status_code' => 1, 'message' => 'Status successfully changed']);
@@ -386,11 +373,11 @@ class JobController extends Controller
     public function deleteJobDepartment(Request $request)
     {
         $id = $request->input('id');
-    
-        if (!empty($id)) {
+
+        if (! empty($id)) {
             // Attempt to find and delete the record
             $JobDepartment = JobDepartment::find($id);
-    
+
             if ($JobDepartment) {
                 $JobDepartment->delete();
                 return response()->json(['status_code' => 1, 'message' => 'JobDepartment deleted successfully ']);
@@ -406,9 +393,9 @@ class JobController extends Controller
     {
         $id = $request->input('id');
 
-        if (!empty($id)) {
+        if (! empty($id)) {
             // Find the record by ID
-         
+
             $JobDepartment = JobDepartment::find($id);
 
             if ($JobDepartment) {
@@ -424,24 +411,23 @@ class JobController extends Controller
     public function updateJobDepartment(Request $request)
     {
         $rules = [
-            'edit-id' => 'required|exists:job_department,id',
-            'editcategory' => 'required',
+            'edit-id'        => 'required|exists:job_department,id',
+            'editcategory'   => 'required',
             'editdepartment' => 'required|max:100',
         ];
 
         $validator = Validator::make($request->all(), $rules);
 
-        if (!$validator->fails()) {
+        if (! $validator->fails()) {
             $id = $request->input('edit-id');
-
 
             // Find the record by ID
             $JobDepartment = JobDepartment::find($id);
 
             if ($JobDepartment) {
                 $JobDepartment->category_name = $request->input('editcategory');
-                $JobDepartment->department = $request->input('editdepartment');
-                $JobDepartment->updated_at = now();
+                $JobDepartment->department    = $request->input('editdepartment');
+                $JobDepartment->updated_at    = now();
 
                 if ($JobDepartment->save()) {
                     return response()->json(['status_code' => 1, 'message' => 'JobDepartment updated successfully']);
@@ -456,49 +442,48 @@ class JobController extends Controller
         }
     }
 
-
     // Role
-    public function JobRole() {
-        $data['JobDepartment'] = JobDepartment::select('department')->get(); 
-        return view('admin.job.Jobrole',$data);
+    public function JobRole()
+    {
+        $data['JobDepartment'] = JobDepartment::select('department')->get();
+        return view('admin.job.Jobrole', $data);
     }
 
     public function getJobRole(Request $request)
     {
         // dd($request->all());
-        $draw = intval($request->input("draw"));
+        $draw   = intval($request->input("draw"));
         $offset = trim($request->input('start'));
         // $limit = 10;
         $limit = intval($request->input('length', 10));
 
-        $order = $request->input("order");
-        $search = $request->input("search");
-        $columns = array(
+        $order   = $request->input("order");
+        $search  = $request->input("search");
+        $columns = [
             0 => 'id',
             1 => 'department_name',
             2 => 'role',
             3 => 'status',
             4 => 'created_at',
             5 => 'id',
-        );
+        ];
 
         $query = JobRole::query();
         // Count Data
 
-        if (!empty($search)) {
+        if (! empty($search)) {
             $query->where('role', 'like', '%' . $search . '%');
         }
-    
+
         if ($order) {
             $column = $columns[$order[0]['column']];
-            $dir = $order[0]['dir'];
+            $dir    = $order[0]['dir'];
             $query->orderBy($column, $dir);
         }
 
         $totalRecords = $query->count();
 
         $records = $query->offset($offset)->limit($limit)->orderBy('id', 'desc')->get();
-
 
         $data = [];
         foreach ($records as $record) {
@@ -509,11 +494,10 @@ class JobController extends Controller
             $dataArray[] = ucfirst($record->role);
 
             $status = $record->status == 1
-                ? '<div class="d-flex "><span onclick="changeStatus(' . $record->id . ');" class="badge bg-success text-uppercase"  style="cursor: pointer;">Active</span></div>'
-                : '<div class="d-flex "><span onclick="changeStatus(' . $record->id . ');" class="badge bg-danger text-uppercase" style="cursor: pointer;">Inactive</span></div>';
+            ? '<div class="d-flex "><span onclick="changeStatus(' . $record->id . ');" class="badge bg-success text-uppercase"  style="cursor: pointer;">Active</span></div>'
+            : '<div class="d-flex "><span onclick="changeStatus(' . $record->id . ');" class="badge bg-danger text-uppercase" style="cursor: pointer;">Inactive</span></div>';
 
             $dataArray[] = $status;
-
 
             $dataArray[] = date('d-M-Y', strtotime($record->created_at));
 
@@ -532,32 +516,32 @@ class JobController extends Controller
         }
 
         return response()->json([
-            "draw" => $draw,
-            "recordsTotal" => $totalRecords,
+            "draw"            => $draw,
+            "recordsTotal"    => $totalRecords,
             "recordsFiltered" => $totalRecords,
-            "data" => $data
+            "data"            => $data,
         ]);
     }
 
     public function addJobRole(Request $request)
     {
-  
+
         // Define validation rules
         $rules = [
             'department' => 'required',
-            'role' => 'required|string|max:100|unique:job_role,role',
+            'role'       => 'required|string|max:100|unique:job_role,role',
         ];
 
         // Validate the request
         $validator = Validator::make($request->all(), $rules);
 
-        if (!$validator->fails()) {
+        if (! $validator->fails()) {
             try {
-                $JobRole = new JobRole();
+                $JobRole                  = new JobRole();
                 $JobRole->department_name = $request->input('department');
-                $JobRole->role = $request->input('role');
-                $JobRole->status = 0;
-                $JobRole->created_at = now();
+                $JobRole->role            = $request->input('role');
+                $JobRole->status          = 0;
+                $JobRole->created_at      = now();
 
                 $JobRole->save();
 
@@ -575,16 +559,15 @@ class JobController extends Controller
     public function changeJobRoleStatus(Request $request)
     {
         $id = $request->input('id');
-    
-        if (!empty($id)) {
+
+        if (! empty($id)) {
             // Find the record by ID
             $JobRole = JobRole::find($id);
-    
-           
+
             if ($JobRole) {
                 // Toggle the status
                 $JobRole->status = $JobRole->status == 1 ? 0 : 1;
-    
+
                 // Save the updated record
                 if ($JobRole->save()) {
                     return response()->json(['status_code' => 1, 'message' => 'Status successfully changed']);
@@ -602,11 +585,11 @@ class JobController extends Controller
     public function deleteJobRole(Request $request)
     {
         $id = $request->input('id');
-    
-        if (!empty($id)) {
+
+        if (! empty($id)) {
             // Attempt to find and delete the record
             $JobRole = JobRole::find($id);
-    
+
             if ($JobRole) {
                 $JobRole->delete();
                 return response()->json(['status_code' => 1, 'message' => 'JobRole deleted successfully ']);
@@ -622,9 +605,9 @@ class JobController extends Controller
     {
         $id = $request->input('id');
 
-        if (!empty($id)) {
+        if (! empty($id)) {
             // Find the record by ID
-         
+
             $JobRole = JobRole::find($id);
 
             if ($JobRole) {
@@ -640,24 +623,23 @@ class JobController extends Controller
     public function updateJobRole(Request $request)
     {
         $rules = [
-            'edit-id' => 'required|exists:job_role,id',
+            'edit-id'        => 'required|exists:job_role,id',
             'editdepartment' => 'required',
-            'editrole' => 'required|max:100',
+            'editrole'       => 'required|max:100',
         ];
 
         $validator = Validator::make($request->all(), $rules);
 
-        if (!$validator->fails()) {
+        if (! $validator->fails()) {
             $id = $request->input('edit-id');
-
 
             // Find the record by ID
             $JobRole = JobRole::find($id);
 
             if ($JobRole) {
                 $JobRole->department_name = $request->input('editdepartment');
-                $JobRole->role = $request->input('editrole');
-                $JobRole->updated_at = now();
+                $JobRole->role            = $request->input('editrole');
+                $JobRole->updated_at      = now();
 
                 if ($JobRole->save()) {
                     return response()->json(['status_code' => 1, 'message' => 'JobRole updated successfully']);
@@ -681,40 +663,39 @@ class JobController extends Controller
     public function getJobLocation(Request $request)
     {
         // dd($request->all());
-        $draw = intval($request->input("draw"));
+        $draw   = intval($request->input("draw"));
         $offset = trim($request->input('start'));
         // $limit = 10;
         $limit = intval($request->input('length', 10));
 
-        $order = $request->input("order");
-        $search = $request->input("search");
-        $columns = array(
+        $order   = $request->input("order");
+        $search  = $request->input("search");
+        $columns = [
             0 => 'id',
             1 => 'country',
             2 => 'city',
             3 => 'status',
             4 => 'created_at',
             5 => 'id',
-        );
+        ];
 
         $query = JobLocation::query();
         // Count Data
 
-        if (!empty($search)) {
+        if (! empty($search)) {
             $query->where('country', 'like', '%' . $search . '%')
                 ->orwhere('city', 'like', '%' . $search . '%');
         }
-    
+
         if ($order) {
             $column = $columns[$order[0]['column']];
-            $dir = $order[0]['dir'];
+            $dir    = $order[0]['dir'];
             $query->orderBy($column, $dir);
         }
 
         $totalRecords = $query->count();
 
         $records = $query->offset($offset)->limit($limit)->orderBy('id', 'desc')->get();
-
 
         $data = [];
         foreach ($records as $record) {
@@ -725,11 +706,10 @@ class JobController extends Controller
             $dataArray[] = ucfirst($record->city);
 
             $status = $record->status == 1
-                ? '<div class="d-flex justify-content-center"><span onclick="changeStatus(' . $record->id . ');" class="badge bg-success text-uppercase"  style="cursor: pointer;">Active</span></div>'
-                : '<div class="d-flex justify-content-center"><span onclick="changeStatus(' . $record->id . ');" class="badge bg-danger text-uppercase" style="cursor: pointer;">Inactive</span></div>';
+            ? '<div class="d-flex justify-content-center"><span onclick="changeStatus(' . $record->id . ');" class="badge bg-success text-uppercase"  style="cursor: pointer;">Active</span></div>'
+            : '<div class="d-flex justify-content-center"><span onclick="changeStatus(' . $record->id . ');" class="badge bg-danger text-uppercase" style="cursor: pointer;">Inactive</span></div>';
 
             $dataArray[] = $status;
-
 
             $dataArray[] = date('d-M-Y', strtotime($record->created_at));
 
@@ -748,16 +728,16 @@ class JobController extends Controller
         }
 
         return response()->json([
-            "draw" => $draw,
-            "recordsTotal" => $totalRecords,
+            "draw"            => $draw,
+            "recordsTotal"    => $totalRecords,
             "recordsFiltered" => $totalRecords,
-            "data" => $data
+            "data"            => $data,
         ]);
     }
 
     public function addJobLocation(Request $request)
     {
-  
+
         // Define validation rules
         $rules = [
             'country' => 'required|string|max:100',
@@ -767,12 +747,12 @@ class JobController extends Controller
         // Validate the request
         $validator = Validator::make($request->all(), $rules);
 
-        if (!$validator->fails()) {
+        if (! $validator->fails()) {
             try {
-                $JobLocation = new JobLocation();
-                $JobLocation->country = $request->input('country');
-                $JobLocation->city = $request->input('city');
-                $JobLocation->status = 0;
+                $JobLocation             = new JobLocation();
+                $JobLocation->country    = $request->input('country');
+                $JobLocation->city       = $request->input('city');
+                $JobLocation->status     = 0;
                 $JobLocation->created_at = now();
 
                 $JobLocation->save();
@@ -791,16 +771,15 @@ class JobController extends Controller
     public function changeJobLocationStatus(Request $request)
     {
         $id = $request->input('id');
-    
-        if (!empty($id)) {
+
+        if (! empty($id)) {
             // Find the record by ID
             $JobLocation = JobLocation::find($id);
-    
-           
+
             if ($JobLocation) {
                 // Toggle the status
                 $JobLocation->status = $JobLocation->status == 1 ? 0 : 1;
-    
+
                 // Save the updated record
                 if ($JobLocation->save()) {
                     return response()->json(['status_code' => 1, 'message' => 'Status successfully changed']);
@@ -818,11 +797,11 @@ class JobController extends Controller
     public function deleteJobLocation(Request $request)
     {
         $id = $request->input('id');
-    
-        if (!empty($id)) {
+
+        if (! empty($id)) {
             // Attempt to find and delete the record
             $JobLocation = JobLocation::find($id);
-    
+
             if ($JobLocation) {
                 $JobLocation->delete();
                 return response()->json(['status_code' => 1, 'message' => 'Location deleted successfully ']);
@@ -838,9 +817,9 @@ class JobController extends Controller
     {
         $id = $request->input('id');
 
-        if (!empty($id)) {
+        if (! empty($id)) {
             // Find the record by ID
-         
+
             $JobLocation = JobLocation::find($id);
 
             if ($JobLocation) {
@@ -856,23 +835,22 @@ class JobController extends Controller
     public function updateJobLocation(Request $request)
     {
         $rules = [
-            'edit-id' => 'required|exists:job_location,id',
+            'edit-id'     => 'required|exists:job_location,id',
             'editcountry' => 'required|max:100',
-            'editcity' => 'required|max:100',
+            'editcity'    => 'required|max:100',
         ];
 
         $validator = Validator::make($request->all(), $rules);
 
-        if (!$validator->fails()) {
+        if (! $validator->fails()) {
             $id = $request->input('edit-id');
-
 
             // Find the record by ID
             $JobLocation = JobLocation::find($id);
 
             if ($JobLocation) {
-                $JobLocation->country = $request->input('editcountry');
-                $JobLocation->city = $request->input('editcity');
+                $JobLocation->country    = $request->input('editcountry');
+                $JobLocation->city       = $request->input('editcity');
                 $JobLocation->updated_at = now();
 
                 if ($JobLocation->save()) {
@@ -897,38 +875,37 @@ class JobController extends Controller
     public function getJobCategory(Request $request)
     {
         // dd($request->all());
-        $draw = intval($request->input("draw"));
+        $draw   = intval($request->input("draw"));
         $offset = trim($request->input('start'));
         // $limit = 10;
         $limit = intval($request->input('length', 10));
 
-        $order = $request->input("order");
-        $search = $request->input("search");
-        $columns = array(
+        $order   = $request->input("order");
+        $search  = $request->input("search");
+        $columns = [
             0 => 'id',
             1 => 'name',
             2 => 'status',
             3 => 'created_at',
             4 => 'id',
-        );
+        ];
 
         $query = JobCategory::query();
         // Count Data
 
-        if (!empty($search)) {
+        if (! empty($search)) {
             $query->where('name', 'like', '%' . $search . '%');
         }
-    
+
         if ($order) {
             $column = $columns[$order[0]['column']];
-            $dir = $order[0]['dir'];
+            $dir    = $order[0]['dir'];
             $query->orderBy($column, $dir);
         }
 
         $totalRecords = $query->count();
 
         $records = $query->offset($offset)->limit($limit)->orderBy('id', 'desc')->get();
-
 
         $data = [];
         foreach ($records as $record) {
@@ -938,11 +915,10 @@ class JobController extends Controller
             $dataArray[] = ucfirst($record->name);
 
             $status = $record->status == 1
-                ? '<div class="d-flex "><span onclick="changeStatus(' . $record->id . ');" class="badge bg-success text-uppercase"  style="cursor: pointer;">Active</span></div>'
-                : '<div class="d-flex "><span onclick="changeStatus(' . $record->id . ');" class="badge bg-danger text-uppercase" style="cursor: pointer;">Inactive</span></div>';
+            ? '<div class="d-flex "><span onclick="changeStatus(' . $record->id . ');" class="badge bg-success text-uppercase"  style="cursor: pointer;">Active</span></div>'
+            : '<div class="d-flex "><span onclick="changeStatus(' . $record->id . ');" class="badge bg-danger text-uppercase" style="cursor: pointer;">Inactive</span></div>';
 
             $dataArray[] = $status;
-
 
             $dataArray[] = date('d-M-Y', strtotime($record->created_at));
 
@@ -961,17 +937,16 @@ class JobController extends Controller
         }
 
         return response()->json([
-            "draw" => $draw,
-            "recordsTotal" => $totalRecords,
+            "draw"            => $draw,
+            "recordsTotal"    => $totalRecords,
             "recordsFiltered" => $totalRecords,
-            "data" => $data
+            "data"            => $data,
         ]);
     }
 
-
     public function addJobCategory(Request $request)
     {
-  
+
         // Define validation rules
         $rules = [
             'category' => 'required|string|max:100|unique:job_category,name',
@@ -980,11 +955,11 @@ class JobController extends Controller
         // Validate the request
         $validator = Validator::make($request->all(), $rules);
 
-        if (!$validator->fails()) {
+        if (! $validator->fails()) {
             try {
-                $JobLocation = new JobCategory();
-                $JobLocation->name = $request->input('category');
-                $JobLocation->status = 0;
+                $JobLocation             = new JobCategory();
+                $JobLocation->name       = $request->input('category');
+                $JobLocation->status     = 0;
                 $JobLocation->created_at = now();
 
                 $JobLocation->save();
@@ -1003,16 +978,15 @@ class JobController extends Controller
     public function changeJobCategoryStatus(Request $request)
     {
         $id = $request->input('id');
-    
-        if (!empty($id)) {
+
+        if (! empty($id)) {
             // Find the record by ID
             $JobCategory = JobCategory::find($id);
-    
-           
+
             if ($JobCategory) {
                 // Toggle the status
                 $JobCategory->status = $JobCategory->status == 1 ? 0 : 1;
-    
+
                 // Save the updated record
                 if ($JobCategory->save()) {
                     return response()->json(['status_code' => 1, 'message' => 'Status successfully changed']);
@@ -1030,11 +1004,11 @@ class JobController extends Controller
     public function deleteJobCategory(Request $request)
     {
         $id = $request->input('id');
-    
-        if (!empty($id)) {
+
+        if (! empty($id)) {
             // Attempt to find and delete the record
             $JobCategory = JobCategory::find($id);
-    
+
             if ($JobCategory) {
                 $JobCategory->delete();
                 return response()->json(['status_code' => 1, 'message' => 'Category deleted successfully ']);
@@ -1050,9 +1024,9 @@ class JobController extends Controller
     {
         $id = $request->input('id');
 
-        if (!empty($id)) {
+        if (! empty($id)) {
             // Find the record by ID
-         
+
             $JobCategory = JobCategory::find($id);
 
             if ($JobCategory) {
@@ -1068,21 +1042,20 @@ class JobController extends Controller
     public function updateJobCategory(Request $request)
     {
         $rules = [
-            'edit-id' => 'required|exists:job_category,id',
+            'edit-id'      => 'required|exists:job_category,id',
             'editcategory' => 'required|max:100',
         ];
 
         $validator = Validator::make($request->all(), $rules);
 
-        if (!$validator->fails()) {
+        if (! $validator->fails()) {
             $id = $request->input('edit-id');
-
 
             // Find the record by ID
             $JobCategory = JobCategory::find($id);
 
             if ($JobCategory) {
-                $JobCategory->name = $request->input('editcategory');
+                $JobCategory->name       = $request->input('editcategory');
                 $JobCategory->updated_at = now();
 
                 if ($JobCategory->save()) {
@@ -1107,37 +1080,36 @@ class JobController extends Controller
     public function getJobTypes(Request $request)
     {
         // dd($request->all());
-        $draw = intval($request->input("draw"));
+        $draw   = intval($request->input("draw"));
         $offset = trim($request->input('start'));
         // $limit = 10;
-        $limit = intval($request->input('length', 10));
-        $order = $request->input("order");
-        $search = $request->input("search");
-        $columns = array(
+        $limit   = intval($request->input('length', 10));
+        $order   = $request->input("order");
+        $search  = $request->input("search");
+        $columns = [
             0 => 'id',
             1 => 'type',
             2 => 'status',
             3 => 'created_at',
             4 => 'id',
-        );
+        ];
 
         $query = JobTypes::query();
         // Count Data
 
-        if (!empty($search)) {
+        if (! empty($search)) {
             $query->where('type', 'like', '%' . $search . '%');
         }
-    
+
         if ($order) {
             $column = $columns[$order[0]['column']];
-            $dir = $order[0]['dir'];
+            $dir    = $order[0]['dir'];
             $query->orderBy($column, $dir);
         }
 
         $totalRecords = $query->count();
 
         $records = $query->offset($offset)->limit($limit)->orderBy('id', 'desc')->get();
-
 
         $data = [];
         foreach ($records as $record) {
@@ -1147,11 +1119,10 @@ class JobController extends Controller
             $dataArray[] = ucfirst($record->type);
 
             $status = $record->status == 1
-                ? '<div class="d-flex justify-content-center"><span onclick="changeStatus(' . $record->id . ');" class="badge bg-success text-uppercase"  style="cursor: pointer;">Active</span></div>'
-                : '<div class="d-flex justify-content-center"><span onclick="changeStatus(' . $record->id . ');" class="badge bg-danger text-uppercase" style="cursor: pointer;">Inactive</span></div>';
+            ? '<div class="d-flex justify-content-center"><span onclick="changeStatus(' . $record->id . ');" class="badge bg-success text-uppercase"  style="cursor: pointer;">Active</span></div>'
+            : '<div class="d-flex justify-content-center"><span onclick="changeStatus(' . $record->id . ');" class="badge bg-danger text-uppercase" style="cursor: pointer;">Inactive</span></div>';
 
             $dataArray[] = $status;
-
 
             $dataArray[] = date('d-M-Y', strtotime($record->created_at));
 
@@ -1170,16 +1141,16 @@ class JobController extends Controller
         }
 
         return response()->json([
-            "draw" => $draw,
-            "recordsTotal" => $totalRecords,
+            "draw"            => $draw,
+            "recordsTotal"    => $totalRecords,
             "recordsFiltered" => $totalRecords,
-            "data" => $data
+            "data"            => $data,
         ]);
     }
 
     public function addJobTypes(Request $request)
     {
-  
+
         // Define validation rules
         $rules = [
             'types' => 'required|string|max:100|unique:job_types,type',
@@ -1188,11 +1159,11 @@ class JobController extends Controller
         // Validate the request
         $validator = Validator::make($request->all(), $rules);
 
-        if (!$validator->fails()) {
+        if (! $validator->fails()) {
             try {
-                $JobTypes = new JobTypes();
-                $JobTypes->type = $request->input('types');
-                $JobTypes->status = 0;
+                $JobTypes             = new JobTypes();
+                $JobTypes->type       = $request->input('types');
+                $JobTypes->status     = 0;
                 $JobTypes->created_at = now();
 
                 $JobTypes->save();
@@ -1211,16 +1182,15 @@ class JobController extends Controller
     public function changeJobTypesStatus(Request $request)
     {
         $id = $request->input('id');
-    
-        if (!empty($id)) {
+
+        if (! empty($id)) {
             // Find the record by ID
             $JobTypes = JobTypes::find($id);
-    
-           
+
             if ($JobTypes) {
                 // Toggle the status
                 $JobTypes->status = $JobTypes->status == 1 ? 0 : 1;
-    
+
                 // Save the updated record
                 if ($JobTypes->save()) {
                     return response()->json(['status_code' => 1, 'message' => 'Status successfully changed']);
@@ -1235,15 +1205,14 @@ class JobController extends Controller
         }
     }
 
-
     public function deleteJobTypes(Request $request)
     {
         $id = $request->input('id');
-    
-        if (!empty($id)) {
+
+        if (! empty($id)) {
             // Attempt to find and delete the record
             $JobTypes = JobTypes::find($id);
-    
+
             if ($JobTypes) {
                 $JobTypes->delete();
                 return response()->json(['status_code' => 1, 'message' => 'Types deleted successfully ']);
@@ -1259,9 +1228,9 @@ class JobController extends Controller
     {
         $id = $request->input('id');
 
-        if (!empty($id)) {
+        if (! empty($id)) {
             // Find the record by ID
-         
+
             $JobTypes = JobTypes::find($id);
 
             if ($JobTypes) {
@@ -1277,21 +1246,20 @@ class JobController extends Controller
     public function updateJobTypes(Request $request)
     {
         $rules = [
-            'edit-id' => 'required|exists:job_types,id',
+            'edit-id'  => 'required|exists:job_types,id',
             'editType' => 'required|max:100',
         ];
 
         $validator = Validator::make($request->all(), $rules);
 
-        if (!$validator->fails()) {
+        if (! $validator->fails()) {
             $id = $request->input('edit-id');
-
 
             // Find the record by ID
             $JobTypes = JobTypes::find($id);
 
             if ($JobTypes) {
-                $JobTypes->type = $request->input('editType');
+                $JobTypes->type       = $request->input('editType');
                 $JobTypes->updated_at = now();
 
                 if ($JobTypes->save()) {
@@ -1315,37 +1283,36 @@ class JobController extends Controller
     public function getJobMode(Request $request)
     {
         // dd($request->all());
-        $draw = intval($request->input("draw"));
+        $draw   = intval($request->input("draw"));
         $offset = trim($request->input('start'));
         // $limit = 10;
-        $limit = intval($request->input('length', 10));
-        $order = $request->input("order");
-        $search = $request->input("search");
-        $columns = array(
+        $limit   = intval($request->input('length', 10));
+        $order   = $request->input("order");
+        $search  = $request->input("search");
+        $columns = [
             0 => 'id',
             1 => 'mode',
             2 => 'status',
             3 => 'created_at',
             4 => 'id',
-        );
+        ];
 
         $query = JobMode::query();
         // Count Data
 
-        if (!empty($search)) {
+        if (! empty($search)) {
             $query->where('mode', 'like', '%' . $search . '%');
         }
-    
+
         if ($order) {
             $column = $columns[$order[0]['column']];
-            $dir = $order[0]['dir'];
+            $dir    = $order[0]['dir'];
             $query->orderBy($column, $dir);
         }
 
         $totalRecords = $query->count();
 
         $records = $query->offset($offset)->limit($limit)->orderBy('id', 'desc')->get();
-
 
         $data = [];
         foreach ($records as $record) {
@@ -1355,11 +1322,10 @@ class JobController extends Controller
             $dataArray[] = ucfirst($record->mode);
 
             $status = $record->status == 1
-                ? '<div class="d-flex justify-content-center"><span onclick="changeStatus(' . $record->id . ');" class="badge bg-success text-uppercase"  style="cursor: pointer;">Active</span></div>'
-                : '<div class="d-flex justify-content-center"><span onclick="changeStatus(' . $record->id . ');" class="badge bg-danger text-uppercase" style="cursor: pointer;">Inactive</span></div>';
+            ? '<div class="d-flex justify-content-center"><span onclick="changeStatus(' . $record->id . ');" class="badge bg-success text-uppercase"  style="cursor: pointer;">Active</span></div>'
+            : '<div class="d-flex justify-content-center"><span onclick="changeStatus(' . $record->id . ');" class="badge bg-danger text-uppercase" style="cursor: pointer;">Inactive</span></div>';
 
             $dataArray[] = $status;
-
 
             $dataArray[] = date('d-M-Y', strtotime($record->created_at));
 
@@ -1378,16 +1344,16 @@ class JobController extends Controller
         }
 
         return response()->json([
-            "draw" => $draw,
-            "recordsTotal" => $totalRecords,
+            "draw"            => $draw,
+            "recordsTotal"    => $totalRecords,
             "recordsFiltered" => $totalRecords,
-            "data" => $data
+            "data"            => $data,
         ]);
     }
 
     public function addJobMode(Request $request)
     {
-  
+
         // Define validation rules
         $rules = [
             'mode' => 'required|string|max:100|unique:job_mode,mode',
@@ -1396,11 +1362,11 @@ class JobController extends Controller
         // Validate the request
         $validator = Validator::make($request->all(), $rules);
 
-        if (!$validator->fails()) {
+        if (! $validator->fails()) {
             try {
-                $JobMode = new JobMode();
-                $JobMode->mode = $request->input('mode');
-                $JobMode->status = 0;
+                $JobMode             = new JobMode();
+                $JobMode->mode       = $request->input('mode');
+                $JobMode->status     = 0;
                 $JobMode->created_at = now();
 
                 $JobMode->save();
@@ -1419,16 +1385,15 @@ class JobController extends Controller
     public function changeJobModeStatus(Request $request)
     {
         $id = $request->input('id');
-    
-        if (!empty($id)) {
+
+        if (! empty($id)) {
             // Find the record by ID
             $JobMode = JobMode::find($id);
-    
-           
+
             if ($JobMode) {
                 // Toggle the status
                 $JobMode->status = $JobMode->status == 1 ? 0 : 1;
-    
+
                 // Save the updated record
                 if ($JobMode->save()) {
                     return response()->json(['status_code' => 1, 'message' => 'Status successfully changed']);
@@ -1446,11 +1411,11 @@ class JobController extends Controller
     public function deleteJobMode(Request $request)
     {
         $id = $request->input('id');
-    
-        if (!empty($id)) {
+
+        if (! empty($id)) {
             // Attempt to find and delete the record
             $JobMode = JobMode::find($id);
-    
+
             if ($JobMode) {
                 $JobMode->delete();
                 return response()->json(['status_code' => 1, 'message' => 'Job mode deleted successfully ']);
@@ -1466,9 +1431,9 @@ class JobController extends Controller
     {
         $id = $request->input('id');
 
-        if (!empty($id)) {
+        if (! empty($id)) {
             // Find the record by ID
-         
+
             $JobMode = JobMode::find($id);
 
             if ($JobMode) {
@@ -1484,21 +1449,20 @@ class JobController extends Controller
     public function updateJobMode(Request $request)
     {
         $rules = [
-            'edit-id' => 'required|exists:job_mode,id',
+            'edit-id'  => 'required|exists:job_mode,id',
             'editMode' => 'required|max:100',
         ];
 
         $validator = Validator::make($request->all(), $rules);
 
-        if (!$validator->fails()) {
+        if (! $validator->fails()) {
             $id = $request->input('edit-id');
-
 
             // Find the record by ID
             $JobMode = JobMode::find($id);
 
             if ($JobMode) {
-                $JobMode->mode = $request->input('editMode');
+                $JobMode->mode       = $request->input('editMode');
                 $JobMode->updated_at = now();
 
                 if ($JobMode->save()) {
@@ -1514,8 +1478,6 @@ class JobController extends Controller
         }
     }
 
-    
-
     // Shift
     public function jobShift()
     {
@@ -1525,37 +1487,36 @@ class JobController extends Controller
     public function getJobShift(Request $request)
     {
         // dd($request->all());
-        $draw = intval($request->input("draw"));
+        $draw   = intval($request->input("draw"));
         $offset = trim($request->input('start'));
         // $limit = 10;
-        $limit = intval($request->input('length', 10));
-        $order = $request->input("order");
-        $search = $request->input("search");
-        $columns = array(
+        $limit   = intval($request->input('length', 10));
+        $order   = $request->input("order");
+        $search  = $request->input("search");
+        $columns = [
             0 => 'id',
             1 => 'shift',
             2 => 'status',
             3 => 'created_at',
             4 => 'id',
-        );
+        ];
 
         $query = JobShift::query();
         // Count Data
 
-        if (!empty($search)) {
+        if (! empty($search)) {
             $query->where('shift', 'like', '%' . $search . '%');
         }
-    
+
         if ($order) {
             $column = $columns[$order[0]['column']];
-            $dir = $order[0]['dir'];
+            $dir    = $order[0]['dir'];
             $query->orderBy($column, $dir);
         }
 
         $totalRecords = $query->count();
 
         $records = $query->offset($offset)->limit($limit)->orderBy('id', 'desc')->get();
-
 
         $data = [];
         foreach ($records as $record) {
@@ -1565,11 +1526,10 @@ class JobController extends Controller
             $dataArray[] = ucfirst($record->shift);
 
             $status = $record->status == 1
-                ? '<div class="d-flex justify-content-center"><span onclick="changeStatus(' . $record->id . ');" class="badge bg-success text-uppercase"  style="cursor: pointer;">Active</span></div>'
-                : '<div class="d-flex justify-content-center"><span onclick="changeStatus(' . $record->id . ');" class="badge bg-danger text-uppercase" style="cursor: pointer;">Inactive</span></div>';
+            ? '<div class="d-flex justify-content-center"><span onclick="changeStatus(' . $record->id . ');" class="badge bg-success text-uppercase"  style="cursor: pointer;">Active</span></div>'
+            : '<div class="d-flex justify-content-center"><span onclick="changeStatus(' . $record->id . ');" class="badge bg-danger text-uppercase" style="cursor: pointer;">Inactive</span></div>';
 
             $dataArray[] = $status;
-
 
             $dataArray[] = date('d-M-Y', strtotime($record->created_at));
 
@@ -1588,16 +1548,16 @@ class JobController extends Controller
         }
 
         return response()->json([
-            "draw" => $draw,
-            "recordsTotal" => $totalRecords,
+            "draw"            => $draw,
+            "recordsTotal"    => $totalRecords,
             "recordsFiltered" => $totalRecords,
-            "data" => $data
+            "data"            => $data,
         ]);
     }
 
     public function addJobShift(Request $request)
     {
-  
+
         // Define validation rules
         $rules = [
             'shift' => 'required|string|max:100|unique:job_shift,shift',
@@ -1606,11 +1566,11 @@ class JobController extends Controller
         // Validate the request
         $validator = Validator::make($request->all(), $rules);
 
-        if (!$validator->fails()) {
+        if (! $validator->fails()) {
             try {
-                $JobShift = new JobShift();
-                $JobShift->shift = $request->input('shift');
-                $JobShift->status = 0;
+                $JobShift             = new JobShift();
+                $JobShift->shift      = $request->input('shift');
+                $JobShift->status     = 0;
                 $JobShift->created_at = now();
 
                 $JobShift->save();
@@ -1629,16 +1589,15 @@ class JobController extends Controller
     public function changeJobShiftStatus(Request $request)
     {
         $id = $request->input('id');
-    
-        if (!empty($id)) {
+
+        if (! empty($id)) {
             // Find the record by ID
             $JobShift = JobShift::find($id);
-    
-           
+
             if ($JobShift) {
                 // Toggle the status
                 $JobShift->status = $JobShift->status == 1 ? 0 : 1;
-    
+
                 // Save the updated record
                 if ($JobShift->save()) {
                     return response()->json(['status_code' => 1, 'message' => 'Status successfully changed']);
@@ -1656,11 +1615,11 @@ class JobController extends Controller
     public function deleteJobShift(Request $request)
     {
         $id = $request->input('id');
-    
-        if (!empty($id)) {
+
+        if (! empty($id)) {
             // Attempt to find and delete the record
             $JobShift = JobShift::find($id);
-    
+
             if ($JobShift) {
                 $JobShift->delete();
                 return response()->json(['status_code' => 1, 'message' => 'JobShift deleted successfully ']);
@@ -1676,9 +1635,9 @@ class JobController extends Controller
     {
         $id = $request->input('id');
 
-        if (!empty($id)) {
+        if (! empty($id)) {
             // Find the record by ID
-         
+
             $JobShift = JobShift::find($id);
 
             if ($JobShift) {
@@ -1694,21 +1653,20 @@ class JobController extends Controller
     public function updateJobShift(Request $request)
     {
         $rules = [
-            'edit-id' => 'required|exists:job_shift,id',
+            'edit-id'   => 'required|exists:job_shift,id',
             'editShift' => 'required|max:100',
         ];
 
         $validator = Validator::make($request->all(), $rules);
 
-        if (!$validator->fails()) {
+        if (! $validator->fails()) {
             $id = $request->input('edit-id');
-
 
             // Find the record by ID
             $JobShift = JobShift::find($id);
 
             if ($JobShift) {
-                $JobShift->shift = $request->input('editShift');
+                $JobShift->shift      = $request->input('editShift');
                 $JobShift->updated_at = now();
 
                 if ($JobShift->save()) {
@@ -1733,30 +1691,30 @@ class JobController extends Controller
     public function getJobExperience(Request $request)
     {
         // dd($request->all());
-        $draw = intval($request->input("draw"));
+        $draw   = intval($request->input("draw"));
         $offset = trim($request->input('start'));
         // $limit = 10;
-        $limit = intval($request->input('length', 10));
-        $order = $request->input("order");
-        $search = $request->input("search");
-        $columns = array(
+        $limit   = intval($request->input('length', 10));
+        $order   = $request->input("order");
+        $search  = $request->input("search");
+        $columns = [
             0 => 'id',
             1 => 'experience',
             2 => 'status',
             3 => 'created_at',
             4 => 'id',
-        );
+        ];
 
         $query = JobExperience::query();
         // Count Data
 
-        if (!empty($search)) {
+        if (! empty($search)) {
             $query->where('experience', 'like', '%' . $search . '%');
         }
-    
+
         if ($order) {
             $column = $columns[$order[0]['column']];
-            $dir = $order[0]['dir'];
+            $dir    = $order[0]['dir'];
             $query->orderBy($column, $dir);
         }
 
@@ -1764,20 +1722,18 @@ class JobController extends Controller
 
         $records = $query->offset($offset)->limit($limit)->orderBy('id', 'desc')->get();
 
-
         $data = [];
         foreach ($records as $record) {
             $dataArray = [];
 
             $dataArray[] = $record->id;
-            $dataArray[] = ucfirst($record->experience). ' ' . ($record->experience == 1 ? 'year' : 'years');
+            $dataArray[] = ucfirst($record->experience) . ' ' . ($record->experience == 1 ? 'year' : 'years');
 
             $status = $record->status == 1
-                ? '<div class="d-flex justify-content"><span onclick="changeStatus(' . $record->id . ');" class="badge bg-success text-uppercase"  style="cursor: pointer;">Active</span></div>'
-                : '<div class="d-flex justify-content"><span onclick="changeStatus(' . $record->id . ');" class="badge bg-danger text-uppercase" style="cursor: pointer;">Inactive</span></div>';
+            ? '<div class="d-flex justify-content"><span onclick="changeStatus(' . $record->id . ');" class="badge bg-success text-uppercase"  style="cursor: pointer;">Active</span></div>'
+            : '<div class="d-flex justify-content"><span onclick="changeStatus(' . $record->id . ');" class="badge bg-danger text-uppercase" style="cursor: pointer;">Inactive</span></div>';
 
             $dataArray[] = $status;
-
 
             $dataArray[] = date('d-M-Y', strtotime($record->created_at));
 
@@ -1796,16 +1752,16 @@ class JobController extends Controller
         }
 
         return response()->json([
-            "draw" => $draw,
-            "recordsTotal" => $totalRecords,
+            "draw"            => $draw,
+            "recordsTotal"    => $totalRecords,
             "recordsFiltered" => $totalRecords,
-            "data" => $data
+            "data"            => $data,
         ]);
     }
 
     public function addJobExperience(Request $request)
     {
-  
+
         // Define validation rules
         $rules = [
             'experience' => 'required|integer|max:100|unique:job_experience,experience',
@@ -1814,11 +1770,11 @@ class JobController extends Controller
         // Validate the request
         $validator = Validator::make($request->all(), $rules);
 
-        if (!$validator->fails()) {
+        if (! $validator->fails()) {
             try {
-                $Jobexp = new JobExperience();
+                $Jobexp             = new JobExperience();
                 $Jobexp->experience = $request->input('experience');
-                $Jobexp->status = 0;
+                $Jobexp->status     = 0;
                 $Jobexp->created_at = now();
 
                 $Jobexp->save();
@@ -1837,16 +1793,15 @@ class JobController extends Controller
     public function changeJobExperienceStatus(Request $request)
     {
         $id = $request->input('id');
-    
-        if (!empty($id)) {
+
+        if (! empty($id)) {
             // Find the record by ID
             $JobExp = JobExperience::find($id);
-    
-           
+
             if ($JobExp) {
                 // Toggle the status
                 $JobExp->status = $JobExp->status == 1 ? 0 : 1;
-    
+
                 // Save the updated record
                 if ($JobExp->save()) {
                     return response()->json(['status_code' => 1, 'message' => 'Status successfully changed']);
@@ -1864,11 +1819,11 @@ class JobController extends Controller
     public function deleteJobExperience(Request $request)
     {
         $id = $request->input('id');
-    
-        if (!empty($id)) {
+
+        if (! empty($id)) {
             // Attempt to find and delete the record
             $JobExp = JobExperience::find($id);
-    
+
             if ($JobExp) {
                 $JobExp->delete();
                 return response()->json(['status_code' => 1, 'message' => 'Experience deleted successfully ']);
@@ -1884,9 +1839,9 @@ class JobController extends Controller
     {
         $id = $request->input('id');
 
-        if (!empty($id)) {
+        if (! empty($id)) {
             // Find the record by ID
-         
+
             $JobExp = JobExperience::find($id);
 
             if ($JobExp) {
@@ -1908,7 +1863,7 @@ class JobController extends Controller
 
         $validator = Validator::make($request->all(), $rules);
 
-        if (!$validator->fails()) {
+        if (! $validator->fails()) {
             $id = $request->input('edit-id');
 
             // Find the record by ID
@@ -1940,37 +1895,36 @@ class JobController extends Controller
     public function getJobCurrency(Request $request)
     {
         // dd($request->all());
-        $draw = intval($request->input("draw"));
+        $draw   = intval($request->input("draw"));
         $offset = trim($request->input('start'));
         // $limit = 10;
-        $limit = intval($request->input('length', 10));
-        $order = $request->input("order");
-        $search = $request->input("search");
-        $columns = array(
+        $limit   = intval($request->input('length', 10));
+        $order   = $request->input("order");
+        $search  = $request->input("search");
+        $columns = [
             0 => 'id',
             1 => 'currency',
             2 => 'status',
             3 => 'created_at',
             4 => 'id',
-        );
+        ];
 
         $query = JobCurrency::query();
         // Count Data
 
-        if (!empty($search)) {
+        if (! empty($search)) {
             $query->where('currency', 'like', '%' . $search . '%');
         }
-    
+
         if ($order) {
             $column = $columns[$order[0]['column']];
-            $dir = $order[0]['dir'];
+            $dir    = $order[0]['dir'];
             $query->orderBy($column, $dir);
         }
 
         $totalRecords = $query->count();
 
         $records = $query->offset($offset)->limit($limit)->orderBy('id', 'desc')->get();
-
 
         $data = [];
         foreach ($records as $record) {
@@ -1980,11 +1934,10 @@ class JobController extends Controller
             $dataArray[] = ucfirst($record->currency);
 
             $status = $record->status == 1
-                ? '<div class="d-flex justify-content"><span onclick="changeStatus(' . $record->id . ');" class="badge bg-success text-uppercase"  style="cursor: pointer;">Active</span></div>'
-                : '<div class="d-flex justify-content"><span onclick="changeStatus(' . $record->id . ');" class="badge bg-danger text-uppercase" style="cursor: pointer;">Inactive</span></div>';
+            ? '<div class="d-flex justify-content"><span onclick="changeStatus(' . $record->id . ');" class="badge bg-success text-uppercase"  style="cursor: pointer;">Active</span></div>'
+            : '<div class="d-flex justify-content"><span onclick="changeStatus(' . $record->id . ');" class="badge bg-danger text-uppercase" style="cursor: pointer;">Inactive</span></div>';
 
             $dataArray[] = $status;
-
 
             $dataArray[] = date('d-M-Y', strtotime($record->created_at));
 
@@ -2003,16 +1956,16 @@ class JobController extends Controller
         }
 
         return response()->json([
-            "draw" => $draw,
-            "recordsTotal" => $totalRecords,
+            "draw"            => $draw,
+            "recordsTotal"    => $totalRecords,
             "recordsFiltered" => $totalRecords,
-            "data" => $data
+            "data"            => $data,
         ]);
     }
 
     public function addJobCurrency(Request $request)
     {
-  
+
         // Define validation rules
         $rules = [
             'currency' => 'required|string|max:50|unique:currency,currency',
@@ -2021,11 +1974,11 @@ class JobController extends Controller
         // Validate the request
         $validator = Validator::make($request->all(), $rules);
 
-        if (!$validator->fails()) {
+        if (! $validator->fails()) {
             try {
-                $JobCurrency = new JobCurrency();
-                $JobCurrency->currency = $request->input('currency');
-                $JobCurrency->status = 0;
+                $JobCurrency             = new JobCurrency();
+                $JobCurrency->currency   = $request->input('currency');
+                $JobCurrency->status     = 0;
                 $JobCurrency->created_at = now();
 
                 $JobCurrency->save();
@@ -2044,16 +1997,15 @@ class JobController extends Controller
     public function changeJobCurrencyStatus(Request $request)
     {
         $id = $request->input('id');
-    
-        if (!empty($id)) {
+
+        if (! empty($id)) {
             // Find the record by ID
             $JobCurrency = JobCurrency::find($id);
-    
-           
+
             if ($JobCurrency) {
                 // Toggle the status
                 $JobCurrency->status = $JobCurrency->status == 1 ? 0 : 1;
-    
+
                 // Save the updated record
                 if ($JobCurrency->save()) {
                     return response()->json(['status_code' => 1, 'message' => 'Status successfully changed']);
@@ -2071,11 +2023,11 @@ class JobController extends Controller
     public function deleteJobCurrency(Request $request)
     {
         $id = $request->input('id');
-    
-        if (!empty($id)) {
+
+        if (! empty($id)) {
             // Attempt to find and delete the record
             $JobCurrency = JobCurrency::find($id);
-    
+
             if ($JobCurrency) {
                 $JobCurrency->delete();
                 return response()->json(['status_code' => 1, 'message' => 'Currency deleted successfully ']);
@@ -2091,9 +2043,9 @@ class JobController extends Controller
     {
         $id = $request->input('id');
 
-        if (!empty($id)) {
+        if (! empty($id)) {
             // Find the record by ID
-         
+
             $JobCurrency = JobCurrency::find($id);
 
             if ($JobCurrency) {
@@ -2109,20 +2061,20 @@ class JobController extends Controller
     public function updateJobCurrency(Request $request)
     {
         $rules = [
-            'edit-id' => 'required|exists:currency,id',
+            'edit-id'      => 'required|exists:currency,id',
             'editcurrency' => 'required|string|unique:currency,currency',
         ];
 
         $validator = Validator::make($request->all(), $rules);
 
-        if (!$validator->fails()) {
+        if (! $validator->fails()) {
             $id = $request->input('edit-id');
 
             // Find the record by ID
             $JobCurrency = JobCurrency::find($id);
 
             if ($JobCurrency) {
-                $JobCurrency->currency = $request->input('editcurrency');
+                $JobCurrency->currency   = $request->input('editcurrency');
                 $JobCurrency->updated_at = now();
 
                 if ($JobCurrency->save()) {
@@ -2138,7 +2090,6 @@ class JobController extends Controller
         }
     }
 
-
     // Annual Salary
     public function jobSalary()
     {
@@ -2148,37 +2099,36 @@ class JobController extends Controller
     public function getJobSalary(Request $request)
     {
         // dd($request->all());
-        $draw = intval($request->input("draw"));
+        $draw   = intval($request->input("draw"));
         $offset = trim($request->input('start'));
         // $limit = 10;
-        $limit = intval($request->input('length', 10));
-        $order = $request->input("order");
-        $search = $request->input("search");
-        $columns = array(
+        $limit   = intval($request->input('length', 10));
+        $order   = $request->input("order");
+        $search  = $request->input("search");
+        $columns = [
             0 => 'id',
             1 => 'salary',
             2 => 'status',
             3 => 'created_at',
             4 => 'id',
-        );
+        ];
 
         $query = JobSalary::query();
         // Count Data
 
-        if (!empty($search)) {
+        if (! empty($search)) {
             $query->where('salary', 'like', '%' . $search . '%');
         }
-    
+
         if ($order) {
             $column = $columns[$order[0]['column']];
-            $dir = $order[0]['dir'];
+            $dir    = $order[0]['dir'];
             $query->orderBy($column, $dir);
         }
 
         $totalRecords = $query->count();
 
         $records = $query->offset($offset)->limit($limit)->orderBy('id', 'desc')->get();
-
 
         $data = [];
         foreach ($records as $record) {
@@ -2188,11 +2138,10 @@ class JobController extends Controller
             $dataArray[] = ucfirst($record->salary);
 
             $status = $record->status == 1
-                ? '<div class="d-flex justify-content"><span onclick="changeStatus(' . $record->id . ');" class="badge bg-success text-uppercase"  style="cursor: pointer;">Active</span></div>'
-                : '<div class="d-flex justify-content"><span onclick="changeStatus(' . $record->id . ');" class="badge bg-danger text-uppercase" style="cursor: pointer;">Inactive</span></div>';
+            ? '<div class="d-flex justify-content"><span onclick="changeStatus(' . $record->id . ');" class="badge bg-success text-uppercase"  style="cursor: pointer;">Active</span></div>'
+            : '<div class="d-flex justify-content"><span onclick="changeStatus(' . $record->id . ');" class="badge bg-danger text-uppercase" style="cursor: pointer;">Inactive</span></div>';
 
             $dataArray[] = $status;
-
 
             $dataArray[] = date('d-M-Y', strtotime($record->created_at));
 
@@ -2211,16 +2160,16 @@ class JobController extends Controller
         }
 
         return response()->json([
-            "draw" => $draw,
-            "recordsTotal" => $totalRecords,
+            "draw"            => $draw,
+            "recordsTotal"    => $totalRecords,
             "recordsFiltered" => $totalRecords,
-            "data" => $data
+            "data"            => $data,
         ]);
     }
 
     public function addJobSalary(Request $request)
     {
-  
+
         // Define validation rules
         $rules = [
             'salary' => 'required|integer|min:1000|max:10000000|unique:annual_salary,salary',
@@ -2229,11 +2178,11 @@ class JobController extends Controller
         // Validate the request
         $validator = Validator::make($request->all(), $rules);
 
-        if (!$validator->fails()) {
+        if (! $validator->fails()) {
             try {
-                $JobSalary = new JobSalary();
-                $JobSalary->salary = $request->input('salary');
-                $JobSalary->status = 0;
+                $JobSalary             = new JobSalary();
+                $JobSalary->salary     = $request->input('salary');
+                $JobSalary->status     = 0;
                 $JobSalary->created_at = now();
 
                 $JobSalary->save();
@@ -2252,16 +2201,15 @@ class JobController extends Controller
     public function changeJobSalaryStatus(Request $request)
     {
         $id = $request->input('id');
-    
-        if (!empty($id)) {
+
+        if (! empty($id)) {
             // Find the record by ID
             $JobSalary = JobSalary::find($id);
-    
-           
+
             if ($JobSalary) {
                 // Toggle the status
                 $JobSalary->status = $JobSalary->status == 1 ? 0 : 1;
-    
+
                 // Save the updated record
                 if ($JobSalary->save()) {
                     return response()->json(['status_code' => 1, 'message' => 'Status successfully changed']);
@@ -2279,11 +2227,11 @@ class JobController extends Controller
     public function deleteJobSalary(Request $request)
     {
         $id = $request->input('id');
-    
-        if (!empty($id)) {
+
+        if (! empty($id)) {
             // Attempt to find and delete the record
             $JobSalary = JobSalary::find($id);
-    
+
             if ($JobSalary) {
                 $JobSalary->delete();
                 return response()->json(['status_code' => 1, 'message' => 'Salary deleted successfully ']);
@@ -2299,9 +2247,9 @@ class JobController extends Controller
     {
         $id = $request->input('id');
 
-        if (!empty($id)) {
+        if (! empty($id)) {
             // Find the record by ID
-         
+
             $JobSalary = JobSalary::find($id);
 
             if ($JobSalary) {
@@ -2317,20 +2265,20 @@ class JobController extends Controller
     public function updateJobSalary(Request $request)
     {
         $rules = [
-            'edit-id' => 'required|exists:annual_salary,id',
+            'edit-id'    => 'required|exists:annual_salary,id',
             'editsalary' => 'required|integer|min:1000|max:10000000|unique:annual_salary,salary',
         ];
 
         $validator = Validator::make($request->all(), $rules);
 
-        if (!$validator->fails()) {
+        if (! $validator->fails()) {
             $id = $request->input('edit-id');
 
             // Find the record by ID
             $JobSalary = JobSalary::find($id);
 
             if ($JobSalary) {
-                $JobSalary->salary = $request->input('editsalary');
+                $JobSalary->salary     = $request->input('editsalary');
                 $JobSalary->updated_at = now();
 
                 if ($JobSalary->save()) {
@@ -2346,48 +2294,46 @@ class JobController extends Controller
         }
     }
 
-
-
     // Interview Type
-    public function JobIntType() {
+    public function JobIntType()
+    {
         return view('admin.job.Jobinttype');
     }
 
     public function getJobIntType(Request $request)
     {
         // dd($request->all());
-        $draw = intval($request->input("draw"));
+        $draw   = intval($request->input("draw"));
         $offset = trim($request->input('start'));
         // $limit = 10;
         $limit = intval($request->input('length', 10));
 
-        $order = $request->input("order");
-        $search = $request->input("search");
-        $columns = array(
+        $order   = $request->input("order");
+        $search  = $request->input("search");
+        $columns = [
             0 => 'id',
             1 => 'int_type',
             2 => 'status',
             3 => 'created_at',
             4 => 'id',
-        );
+        ];
 
         $query = JobIntType::query();
         // Count Data
 
-        if (!empty($search)) {
+        if (! empty($search)) {
             $query->where('int_type', 'like', '%' . $search . '%');
         }
-    
+
         if ($order) {
             $column = $columns[$order[0]['column']];
-            $dir = $order[0]['dir'];
+            $dir    = $order[0]['dir'];
             $query->orderBy($column, $dir);
         }
 
         $totalRecords = $query->count();
 
         $records = $query->offset($offset)->limit($limit)->orderBy('id', 'desc')->get();
-
 
         $data = [];
         foreach ($records as $record) {
@@ -2397,11 +2343,10 @@ class JobController extends Controller
             $dataArray[] = ucfirst($record->int_type);
 
             $status = $record->status == 1
-                ? '<div class="d-flex "><span onclick="changeStatus(' . $record->id . ');" class="badge bg-success text-uppercase"  style="cursor: pointer;">Active</span></div>'
-                : '<div class="d-flex "><span onclick="changeStatus(' . $record->id . ');" class="badge bg-danger text-uppercase" style="cursor: pointer;">Inactive</span></div>';
+            ? '<div class="d-flex "><span onclick="changeStatus(' . $record->id . ');" class="badge bg-success text-uppercase"  style="cursor: pointer;">Active</span></div>'
+            : '<div class="d-flex "><span onclick="changeStatus(' . $record->id . ');" class="badge bg-danger text-uppercase" style="cursor: pointer;">Inactive</span></div>';
 
             $dataArray[] = $status;
-
 
             $dataArray[] = date('d-M-Y', strtotime($record->created_at));
 
@@ -2420,16 +2365,16 @@ class JobController extends Controller
         }
 
         return response()->json([
-            "draw" => $draw,
-            "recordsTotal" => $totalRecords,
+            "draw"            => $draw,
+            "recordsTotal"    => $totalRecords,
             "recordsFiltered" => $totalRecords,
-            "data" => $data
+            "data"            => $data,
         ]);
     }
 
     public function addJobIntType(Request $request)
     {
-  
+
         // Define validation rules
         $rules = [
             'IntType' => 'required|string|max:100|unique:interview_type,int_type',
@@ -2438,11 +2383,11 @@ class JobController extends Controller
         // Validate the request
         $validator = Validator::make($request->all(), $rules);
 
-        if (!$validator->fails()) {
+        if (! $validator->fails()) {
             try {
-                $JobIntType = new JobIntType();
-                $JobIntType->int_type = $request->input('IntType');
-                $JobIntType->status = 0;
+                $JobIntType             = new JobIntType();
+                $JobIntType->int_type   = $request->input('IntType');
+                $JobIntType->status     = 0;
                 $JobIntType->created_at = now();
 
                 $JobIntType->save();
@@ -2461,16 +2406,15 @@ class JobController extends Controller
     public function changeJobIntTypeStatus(Request $request)
     {
         $id = $request->input('id');
-    
-        if (!empty($id)) {
+
+        if (! empty($id)) {
             // Find the record by ID
             $JobIntType = JobIntType::find($id);
-    
-           
+
             if ($JobIntType) {
                 // Toggle the status
                 $JobIntType->status = $JobIntType->status == 1 ? 0 : 1;
-    
+
                 // Save the updated record
                 if ($JobIntType->save()) {
                     return response()->json(['status_code' => 1, 'message' => 'Status successfully changed']);
@@ -2488,11 +2432,11 @@ class JobController extends Controller
     public function deleteJobIntType(Request $request)
     {
         $id = $request->input('id');
-    
-        if (!empty($id)) {
+
+        if (! empty($id)) {
             // Attempt to find and delete the record
             $JobIntType = JobIntType::find($id);
-    
+
             if ($JobIntType) {
                 $JobIntType->delete();
                 return response()->json(['status_code' => 1, 'message' => 'Interview Type deleted successfully ']);
@@ -2508,9 +2452,9 @@ class JobController extends Controller
     {
         $id = $request->input('id');
 
-        if (!empty($id)) {
+        if (! empty($id)) {
             // Find the record by ID
-         
+
             $JobIntType = JobIntType::find($id);
 
             if ($JobIntType) {
@@ -2526,21 +2470,20 @@ class JobController extends Controller
     public function updateJobIntType(Request $request)
     {
         $rules = [
-            'edit-id' => 'required|exists:interview_type,id',
+            'edit-id'     => 'required|exists:interview_type,id',
             'editIntType' => 'required|max:100',
         ];
 
         $validator = Validator::make($request->all(), $rules);
 
-        if (!$validator->fails()) {
+        if (! $validator->fails()) {
             $id = $request->input('edit-id');
-
 
             // Find the record by ID
             $JobIntType = JobIntType::find($id);
 
             if ($JobIntType) {
-                $JobIntType->int_type = $request->input('editIntType');
+                $JobIntType->int_type   = $request->input('editIntType');
                 $JobIntType->updated_at = now();
 
                 if ($JobIntType->save()) {
@@ -2556,7 +2499,6 @@ class JobController extends Controller
         }
     }
 
-
     // Educational Qualifications
     public function jobEducation()
     {
@@ -2566,38 +2508,37 @@ class JobController extends Controller
     public function getJobEducation(Request $request)
     {
         // dd($request->all());
-        $draw = intval($request->input("draw"));
+        $draw   = intval($request->input("draw"));
         $offset = trim($request->input('start'));
         // $limit = 10;
         $limit = intval($request->input('length', 10));
 
-        $order = $request->input("order");
-        $search = $request->input("search");
-        $columns = array(
+        $order   = $request->input("order");
+        $search  = $request->input("search");
+        $columns = [
             0 => 'id',
             1 => 'education',
             2 => 'status',
             3 => 'created_at',
             4 => 'id',
-        );
+        ];
 
         $query = JobEducation::query();
         // Count Data
 
-        if (!empty($search)) {
+        if (! empty($search)) {
             $query->where('education', 'like', '%' . $search . '%');
         }
-    
+
         if ($order) {
             $column = $columns[$order[0]['column']];
-            $dir = $order[0]['dir'];
+            $dir    = $order[0]['dir'];
             $query->orderBy($column, $dir);
         }
 
         $totalRecords = $query->count();
 
         $records = $query->offset($offset)->limit($limit)->orderBy('id', 'desc')->get();
-
 
         $data = [];
         foreach ($records as $record) {
@@ -2608,13 +2549,11 @@ class JobController extends Controller
             $dataArray[] = ucfirst($record->education);
             $dataArray[] = $record->branch ? ucfirst($record->branch) : '-';
 
-
             $status = $record->status == 1
-                ? '<div class="d-flex "><span onclick="changeStatus(' . $record->id . ');" class="badge bg-success text-uppercase"  style="cursor: pointer;">Active</span></div>'
-                : '<div class="d-flex "><span onclick="changeStatus(' . $record->id . ');" class="badge bg-danger text-uppercase" style="cursor: pointer;">Inactive</span></div>';
+            ? '<div class="d-flex "><span onclick="changeStatus(' . $record->id . ');" class="badge bg-success text-uppercase"  style="cursor: pointer;">Active</span></div>'
+            : '<div class="d-flex "><span onclick="changeStatus(' . $record->id . ');" class="badge bg-danger text-uppercase" style="cursor: pointer;">Inactive</span></div>';
 
             $dataArray[] = $status;
-
 
             $dataArray[] = date('d-M-Y', strtotime($record->created_at));
 
@@ -2633,38 +2572,35 @@ class JobController extends Controller
         }
 
         return response()->json([
-            "draw" => $draw,
-            "recordsTotal" => $totalRecords,
+            "draw"            => $draw,
+            "recordsTotal"    => $totalRecords,
             "recordsFiltered" => $totalRecords,
-            "data" => $data
+            "data"            => $data,
         ]);
     }
 
-
     public function addJobEducation(Request $request)
     {
-  
+
         // Define validation rules
         $rules = [
             'education_level' => 'required|string',
-            'education' => 'required|string|max:100|unique:education,education',
+            'education'       => 'required|string|max:100|unique:education,education',
         ];
-
 
         // Validate the request
         $validator = Validator::make($request->all(), $rules);
 
-        if (!$validator->fails()) {
+        if (! $validator->fails()) {
             try {
-                $JobEducation = new JobEducation();
+                $JobEducation                  = new JobEducation();
                 $JobEducation->education_level = $request->input('education_level');
-                $JobEducation->education = $request->input('education');
-                $JobEducation->branch = $request->input('branch') ?? null;
-                $JobEducation->status = 0;
-                $JobEducation->created_at = now();
+                $JobEducation->education       = $request->input('education');
+                $JobEducation->branch          = $request->input('branch') ?? null;
+                $JobEducation->status          = 0;
+                $JobEducation->created_at      = now();
 
                 $JobEducation->save();
-                
 
                 return response()->json(['status_code' => 1, 'message' => 'Educational Qualification successfully added']);
             } catch (\Exception $e) {
@@ -2680,16 +2616,15 @@ class JobController extends Controller
     public function changeJobEducationStatus(Request $request)
     {
         $id = $request->input('id');
-    
-        if (!empty($id)) {
+
+        if (! empty($id)) {
             // Find the record by ID
             $JobEducation = JobEducation::find($id);
-    
-           
+
             if ($JobEducation) {
                 // Toggle the status
                 $JobEducation->status = $JobEducation->status == 1 ? 0 : 1;
-    
+
                 // Save the updated record
                 if ($JobEducation->save()) {
                     return response()->json(['status_code' => 1, 'message' => 'Status successfully changed']);
@@ -2707,11 +2642,11 @@ class JobController extends Controller
     public function deleteJobEducation(Request $request)
     {
         $id = $request->input('id');
-    
-        if (!empty($id)) {
+
+        if (! empty($id)) {
             // Attempt to find and delete the record
             $JobEducation = JobEducation::find($id);
-    
+
             if ($JobEducation) {
                 $JobEducation->delete();
                 return response()->json(['status_code' => 1, 'message' => 'Educational Qualification deleted successfully ']);
@@ -2727,9 +2662,9 @@ class JobController extends Controller
     {
         $id = $request->input('id');
 
-        if (!empty($id)) {
+        if (! empty($id)) {
             // Find the record by ID
-         
+
             $JobEducation = JobEducation::find($id);
 
             if ($JobEducation) {
@@ -2745,25 +2680,24 @@ class JobController extends Controller
     public function updateJobEducation(Request $request)
     {
         $rules = [
-            'edit-id' => 'required|exists:education,id',
-            'edit_education_level' =>'required|string',
-            'editeducation' =>'required|string|max:100',
+            'edit-id'              => 'required|exists:education,id',
+            'edit_education_level' => 'required|string',
+            'editeducation'        => 'required|string|max:100',
         ];
 
         $validator = Validator::make($request->all(), $rules);
 
-        if (!$validator->fails()) {
+        if (! $validator->fails()) {
             $id = $request->input('edit-id');
-
 
             // Find the record by ID
             $JobEducation = JobEducation::find($id);
 
             if ($JobEducation) {
                 $JobEducation->education_level = $request->input('edit_education_level');
-                $JobEducation->education = $request->input('editeducation');
-                $JobEducation->branch = $request->input('edit_branch');
-                $JobEducation->updated_at = now();
+                $JobEducation->education       = $request->input('editeducation');
+                $JobEducation->branch          = $request->input('edit_branch');
+                $JobEducation->updated_at      = now();
 
                 if ($JobEducation->save()) {
                     return response()->json(['status_code' => 1, 'message' => 'Educational Qualification updated successfully']);
@@ -2780,152 +2714,155 @@ class JobController extends Controller
 
     public function createJob()
     {
-        $data['jobTypes'] = JobTypes::where('status', 1)->select('type','status')->get(); 
-        $data['jobMode'] = JobMode::where('status', 1)->select('mode','status')->get(); 
-        $data['jobSkill'] = JobSkill::where('status', 1)->select('skill','status')->get(); 
-        $data['JobDepartment'] = JobDepartment::where('status', 1)->select('department','status')->get(); 
-        $data['JobRole'] = JobRole::where('status', 1)->select('role','status')->get(); 
-        $data['JobExperience'] = JobExperience::where('status', 1)->select('experience','status')->get(); 
-        $data['JobLocation'] = JobLocation::where('status', 1)->select('country','city','status')->get(); 
-        $data['JobCategory'] = JobCategory::where('status', 1)->select('name','status')->get(); 
-        $data['Companies'] = Companies::where('status', 1)->select('id', 'name', 'details','logo', 'status')->get(); 
-        $data['JobIntType'] = JobIntType::where('status', 1)->select('id', 'int_type','status')->get();
-        $data['JobCurrency'] = JobCurrency::where('status', 1)->select('id', 'currency', 'status')->get();
-        $data['JobEducation'] = JobEducation::where('status', 1)->select('education_level','education', 'branch', 'status')->get();
-        $data['JobSalary'] = JobSalary::where('status', 1)
-        ->orderByRaw('CAST(salary AS UNSIGNED) ASC') // Ensures numeric sorting
-        ->get();
-        $data['Recruiter'] = Recruiter::where('user_type',2)->where('status',1)->get();
+        $data['jobTypes']      = JobTypes::where('status', 1)->select('type', 'status')->get();
+        $data['jobMode']       = JobMode::where('status', 1)->select('mode', 'status')->get();
+        $data['jobSkill']      = JobSkill::where('status', 1)->select('skill', 'status')->get();
+        $data['JobDepartment'] = JobDepartment::where('status', 1)->select('department', 'status')->get();
+        $data['JobRole']       = JobRole::where('status', 1)->select('role', 'status')->get();
+        $data['JobExperience'] = JobExperience::where('status', 1)->select('experience', 'status')->get();
+        $data['JobLocation']   = JobLocation::where('status', 1)->select('country', 'city', 'status')->get();
+        $data['JobCategory']   = JobCategory::where('status', 1)->select('name', 'status')->get();
+        $data['Companies']     = Companies::where('status', 1)->select('id', 'name', 'details', 'logo', 'status')->get();
+        $data['JobIntType']    = JobIntType::where('status', 1)->select('id', 'int_type', 'status')->get();
+        $data['JobCurrency']   = JobCurrency::where('status', 1)->select('id', 'currency', 'status')->get();
+        $data['JobEducation']  = JobEducation::where('status', 1)->select('education_level', 'education', 'branch', 'status')->get();
+        $data['JobSalary']     = JobSalary::where('status', 1)
+            ->orderByRaw('CAST(salary AS UNSIGNED) ASC') // Ensures numeric sorting
+            ->get();
+        $data['Recruiter'] = Recruiter::where('user_type', 2)->where('status', 1)->get();
         return view('admin.job.CreateJob', $data);
     }
 
-    public function getDepartment(Request $request) {
+    public function getDepartment(Request $request)
+    {
 
-        if (!$request->has('category_name')) {
+        if (! $request->has('category_name')) {
             return response()->json(['error' => 'Category Name is missing'], 400);
         }
         $JobDepartment = JobDepartment::where('category_name', $request->category_name)->select('department')->get();
-    
+
         return response()->json($JobDepartment);
 
     }
 
-    public function getRole(Request $request) {
-        if (!$request->has('department_name')) {
+    public function getRole(Request $request)
+    {
+        if (! $request->has('department_name')) {
             return response()->json(['error' => 'Department Name is missing'], 400);
         }
-    
+
         $JobRole = JobRole::where('department_name', $request->department_name)
-                            ->select('role')
-                            ->get();
-    
+            ->select('role')
+            ->get();
+
         return response()->json($JobRole);
     }
 
-    public function getEducation(Request $request) {
-        if (!$request->has('education_level')) {
+    public function getEducation(Request $request)
+    {
+        if (! $request->has('education_level')) {
             return response()->json(['error' => 'Education Level is missing'], 400);
         }
 
         $JobEducation = JobEducation::where('education_level', $request->education_level)
-                                    ->select('education')
-                                    ->distinct()
-                                    ->get();
+            ->select('education')
+            ->distinct()
+            ->get();
 
         return response()->json($JobEducation);
     }
 
     // Fetch Branches based on Selected Qualification
-    public function getBranch(Request $request) {
-        if (!$request->has('education')) {
+    public function getBranch(Request $request)
+    {
+        if (! $request->has('education')) {
             return response()->json(['error' => 'Education Name is missing'], 400);
         }
 
         $JobEducation = JobEducation::where('education', $request->education)
-                                    ->whereNotNull('branch')
-                                    ->select('branch')
-                                    ->distinct()
-                                    ->get();
+            ->whereNotNull('branch')
+            ->select('branch')
+            ->distinct()
+            ->get();
 
         return response()->json($JobEducation);
     }
 
-    
     public function submitJob(Request $request)
     {
         // dd($request->all());
         // Define validation rules
         $rules = [
-            'recruiter_id' => 'required',
-            'job_title' => 'required|string|max:100|',
-            'job_type' => 'required|string',
-            'skills' => 'required',
-            'industry' => 'required|string',
-            'department' => 'required|string',
-            'role' => 'required|string',
-            'work_mode' => 'required|string',
-            'location' => 'required|string',
-            'min_experience' => 'required|integer',
-            'max_experience' => 'required|string',
-            'currency' => 'required|string',
-            'min_salary' => 'required|integer',
-            'max_salary' => 'required',
-            'education_level' => 'required|string',
-            'education' => 'required|string',
-            'branch' => 'nullable',
+            'recruiter_id'       => 'required',
+            'job_title'          => 'required|string|max:100|',
+            'job_type'           => 'required|string',
+            'skills'             => 'required',
+            'industry'           => 'required|string',
+            'department'         => 'required|string',
+            'role'               => 'required|string',
+            'work_mode'          => 'required|string',
+            'location'           => 'required|string',
+            'min_experience'     => 'required|integer',
+            'max_experience'     => 'required|string',
+            'currency'           => 'required|string',
+            'min_salary'         => 'required|integer',
+            'max_salary'         => 'required',
+            'education_level'    => 'required|string',
+            'education'          => 'required|string',
+            'branch'             => 'nullable',
             'candidate_industry' => 'nullable|string',
-            'diversity' => 'nullable|in:Male,Female',
-            'vacancies' => 'required|integer',
-            'interview_type' => 'required|string',
-            'company_name' => 'required|string',
-            'company_details' => 'required|string',
-            'jobExp'=> 'required|date',
-            'job_description'=> 'required|string',
-            'job_resp' => 'required|string',
-            'job_req' => 'required|string',
+            'diversity'          => 'nullable|in:Male,Female',
+            'vacancies'          => 'required|integer',
+            'interview_type'     => 'required|string',
+            'company_name'       => 'required|string',
+            'company_details'    => 'required|string',
+            'jobExp'             => 'required|date',
+            'job_description'    => 'required|string',
+            'job_resp'           => 'required|string',
+            'job_req'            => 'required|string',
         ];
 
         // Validate the request
         $validator = Validator::make($request->all(), $rules);
 
-        if (!$validator->fails()) {
+        if (! $validator->fails()) {
             try {
                 $JobPost = new JobPost();
 
                 $JobPost->recruiter_id = $request->input('recruiter_id');
-                $JobPost->title = $request->input('job_title');
-                $JobPost->type = $request->input('job_type');
+                $JobPost->title        = $request->input('job_title');
+                $JobPost->type         = $request->input('job_type');
                 // $JobPost->skills = $request->input('skills');
-                $JobPost->skills = implode(',', $request->input('skills'));
-                $JobPost->industry = $request->input('industry');
-                $JobPost->department = $request->input('department');
-                $JobPost->role = $request->input('role');
-                $JobPost->mode = $request->input('work_mode');
-                $JobPost->location = $request->input('location');
-                $JobPost->min_exp = $request->input('min_experience');
-                $JobPost->max_exp = $request->input('max_experience');
-                $JobPost->currency = $request->input('currency');
-                $JobPost->min_sal = $request->input('min_salary');
-                $JobPost->max_sal = $request->input('max_salary');
-                $JobPost->sal_status = $request->input('sal_status') ?? 'off';
+                $JobPost->skills          = implode(',', $request->input('skills'));
+                $JobPost->industry        = $request->input('industry');
+                $JobPost->department      = $request->input('department');
+                $JobPost->role            = $request->input('role');
+                $JobPost->mode            = $request->input('work_mode');
+                $JobPost->location        = $request->input('location');
+                $JobPost->min_exp         = $request->input('min_experience');
+                $JobPost->max_exp         = $request->input('max_experience');
+                $JobPost->currency        = $request->input('currency');
+                $JobPost->min_sal         = $request->input('min_salary');
+                $JobPost->max_sal         = $request->input('max_salary');
+                $JobPost->sal_status      = $request->input('sal_status') ?? 'off';
                 $JobPost->education_level = $request->input('education_level');
-                $JobPost->education = $request->input('education');
+                $JobPost->education       = $request->input('education');
                 // $JobPost->branch = implode(',', $request->input('branch',[]));
-                $JobPost->branch = implode(',', (array) $request->input('branch'));
+                $JobPost->branch             = implode(',', (array) $request->input('branch'));
                 $JobPost->condidate_industry = $request->input('candidate_industry');
-                $JobPost->diversity = $request->input('diversity') ?? 'All';
-                $JobPost->vacancies = $request->input('vacancies');
-                $JobPost->int_type = $request->input('interview_type');
-                $JobPost->com_name = $request->input('company_name');
-                $JobPost->com_logo = $request->input('company_logo');
-                $JobPost->com_details = $request->input('company_details');
-                $JobPost->jobexpiry = $request->input('jobExp');
-                $JobPost->job_desc = $request->input('job_description');
-                $JobPost->job_resp = $request->input('job_resp');
-                $JobPost->job_req = $request->input('job_req');
-                $JobPost->status = 0;
-                $JobPost->admin_verify = 0;
-                $JobPost->created_at = now();
+                $JobPost->diversity          = $request->input('diversity') ?? 'All';
+                $JobPost->vacancies          = $request->input('vacancies');
+                $JobPost->int_type           = $request->input('interview_type');
+                $JobPost->com_name           = $request->input('company_name');
+                $JobPost->com_logo           = $request->input('company_logo');
+                $JobPost->com_details        = $request->input('company_details');
+                $JobPost->jobexpiry          = $request->input('jobExp');
+                $JobPost->job_desc           = $request->input('job_description');
+                $JobPost->job_resp           = $request->input('job_resp');
+                $JobPost->job_req            = $request->input('job_req');
+                $JobPost->status             = 0;
+                $JobPost->admin_verify       = 0;
+                $JobPost->created_at         = now();
 
                 // dd($JobPost);
 
@@ -2942,9 +2879,6 @@ class JobController extends Controller
         }
     }
 
-
-    
-    
     // Job Post
     public function jobList()
     {
@@ -2954,14 +2888,14 @@ class JobController extends Controller
     public function getJobPost(Request $request)
     {
         // dd($request->all());
-        $draw = intval($request->input("draw"));
+        $draw   = intval($request->input("draw"));
         $offset = trim($request->input('start'));
         // $limit = 10;
         $limit = intval($request->input('length', 10));
 
-        $order = $request->input("order");
-        $search = $request->input("search");
-        $columns = array(
+        $order   = $request->input("order");
+        $search  = $request->input("search");
+        $columns = [
             0 => 'id',
             1 => 'title',
             2 => 'admin_verify',
@@ -2970,18 +2904,18 @@ class JobController extends Controller
             5 => 'created_at',
             6 => 'jobexpiry',
             7 => 'id',
-        );
+        ];
 
-        $query = JobPost::with('recruiter');
+        $query = JobPost::withCount('recruiter', 'applications');
         // Count Data
 
-        if (!empty($search)) {
+        if (! empty($search)) {
             $query->where('title', 'like', '%' . $search . '%');
         }
-    
+
         if ($order) {
             $column = $columns[$order[0]['column']];
-            $dir = $order[0]['dir'];
+            $dir    = $order[0]['dir'];
             $query->orderBy($column, $dir);
         }
 
@@ -2989,7 +2923,6 @@ class JobController extends Controller
 
         $records = $query->offset($offset)->limit($limit)->orderBy('id', 'desc')->get();
         // dd($records);
-
 
         $data = [];
         foreach ($records as $record) {
@@ -2999,8 +2932,8 @@ class JobController extends Controller
             $dataArray[] = ucfirst($record->title);
 
             $admin_verify = '<div class="d-flex">
-                    <span onclick="toggleVerifyOptions(' . $record->id . ');" 
-                          class="badge ' . ($record->admin_verify == 1 ? 'bg-success' : ($record->admin_verify == 0 ? 'bg-warning' : 'bg-danger')) . ' text-uppercase"  
+                    <span onclick="toggleVerifyOptions(' . $record->id . ');"
+                          class="badge ' . ($record->admin_verify == 1 ? 'bg-success' : ($record->admin_verify == 0 ? 'bg-warning' : 'bg-danger')) . ' text-uppercase"
                           style="cursor: pointer;">
                         ' . ($record->admin_verify == 1 ? 'Verified' : ($record->admin_verify == 0 ? 'Pending' : 'Rejected')) . '
                     </span>
@@ -3013,15 +2946,13 @@ class JobController extends Controller
                                         <button class="badge bg-danger text-uppercase" style="cursor: pointer; border: none; padding: 5px 10px;" onclick="changeVerifyStatus(' . $record->id . ', 2)">Reject</button>
                                     </div>
                                 </div>';
-            }
-            elseif ($record->admin_verify == 1) {
+            } elseif ($record->admin_verify == 1) {
                 $admin_verify .= '<div id="verify-options-' . $record->id . '" style="display: none; margin-top: 5px;">
                                     <div class="d-flex gap-2">
                                         <button class="badge bg-danger text-uppercase" style="cursor: pointer; border: none; padding: 5px 10px;" onclick="changeVerifyStatus(' . $record->id . ', 2)">Reject</button>
                                     </div>
                                 </div>';
-            }
-            else {
+            } else {
                 $admin_verify .= '<div id="verify-options-' . $record->id . '" style="display: none; margin-top: 5px;">
                                     <div class="d-flex gap-2">
                                         <button class="badge bg-success text-uppercase" style="cursor: pointer; border: none; padding: 5px 10px;" onclick="changeVerifyStatus(' . $record->id . ', 1)">Verify</button>
@@ -3031,23 +2962,20 @@ class JobController extends Controller
 
             $dataArray[] = $admin_verify;
 
-
-        
-
             $status = $record->status == 1
-                ? '<div class="d-flex "><span onclick="changeStatus(' . $record->id . ');" class="badge bg-success text-uppercase"  style="cursor: pointer;">Active</span></div>'
-                : '<div class="d-flex "><span onclick="changeStatus(' . $record->id . ');" class="badge bg-danger text-uppercase" style="cursor: pointer;">Inactive</span></div>';
+            ? '<div class="d-flex "><span onclick="changeStatus(' . $record->id . ');" class="badge bg-success text-uppercase"  style="cursor: pointer;">Active</span></div>'
+            : '<div class="d-flex "><span onclick="changeStatus(' . $record->id . ');" class="badge bg-danger text-uppercase" style="cursor: pointer;">Inactive</span></div>';
 
             $dataArray[] = $status;
 
             // $dataArray[] = $record->recruiter->name ?? 'N/A' - $record->recruiter->email ?? 'N/A';
             $dataArray[] = ($record->recruiter->name ?? 'N/A') . ' - ' . ($record->recruiter->email ?? 'N/A');
 
+            $dataArray[] = '<a href="' . route('Admin.AllApplicants') . '" class="badge bg-warning text-decoration-none" style="cursor: pointer;">' . $record->applications_count . ' Applied</a>';
 
             $dataArray[] = date('d-M-Y', strtotime($record->created_at));
             // $dataArray[] = date('d-M-Y', strtotime($record->jobexpiry));
             $dataArray[] = '<span style="color: red;">' . date('d-M-Y', strtotime($record->jobexpiry)) . '</span>';
-
 
             $dataArray[] = '<div class="d-flex gap-2">
 
@@ -3072,19 +3000,19 @@ class JobController extends Controller
         }
 
         return response()->json([
-            "draw" => $draw,
-            "recordsTotal" => $totalRecords,
+            "draw"            => $draw,
+            "recordsTotal"    => $totalRecords,
             "recordsFiltered" => $totalRecords,
-            "data" => $data
+            "data"            => $data,
         ]);
     }
 
     public function verifyStatus(Request $request)
     {
-        $id = $request->input('id');
+        $id     = $request->input('id');
         $status = $request->input('status'); // 1 for Verify, -1 for Reject
 
-        if (!empty($id)) {
+        if (! empty($id)) {
             // Check if the record exists
             $JobPost = JobPost::find($id);
 
@@ -3105,16 +3033,15 @@ class JobController extends Controller
     public function changeJobPostStatus(Request $request)
     {
         $id = $request->input('id');
-    
-        if (!empty($id)) {
+
+        if (! empty($id)) {
             // Find the record by ID
             $JobPost = JobPost::find($id);
-    
-           
+
             if ($JobPost) {
                 // Toggle the status
                 $JobPost->status = $JobPost->status == 1 ? 0 : 1;
-    
+
                 // Save the updated record
                 if ($JobPost->save()) {
                     return response()->json(['status_code' => 1, 'message' => 'Status successfully changed']);
@@ -3132,11 +3059,11 @@ class JobController extends Controller
     public function deleteJobPost(Request $request)
     {
         $id = $request->input('id');
-    
-        if (!empty($id)) {
+
+        if (! empty($id)) {
             // Attempt to find and delete the record
             $JobPost = JobPost::find($id);
-    
+
             if ($JobPost) {
                 $JobPost->delete();
                 return response()->json(['status_code' => 1, 'message' => 'Job Post deleted successfully ']);
@@ -3152,12 +3079,12 @@ class JobController extends Controller
     {
         try {
             $decryptedId = Crypt::decrypt($id);
-            $job = JobPost::findOrFail($decryptedId);
+            $job         = JobPost::findOrFail($decryptedId);
             // dd($job);
-            $Recruiter = Recruiter::where('id',$job->recruiter_id)->first();
+            $Recruiter = Recruiter::where('id', $job->recruiter_id)->first();
             // dd($Recruiter);
 
-            return view('admin.job.ViewJob', compact('job','Recruiter'));
+            return view('admin.job.ViewJob', compact('job', 'Recruiter'));
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Invalid Job ID!');
         }
@@ -3167,66 +3094,67 @@ class JobController extends Controller
     {
         try {
 
-            $data['jobTypes'] = JobTypes::where('status', 1)->select('type','status')->get(); 
-            $data['jobMode'] = JobMode::where('status', 1)->select('mode','status')->get(); 
-            $data['jobSkill'] = JobSkill::where('status', 1)->select('skill','status')->get(); 
-            $data['JobDepartment'] = JobDepartment::where('status', 1)->select('department','status')->get(); 
-            $data['JobRole'] = JobRole::where('status', 1)->select('role','status')->get(); 
-            $data['JobExperience'] = JobExperience::where('status', 1)->select('experience','status')->get(); 
-            $data['JobLocation'] = JobLocation::where('status', 1)->select('country','city','status')->get(); 
-            $data['JobCategory'] = JobCategory::where('status', 1)->select('name','status')->get(); 
-            $data['Companies'] = Companies::where('status', 1)->select('id', 'name', 'details','logo', 'status')->get(); 
-            $data['JobIntType'] = JobIntType::where('status', 1)->select('id', 'int_type','status')->get();
-            $data['JobCurrency'] = JobCurrency::where('status', 1)->select('id', 'currency', 'status')->get();
-            $data['JobEducation'] = JobEducation::where('status', 1)->select('education_level','education', 'branch', 'status')->get();
-            $data['JobSalary'] = JobSalary::where('status', 1)
-            ->orderByRaw('CAST(salary AS UNSIGNED) ASC') // Ensures numeric sorting
-            ->get();
-            $data['Recruiter'] = Recruiter::where('user_type',2)->where('status',1)->get();
-            $decryptedId = Crypt::decrypt($id);
-            $jobPost = JobPost::findOrFail($decryptedId);
+            $data['jobTypes']      = JobTypes::where('status', 1)->select('type', 'status')->get();
+            $data['jobMode']       = JobMode::where('status', 1)->select('mode', 'status')->get();
+            $data['jobSkill']      = JobSkill::where('status', 1)->select('skill', 'status')->get();
+            $data['JobDepartment'] = JobDepartment::where('status', 1)->select('department', 'status')->get();
+            $data['JobRole']       = JobRole::where('status', 1)->select('role', 'status')->get();
+            $data['JobExperience'] = JobExperience::where('status', 1)->select('experience', 'status')->get();
+            $data['JobLocation']   = JobLocation::where('status', 1)->select('country', 'city', 'status')->get();
+            $data['JobCategory']   = JobCategory::where('status', 1)->select('name', 'status')->get();
+            $data['Companies']     = Companies::where('status', 1)->select('id', 'name', 'details', 'logo', 'status')->get();
+            $data['JobIntType']    = JobIntType::where('status', 1)->select('id', 'int_type', 'status')->get();
+            $data['JobCurrency']   = JobCurrency::where('status', 1)->select('id', 'currency', 'status')->get();
+            $data['JobEducation']  = JobEducation::where('status', 1)->select('education_level', 'education', 'branch', 'status')->get();
+            $data['JobSalary']     = JobSalary::where('status', 1)
+                ->orderByRaw('CAST(salary AS UNSIGNED) ASC') // Ensures numeric sorting
+                ->get();
+            $data['Recruiter'] = Recruiter::where('user_type', 2)->where('status', 1)->get();
+            $decryptedId       = Crypt::decrypt($id);
+            $jobPost           = JobPost::findOrFail($decryptedId);
             return view('admin.job.EditJob', compact('jobPost') + $data);
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Invalid Job ID!');
         }
     }
 
-    public function updateJobPost(Request $request) {
+    public function updateJobPost(Request $request)
+    {
         // dd($request->input('edit-id'));
 
         // Validate request
         $rules = [
-            'job_title' => 'required|string|max:100|',
-            'job_type' => 'required|string',
-            'skills' => 'required',
-            'industry' => 'required|string',
-            'department' => 'required|string',
-            'role' => 'required|string',
-            'work_mode' => 'required|string',
-            'location' => 'required|string',
-            'min_experience' => 'required|integer',
-            'max_experience' => 'required|string',
-            'currency' => 'required|string',
-            'min_salary' => 'required|integer',
-            'max_salary' => 'required',
-            'education_level' => 'required|string',
-            'education' => 'required|string',
-            'branch' => 'nullable',
+            'job_title'          => 'required|string|max:100|',
+            'job_type'           => 'required|string',
+            'skills'             => 'required',
+            'industry'           => 'required|string',
+            'department'         => 'required|string',
+            'role'               => 'required|string',
+            'work_mode'          => 'required|string',
+            'location'           => 'required|string',
+            'min_experience'     => 'required|integer',
+            'max_experience'     => 'required|string',
+            'currency'           => 'required|string',
+            'min_salary'         => 'required|integer',
+            'max_salary'         => 'required',
+            'education_level'    => 'required|string',
+            'education'          => 'required|string',
+            'branch'             => 'nullable',
             'candidate_industry' => 'nullable|string',
-            'diversity' => 'nullable|in:Male,Female',
-            'vacancies' => 'required|integer',
-            'interview_type' => 'required|string',
-            'company_name' => 'required|string',
-            'company_details' => 'required|string',
-            'jobExp'=> 'required|date',
-            'job_description'=> 'required|string',
-            'job_resp' => 'required|string',
-            'job_req' => 'required|string',
+            'diversity'          => 'nullable|in:Male,Female',
+            'vacancies'          => 'required|integer',
+            'interview_type'     => 'required|string',
+            'company_name'       => 'required|string',
+            'company_details'    => 'required|string',
+            'jobExp'             => 'required|date',
+            'job_description'    => 'required|string',
+            'job_resp'           => 'required|string',
+            'job_req'            => 'required|string',
         ];
 
         $validator = Validator::make($request->all(), $rules);
 
-        if (!$validator->fails()) {
+        if (! $validator->fails()) {
 
             $id = $request->input('edit-id');
 
@@ -3235,39 +3163,39 @@ class JobController extends Controller
 
             if ($JobPost) {
                 $JobPost->recruiter_id = $request->input('recruiter_id');
-                $JobPost->title = $request->input('job_title');
-                $JobPost->type = $request->input('job_type');
+                $JobPost->title        = $request->input('job_title');
+                $JobPost->type         = $request->input('job_type');
                 // $JobPost->skills = $request->input('skills');
                 $JobPost->skills = implode(',', $request->input('skills'));
                 // $JobPost->industry = $request->input('industry');
                 // $JobPost->department = $request->input('department');
                 // $JobPost->role = $request->input('role');
-                $JobPost->mode = $request->input('work_mode');
-                $JobPost->location = $request->input('location');
-                $JobPost->min_exp = $request->input('min_experience');
-                $JobPost->max_exp = $request->input('max_experience');
-                $JobPost->currency = $request->input('currency');
-                $JobPost->min_sal = $request->input('min_salary');
-                $JobPost->max_sal = $request->input('max_salary');
-                $JobPost->sal_status = $request->input('sal_status') ?? 'off';
+                $JobPost->mode            = $request->input('work_mode');
+                $JobPost->location        = $request->input('location');
+                $JobPost->min_exp         = $request->input('min_experience');
+                $JobPost->max_exp         = $request->input('max_experience');
+                $JobPost->currency        = $request->input('currency');
+                $JobPost->min_sal         = $request->input('min_salary');
+                $JobPost->max_sal         = $request->input('max_salary');
+                $JobPost->sal_status      = $request->input('sal_status') ?? 'off';
                 $JobPost->education_level = $request->input('education_level');
-                $JobPost->education = $request->input('education');
+                $JobPost->education       = $request->input('education');
                 // $JobPost->branch = implode(',', $request->input('branch',[]));
-                $JobPost->branch = implode(',', (array) $request->input('branch'));
+                $JobPost->branch             = implode(',', (array) $request->input('branch'));
                 $JobPost->condidate_industry = $request->input('candidate_industry');
-                $JobPost->diversity = $request->input('diversity') ?? 'All';
-                $JobPost->vacancies = $request->input('vacancies');
-                $JobPost->int_type = $request->input('interview_type');
+                $JobPost->diversity          = $request->input('diversity') ?? 'All';
+                $JobPost->vacancies          = $request->input('vacancies');
+                $JobPost->int_type           = $request->input('interview_type');
                 // $JobPost->com_name = $request->input('company_name');
                 // $JobPost->com_logo = $request->input('company_logo');
-                $JobPost->com_details = $request->input('company_details');
-                $JobPost->jobexpiry = $request->input('jobExp');
-                $JobPost->job_desc = $request->input('job_description');
-                $JobPost->job_resp = $request->input('job_resp');
-                $JobPost->job_req = $request->input('job_req');
-                $JobPost->status = 0;
-                $JobPost->admin_verify = 0;        
-                $JobPost->updated_at = now();
+                $JobPost->com_details  = $request->input('company_details');
+                $JobPost->jobexpiry    = $request->input('jobExp');
+                $JobPost->job_desc     = $request->input('job_description');
+                $JobPost->job_resp     = $request->input('job_resp');
+                $JobPost->job_req      = $request->input('job_req');
+                $JobPost->status       = 0;
+                $JobPost->admin_verify = 0;
+                $JobPost->updated_at   = now();
 
                 $JobPost->save();
 
@@ -3282,25 +3210,25 @@ class JobController extends Controller
         } else {
             return response()->json(['status_code' => 2, 'message' => $validator->errors()->first()]);
         }
-        
 
     }
 
-    public function showverifiedjobs() {
+    public function showverifiedjobs()
+    {
         return view('admin.job.VerifiedJobs');
     }
 
     public function verifiedJobs(Request $request)
     {
         // dd($request->all());
-        $draw = intval($request->input("draw"));
+        $draw   = intval($request->input("draw"));
         $offset = trim($request->input('start'));
         // $limit = 10;
         $limit = intval($request->input('length', 10));
 
-        $order = $request->input("order");
-        $search = $request->input("search");
-        $columns = array(
+        $order   = $request->input("order");
+        $search  = $request->input("search");
+        $columns = [
             0 => 'id',
             1 => 'title',
             2 => 'admin_verify',
@@ -3308,25 +3236,24 @@ class JobController extends Controller
             4 => 'created_at',
             5 => 'jobexpiry',
             6 => 'id',
-        );
+        ];
 
-        $query = JobPost::query()->where('admin_verify',1);
+        $query = JobPost::query()->where('admin_verify', 1);
         // Count Data
 
-        if (!empty($search)) {
+        if (! empty($search)) {
             $query->where('title', 'like', '%' . $search . '%');
         }
-    
+
         if ($order) {
             $column = $columns[$order[0]['column']];
-            $dir = $order[0]['dir'];
+            $dir    = $order[0]['dir'];
             $query->orderBy($column, $dir);
         }
 
         $totalRecords = $query->count();
 
         $records = $query->offset($offset)->limit($limit)->orderBy('id', 'desc')->get();
-
 
         $data = [];
         foreach ($records as $record) {
@@ -3336,8 +3263,8 @@ class JobController extends Controller
             $dataArray[] = ucfirst($record->title);
 
             $admin_verify = '<div class="d-flex">
-                    <span onclick="toggleVerifyOptions(' . $record->id . ');" 
-                          class="badge ' . ($record->admin_verify == 1 ? 'bg-success' : ($record->admin_verify == 0 ? 'bg-warning' : 'bg-danger')) . ' text-uppercase"  
+                    <span onclick="toggleVerifyOptions(' . $record->id . ');"
+                          class="badge ' . ($record->admin_verify == 1 ? 'bg-success' : ($record->admin_verify == 0 ? 'bg-warning' : 'bg-danger')) . ' text-uppercase"
                           style="cursor: pointer;">
                         ' . ($record->admin_verify == 1 ? 'Verified' : ($record->admin_verify == 0 ? 'Pending' : 'Rejected')) . '
                     </span>
@@ -3350,15 +3277,13 @@ class JobController extends Controller
                                         <button class="badge bg-danger text-uppercase" style="cursor: pointer; border: none; padding: 5px 10px;" onclick="changeVerifyStatus(' . $record->id . ', 2)">Reject</button>
                                     </div>
                                 </div>';
-            }
-            elseif ($record->admin_verify == 1) {
+            } elseif ($record->admin_verify == 1) {
                 $admin_verify .= '<div id="verify-options-' . $record->id . '" style="display: none; margin-top: 5px;">
                                     <div class="d-flex gap-2">
                                         <button class="badge bg-danger text-uppercase" style="cursor: pointer; border: none; padding: 5px 10px;" onclick="changeVerifyStatus(' . $record->id . ', 2)">Reject</button>
                                     </div>
                                 </div>';
-            }
-            else {
+            } else {
                 $admin_verify .= '<div id="verify-options-' . $record->id . '" style="display: none; margin-top: 5px;">
                                     <div class="d-flex gap-2">
                                         <button class="badge bg-success text-uppercase" style="cursor: pointer; border: none; padding: 5px 10px;" onclick="changeVerifyStatus(' . $record->id . ', 1)">Verify</button>
@@ -3368,15 +3293,11 @@ class JobController extends Controller
 
             $dataArray[] = $admin_verify;
 
-
-        
-
             $status = $record->status == 1
-                ? '<div class="d-flex "><span onclick="changeStatus(' . $record->id . ');" class="badge bg-success text-uppercase"  style="cursor: pointer;">Active</span></div>'
-                : '<div class="d-flex "><span onclick="changeStatus(' . $record->id . ');" class="badge bg-danger text-uppercase" style="cursor: pointer;">Inactive</span></div>';
+            ? '<div class="d-flex "><span onclick="changeStatus(' . $record->id . ');" class="badge bg-success text-uppercase"  style="cursor: pointer;">Active</span></div>'
+            : '<div class="d-flex "><span onclick="changeStatus(' . $record->id . ');" class="badge bg-danger text-uppercase" style="cursor: pointer;">Inactive</span></div>';
 
             $dataArray[] = $status;
-
 
             $dataArray[] = date('d-M-Y', strtotime($record->created_at));
             $dataArray[] = '<span style="color: red;">' . date('d-M-Y', strtotime($record->jobexpiry)) . '</span>';
@@ -3405,28 +3326,29 @@ class JobController extends Controller
         }
 
         return response()->json([
-            "draw" => $draw,
-            "recordsTotal" => $totalRecords,
+            "draw"            => $draw,
+            "recordsTotal"    => $totalRecords,
             "recordsFiltered" => $totalRecords,
-            "data" => $data
+            "data"            => $data,
         ]);
     }
 
-    public function showrejectedjobs() {
+    public function showrejectedjobs()
+    {
         return view('admin.job.RejectedJobs');
     }
 
     public function rejectedJobs(Request $request)
     {
         // dd($request->all());
-        $draw = intval($request->input("draw"));
+        $draw   = intval($request->input("draw"));
         $offset = trim($request->input('start'));
         // $limit = 10;
         $limit = intval($request->input('length', 10));
 
-        $order = $request->input("order");
-        $search = $request->input("search");
-        $columns = array(
+        $order   = $request->input("order");
+        $search  = $request->input("search");
+        $columns = [
             0 => 'id',
             1 => 'title',
             2 => 'admin_verify',
@@ -3434,25 +3356,24 @@ class JobController extends Controller
             4 => 'created_at',
             5 => 'jobexpiry',
             6 => 'id',
-        );
+        ];
 
-        $query = JobPost::query()->where('admin_verify',2);
+        $query = JobPost::query()->where('admin_verify', 2);
         // Count Data
 
-        if (!empty($search)) {
+        if (! empty($search)) {
             $query->where('title', 'like', '%' . $search . '%');
         }
-    
+
         if ($order) {
             $column = $columns[$order[0]['column']];
-            $dir = $order[0]['dir'];
+            $dir    = $order[0]['dir'];
             $query->orderBy($column, $dir);
         }
 
         $totalRecords = $query->count();
 
         $records = $query->offset($offset)->limit($limit)->orderBy('id', 'desc')->get();
-
 
         $data = [];
         foreach ($records as $record) {
@@ -3462,8 +3383,8 @@ class JobController extends Controller
             $dataArray[] = ucfirst($record->title);
 
             $admin_verify = '<div class="d-flex">
-                    <span onclick="toggleVerifyOptions(' . $record->id . ');" 
-                          class="badge ' . ($record->admin_verify == 1 ? 'bg-success' : ($record->admin_verify == 0 ? 'bg-warning' : 'bg-danger')) . ' text-uppercase"  
+                    <span onclick="toggleVerifyOptions(' . $record->id . ');"
+                          class="badge ' . ($record->admin_verify == 1 ? 'bg-success' : ($record->admin_verify == 0 ? 'bg-warning' : 'bg-danger')) . ' text-uppercase"
                           style="cursor: pointer;">
                         ' . ($record->admin_verify == 1 ? 'Verified' : ($record->admin_verify == 0 ? 'Pending' : 'Rejected')) . '
                     </span>
@@ -3476,15 +3397,13 @@ class JobController extends Controller
                                         <button class="badge bg-danger text-uppercase" style="cursor: pointer; border: none; padding: 5px 10px;" onclick="changeVerifyStatus(' . $record->id . ', 2)">Reject</button>
                                     </div>
                                 </div>';
-            }
-            elseif ($record->admin_verify == 1) {
+            } elseif ($record->admin_verify == 1) {
                 $admin_verify .= '<div id="verify-options-' . $record->id . '" style="display: none; margin-top: 5px;">
                                     <div class="d-flex gap-2">
                                         <button class="badge bg-danger text-uppercase" style="cursor: pointer; border: none; padding: 5px 10px;" onclick="changeVerifyStatus(' . $record->id . ', 2)">Reject</button>
                                     </div>
                                 </div>';
-            }
-            else {
+            } else {
                 $admin_verify .= '<div id="verify-options-' . $record->id . '" style="display: none; margin-top: 5px;">
                                     <div class="d-flex gap-2">
                                         <button class="badge bg-success text-uppercase" style="cursor: pointer; border: none; padding: 5px 10px;" onclick="changeVerifyStatus(' . $record->id . ', 1)">Verify</button>
@@ -3494,15 +3413,11 @@ class JobController extends Controller
 
             $dataArray[] = $admin_verify;
 
-
-        
-
             $status = $record->status == 1
-                ? '<div class="d-flex "><span onclick="changeStatus(' . $record->id . ');" class="badge bg-success text-uppercase"  style="cursor: pointer;">Active</span></div>'
-                : '<div class="d-flex "><span onclick="changeStatus(' . $record->id . ');" class="badge bg-danger text-uppercase" style="cursor: pointer;">Inactive</span></div>';
+            ? '<div class="d-flex "><span onclick="changeStatus(' . $record->id . ');" class="badge bg-success text-uppercase"  style="cursor: pointer;">Active</span></div>'
+            : '<div class="d-flex "><span onclick="changeStatus(' . $record->id . ');" class="badge bg-danger text-uppercase" style="cursor: pointer;">Inactive</span></div>';
 
             $dataArray[] = $status;
-
 
             $dataArray[] = date('d-M-Y', strtotime($record->created_at));
             $dataArray[] = '<span style="color: red;">' . date('d-M-Y', strtotime($record->jobexpiry)) . '</span>';
@@ -3531,28 +3446,29 @@ class JobController extends Controller
         }
 
         return response()->json([
-            "draw" => $draw,
-            "recordsTotal" => $totalRecords,
+            "draw"            => $draw,
+            "recordsTotal"    => $totalRecords,
             "recordsFiltered" => $totalRecords,
-            "data" => $data
+            "data"            => $data,
         ]);
     }
 
-    public function showpendingjobs() {
+    public function showpendingjobs()
+    {
         return view('admin.job.PendingJobs');
     }
 
     public function pendingJobs(Request $request)
     {
         // dd($request->all());
-        $draw = intval($request->input("draw"));
+        $draw   = intval($request->input("draw"));
         $offset = trim($request->input('start'));
         // $limit = 10;
         $limit = intval($request->input('length', 10));
 
-        $order = $request->input("order");
-        $search = $request->input("search");
-        $columns = array(
+        $order   = $request->input("order");
+        $search  = $request->input("search");
+        $columns = [
             0 => 'id',
             1 => 'title',
             2 => 'admin_verify',
@@ -3560,25 +3476,24 @@ class JobController extends Controller
             4 => 'created_at',
             5 => 'jobexpiry',
             6 => 'id',
-        );
+        ];
 
-        $query = JobPost::query()->where('admin_verify',0);
+        $query = JobPost::query()->where('admin_verify', 0);
         // Count Data
 
-        if (!empty($search)) {
+        if (! empty($search)) {
             $query->where('title', 'like', '%' . $search . '%');
         }
-    
+
         if ($order) {
             $column = $columns[$order[0]['column']];
-            $dir = $order[0]['dir'];
+            $dir    = $order[0]['dir'];
             $query->orderBy($column, $dir);
         }
 
         $totalRecords = $query->count();
 
         $records = $query->offset($offset)->limit($limit)->orderBy('id', 'desc')->get();
-
 
         $data = [];
         foreach ($records as $record) {
@@ -3588,8 +3503,8 @@ class JobController extends Controller
             $dataArray[] = ucfirst($record->title);
 
             $admin_verify = '<div class="d-flex">
-                    <span onclick="toggleVerifyOptions(' . $record->id . ');" 
-                          class="badge ' . ($record->admin_verify == 1 ? 'bg-success' : ($record->admin_verify == 0 ? 'bg-warning' : 'bg-danger')) . ' text-uppercase"  
+                    <span onclick="toggleVerifyOptions(' . $record->id . ');"
+                          class="badge ' . ($record->admin_verify == 1 ? 'bg-success' : ($record->admin_verify == 0 ? 'bg-warning' : 'bg-danger')) . ' text-uppercase"
                           style="cursor: pointer;">
                         ' . ($record->admin_verify == 1 ? 'Verified' : ($record->admin_verify == 0 ? 'Pending' : 'Rejected')) . '
                     </span>
@@ -3602,15 +3517,13 @@ class JobController extends Controller
                                         <button class="badge bg-danger text-uppercase" style="cursor: pointer; border: none; padding: 5px 10px;" onclick="changeVerifyStatus(' . $record->id . ', 2)">Reject</button>
                                     </div>
                                 </div>';
-            }
-            elseif ($record->admin_verify == 1) {
+            } elseif ($record->admin_verify == 1) {
                 $admin_verify .= '<div id="verify-options-' . $record->id . '" style="display: none; margin-top: 5px;">
                                     <div class="d-flex gap-2">
                                         <button class="badge bg-danger text-uppercase" style="cursor: pointer; border: none; padding: 5px 10px;" onclick="changeVerifyStatus(' . $record->id . ', 2)">Reject</button>
                                     </div>
                                 </div>';
-            }
-            else {
+            } else {
                 $admin_verify .= '<div id="verify-options-' . $record->id . '" style="display: none; margin-top: 5px;">
                                     <div class="d-flex gap-2">
                                         <button class="badge bg-success text-uppercase" style="cursor: pointer; border: none; padding: 5px 10px;" onclick="changeVerifyStatus(' . $record->id . ', 1)">Verify</button>
@@ -3620,15 +3533,11 @@ class JobController extends Controller
 
             $dataArray[] = $admin_verify;
 
-
-        
-
             $status = $record->status == 1
-                ? '<div class="d-flex "><span onclick="changeStatus(' . $record->id . ');" class="badge bg-success text-uppercase"  style="cursor: pointer;">Active</span></div>'
-                : '<div class="d-flex "><span onclick="changeStatus(' . $record->id . ');" class="badge bg-danger text-uppercase" style="cursor: pointer;">Inactive</span></div>';
+            ? '<div class="d-flex "><span onclick="changeStatus(' . $record->id . ');" class="badge bg-success text-uppercase"  style="cursor: pointer;">Active</span></div>'
+            : '<div class="d-flex "><span onclick="changeStatus(' . $record->id . ');" class="badge bg-danger text-uppercase" style="cursor: pointer;">Inactive</span></div>';
 
             $dataArray[] = $status;
-
 
             $dataArray[] = date('d-M-Y', strtotime($record->created_at));
             $dataArray[] = '<span style="color: red;">' . date('d-M-Y', strtotime($record->jobexpiry)) . '</span>';
@@ -3657,10 +3566,10 @@ class JobController extends Controller
         }
 
         return response()->json([
-            "draw" => $draw,
-            "recordsTotal" => $totalRecords,
+            "draw"            => $draw,
+            "recordsTotal"    => $totalRecords,
             "recordsFiltered" => $totalRecords,
-            "data" => $data
+            "data"            => $data,
         ]);
     }
 
