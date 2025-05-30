@@ -2,7 +2,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\CandidateProfile;
 use App\Models\Companies;
+use App\Models\JobApplication;
 use App\Models\JobCategory;
 use App\Models\JobCurrency;
 use App\Models\JobDepartment;
@@ -18,7 +20,9 @@ use App\Models\JobShift;
 use App\Models\JobSkill;
 use App\Models\JobTypes;
 use App\Models\Recruiter;
+use App\Models\UserProfile;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Validator;
 
@@ -2971,7 +2975,7 @@ class JobController extends Controller
             // $dataArray[] = $record->recruiter->name ?? 'N/A' - $record->recruiter->email ?? 'N/A';
             $dataArray[] = ($record->recruiter->name ?? 'N/A') . ' - ' . ($record->recruiter->email ?? 'N/A');
 
-            $dataArray[] = '<a href="' . route('Admin.AllApplicants') . '" class="badge bg-warning text-decoration-none" style="cursor: pointer;">' . $record->applications_count . ' Applied</a>';
+            $dataArray[] = '<a href="' . route('Admin.AppliedUserList', ['job_id' => Crypt::encrypt($record->id)]) . '" class="badge bg-warning text-decoration-none" style="cursor: pointer;">' . $record->applications_count . ' Applied</a>';
 
             $dataArray[] = date('d-M-Y', strtotime($record->created_at));
             // $dataArray[] = date('d-M-Y', strtotime($record->jobexpiry));
@@ -3054,6 +3058,290 @@ class JobController extends Controller
         } else {
             return response()->json(['status_code' => 2, 'message' => 'Id is required']);
         }
+    }
+
+    public function appliedUserList(Request $request)
+    {
+
+        // dd($request->all());
+        $job_id = $request->job_id;
+        $decryptedId = null;
+        if (! empty($job_id)) {
+            $decryptedId = Crypt::decrypt($job_id);
+        }
+        // dd($decryptedId);
+        $PostName = JobPost::where('id', $decryptedId)->value('title');
+        // dd($PostName);
+        $today   = Carbon::today();
+        $joblist = JobPost::select('id', 'title')->where('status', 1)->where('admin_verify', 1)->whereDate('jobexpiry', '>=', $today)->get();
+        $cities  = JobApplication::with('user')->get()->pluck('user.city')->filter()->unique()->values();
+        $skills  = CandidateProfile::pluck('skill')
+            ->filter()
+            ->flatMap(function ($item) {
+                // Remove square brackets and quotes
+                $item = str_replace(['[', ']', '"'], '', $item);
+
+                // Split and clean each skill
+                $skills  = explode(',', $item);
+                $cleaned = [];
+
+                foreach ($skills as $skill) {
+                    $skill = strtolower(trim($skill));
+                    if (! empty($skill)) {
+                        $cleaned[] = $skill;
+                    }
+                }
+
+                return $cleaned;
+            })
+            ->unique()
+            ->sort()
+            ->values();
+
+        // dd($skills);
+
+        $data = [
+            'qualifications' => UserProfile::select('qualification')->distinct()->pluck('qualification')->filter(),
+            'branches'       => UserProfile::select('branch')->distinct()->pluck('branch')->filter(),
+        ];
+
+        $experience = JobExperience::pluck('experience');
+
+        return view('admin.job.AppliedUserList', compact('joblist', 'cities', 'skills', 'data', 'decryptedId', 'experience', 'PostName'));
+    }
+
+    public function getAppliedUserList(Request $request)
+    {
+        $draw        = intval($request->input("draw"));
+        $offset      = intval($request->input("start", 0));
+        $limit       = intval($request->input('length', 10));
+        $order       = $request->input("order");
+        $decryptedId = $request->input('decryptedId');
+        $jobId       = $request->input('job_id');
+        // dd($jobId,$decryptedId);
+
+        $education_level = $request->input('education_level');
+        $Qualification   = $request->input('Qualification');
+        $Branch          = $request->input('Branch');
+
+        $city   = $request->input('city');
+        $status = $request->input('status');
+        $search = $request->input("search");
+
+        $ProfileStatus = $request->input('Profilestatus');
+
+        $skills = $request->input('skills'); // array
+                                             // $experience = $request->input('experience'); // array
+        $experience = $request->input('experience', []);
+
+        // dd($Qualification);
+        // If no job is selected, return empty result
+        // if (empty($jobId)) {
+        //     return response()->json([
+        //         "draw"            => $draw,
+        //         "recordsTotal"    => 0,
+        //         "recordsFiltered" => 0,
+        //         "data"            => [],
+        //     ]);
+        // }
+
+        $columns = [
+            0 => 'job_applications.id',
+            1 => 'job_applications.user_id',
+            2 => 'job_applications.user_id',
+            3 => 'job_applications.user_id',
+            4 => 'job_applications.user_id',
+            5 => 'job_applications.status',
+            6 => 'job_applications.created_at',
+            7 => 'job_applications.recruiter_view',
+
+        ];
+
+        // dd($decryptedId);
+        $query = JobApplication::with([
+            'user:id,name,lname,email,logo,education_level,city,experience',
+            'user.candidateProfile:skill',
+            'jobPost:id,title',
+        ])
+            ->select(['id', 'user_id', 'job_id', 'status', 'recruiter_view', 'created_at']);
+
+        if (! empty($jobId)) {
+            $query->where('job_id', $jobId);
+        } else {
+            $query->where('job_id', $decryptedId);
+        }
+
+        // ->where('job_id', !empty($jobId) ? $jobId : $decryptedId);
+
+        if (! empty($education_level)) {
+            $query->whereHas('user', function ($q) use ($education_level) {
+                $q->where('education_level', $education_level);
+            });
+        }
+
+        if (! empty($Qualification)) {
+            $query->whereHas('user', function ($q) use ($Qualification) {
+                $q->where('qualification', 'like', '%' . $Qualification . '%');
+            });
+        }
+
+        if (! empty($Branch)) {
+            $query->whereHas('user', function ($q) use ($Branch) {
+                $q->where('branch', 'like', '%' . $Branch . '%');
+            });
+        }
+
+        if (! empty($city)) {
+            $query->whereHas('user', function ($q) use ($city) {
+                $q->where('city', $city);
+            });
+        }
+
+        if (! empty($status)) {
+            $query->where('status', $status);
+        }
+
+        if (isset($ProfileStatus)) {
+            $query->where('recruiter_view', $ProfileStatus);
+        }
+
+        if (! empty($search)) {
+            $query->whereHas('user', function ($q) use ($search) {
+                $q->where('name', 'like', '%' . $search . '%')
+                    ->orWhere('email', 'like', '%' . $search . '%')
+                    ->orWhere('city', 'like', '%' . $search . '%');
+            });
+        }
+
+        if (! empty($skills)) {
+            $query->whereHas('user.candidateProfile', function ($q) use ($skills) {
+                foreach ($skills as $skill) {
+                    $q->where('skill', 'like', '%' . $skill . '%');
+                }
+            });
+        }
+
+        // if (! empty($experience)) {
+        //     $query->whereHas('user', function ($q) use ($experience) {
+        //         $q->where('experience', '<=', $experience);
+        //     });
+        // }
+        if (! empty($experience) && is_array($experience)) {
+            $experience = array_map('intval', $experience);
+            $min        = min($experience);
+            $max        = max($experience);
+
+            $query->whereHas('user', function ($q) use ($min, $max) {
+                $q->whereBetween('experience', [$min, $max]);
+            });
+        }
+
+        if ($order) {
+            $columnIndex = $order[0]['column'];
+            $columnName  = $columns[$columnIndex];
+            $dir         = $order[0]['dir'];
+
+            // Sort with recruiter_view = '0' first (as string)
+            $query->orderByRaw("recruiter_view = '0' DESC")->orderBy($columnName, $dir);
+        } else {
+            $query->orderByRaw("recruiter_view = '0' DESC")->orderBy('created_at', 'desc');
+        }
+
+        $totalRecords = $query->count();
+        $records      = $query->offset($offset)->limit($limit)->get();
+        // dd($records);
+        $data = [];
+        foreach ($records as $record) {
+            $dataArray = [];
+
+            $dataArray[] = $record->id;
+            // $dataArray[] = '<a href="' . route('Recruiter.ViewJobPost', ['id' => Crypt::encrypt($record->jobPost->id)]) . '" class="text-primary"> '.ucfirst($record->jobPost->title).'</a>';
+
+            $dataArray[] = '<div class="d-flex gap-2">
+                <a href="' . route('Recruiter.ApllicantsDetails', [
+                'userId' => Crypt::encrypt($record->user->id),
+                'jobId'  => Crypt::encrypt($record->jobPost->id),
+            ]) . '" class="text-primary text-decoration-none" data-bs-toggle="tooltip" title="View Profile">'
+            . ucfirst($record->user->name) . ' ' . $record->user->lname .
+                '</a>
+            </div>';
+
+            // $dataArray[] = ucfirst($record->user->name) .' '.$record->user->lname;
+            $dataArray[] = $record->user->email ?? 'N/A';
+            $dataArray[] = '<img src="' . asset($record->user->logo) . '" alt="Logo" style="height: 50px; width: 50px;border-radius:50px;" onclick="openImageModal(\'' . asset($record->user->logo) . '\')">';
+
+            $dataArray[] = $record->user->city ?? 'N/A';
+
+            // rejected shortlisted hired
+            if ($record->status === 'pending') {
+                $dataArray[] = '<span class="badge bg-warning text-dark">Applied</span>';
+
+            } elseif ($record->status === 'shortlisted') {
+                $dataArray[] = '<span class="badge bg-primary">' . ucfirst($record->status) . '</span>';
+
+            } elseif ($record->status === 'rejected') {
+                $dataArray[] = '<span class="badge bg-danger">' . ucfirst($record->status) . '</span>';
+            } elseif ($record->status === 'hired') {
+                $dataArray[] = '<span class="badge bg-success">' . ucfirst($record->status) . '</span>';
+            }
+
+            $dataArray[] = date('d-M-Y', strtotime($record->created_at));
+
+            // $dataArray[] = '<div class="d-flex gap-2">
+            //   <a href="' . route('Recruiter.ApllicantsDetails', [
+            //     'userId' => Crypt::encrypt($record->user->id),
+            //     'jobId'  => Crypt::encrypt($record->jobPost->id),
+            // ]) . '" class="badge bg-primary">View Profile</a>
+            // </div>';
+
+            $buttonClass = $record->recruiter_view == 1 ? 'bg-success text-white' : 'bg-warning text-dark';
+            $buttonLabel = $record->recruiter_view == 1 ? 'Viewed' : 'Not Viewed';
+
+            $dataArray[] = '<div class="d-flex gap-2">
+                                <span class="badge ' . $buttonClass . '">' . $buttonLabel . '</span>
+                            </div>';
+
+            $dataArray[] = '<div class="d-flex gap-2">
+                            <a href="' . route('Admin.ApllicantsDetails', [
+                'userId' => Crypt::encrypt($record->user->id),
+                'jobId'  => Crypt::encrypt($record->jobPost->id),
+            ]) . '" class="badge bg-success">View Profile</a>
+                                </div>';
+            $data[] = $dataArray;
+        }
+
+        return response()->json([
+            "draw"            => $draw,
+            "recordsTotal"    => $totalRecords,
+            "recordsFiltered" => $totalRecords,
+            "data"            => $data,
+        ]);
+    }
+
+    public function getUserListQualifications(Request $request)
+    {
+        $education_level = $request->input('education_level');
+
+        // Replace with your actual logic for fetching qualifications
+        $qualifications = UserProfile::where('education_level', $education_level)
+            ->pluck('qualification')
+            ->unique()
+            ->values();
+
+        return response()->json($qualifications);
+    }
+
+    public function getUserListBranches(Request $request)
+    {
+        $qualification = $request->input('qualification');
+
+        $branches = UserProfile::where('qualification', $qualification)
+            ->pluck('branch')
+            ->unique()
+            ->filter() // optional: removes null values
+            ->values();
+
+        return response()->json($branches);
     }
 
     public function deleteJobPost(Request $request)

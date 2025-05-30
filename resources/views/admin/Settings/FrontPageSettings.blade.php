@@ -24,6 +24,9 @@
                         <div class="col-md-2 mb-2">
                             <a href="/page4" class="btn btn-danger w-100">Go to Page 4</a>
                         </div>
+                        <div class="col-md-2 mb-2">
+                            <a href="{{ route('Admin.NewsSectionSettings') }}" class="btn btn-danger w-100">News Section</a>
+                        </div>
                     </div>
                 </div>
             </div>

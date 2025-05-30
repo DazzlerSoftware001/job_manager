@@ -278,4 +278,8 @@ class SettingsController extends Controller
         ]);
     }
 
+    public function newsSectionSettings () {
+        return view('admin.Settings.NewsSectionSettings');
+    }
+
 }

@@ -207,6 +207,10 @@ Route::prefix('Admin')->group(function () {
         Route::post('/GetJobPost', [JobController::class, 'getJobPost'])->name('Admin.GetJobPost');
         Route::post('/VerifyStatus', [JobController::class, 'verifyStatus'])->name('Admin.VerifyStatus');
         Route::post('/ChangeJobPostStatus',[JobController::class,'changeJobPostStatus'])->name('Admin.ChangeJobPostStatus');
+        Route::get('/AppliedUserList', [JobController::class, 'appliedUserList'])->name('Admin.AppliedUserList');
+        Route::post('/GetAppliedUserList', [JobController::class, 'getAppliedUserList'])->name('Admin.GetAppliedUserList');
+        Route::post('/GetUserListQualifications', [JobController::class, 'getUserListQualifications'])->name('Admin.GetUserListQualifications');
+        Route::post('/GetUserListBranches', [JobController::class, 'getUserListBranches'])->name('Admin.GetUserListBranches');
         Route::get('/ViewJobPost/{id}', [JobController::class, 'viewJobPost'])->name('Admin.ViewJobPost');
         Route::get('/EditJobPost/{id}',[JobController::class,'editJobPost'])->name('Admin.EditJobPost');
         Route::post('/UpdateJobPost',[JobController::class,'updateJobPost'])->name('Admin.UpdateJobPost');
@@ -283,6 +287,7 @@ Route::prefix('Admin')->group(function () {
         Route::get('/FrontPageSettings', [SettingsController::class, 'frontPageSettings'])->name('Admin.FrontPageSettings');
         Route::get('/HomeSectionSettings', [SettingsController::class, 'homeSectionSettings'])->name('Admin.HomeSectionSettings');
         Route::post('SubmitHomeSection', [SettingsController::class, 'submitHomeSection'])->name('Admin.SubmitHomeSection');
+        Route::get('/NewsSectionSettings', [SettingsController::class, 'newsSectionSettings'])->name('Admin.NewsSectionSettings');
 
         
         Route::post('/logout', [AuthController::class, 'logout'])->name('Admin.logout');
