@@ -4,6 +4,7 @@ namespace App\Providers;
 use App\Models\GeneralSetting;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Schema;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -20,8 +21,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $timezone = GeneralSetting::first()->timezone ?? 'Asia/Kolkata';
-        Config::set('app.timezone', $timezone);
-        date_default_timezone_set($timezone);
+        if (Schema::hasTable('general_setting')) {
+            $timezone = GeneralSetting::first()->timezone ?? 'Asia/Kolkata';
+            Config::set('app.timezone', $timezone);
+            date_default_timezone_set($timezone);
+        } else {
+            // Fallback during initial migration or setup
+            Config::set('app.timezone', 'Asia/Kolkata');
+            date_default_timezone_set('Asia/Kolkata');
+        }
     }
 }
