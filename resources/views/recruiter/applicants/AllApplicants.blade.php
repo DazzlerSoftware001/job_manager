@@ -117,7 +117,7 @@
                                         </select>
                                     </div>
 
-                                    <div class="col-2 mt-2">
+                                    {{-- <div class="col-2 mt-2">
                                         <label for="ExperienceFilter" class="form-label">Select Experience</label>
 
                                         <select id="ExperienceFilter" class="form-select">
@@ -126,6 +126,46 @@
                                                 <option value="{{ $exp }}">{{ $exp }}</option>
                                             @endforeach
                                         </select>
+                                    </div> --}}
+
+                                    {{-- <div class="col-12 col-md-4 mt-2">
+                                        <label class="form-label fw-bold">Select Experience</label>
+                                        <div class="border rounded p-2" style="max-height: 180px; overflow-y: auto;">
+                                            @foreach ($experience as $exp)
+                                                <div class="form-check mb-1">
+                                                    <input class="form-check-input" type="checkbox" name="experience[]"
+                                                        value="{{ $exp }}" id="exp_{{ $loop->index }}">
+                                                    <label class="form-check-label" for="exp_{{ $loop->index }}">
+                                                        {{ $exp }}
+                                                    </label>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    </div> --}}
+                                    <div class="col-12 col-md-2 mt-2">
+                                        <label class="form-label">Select Experience</label>
+
+                                        <div class="dropdown">
+                                            <button class="btn btn-outline-secondary form-control dropdown-toggle w-100 text-start"
+                                                type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                Select Experience
+                                            </button>
+                                            <ul class="dropdown-menu w-100 px-3"
+                                                style="max-height: 200px; overflow-y: auto;">
+                                                @foreach ($experience as $exp)
+                                                    <li>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                name="experience[]" value="{{ $exp }}"
+                                                                id="exp_{{ $loop->index }}">
+                                                            <label class="form-check-label" for="exp_{{ $loop->index }}">
+                                                                {{ $exp }}
+                                                            </label>
+                                                        </div>
+                                                    </li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
                                     </div>
 
                                     <div class="col-2 mt-2">
@@ -184,7 +224,8 @@
         <!-- End Page-content -->
 
         <!--Details Modal -->
-        <div class="modal fade" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel" aria-hidden="true">
+        <div class="modal fade" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel"
+            aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -261,7 +302,11 @@
                             data.Profilestatus = $('#ProfilestatusFilter').val(); // optional
                             data.search = $('#search').val();
                             data.skills = $('#skills').val();
-                            data.experience = $('#ExperienceFilter').val();
+                            // data.experience = $('#ExperienceFilter').val();
+                            data.experience = $('input[name="experience[]"]:checked')
+                                .map(function() {
+                                    return this.value;
+                                }).get();
 
                         }
 
@@ -274,12 +319,13 @@
                     $('#myTable').DataTable().draw();
                 }
 
-                $('#jobFilter, #education_level, #Qualification, #Branch, #cityFilter, #statusFilter, #ProfilestatusFilter, #skills, input[name="experience[]"]').on(
-                    'change',
-                    function() {
-                        $('#myTable').DataTable().draw();
-                        
-                    });
+                $('#jobFilter, #education_level, #Qualification, #Branch, #cityFilter, #statusFilter, #ProfilestatusFilter, #skills, input[name="experience[]"]')
+                    .on(
+                        'change',
+                        function() {
+                            $('#myTable').DataTable().draw();
+
+                        });
 
                 // 🔍 Trigger search if search box exists
                 $('#search').on('keyup', function(e) {
