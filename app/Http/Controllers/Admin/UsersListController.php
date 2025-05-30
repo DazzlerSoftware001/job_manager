@@ -336,12 +336,68 @@ class UsersListController extends Controller
     {
 
         $Recruiters = Recruiter::select('id', 'name', 'email')->where('user_type', 2)->where('status', 1)->get();
-        $today      = Carbon::today();
+        // $today      = Carbon::today();
 
-        $joblist = JobPost::select('id', 'title')->where('status', 1)->where('admin_verify', 1)->whereDate('jobexpiry', '>=', $today)->get();
+        // $joblist = JobPost::select('id', 'title')->where('status', 1)->where('admin_verify', 1)->whereDate('jobexpiry', '>=', $today)->get();
 
-        return view('admin.Users.AllApplicants', compact('Recruiters'));
+        $cities = JobApplication::with('user')->get()->pluck('user.city')->filter()->unique()->values();
+       
+        $skills = CandidateProfile::pluck('skill')
+            ->filter()
+            ->flatMap(function ($item) {
+                // Remove square brackets and quotes
+                $item = str_replace(['[', ']', '"'], '', $item);
+
+                // Split and clean each skill
+                $skills  = explode(',', $item);
+                $cleaned = [];
+
+                foreach ($skills as $skill) {
+                    $skill = strtolower(trim($skill));
+                    if (! empty($skill)) {
+                        $cleaned[] = $skill;
+                    }
+                }
+
+                return $cleaned;
+            })
+            ->unique()
+            ->sort()
+            ->values();
+
+        $experience = JobExperience::pluck('experience');
+
+
+        return view('admin.Users.AllApplicants', compact('Recruiters','cities','skills','experience'));
     }
+
+
+     public function getApplicantsQualifications(Request $request)
+    {
+        $education_level = $request->input('education_level');
+
+        // Replace with your actual logic for fetching qualifications
+        $qualifications = UserProfile::where('education_level', $education_level)
+            ->pluck('qualification')
+            ->unique()
+            ->values();
+
+        return response()->json($qualifications);
+    }
+
+    public function getApplicantsBranches(Request $request)
+    {
+        $qualification = $request->input('qualification');
+
+        $branches = UserProfile::where('qualification', $qualification)
+            ->pluck('branch')
+            ->unique()
+            ->filter() // optional: removes null values
+            ->values();
+
+        return response()->json($branches);
+    }
+
 
     public function getJobsByRecruiter(Request $request)
     {
@@ -363,6 +419,15 @@ class UsersListController extends Controller
         $order = $request->input("order");
 
         $JobFilter = $request->input("JobFilter");
+
+        $education_level = $request->input('education_level');
+        $Qualification   = $request->input('Qualification');
+        $Branch          = $request->input('Branch');
+        $city = $request->input('city');
+        $experience = $request->input('experience', []);
+        $skills = $request->input('skills'); // should be an array
+
+        // dd($education_level,$Qualification,$Branch,$city,$experience,$skills);
 
         if (empty($JobFilter)) {
             return response()->json([
@@ -386,7 +451,7 @@ class UsersListController extends Controller
         // $query = Jobpost::where('id', $JobFilter)->get();
 
         $query = JobApplication::with([
-            'user:id,name,lname,email,logo,education_level,city',
+            'user:id,name,lname,email,logo,education_level,qualification,branch,city,experience',
             'user.candidateProfile:skill',
             'jobPost:id,title',
         ])
@@ -394,6 +459,38 @@ class UsersListController extends Controller
 
         if (! empty($JobFilter)) {
             $query->where('job_id', $JobFilter);
+        }
+
+        if (! empty($city)) {
+            $query->whereHas('user', fn($q) => $q->where('city', $city));
+        }
+
+        if (! empty($education_level)) {
+            $query->whereHas('user', fn($q) => $q->where('education_level', $education_level));
+        }
+
+        if (! empty($Qualification)) {
+            $query->whereHas('user', fn($q) => $q->where('qualification', 'like', '%' . $Qualification . '%'));
+        }
+
+        if (! empty($Branch)) {
+            $query->whereHas('user', fn($q) => $q->where('branch', 'like', '%' . $Branch . '%'));
+        }
+
+        if (! empty($skills) && is_array($skills)) {
+            $query->whereHas('user.candidateProfile', function ($q) use ($skills) {
+                $q->where(function ($q2) use ($skills) {
+                    foreach ($skills as $skill) {
+                        $q2->orWhere('skill', 'like', '%' . $skill . '%');
+                    }
+                });
+            });
+        }
+
+        if (! empty($experience) && is_array($experience)) {
+            $query->whereHas('user', function ($q) use ($experience) {
+                $q->whereIn('experience', $experience);
+            });
         }
 
         if ($order) {
