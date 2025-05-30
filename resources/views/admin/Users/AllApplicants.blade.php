@@ -121,7 +121,7 @@
                                         </select>
                                     </div> --}}
 
-                                    <div class="col-12 col-md-4 mt-2">
+                                    {{-- <div class="col-12 col-md-4 mt-2">
                                         <label class="form-label fw-bold">Select Experience</label>
                                         <div class="border rounded p-2" style="max-height: 180px; overflow-y: auto;">
                                             @foreach ($experience as $exp)
@@ -133,6 +133,31 @@
                                                     </label>
                                                 </div>
                                             @endforeach
+                                        </div>
+                                    </div> --}}
+                                    <div class="col-12 col-md-2 mt-2">
+                                        <label class="form-label">Select Experience</label>
+
+                                        <div class="dropdown">
+                                            <button class="btn btn-outline-secondary form-control dropdown-toggle w-100 text-start"
+                                                type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                Select Experience
+                                            </button>
+                                            <ul class="dropdown-menu w-100 px-3"
+                                                style="max-height: 200px; overflow-y: auto;">
+                                                @foreach ($experience as $exp)
+                                                    <li>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox"
+                                                                name="experience[]" value="{{ $exp }}"
+                                                                id="exp_{{ $loop->index }}">
+                                                            <label class="form-check-label" for="exp_{{ $loop->index }}">
+                                                                {{ $exp }}
+                                                            </label>
+                                                        </div>
+                                                    </li>
+                                                @endforeach
+                                            </ul>
                                         </div>
                                     </div>
 

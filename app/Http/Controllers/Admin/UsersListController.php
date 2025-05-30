@@ -487,9 +487,18 @@ class UsersListController extends Controller
             });
         }
 
+        // if (! empty($experience) && is_array($experience)) {
+        //     $query->whereHas('user', function ($q) use ($experience) {
+        //         $q->whereIn('experience', $experience);
+        //     });
+        // }
         if (! empty($experience) && is_array($experience)) {
-            $query->whereHas('user', function ($q) use ($experience) {
-                $q->whereIn('experience', $experience);
+            $experience = array_map('intval', $experience);
+            $min        = min($experience);
+            $max        = max($experience);
+
+            $query->whereHas('user', function ($q) use ($min, $max) {
+                $q->whereBetween('experience', [$min, $max]);
             });
         }
 
