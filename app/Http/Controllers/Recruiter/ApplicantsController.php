@@ -4,12 +4,12 @@ namespace App\Http\Controllers\Recruiter;
 use App\Http\Controllers\Controller;
 use App\Models\CandidateProfile;
 use App\Models\JobApplication;
+use App\Models\JobExperience;
 use App\Models\JobPost;
 use App\Models\UserProfile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Crypt;
-use App\Models\JobExperience;
 
 class ApplicantsController extends Controller
 {
@@ -18,13 +18,13 @@ class ApplicantsController extends Controller
         // dd($request->all());
         $job_id      = $request->job_id;
         $decryptedId = null;
-        if(!empty($job_id)) {
+        if (! empty($job_id)) {
             $decryptedId = Crypt::decrypt($job_id);
         }
-        $today       = Carbon::today();
-        $joblist     = JobPost::select('id', 'title')->where('status', 1)->where('admin_verify', 1)->whereDate('jobexpiry', '>=', $today)->get();
-        $cities      = JobApplication::with('user')->get()->pluck('user.city')->filter()->unique()->values();
-        $skills      = CandidateProfile::pluck('skill')
+        $today   = Carbon::today();
+        $joblist = JobPost::select('id', 'title')->where('status', 1)->where('admin_verify', 1)->whereDate('jobexpiry', '>=', $today)->get();
+        $cities  = JobApplication::with('user')->get()->pluck('user.city')->filter()->unique()->values();
+        $skills  = CandidateProfile::pluck('skill')
             ->filter()
             ->flatMap(function ($item) {
                 // Remove square brackets and quotes
@@ -78,11 +78,11 @@ class ApplicantsController extends Controller
         $city   = $request->input('city');
         $status = $request->input('status');
         $search = $request->input("search");
-        
+
         $ProfileStatus = $request->input('Profilestatus');
 
         $skills = $request->input('skills'); // array
-        // $experience = $request->input('experience'); // array
+                                             // $experience = $request->input('experience'); // array
         $experience = $request->input('experience', []);
 
         // dd($Qualification);
@@ -113,16 +113,16 @@ class ApplicantsController extends Controller
             'user:id,name,lname,email,logo,education_level,city,experience',
             'user.candidateProfile:skill',
             'jobPost:id,title',
-        ]) 
+        ])
             ->select(['id', 'user_id', 'job_id', 'status', 'recruiter_view', 'created_at']);
 
-            if (!empty($jobId)) {
-                $query->where('job_id', $jobId);
-            } else {
-                $query->where('job_id', $decryptedId);
-            }
+        if (! empty($jobId)) {
+            $query->where('job_id', $jobId);
+        } else {
+            $query->where('job_id', $decryptedId);
+        }
 
-            // ->where('job_id', !empty($jobId) ? $jobId : $decryptedId);
+        // ->where('job_id', !empty($jobId) ? $jobId : $decryptedId);
 
         if (! empty($education_level)) {
             $query->whereHas('user', function ($q) use ($education_level) {
@@ -178,13 +178,13 @@ class ApplicantsController extends Controller
         //     });
         // }
         if (! empty($experience) && is_array($experience)) {
-            // Clean and cast to int
             $experience = array_map('intval', $experience);
+            $min        = min($experience);
+            $max        = max($experience);
 
-            $min = min($experience);
-            $max = max($experience);
-
-            $query->whereBetween('experience', [$min, $max]);
+            $query->whereHas('user', function ($q) use ($min, $max) {
+                $q->whereBetween('experience', [$min, $max]);
+            });
         }
 
         if ($order) {
