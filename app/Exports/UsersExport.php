@@ -10,9 +10,18 @@ class UsersExport implements FromCollection,WithHeadings
     /**
     * @return \Illuminate\Support\Collection
     */
+
+    protected $userId;
+
+    public function __construct($userId)
+    {
+        $this->userId = $userId;
+    }
+
+
     public function collection()
     {
-        return UserProfile::where('user_type', 0)->get([
+        return UserProfile::where('user_type', 0) ->where('id', $this->userId)->get([
             'id', 'name', 'email', 'phone', 'experience', 'city', 'status', 'created_at'
         ]);
     }

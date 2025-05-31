@@ -225,7 +225,7 @@ class UsersListController extends Controller
                                 </a>
 
                                 <!-- Export Excel -->
-                                <a href="' . route('Admin.UsersExportExcel') . '" 
+                                <a href="' . route('Admin.UsersExportExcel', ['id' => $record->id]) . '" 
                                 class="btn btn-sm btn-outline-success d-flex align-items-center gap-1">
                                     <i class="mdi mdi-file-excel"></i> Export
                                 </a>
@@ -420,9 +420,9 @@ class UsersListController extends Controller
 
     
 
-    public function UsersExportExcel()
+    public function UsersExportExcel($id)
     {
-        return Excel::download(new UsersExport, 'users_list.xlsx');
+        return Excel::download(new UsersExport($id), 'user_details.xlsx');
     }
     
 
