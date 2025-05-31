@@ -161,6 +161,12 @@ class UsersListController extends Controller
 
             $dataArray[] = date('d-M-Y', strtotime($record->created_at));
 
+             $dataArray[] = '<div class="d-flex gap-2">
+                                <a href="' . route('Admin.UsersDetails', [
+                                'userId' => Crypt::encrypt($record->id),
+                                 ]) . '" class="badge bg-success">View Profile</a>
+                            </div>';
+
             $dataArray[] = '<div class="d-flex gap-2">
                                 <div class="edit">
                                     <a href="' . route('Admin.EditUser', ['id' => Crypt::encrypt($record->id)]) . '" class="edit-item-btn text-primary">
@@ -331,6 +337,34 @@ class UsersListController extends Controller
             return response()->json(['status_code' => 2, 'message' => 'Id is required']);
         }
     }
+
+     public function UsersDetails($userId)
+    {
+        try {
+            $decryptedId = Crypt::decrypt($userId);
+        } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
+            abort(404, 'Invalid User ID');
+        }
+
+        // Load user with candidate profile
+        $user = UserProfile::with('candidateProfile', 'candidateQualification', 'candidateEmployment', 'candidateAward')->find($decryptedId);
+
+
+
+        // Check and increment view_profile if candidate profile exists
+        // if ($user && $user->candidateProfile) {
+        //     if (is_null($user->candidateProfile->view_profile)) {
+        //         $user->candidateProfile->view_profile = 1;
+        //         $user->candidateProfile->save();
+        //     } else {
+        //         $user->candidateProfile->increment('view_profile');
+        //     }
+        // }
+
+
+        return view('admin.Users.UsersDetails', compact('user'));
+    }
+    
 
     public function AllApplicants()
     {

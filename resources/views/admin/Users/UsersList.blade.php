@@ -211,6 +211,7 @@
                                                 <th>Image</th>
                                                 <th>Status</th>
                                                 <th>Registered Date</th>
+                                                <th>Profile</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
