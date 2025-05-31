@@ -96,28 +96,40 @@
             <div class="row justify-content-center mb-60">
                 <div class="col-xl-6 col-lg-10">
                     <div class="rts__section__content text-center wow animated fadeInUp">
-                        <h3 class="rts__section__title section__mb">How careernext Works</h3>
-                        <p class="rts__section__desc">Our job board offers a wide range</p>
+                        <h3 class="rts__section__title section__mb">
+                            {{ $WorkProcessSectionSettings->work_title ?? 'How careernext Works' }}</h3>
+                        <p class="rts__section__desc">
+                            {{ $WorkProcessSectionSettings->work_message ?? 'Our job board offers a wide range' }}</p>
                     </div>
                 </div>
             </div>
 
             <div class="row g-30 justify-content-center">
-                <div class="col-lg-4 col-md-10 wow animated fadeInUp" data-wow-delay=".1s">
-                    <div class="rts__workprocess__box">
-                        <div class="rts__icon">
-                            <img src="{{ url('user/assets/img/home-1/process/icon-1.svg') }}" alt="">
+                @if (!empty($WorkProcessSectionSettings->cards))
+                    @foreach ($WorkProcessSectionSettings->cards as $card)
+                        <div class="col-lg-4 col-md-10 wow animated fadeInUp" data-wow-delay=".1s">
+                            <div class="rts__workprocess__box">
+                                <div class="rts__icon">
+                                    {{-- <img src="{{ url('user/assets/img/home-1/process/icon-1.svg') }}" alt=""> --}}
+                                    <img src="{{ asset($card['icon']) }}" alt="">
+                                </div>
+                                <span
+                                    class="process__title h6 d-block">{{ $card['title'] ?? 'Create a Free Account' }}</span>
+                                <p> {{ $card['description'] ??
+                                    'Consectetur adipisicing elit. Possimus
+                                                                                                    aut mollitia eum ipsum fugiat odio officiis odit mollitia eum ipsum.' }}
+                                </p>
+                                <div class="work__readmore mt-3">
+                                    <a href="#">{{ $card['button_text'] ?? 'Read More' }} <i
+                                            class="fas fa-arrow-right"></i></a>
+                                </div>
+                            </div>
                         </div>
-                        <span class="process__title h6 d-block">Create a Free Account</span>
-                        <p>Consectetur adipisicing elit. Possimus
-                            aut mollitia eum ipsum fugiat odio officiis odit mollitia eum ipsum.
-                        </p>
-                        <div class="work__readmore mt-3">
-                            <a href="#">Read More <i class="fas fa-arrow-right"></i></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-10 wow animated fadeInUp" data-wow-delay=".2s">
+                    @endforeach
+                @else
+                    <p class="text-center">No news found.</p>
+                @endif
+                {{-- <div class="col-lg-4 col-md-10 wow animated fadeInUp" data-wow-delay=".2s">
                     <div class="rts__workprocess__box">
                         <div class="rts__icon">
                             <img src="{{ url('user/assets/img/home-1/process/icon-2.svg') }}" alt="">
@@ -144,7 +156,8 @@
                             <a href="#">Read More <i class="fas fa-arrow-right"></i></a>
                         </div>
                     </div>
-                </div>
+                </div> --}}
+
             </div>
         </div>
     </section>
@@ -276,44 +289,44 @@
             <div class="row">
                 <div class="cat__slider overflow-hidden swiper-data @@style"
                     data-swiper='
-    {
-    "slidesPerView": 4, 
-    "spaceBetween": 30,
-    "loop": true,
-    "speed": 1000,
-    "autoplay":{
-        "delay":"7000"
-    },
-    "pagination": {
-        "el": ".rts__pagination",
-        "clickable": true
-    },
-    "navigation": {
-        "nextEl": ".rts__slide__next",
-        "prevEl": ".rts__slide__prev"
-    },
-    "breakpoints": {
-        "0": {
-            "slidesPerView": 1
-        },
-        "490": {
-            "slidesPerView": 1.5
-        },
-        "768": {
-            "slidesPerView": 2
-        },
-        "1024": {
-            "slidesPerView": 3
-        },
-        "1200": {
-            "slidesPerView": 3.5
-        },
-        "1400": {
-            "slidesPerView": 4
-        }
-    }
+                {
+                "slidesPerView": 4, 
+                "spaceBetween": 30,
+                "loop": true,
+                "speed": 1000,
+                "autoplay":{
+                    "delay":"7000"
+                },
+                "pagination": {
+                    "el": ".rts__pagination",
+                    "clickable": true
+                },
+                "navigation": {
+                    "nextEl": ".rts__slide__next",
+                    "prevEl": ".rts__slide__prev"
+                },
+                "breakpoints": {
+                    "0": {
+                        "slidesPerView": 1
+                    },
+                    "490": {
+                        "slidesPerView": 1.5
+                    },
+                    "768": {
+                        "slidesPerView": 2
+                    },
+                    "1024": {
+                        "slidesPerView": 3
+                    },
+                    "1200": {
+                        "slidesPerView": 3.5
+                    },
+                    "1400": {
+                        "slidesPerView": 4
+                    }
+                }
 
-}'>
+            }'>
                     <div class="swiper-wrapper">
 
                         <div class="swiper-slide">
@@ -889,7 +902,7 @@
     <!-- pricing section end -->
 
     <!-- blog section -->
-    <div class="rts__section section__padding">
+    {{-- <div class="rts__section section__padding">
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-xl-6 col-lg-10">
@@ -899,7 +912,7 @@
                     </div>
                 </div>
             </div>
-            <div class="row justify-content-center justify-content-lg-start g-30">
+            <div class="row justify-content-center justify-content-cneter g-30">
                 <div class="col-lg-6 col-xl-4 col-md-10">
                     <div class="rts__single__blog">
                         <a href="blog-details.html" class="blog__img">
@@ -921,7 +934,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-6 col-xl-4 col-md-10">
+                 <div class="col-lg-6 col-xl-4 col-md-10">
                     <div class="rts__single__blog">
                         <a href="blog-details.html" class="blog__img">
                             <img src="{{ url('user/assets/img/home-1/blog/2.webp') }}" class="mb-2" alt="blog">
@@ -965,7 +978,61 @@
                 </div>
             </div>
         </div>
+    </div> --}}
+    <div class="rts__section section__padding">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-xl-6 col-lg-10">
+                    <div class="rts__section__content text-center wow animated fadeIn mb-60">
+                        <h3 class="rts__section__title section__mb">
+                            {{ $NewsSection->news_title ?? 'Read Our Latest News' }}
+                        </h3>
+                        <p class="rts__section__desc">
+                            {{ $NewsSection->news_message ?? 'Looking for your next career opportunity. Look no further' }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row justify-content-center g-30">
+                @if (!empty($NewsSection->cards))
+                    @foreach ($NewsSection->cards as $card)
+                        <div class="col-lg-6 col-xl-4 col-md-10">
+                            <div class="rts__single__blog">
+                                <a href="#" class="blog__img">
+                                    <img src="{{ asset($card['image']) }}" class="mb-2" alt="blog">
+                                </a>
+                                <div class="blog__meta">
+                                    <div class="blog__meta__info d-flex gap-3 my-3">
+                                        <span class="d-flex gap-1 align-items-center">
+                                            <img class="svg" src="{{ url('user/assets/img/icon/calender.svg') }}"
+                                                alt="">
+                                            {{ $card['date'] ?? '' }}
+                                        </span>
+                                        <a href="#" class="d-flex gap-1 align-items-center">
+                                            <img class="svg" src="{{ url('user/assets/img/icon/user.svg') }}"
+                                                alt="">
+                                            {{ $card['author'] ?? '' }}
+                                        </a>
+                                    </div>
+                                    <a href="#" class="h6 fw-semibold">
+                                        {{ $card['title'] ?? '' }}
+                                    </a>
+                                    <a href="#" class="readmore__btn d-flex mt-3 gap-2 align-items-center">
+                                        {{ $card['link_text'] ?? 'Read More' }}
+                                        <i class="fa-light fa-arrow-right"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                @else
+                    <p class="text-center">No news found.</p>
+                @endif
+            </div>
+        </div>
     </div>
+
     <!-- blog section end -->
 
     {{-- 

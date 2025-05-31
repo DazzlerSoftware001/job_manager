@@ -1,15 +1,15 @@
 <?php
-
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\CustomPage;
 use App\Models\HomePageSettings;
 use App\Models\JobPost;
+use App\Models\MaintenanceMode;
+use App\Models\NewsSectionSettings;
+use App\Models\WorkProcessSectionSettings;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
-use App\Models\MaintenanceMode;
 
 class HomeController extends Controller
 {
@@ -20,8 +20,12 @@ class HomeController extends Controller
         $today = Carbon::today();
 
         $location = JobPost::select('location')->where('status', 1)->where('admin_verify', 1)->whereDate('jobexpiry', '>=', $today)->distinct()->get();
-        $type        = JobPost::select('type', DB::raw('count(*) as count'))->where('status', 1)->where('admin_verify', 1)->whereDate('jobexpiry', '>=', $today)->groupBy('type')->get();
-        return view('User.Home', compact('HomeSection','location','type'));
+        $type     = JobPost::select('type', DB::raw('count(*) as count'))->where('status', 1)->where('admin_verify', 1)->whereDate('jobexpiry', '>=', $today)->groupBy('type')->get();
+
+        $NewsSection = NewsSectionSettings::first();
+        $WorkProcessSectionSettings = WorkProcessSectionSettings::first();
+
+        return view('User.Home', compact('HomeSection', 'location', 'type', 'NewsSection', 'WorkProcessSectionSettings'));
     }
 
     public function ViewPage($slug)
@@ -31,7 +35,8 @@ class HomeController extends Controller
         return view('user.CustomPage', compact('page'));
     }
 
-    public function maintenanceMode() {
+    public function maintenanceMode()
+    {
         $maintenance = MaintenanceMode::first();
         return view('User.MaintenanceMode', compact('maintenance'));
     }

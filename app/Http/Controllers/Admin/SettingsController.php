@@ -2,10 +2,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\BrandSectionSetting;
 use App\Models\GeneralSetting;
 use App\Models\HomePageSettings;
 use App\Models\MaintenanceMode;
 use App\Models\NewsSectionSettings;
+use App\Models\WorkProcessSectionSettings;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Validator;
@@ -223,11 +225,12 @@ class SettingsController extends Controller
 
     public function homePageSettings()
     {
-        $HomeSection = HomePageSettings::first();
-        $NewsSection = NewsSectionSettings::first();
-        $cards       = json_decode($news->cards ?? '[]', true);
+        $HomeSection                = HomePageSettings::first();
+        $NewsSection                = NewsSectionSettings::first();
+        $WorkProcessSectionSettings = WorkProcessSectionSettings::first();
+        $BrandSectionSetting = BrandSectionSetting::first();
 
-        return view('admin.Settings.HomeSectionSettings', compact('HomeSection', 'NewsSection', 'cards'));
+        return view('admin.Settings.HomeSectionSettings', compact('HomeSection', 'NewsSection', 'WorkProcessSectionSettings', 'BrandSectionSetting'));
     }
 
     public function submitHomeSection(Request $request)
@@ -348,5 +351,145 @@ class SettingsController extends Controller
             'message'     => 'News section saved successfully!',
         ]);
     }
+
+    public function submitWorkProcessSection(Request $request)
+    {
+        $rules = [
+            'section_title'       => 'required|string|max:255',
+            'section_message'     => 'required|string|max:255',
+            'cards'               => 'required|array',
+            'cards.*.title'       => 'required|string|max:255',
+            'cards.*.description' => 'required|string|max:255',
+            'cards.*.icon'        => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status_code' => 2,
+                'message'     => $validator->errors()->first(),
+            ]);
+        }
+
+        $section       = WorkProcessSectionSettings::first() ?? new WorkProcessSectionSettings();
+        $existingCards = is_array($section->cards) ? $section->cards : [];
+
+        $cards = [];
+
+        foreach ($request->cards as $index => $card) {
+            $oldImagePath = $existingCards[$index]['icon'] ?? null;
+
+            $cardData = [
+                'title'       => $card['title'] ?? '',
+                'description' => $card['description'] ?? '',
+                'button_text' => $card['button_text'] ?? 'Read More',
+            ];
+
+            if (isset($card['icon']) && is_object($card['icon'])) {
+                // Delete old image
+                if ($oldImagePath && file_exists(public_path($oldImagePath))) {
+                    @unlink(public_path($oldImagePath));
+                }
+
+                $image     = $card['icon'];
+                $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+                $image->move(public_path('settings/workProcess/'), $imageName);
+                $cardData['icon'] = 'settings/workProcess/' . $imageName;
+            } elseif (! empty($oldImagePath)) {
+                $cardData['icon'] = $oldImagePath;
+            } else {
+                $cardData['icon'] = null;
+            }
+
+            $cards[] = $cardData;
+        }
+
+        $section->work_title   = $request->section_title;
+        $section->work_message = $request->section_message;
+        $section->cards        = $cards;
+        $section->save();
+
+        return response()->json([
+            'status_code' => 1,
+            'message'     => 'How Work Process Section saved successfully!',
+        ]);
+    }
+
+    public function submitBrandSection(Request $request)
+    {
+        $rules = [
+            'section_title' => 'nullable|string|max:255',
+            'logos'         => 'nullable|array',
+            'logos.*'       => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status_code' => 2,
+                'message'     => $validator->errors()->first(),
+            ]);
+        }
+
+        $brandSection = BrandSectionSetting::first(); // Only one record expected
+
+        $uploadedLogos = [];
+        if ($request->hasFile('logos')) {
+            foreach ($request->file('logos') as $file) {
+                $name = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                $file->move(public_path('settings/brands'), $name);
+                $uploadedLogos[] = 'settings/brands/' . $name;
+            }
+        }
+
+        if ($brandSection) {
+            // Merge old logos with new ones
+            $existingLogos = $brandSection->logos ?? [];
+            $mergedLogos   = array_merge($existingLogos, $uploadedLogos);
+
+            $brandSection->update([
+                'title' => $request->section_title,
+                'logos' => $mergedLogos,
+            ]);
+        } else {
+            BrandSectionSetting::create([
+                'title' => $request->section_title,
+                'logos' => $uploadedLogos,
+            ]);
+        }
+
+        return response()->json([
+            'status_code' => 1,
+            'message'     => 'Brand section updated successfully!',
+        ]);
+    }
+
+    public function deleteBrandLogo(Request $request)
+{
+    $logoToDelete = $request->input('logo');
+
+    $brandSection = BrandSectionSetting::first();
+
+    if (!$brandSection || !is_array($brandSection->logos)) {
+        return response()->json(['status_code' => 0, 'message' => 'No logos found.']);
+    }
+
+    $updatedLogos = array_filter($brandSection->logos, function ($logo) use ($logoToDelete) {
+        return $logo !== $logoToDelete;
+    });
+
+    // Delete file from public directory
+    $logoPath = public_path($logoToDelete);
+    if (file_exists($logoPath)) {
+        unlink($logoPath);
+    }
+
+    $brandSection->update(['logos' => array_values($updatedLogos)]); // re-index array
+
+    return response()->json(['status_code' => 1, 'message' => 'Logo deleted successfully.']);
+}
 
 }

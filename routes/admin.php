@@ -290,6 +290,11 @@ Route::prefix('Admin')->group(function () {
         Route::get('/HomePageSettings', [SettingsController::class, 'homePageSettings'])->name('Admin.HomePageSettings');
         Route::post('SubmitHomeSection', [SettingsController::class, 'submitHomeSection'])->name('Admin.SubmitHomeSection');
         Route::post('/SubmitNewsSection', [SettingsController::class, 'submitNewsSection'])->name('Admin.SubmitNewsSection');
+        Route::post('/SubmitWorkProcessSection', [SettingsController::class, 'submitWorkProcessSection'])->name('Admin.SubmitWorkProcessSection');
+        Route::post('/SubmitBrandSection', [SettingsController::class, 'submitBrandSection'])->name('Admin.SubmitBrandSection');
+        Route::post('/DeleteBrandLogo', [SettingsController::class, 'deleteBrandLogo'])->name('Admin.DeleteBrandLogo');
+        Route::post('/SubmitWhatWeAreSection', [SettingsController::class, 'submitWhatWeAreSection'])->name('Admin.SubmitWhatWeAreSection');
+
 
         
         Route::post('/logout', [AuthController::class, 'logout'])->name('Admin.logout');
