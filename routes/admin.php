@@ -158,6 +158,8 @@ Route::prefix('Admin')->group(function () {
         Route::get('/EditUser/{id}', [UsersListController::class, 'EditUser'])->name('Admin.EditUser');
         Route::post('/UpdateUser', [UsersListController::class, 'UpdateUser'])->name('Admin.UpdateUser');
         Route::post('/DeleteUser', [UsersListController::class, 'DeleteUser'])->name('Admin.DeleteUser');
+        Route::get('/UsersDetails/{userId}', [UsersListController::class, 'UsersDetails'])->name('Admin.UsersDetails');
+
 
         Route::get('All-Applicants', [UsersListController::class, 'AllApplicants'])->name('Admin.AllApplicants');
         Route::get('GetRecruiterJobs', [UsersListController::class, 'getJobsByRecruiter'])->name('Admin.getJobsByRecruiter');
@@ -285,9 +287,9 @@ Route::prefix('Admin')->group(function () {
 
         // Front Page Settings
         Route::get('/FrontPageSettings', [SettingsController::class, 'frontPageSettings'])->name('Admin.FrontPageSettings');
-        Route::get('/HomeSectionSettings', [SettingsController::class, 'homeSectionSettings'])->name('Admin.HomeSectionSettings');
+        Route::get('/HomePageSettings', [SettingsController::class, 'homePageSettings'])->name('Admin.HomePageSettings');
         Route::post('SubmitHomeSection', [SettingsController::class, 'submitHomeSection'])->name('Admin.SubmitHomeSection');
-        Route::get('/NewsSectionSettings', [SettingsController::class, 'newsSectionSettings'])->name('Admin.NewsSectionSettings');
+        Route::post('/SubmitNewsSection', [SettingsController::class, 'submitNewsSection'])->name('Admin.SubmitNewsSection');
 
         
         Route::post('/logout', [AuthController::class, 'logout'])->name('Admin.logout');

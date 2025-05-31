@@ -13,7 +13,7 @@
                 <div class="card p-3">
                     <div class="row">
                         <div class="col-md-2 mb-2">
-                            <a href="{{ route('Admin.HomeSectionSettings') }}" class="btn btn-primary w-100">Home Section</a>
+                            <a href="{{ route('Admin.HomePageSettings') }}" class="btn btn-primary w-100">Home Section</a>
                         </div>
                         <div class="col-md-2 mb-2">
                             <a href="/page2" class="btn btn-success w-100">Go to Page 2</a>
@@ -23,9 +23,6 @@
                         </div>
                         <div class="col-md-2 mb-2">
                             <a href="/page4" class="btn btn-danger w-100">Go to Page 4</a>
-                        </div>
-                        <div class="col-md-2 mb-2">
-                            <a href="{{ route('Admin.NewsSectionSettings') }}" class="btn btn-danger w-100">News Section</a>
                         </div>
                     </div>
                 </div>

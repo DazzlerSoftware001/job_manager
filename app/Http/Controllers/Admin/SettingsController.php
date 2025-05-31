@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 use App\Models\GeneralSetting;
 use App\Models\HomePageSettings;
 use App\Models\MaintenanceMode;
+use App\Models\NewsSectionSettings;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Validator;
@@ -220,10 +221,13 @@ class SettingsController extends Controller
         return view('admin.Settings.FrontPageSettings');
     }
 
-    public function homeSectionSettings()
+    public function homePageSettings()
     {
         $HomeSection = HomePageSettings::first();
-        return view('admin.Settings.HomeSectionSettings', compact('HomeSection'));
+        $NewsSection = NewsSectionSettings::first();
+        $cards       = json_decode($news->cards ?? '[]', true);
+
+        return view('admin.Settings.HomeSectionSettings', compact('HomeSection', 'NewsSection', 'cards'));
     }
 
     public function submitHomeSection(Request $request)
@@ -278,8 +282,71 @@ class SettingsController extends Controller
         ]);
     }
 
-    public function newsSectionSettings () {
-        return view('admin.Settings.NewsSectionSettings');
+    public function submitNewsSection(Request $request)
+    {
+        $data = $request->validate([
+            'news_title'         => 'nullable|string|max:255',
+            'news_message'       => 'nullable|string|max:255',
+            'cards'              => 'nullable|array',
+            'cards.*.date'       => 'nullable|string|max:255',
+            'cards.*.author'     => 'nullable|string|max:255',
+            'cards.*.title'      => 'nullable|string|max:255',
+            'cards.*.link_text'  => 'nullable|string|max:255',
+            'cards.*.image'      => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'cards.*.image_path' => 'nullable|string',
+        ]);
+
+        $newsSection = NewsSectionSettings::first() ?? new NewsSectionSettings();
+
+        // Decode existing cards if any
+        $existingCards = is_array($newsSection->cards) ? $newsSection->cards : [];
+
+        $cards = [];
+
+        if (! empty($request->cards)) {
+            foreach ($request->cards as $index => $card) {
+                $oldImagePath = $existingCards[$index]['image'] ?? null;
+
+                $cardData = [
+                    'date'      => $card['date'] ?? '',
+                    'author'    => $card['author'] ?? '',
+                    'title'     => $card['title'] ?? '',
+                    'link_text' => $card['link_text'] ?? 'Read More',
+                ];
+
+                if (! empty($card['image'])) {
+                    // Delete old image if a new one is uploaded
+                    if ($oldImagePath && file_exists(public_path($oldImagePath))) {
+                        @unlink(public_path($oldImagePath));
+                    }
+
+                    $image     = $card['image'];
+                    $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+                    $image->move(public_path('settings/News/'), $imageName);
+                    $cardData['image'] = 'settings/News/' . $imageName;
+
+                } elseif (! empty($oldImagePath)) {
+                    // Keep old image path
+                    $cardData['image'] = $oldImagePath;
+
+                } else {
+                    // No image and no old image
+                    $cardData['image'] = null;
+                }
+
+                $cards[] = $cardData;
+            }
+        }
+
+        $newsSection->news_title   = $request->news_title;
+        $newsSection->news_message = $request->news_message;
+        $newsSection->cards        = $cards;
+        $newsSection->save();
+
+        return response()->json([
+            'status_code' => 1,
+            'message'     => 'News section saved successfully!',
+        ]);
     }
 
 }
