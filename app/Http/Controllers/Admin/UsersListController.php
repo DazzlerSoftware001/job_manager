@@ -12,6 +12,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Validator;
+use App\Exports\UsersExport;
+use App\Exports\FilteredUsersExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class UsersListController extends Controller
 {
@@ -152,6 +155,26 @@ class UsersListController extends Controller
             $dataArray[] = $record->email;
             $dataArray[] = $record->phone;
             $dataArray[] = '<img src="' . asset($record->logo) . '" alt="Logo" style="height: 50px; width: 50px; border-radius:50%; object-fit: cover; cursor: pointer;" onclick="openImageModal(\'' . asset($record->logo) . '\')">';
+            // $dataArray[] = $record->experience;
+
+            $exp = $record->experience ?? null;
+            $years = $months = 0;
+            $formattedExperience = 'N/A';
+
+            if ($exp) {
+                $parts = explode('.', number_format($exp, 2, '.', ''));
+                $years = (int) $parts[0];
+                $months = isset($parts[1]) ? (int) round(($parts[1] / 100) * 12) : 0;
+
+                $formattedExperience = $years . ' Year' . ($years != 1 ? 's' : '');
+                if ($months > 0) {
+                    $formattedExperience .= ' ' . $months . ' Month' . ($months != 1 ? 's' : '');
+                }
+            }
+
+            $dataArray[] = $formattedExperience;
+            $dataArray[] = $record->city;
+
 
             $status = $record->status == 1
             ? '<div class="d-flex"><span onclick="changeStatus(' . $record->id . ');" class="badge bg-success text-uppercase"  style="cursor: pointer;">Active</span></div>'
@@ -167,18 +190,48 @@ class UsersListController extends Controller
                                  ]) . '" class="badge bg-success">View Profile</a>
                             </div>';
 
+            // $dataArray[] = '<div class="d-flex gap-2">
+            //                     <div class="edit">
+            //                         <a href="' . route('Admin.EditUser', ['id' => Crypt::encrypt($record->id)]) . '" class="edit-item-btn text-primary">
+            //                             <i class="far fa-edit"></i>
+            //                         </a>
+            //                     </div>
+            //                     <div class="remove">
+            //                         <a href="javascript:void(0);" class="remove-item-btn text-danger" onclick="deleteRecord(' . $record->id . ');">
+            //                             <i class="far fa-trash-alt"></i>
+            //                         </a>
+            //                     </div>
+
+            //                      <div>
+            //                         <a href="' . route('Admin.UsersExportExcel') . '" class="btn text-primary">
+            //                             <i class="mdi mdi-file-excel"></i> Export Excel
+            //                         </a>
+            //                     </div>
+
+
+            //                 </div>';
+
             $dataArray[] = '<div class="d-flex gap-2">
-                                <div class="edit">
-                                    <a href="' . route('Admin.EditUser', ['id' => Crypt::encrypt($record->id)]) . '" class="edit-item-btn text-primary">
-                                        <i class="far fa-edit"></i>
-                                    </a>
-                                </div>
-                                <div class="remove">
-                                    <a href="javascript:void(0);" class="remove-item-btn text-danger" onclick="deleteRecord(' . $record->id . ');">
-                                        <i class="far fa-trash-alt"></i>
-                                    </a>
-                                </div>
+                                <!-- Edit -->
+                                <a href="' . route('Admin.EditUser', ['id' => Crypt::encrypt($record->id)]) . '" 
+                                class="btn btn-sm btn-outline-primary d-flex align-items-center gap-1">
+                                    <i class="far fa-edit"></i>
+                                </a>
+
+                                <!-- Delete -->
+                                <a href="javascript:void(0);" onclick="deleteRecord(' . $record->id . ');" 
+                                class="btn btn-sm btn-outline-danger d-flex align-items-center gap-1">
+                                    <i class="far fa-trash-alt"></i>
+                                </a>
+
+                                <!-- Export Excel -->
+                                <a href="' . route('Admin.UsersExportExcel') . '" 
+                                class="btn btn-sm btn-outline-success d-flex align-items-center gap-1">
+                                    <i class="mdi mdi-file-excel"></i> Export
+                                </a>
                             </div>';
+
+
 
             $data[] = $dataArray;
         }
@@ -338,7 +391,7 @@ class UsersListController extends Controller
         }
     }
 
-     public function UsersDetails($userId)
+    public function UsersDetails($userId)
     {
         try {
             $decryptedId = Crypt::decrypt($userId);
@@ -364,6 +417,20 @@ class UsersListController extends Controller
 
         return view('admin.Users.UsersDetails', compact('user'));
     }
+
+    
+
+    public function UsersExportExcel()
+    {
+        return Excel::download(new UsersExport, 'users_list.xlsx');
+    }
+    
+
+    public function FilteredUsersExportExcel(Request $request)
+    {
+        return Excel::download(new FilteredUsersExport($request->all()), 'Filtered_users_list.xlsx');
+    }
+
     
 
     public function AllApplicants()

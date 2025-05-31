@@ -56,33 +56,13 @@
 
                                     </div>
 
-                                    {{-- Qualification --}}
-                                    {{-- <div class="col-2 mt-2">
-                                        <label for="Qualification" class="form-label">Qualification</label>
-                                        <select id="Qualification" class="form-select">
-                                                <option value="">Select</option>
-                                                @foreach ($data['qualifications'] as $qualification)
-                                                    <option value="{{ $qualification }}">{{ $qualification }}</option>
-                                                @endforeach
-                                        </select>
-                                    </div> --}}
-
                                     <div class="col-2 mt-2">
                                         <label for="Qualification" class="form-label">Qualification</label>
                                         <select id="Qualification" class="form-select">
                                             <option value="">Select</option>
                                         </select>
                                     </div>
-                                    {{-- Branch --}}
-                                    {{-- <div class="col-2 mt-2">
-                                        <label for="Branch" class="form-label">Branch</label>
-                                        <select id="Branch" class="form-select">
-                                                <option value="">Select</option>
-                                                @foreach ($data['branches'] as $branche)
-                                                    <option value="{{ $branche }}">{{ $branche }}</option>
-                                                @endforeach
-                                        </select>
-                                    </div> --}}
+                                 
                                     <div class="col-2 mt-2">
                                         <label for="Branch" class="form-label">Branch</label>
                                         <select id="Branch" class="form-select">
@@ -102,53 +82,6 @@
                                         </select>
                                     </div>
 
-                                    {{-- <div class="col-2 mt-2">
-                                        <label for="statusFilter" class="form-label">Select Status</label>
-
-                                        <select id="statusFilter" class="form-select">
-                                            <option value="">Status</option>
-                                            <option value="pending">Applied</option>
-                                            <option value="shortlisted">ShortListed</option>
-                                            <option value="hired">Hired</option>
-                                            <option value="rejected">Rejected</option>
-                                        </select>
-                                    </div> --}}
-
-                                    {{-- <div class="col-2 mt-2">
-                                        <label for="ProfilestatusFilter" class="form-label">Select Profile Status</label>
-
-                                        <select id="ProfilestatusFilter" class="form-select">
-                                            <option value="">Status</option>
-                                            <option value="1">Viewed</option>
-                                            <option value="0">Not Viewed</option>
-                                        </select>
-                                    </div> --}}
-
-                                    {{-- <div class="col-2 mt-2">
-                                        <label for="ExperienceFilter" class="form-label">Select Experience</label>
-
-                                        <select id="ExperienceFilter" class="form-select">
-                                            <option value="">Experience</option>
-                                            @foreach ($experience as $exp)
-                                                <option value="{{ $exp }}">{{ $exp }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div> --}}
-
-                                    {{-- <div class="col-12 col-md-4 mt-2">
-                                        <label class="form-label fw-bold">Select Experience</label>
-                                        <div class="border rounded p-2" style="max-height: 180px; overflow-y: auto;">
-                                            @foreach ($experience as $exp)
-                                                <div class="form-check mb-1">
-                                                    <input class="form-check-input" type="checkbox" name="experience[]"
-                                                        value="{{ $exp }}" id="exp_{{ $loop->index }}">
-                                                    <label class="form-check-label" for="exp_{{ $loop->index }}">
-                                                        {{ $exp }}
-                                                    </label>
-                                                </div>
-                                            @endforeach
-                                        </div>
-                                    </div> --}}
 
                                     <div class="col-12 col-md-2 mt-2">
                                         <label class="form-label">Select Experience</label>
@@ -194,6 +127,14 @@
                                         </select>
 
                                     </div>
+                                    <div class="col-6 mt-2">
+                                    </div>
+
+                                    <div class="col-3 mt-5 text-end">
+                                        <a href="{{ route('Admin.FilteredUsersExportExcel', request()->query()) }}" class="btn btn-sm btn-outline-success">
+                                            <i class="mdi mdi-file-excel"></i> Export All
+                                        </a>
+                                    </div>
 
                                 </div>
 
@@ -209,6 +150,8 @@
                                                 <th>Email</th>
                                                 <th>Mobile</th>
                                                 <th>Image</th>
+                                                <th>Experience</th>
+                                                <th>City</th>
                                                 <th>Status</th>
                                                 <th>Registered Date</th>
                                                 <th>Profile</th>
