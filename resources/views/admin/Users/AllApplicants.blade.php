@@ -195,6 +195,7 @@
                                                 <th>Image</th>
                                                 {{-- <th>Status</th> --}}
                                                 {{-- <th>Registered Date</th> --}}
+                                                <th>Excel</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>

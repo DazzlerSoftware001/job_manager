@@ -168,6 +168,8 @@ Route::prefix('Admin')->group(function () {
         Route::post('/GetApplicantsQualifications', [UsersListController::class, 'getApplicantsQualifications'])->name('Admin.GetApplicantsQualifications');
         Route::post('/GetApplicantsBranches', [UsersListController::class, 'getApplicantsBranches'])->name('Admin.GetApplicantsBranches');
         Route::post('Get-Applicants', [UsersListController::class, 'GetApplicants'])->name('Admin.GetApplicants');
+        Route::get('/ApplicantExport-excel/{id}', [UsersListController::class, 'ApplicantExportExcel'])->name('Admin.ApplicantExportExcel');
+        
         Route::get('/ApllicantsDetails/{userId}/{jobId}', [UsersListController::class, 'ApllicantsDetails'])->name('Admin.ApllicantsDetails');
 
          Route::get('/CandidateShortlist/{userId}/{jobId}', [UsersListController::class, 'CandidateShortlist'])->name('Admin.CandidateShortlist');

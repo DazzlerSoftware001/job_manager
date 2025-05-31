@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Validator;
 use App\Exports\UsersExport;
 use App\Exports\FilteredUsersExport;
+use App\Exports\ApplicantExport;
 use Maatwebsite\Excel\Facades\Excel;
 
 class UsersListController extends Controller
@@ -646,12 +647,25 @@ class UsersListController extends Controller
             //                     </div>
             //                 </div>';
 
+
+
             $dataArray[] = '<div class="d-flex gap-2">
-                                <a href="' . route('Admin.ApllicantsDetails', [
-                'userId' => Crypt::encrypt($record->user->id),
-                'jobId'  => Crypt::encrypt($record->jobPost->id),
-            ]) . '" class="badge bg-success">View Profile</a>
+                                <a href="' . route('Admin.ApplicantExportExcel', ['id' => $record->user->id]) . '" 
+                                    class="btn btn-sm btn-outline-success d-flex align-items-center gap-1">
+                                    <i class="mdi mdi-file-excel"></i> Export
+                                </a>
                             </div>';
+
+            $dataArray[] = '<div class="d-flex gap-2">
+                                <div class="edit">
+                                    <a href="' . route('Admin.EditUser', ['id' => Crypt::encrypt($record->id)]) . '" class="edit-item-btn text-primary">
+                                        <i class="far fa-edit"></i>
+                                    </a>
+                                </div>
+                               
+                            </div>';
+
+            
 
             $data[] = $dataArray;
         }
@@ -707,6 +721,13 @@ class UsersListController extends Controller
 
         return view('admin.Users.ApllicantsDetails', compact('user', 'DecJob_Id', 'application', 'JobPost'));
     }
+
+
+    public function ApplicantExportExcel($id)
+    {
+        return Excel::download(new ApplicantExport($id), 'ApplicantExport.xlsx');
+    }
+    
 
     public function CandidateShortlist($userId, $Job_Id)
     {
