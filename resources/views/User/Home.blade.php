@@ -117,7 +117,7 @@
                                     class="process__title h6 d-block">{{ $card['title'] ?? 'Create a Free Account' }}</span>
                                 <p> {{ $card['description'] ??
                                     'Consectetur adipisicing elit. Possimus
-                                                                                                    aut mollitia eum ipsum fugiat odio officiis odit mollitia eum ipsum.' }}
+                                                                                                                                                                                                                                                                                                                                    aut mollitia eum ipsum fugiat odio officiis odit mollitia eum ipsum.' }}
                                 </p>
                                 <div class="work__readmore mt-3">
                                     <a href="#">{{ $card['button_text'] ?? 'Read More' }} <i
@@ -612,54 +612,69 @@
     <!-- current open position end -->
 
     <!-- what we are -->
-    <div class="rts__section pb-120">
-        <div class="container">
-            <div class="row align-items-center g-5">
-                <div class="col-lg-5">
-                    <div class="rts__image__section">
-                        <img src="{{ url('user/assets/img/home-1/we-are/image.webp') }}" alt="">
-                    </div>
-                </div>
-                <div class="col-lg-7">
-                    <div class="rts__content__section ms-lg-4 ms-md-0 wow animated fadeInUp">
-                        <h3 class="fw-bold mb-4">Why We Are Most Popular</h3>
-                        <p>Whether you're an experienced professional or a fresh graduate eager to dive into the workforce,
-                            we have something for everyone. From tech wizards to marketing mavens, finance gurus to creative
-                            minds, our diverse range of listings caters to a variety of skills and interests.</p>
-                        <div class="mt-40 rts__listing">
-                            <div class="single__listing d-flex align-items-center gap-4">
-                                <span class="icon">
-                                    <i class="fa-regular fa-check"></i>
-                                </span>
-                                <span>Quality Job</span>
-                            </div>
-                            <div class="single__listing d-flex align-items-center gap-4">
-                                <span class="icon">
-                                    <i class="fa-regular fa-check"></i>
-                                </span>
-                                <span>Reach 100s contacts</span>
-                            </div>
-                            <div class="single__listing d-flex align-items-center gap-4">
-                                <span class="icon">
-                                    <i class="fa-regular fa-check"></i>
-                                </span>
-                                <span>No Extra Charge</span>
-                            </div>
-                            <div class="single__listing d-flex align-items-center gap-4">
-                                <span class="icon">
-                                    <i class="fa-regular fa-check"></i>
-                                </span>
-                                <span>Internation job </span>
-                            </div>
+    @if ($WhatWeAreSectionSettings && $WhatWeAreSectionSettings->show_section !== 0)
+        <div class="rts__section pb-120">
+            <div class="container">
+                <div class="row align-items-center g-5">
+                    <div class="col-lg-5">
+                        <div class="rts__image__section">
+                            @if (!empty($WhatWeAreSectionSettings->section_image))
+                                <img src="{{ asset($WhatWeAreSectionSettings->section_image) }}" alt="">
+                            @else
+                                <img src="{{ url('user/assets/img/home-1/we-are/image.webp') }}" alt="">
+                            @endif
                         </div>
-                        <a href="job-list-2.html" class="rts__btn common__btn  fill__btn mt-50">Explore More <i
-                                class="fa-regular fa-arrow-right"></i></a>
+                    </div>
+                    <div class="col-lg-7">
+                        <div class="rts__content__section ms-lg-4 ms-md-0 wow animated fadeInUp">
+                            <h3 class="fw-bold mb-4">{{ $WhatWeAreSectionSettings->title ?? 'Why We Are Most Popular' }}
+                            </h3>
+                            <p>{{ $WhatWeAreSectionSettings->description ?? 'Whether you\'re an experienced professional or a fresh graduate eager to dive into the workforce, we have something for everyone. From tech wizards to marketing mavens, finance gurus to creative minds, our diverse range of listings caters to a variety of skills and interests.' }}
+                            </p>
 
+                            <div class="mt-40 rts__listing">
+                                @if (!empty($WhatWeAreSectionSettings->points))
+                                    @foreach ($WhatWeAreSectionSettings->points as $point)
+                                        <div class="single__listing d-flex align-items-center gap-4">
+                                            <span class="icon">
+                                                <i class="fa-regular fa-check"></i>
+                                            </span>
+                                            <span>{{ $point }}</span>
+                                        </div>
+                                    @endforeach
+                                @else
+                                    <div class="single__listing d-flex align-items-center gap-4">
+                                        <span class="icon">
+                                            <i class="fa-regular fa-check"></i>
+                                        </span>
+                                        <span>Reach 100s contacts</span>
+                                    </div>
+                                    <div class="single__listing d-flex align-items-center gap-4">
+                                        <span class="icon">
+                                            <i class="fa-regular fa-check"></i>
+                                        </span>
+                                        <span>No Extra Charge</span>
+                                    </div>
+                                    <div class="single__listing d-flex align-items-center gap-4">
+                                        <span class="icon">
+                                            <i class="fa-regular fa-check"></i>
+                                        </span>
+                                        <span>Internation job </span>
+                                    </div>
+                                @endif
+                            </div>
+
+                            <a href="job-list-2.html" class="rts__btn common__btn  fill__btn mt-50">
+                                {{ $WhatWeAreSectionSettings->button_text ?? 'Explore More' }}
+                                <i class="fa-regular fa-arrow-right"></i>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    @endif
+
     <!-- what we are end -->
 
     <!-- testimonial section -->

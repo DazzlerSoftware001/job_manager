@@ -8,6 +8,7 @@ use App\Models\JobPost;
 use App\Models\MaintenanceMode;
 use App\Models\NewsSectionSettings;
 use App\Models\WorkProcessSectionSettings;
+use App\Models\WhatWeAreSectionSettings;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -24,8 +25,9 @@ class HomeController extends Controller
 
         $NewsSection = NewsSectionSettings::first();
         $WorkProcessSectionSettings = WorkProcessSectionSettings::first();
+        $WhatWeAreSectionSettings = WhatWeAreSectionSettings::first();
 
-        return view('User.Home', compact('HomeSection', 'location', 'type', 'NewsSection', 'WorkProcessSectionSettings'));
+        return view('User.Home', compact('HomeSection', 'location', 'type', 'NewsSection', 'WorkProcessSectionSettings', 'WhatWeAreSectionSettings'));
     }
 
     public function ViewPage($slug)

@@ -297,6 +297,7 @@ Route::prefix('Admin')->group(function () {
         Route::post('/SubmitWorkProcessSection', [SettingsController::class, 'submitWorkProcessSection'])->name('Admin.SubmitWorkProcessSection');
         Route::post('/SubmitBrandSection', [SettingsController::class, 'submitBrandSection'])->name('Admin.SubmitBrandSection');
         Route::post('/DeleteBrandLogo', [SettingsController::class, 'deleteBrandLogo'])->name('Admin.DeleteBrandLogo');
+        Route::post('/ShowingWhatWeAreSection', [SettingsController::class, 'showingWhatWeAreSection'])->name('Admin.ShowingWhatWeAreSection');
         Route::post('/SubmitWhatWeAreSection', [SettingsController::class, 'submitWhatWeAreSection'])->name('Admin.SubmitWhatWeAreSection');
 
 

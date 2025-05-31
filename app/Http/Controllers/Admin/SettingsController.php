@@ -8,6 +8,7 @@ use App\Models\HomePageSettings;
 use App\Models\MaintenanceMode;
 use App\Models\NewsSectionSettings;
 use App\Models\WorkProcessSectionSettings;
+use App\Models\WhatWeAreSectionSettings;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Validator;
@@ -228,9 +229,10 @@ class SettingsController extends Controller
         $HomeSection                = HomePageSettings::first();
         $NewsSection                = NewsSectionSettings::first();
         $WorkProcessSectionSettings = WorkProcessSectionSettings::first();
-        $BrandSectionSetting = BrandSectionSetting::first();
+        $BrandSectionSetting        = BrandSectionSetting::first();
+        $WhatWeAreSectionSettings = WhatWeAreSectionSettings::first();
 
-        return view('admin.Settings.HomeSectionSettings', compact('HomeSection', 'NewsSection', 'WorkProcessSectionSettings', 'BrandSectionSetting'));
+        return view('admin.Settings.HomeSectionSettings', compact('HomeSection', 'NewsSection', 'WorkProcessSectionSettings', 'BrandSectionSetting', 'WhatWeAreSectionSettings'));
     }
 
     public function submitHomeSection(Request $request)
@@ -468,28 +470,115 @@ class SettingsController extends Controller
     }
 
     public function deleteBrandLogo(Request $request)
-{
-    $logoToDelete = $request->input('logo');
+    {
+        $logoToDelete = $request->input('logo');
 
-    $brandSection = BrandSectionSetting::first();
+        $brandSection = BrandSectionSetting::first();
 
-    if (!$brandSection || !is_array($brandSection->logos)) {
-        return response()->json(['status_code' => 0, 'message' => 'No logos found.']);
+        if (! $brandSection || ! is_array($brandSection->logos)) {
+            return response()->json(['status_code' => 0, 'message' => 'No logos found.']);
+        }
+
+        $updatedLogos = array_filter($brandSection->logos, function ($logo) use ($logoToDelete) {
+            return $logo !== $logoToDelete;
+        });
+
+        // Delete file from public directory
+        $logoPath = public_path($logoToDelete);
+        if (file_exists($logoPath)) {
+            unlink($logoPath);
+        }
+
+        $brandSection->update(['logos' => array_values($updatedLogos)]); // re-index array
+
+        return response()->json(['status_code' => 1, 'message' => 'Logo deleted successfully.']);
     }
 
-    $updatedLogos = array_filter($brandSection->logos, function ($logo) use ($logoToDelete) {
-        return $logo !== $logoToDelete;
-    });
+    public function showingWhatWeAreSection(Request $request)
+    {
 
-    // Delete file from public directory
-    $logoPath = public_path($logoToDelete);
-    if (file_exists($logoPath)) {
-        unlink($logoPath);
+        $mode = WhatWeAreSectionSettings::first();
+        //  dd($mode);
+        // dd($mode->maintenance);
+
+        if (! $mode) {
+            WhatWeAreSectionSettings::create(['show_section' => '1']);
+            $message = 'Section is now visible.';
+        } else {
+            $mode->show_section = $mode->show_section ? '0' : '1';
+            $mode->save();
+            $message = $mode->show_section ? 'Section is now visible.' : 'Section is now hidden.';
+        }
+
+        $status = $request->status ? 1 : 0;
+
+        $mode = WhatWeAreSectionSettings::first();
+
+        if (! $mode) {
+            WhatWeAreSectionSettings::create(['show_section' => $status]);
+        } else {
+            $mode->show_section = $status;
+            $mode->save();
+        }
+
+        return response()->json([
+            'status_code' => 1,
+            'message'     => $message,
+        ]);
     }
 
-    $brandSection->update(['logos' => array_values($updatedLogos)]); // re-index array
+    public function submitWhatWeAreSection(Request $request)
+    {
+        $rules = [
+            'image'       => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'title'       => 'nullable|string|max:255',
+            'description' => 'nullable|string',
+            'points'      => 'nullable|array|min:1',
+            'points.*'    => 'nullable|string|max:255',
+            'button_text' => 'nullable|string|max:100',
+        ];
 
-    return response()->json(['status_code' => 1, 'message' => 'Logo deleted successfully.']);
-}
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status_code' => 2,
+                'message'     => $validator->errors()->first(),
+            ]);
+        }
+
+        // Get existing record or create new
+        $data = WhatWeAreSectionSettings::first();
+        if (! $data) {
+            $data = new WhatWeAreSectionSettings();
+        }
+
+        // Custom image upload logic
+        if ($request->hasFile('image')) {
+            $oldPath = public_path($data->image);
+            if (! empty($data->image) && file_exists($oldPath)) {
+                @unlink($oldPath); // Delete old image if exists
+            }
+
+            $uploadedImage = $request->file('image');
+            $imageName     = time() . '_what_we_are.' . $uploadedImage->getClientOriginalExtension();
+            $uploadPath    = 'settings/WhatWeAre/';
+            $uploadedImage->move(public_path($uploadPath), $imageName);
+
+            $data->section_image = $uploadPath . $imageName; // Save path in DB
+        }
+
+        // Save other fields
+        $data->title       = $request->title;
+        $data->description = $request->description;
+        $data->points      = $request->points; // stored as JSON
+        $data->button_text = $request->button_text;
+        $data->save();
+
+        return response()->json([
+            'status_code' => 1,
+            'message'     => 'Section updated successfully!',
+        ]);
+    }
 
 }
