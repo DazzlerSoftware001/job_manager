@@ -17,7 +17,8 @@ class FilteredUsersExport implements FromCollection, WithHeadings
 
     public function collection()
     {
-        $query = UserProfile::query()->where('user_type', 0);
+        // $query = UserProfile::query()->where('user_type', 0);
+        $query = UserProfile::with('candidateProfile')->where('user_type', 0);
 
         if (!empty($this->filters['city'])) {
             $query->where('city', $this->filters['city']);
@@ -51,8 +52,18 @@ class FilteredUsersExport implements FromCollection, WithHeadings
             }
         }
 
-        if (!empty($this->filters['skills'])) {
-            $query->whereJsonContains('skills', $this->filters['skills']);
+        // if (!empty($this->filters['skills'])) {
+        //     $query->whereJsonContains('skills', $this->filters['skills']);
+        // }
+
+        if (! empty($skills) && is_array($skills)) {
+            $query->whereHas('user.candidateProfile', function ($q) use ($skills) {
+                $q->where(function ($q2) use ($skills) {
+                    foreach ($skills as $skill) {
+                        $q2->orWhere('skill', 'like', '%' . $skill . '%');
+                    }
+                });
+            });
         }
 
         return $query->orderBy('id', 'desc')->get([
