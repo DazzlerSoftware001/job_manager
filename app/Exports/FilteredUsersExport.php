@@ -55,6 +55,7 @@ class FilteredUsersExport implements FromCollection, WithHeadings
         // if (!empty($this->filters['skills'])) {
         //     $query->whereJsonContains('skills', $this->filters['skills']);
         // }
+$skills = $this->filters['skills'] ?? [];
 
        if (!empty($skills) && is_array($skills)) { 
             $query->whereHas('candidateProfile', function ($q) use ($skills) {
