@@ -56,7 +56,7 @@ class FilteredUsersExport implements FromCollection, WithHeadings
         //     $query->whereJsonContains('skills', $this->filters['skills']);
         // }
 
-        if (!empty($skills) && is_array($skills)) {
+       if (!empty($skills) && is_array($skills)) { 
             $query->whereHas('candidateProfile', function ($q) use ($skills) {
                 $q->where(function ($q2) use ($skills) {
                     foreach ($skills as $skill) {
@@ -65,6 +65,7 @@ class FilteredUsersExport implements FromCollection, WithHeadings
                 });
             });
         }
+
 
         return $query->orderBy('id', 'desc')->get([
             'id', 'name', 'email', 'phone', 'experience', 'city', 'qualification', 'branch', 'status', 'created_at'
