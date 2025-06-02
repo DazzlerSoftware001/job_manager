@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Validator;
 use App\Exports\UsersExport;
 use App\Exports\FilteredUsersExport;
+use App\Exports\FilterApplicantsExport;
 use App\Exports\ApplicantExport;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -600,7 +601,7 @@ class UsersListController extends Controller
             $query->whereHas('user.candidateProfile', function ($q) use ($skills) {
                 $q->where(function ($q2) use ($skills) {
                     foreach ($skills as $skill) {
-                        $q2->orWhere('skill', 'like', '%' . $skill . '%');
+                        $q2->Where('skill', 'like', '%' . $skill . '%');
                     }
                 });
             });
@@ -743,6 +744,21 @@ class UsersListController extends Controller
     public function ApplicantExportExcel($id)
     {
         return Excel::download(new ApplicantExport($id), 'ApplicantExport.xlsx');
+    }
+
+    public function FilteredApplicantsExportExcel(Request $request) {
+        $filters = $request->only([
+            'recruiter',
+            'job',
+            'city',
+            'education_level',
+            'Qualification',
+            'Branch',
+            'experience',
+            'skills',  // This will be an array if multiple skills selected
+        ]);
+
+        return Excel::download(new FilterApplicantsExport($filters), 'Filtered_applicants_list.xlsx');
     }
     
 

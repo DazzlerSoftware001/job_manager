@@ -61,7 +61,7 @@ $skills = $this->filters['skills'] ?? [];
             $query->whereHas('candidateProfile', function ($q) use ($skills) {
                 $q->where(function ($q2) use ($skills) {
                     foreach ($skills as $skill) {
-                        $q2->orWhere('skill', 'like', '%' . $skill . '%');
+                        $q2->Where('skill', 'like', '%' . $skill . '%');
                     }
                 });
             });
