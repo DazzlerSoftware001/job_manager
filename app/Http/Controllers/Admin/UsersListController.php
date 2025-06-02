@@ -427,10 +427,26 @@ class UsersListController extends Controller
     }
     
 
+    // public function FilteredUsersExportExcel(Request $request)
+    // {
+    //     return Excel::download(new FilteredUsersExport($request->all()), 'Filtered_users_list.xlsx');
+    // }
+
+
     public function FilteredUsersExportExcel(Request $request)
-    {
-        return Excel::download(new FilteredUsersExport($request->all()), 'Filtered_users_list.xlsx');
-    }
+{
+    // Collect filters from the request
+    $filters = $request->only([
+        'city',
+        'education_level',
+        'Qualification',
+        'Branch',
+        'experience',
+        'skills',  // This will be an array if multiple skills selected
+    ]);
+
+    return Excel::download(new FilteredUsersExport($filters), 'Filtered_users_list.xlsx');
+}
 
     
 

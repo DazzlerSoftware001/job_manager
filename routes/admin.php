@@ -160,7 +160,7 @@ Route::prefix('Admin')->group(function () {
         Route::post('/DeleteUser', [UsersListController::class, 'DeleteUser'])->name('Admin.DeleteUser');
         Route::get('/UsersDetails/{userId}', [UsersListController::class, 'UsersDetails'])->name('Admin.UsersDetails');
         Route::get('/UsersExport-excel/{id}', [UsersListController::class, 'UsersExportExcel'])->name('Admin.UsersExportExcel');
-        Route::get('/FilteredUsersExport-excel', [UsersListController::class, 'FilteredUsersExportExcel'])->name('Admin.FilteredUsersExportExcel');
+        Route::post('/FilteredUsersExport-excel', [UsersListController::class, 'FilteredUsersExportExcel'])->name('Admin.FilteredUsersExportExcel');
 
 
         Route::get('All-Applicants', [UsersListController::class, 'AllApplicants'])->name('Admin.AllApplicants');
