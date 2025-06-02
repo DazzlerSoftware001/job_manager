@@ -14,6 +14,7 @@ class BrandSectionSetting extends Model
     protected $table = 'brand_section_settings';
 
     protected $fillable = [
+        'show_section',
         'title',
         'logos',
     ];

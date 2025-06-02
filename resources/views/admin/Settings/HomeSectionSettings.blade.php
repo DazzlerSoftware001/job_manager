@@ -157,95 +157,23 @@
                 </div>
             </div>
 
+            {{-- Work Process Section --}}
             <div class="col-md-6">
                 <div class="card">
-                    <div class="card-header">
-                        <h4 class="card-title">News Section</h4>
-                    </div>
-
-                    <form action="javascript:void(0)" method="POST" enctype="multipart/form-data" id="NewsForm"
-                        class="row px-3 w-100">
-                        @csrf
-                        <div class="card-body">
-                            {{-- Section Title --}}
-                            <label for="news_title" class="form-label">Section Title</label>
-                            <input type="text" name="news_title" id="news_title" class="form-control"
-                                value="{{ old('news_title', $NewsSection->news_title ?? '') }}">
-
-                            {{-- Section Description --}}
-                            <label for="news_message" class="form-label mt-3">Section Message</label>
-                            <input type="text" name="news_message" id="news_message" class="form-control mb-4"
-                                value="{{ old('news_message', $NewsSection->news_message ?? '') }}">
-
-                            <div id="news-card-container">
-                                @php
-                                    $cards = $NewsSection->cards ?? [
-                                        [
-                                            'image' => '',
-                                            'date' => '',
-                                            'author' => '',
-                                            'title' => '',
-                                            'link_text' => 'Read More',
-                                        ],
-                                        [],
-                                        [],
-                                    ];
-                                @endphp
-
-                                @foreach ($cards as $index => $card)
-                                    <div class="news-card mb-4 border p-3 position-relative"
-                                        data-index="{{ $index }}">
-                                        @if ($index > 0)
-                                            <button type="button"
-                                                class="btn btn-danger btn-sm position-absolute top-0 end-0 m-2 remove-card-btn">Remove</button>
-                                        @endif
-                                        <h5>News Card {{ $index + 1 }}</h5>
-
-                                        @if (!empty($card['image']))
-                                            <div class="mb-2">
-                                                <img src="{{ asset($card['image']) }}" width="100">
-                                            </div>
-                                        @endif
-
-                                        <label class="form-label mt-2">Image</label>
-                                        <input type="file" name="cards[{{ $index }}][image]"
-                                            class="form-control">
-
-                                        <label class="form-label mt-2">Date</label>
-                                        <input type="date" name="cards[{{ $index }}][date]" class="form-control"
-                                            value="{{ $card['date'] ?? '' }}">
-
-                                        <label class="form-label mt-2">Author</label>
-                                        <input type="text" name="cards[{{ $index }}][author]"
-                                            class="form-control" value="{{ $card['author'] ?? '' }}">
-
-                                        <label class="form-label mt-2">Title</label>
-                                        <input type="text" name="cards[{{ $index }}][title]" class="form-control"
-                                            value="{{ $card['title'] ?? '' }}">
-
-                                        <label class="form-label mt-2">Link Text</label>
-                                        <input type="text" name="cards[{{ $index }}][link_text]"
-                                            class="form-control" value="{{ $card['link_text'] ?? 'Read More' }}">
-                                    </div>
-                                @endforeach
-                            </div>
-
-                            <div class="text-start mt-3">
-                                <button type="button" class="btn btn-success" id="add-card-btn">Add New Card</button>
-                            </div>
-
-                            <div class="text-end mt-4">
-                                <button type="submit" class="btn btn-primary">Save Section</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-header">
+                    <div class="card-header d-flex justify-content-between align-items-center">
                         <h4 class="card-title">Work Process Section</h4>
+                        <div class="from-group">
+                            <label class="switch d-flex align-items-center mb-0">
+                                <input type="checkbox" id="toggleWorkProcessForm"
+                                    {{ $WorkProcessSectionSettings == null || $WorkProcessSectionSettings->show_section ? 'checked' : '' }}>
+                                <span class="slider d-flex align-items-center justify-content-center">
+                                    <svg class="slider-icon" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"
+                                        aria-hidden="true" role="presentation">
+                                        <path fill="none" d="m4 16.5 8 8 16-16"></path>
+                                    </svg>
+                                </span>
+                            </label>
+                        </div>
                     </div>
 
                     <form action="javascript:void(0)" method="POST" enctype="multipart/form-data" id="WorkProcessForm"
@@ -292,13 +220,12 @@
                                                 <img src="{{ asset($card['icon']) }}" width="60">
                                             </div>
                                         @endif
-                                        <input type="file" name="cards[{{ $index }}][icon]"
-                                            class="form-control">
+                                        <input type="file" name="cards[{{ $index }}][icon]" class="form-control">
 
                                         {{-- Title --}}
                                         <label class="form-label mt-2">Title</label>
-                                        <input type="text" name="cards[{{ $index }}][title]"
-                                            class="form-control" value="{{ $card['title'] ?? '' }}">
+                                        <input type="text" name="cards[{{ $index }}][title]" class="form-control"
+                                            value="{{ $card['title'] ?? '' }}">
 
                                         {{-- Description --}}
                                         <label class="form-label mt-2">Description</label>
@@ -325,11 +252,23 @@
                 </div>
             </div>
 
-
+            {{-- Brand Logo Section --}}
             <div class="col-md-6">
                 <div class="card">
-                    <div class="card-header">
+                    <div class="card-header d-flex justify-content-between align-items-center">
                         <h4 class="card-title">Brand Section</h4>
+                        <div class="from-group">
+                            <label class="switch d-flex align-items-center mb-0">
+                                <input type="checkbox" id="toggleBrandForm"
+                                    {{ $BrandSectionSetting == null || $BrandSectionSetting->show_section ? 'checked' : '' }}>
+                                <span class="slider d-flex align-items-center justify-content-center">
+                                    <svg class="slider-icon" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"
+                                        aria-hidden="true" role="presentation">
+                                        <path fill="none" d="m4 16.5 8 8 16-16"></path>
+                                    </svg>
+                                </span>
+                            </label>
+                        </div>
                     </div>
 
                     <form action="javasript:void(0)" method="POST" enctype="multipart/form-data" id="BrandForm"
@@ -384,9 +323,9 @@
                                     wrapper.classList.add('col-md-2', 'preview-image');
 
                                     wrapper.innerHTML = `
-                    <img src="${e.target.result}" alt="Preview" class="img-fluid">
-                    <button type="button" class="remove-btn" onclick="removeImage(${index})">&times;</button>
-                `;
+                            <img src="${e.target.result}" alt="Preview" class="img-fluid">
+                            <button type="button" class="remove-btn" onclick="removeImage(${index})">&times;</button>
+                        `;
 
                                     previewContainer.appendChild(wrapper);
                                 };
@@ -418,14 +357,15 @@
 
             </div>
 
+            {{-- What We Are Section --}}
             <div class="col-md-6">
                 <div class="card">
-                    <div class="card-header card-header d-flex justify-content-between align-items-center">
+                    <div class="card-header d-flex justify-content-between align-items-center">
                         <h4 class="card-title">What We are Section</h4>
                         <div class="from-group">
                             <label class="switch d-flex align-items-center mb-0">
                                 <input type="checkbox" id="toggleWhatWeAreForm"
-                                    {{ $WhatWeAreSectionSettings && $WhatWeAreSectionSettings->show_section ? 'checked' : '' }}>
+                                    {{ $WhatWeAreSectionSettings == null || $WhatWeAreSectionSettings->show_section ? 'checked' : '' }}>
                                 <span class="slider d-flex align-items-center justify-content-center">
                                     <svg class="slider-icon" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"
                                         aria-hidden="true" role="presentation">
@@ -508,6 +448,103 @@
                 </div>
             </div>
 
+            {{-- News Section --}}
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h4 class="card-title">News Section</h4>
+                        <div class="from-group">
+                            <label class="switch d-flex align-items-center mb-0">
+                                <input type="checkbox" id="toggleNewsForm"
+                                    {{ $NewsSection == null || $NewsSection->show_section ? 'checked' : '' }}>
+                                <span class="slider d-flex align-items-center justify-content-center">
+                                    <svg class="slider-icon" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"
+                                        aria-hidden="true" role="presentation">
+                                        <path fill="none" d="m4 16.5 8 8 16-16"></path>
+                                    </svg>
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <form action="javascript:void(0)" method="POST" enctype="multipart/form-data" id="NewsForm"
+                        class="row px-3 w-100">
+                        @csrf
+                        <div class="card-body">
+                            {{-- Section Title --}}
+                            <label for="news_title" class="form-label">Section Title</label>
+                            <input type="text" name="news_title" id="news_title" class="form-control"
+                                value="{{ old('news_title', $NewsSection->news_title ?? '') }}">
+
+                            {{-- Section Description --}}
+                            <label for="news_message" class="form-label mt-3">Section Message</label>
+                            <input type="text" name="news_message" id="news_message" class="form-control mb-4"
+                                value="{{ old('news_message', $NewsSection->news_message ?? '') }}">
+
+                            <div id="news-card-container">
+                                @php
+                                    $cards = $NewsSection->cards ?? [
+                                        [
+                                            'image' => '',
+                                            'date' => '',
+                                            'author' => '',
+                                            'title' => '',
+                                            'link_text' => 'Read More',
+                                        ],
+                                        [],
+                                        [],
+                                    ];
+                                @endphp
+
+                                @foreach ($cards as $index => $card)
+                                    <div class="news-card mb-4 border p-3 position-relative"
+                                        data-index="{{ $index }}">
+                                        @if ($index > 0)
+                                            <button type="button"
+                                                class="btn btn-danger btn-sm position-absolute top-0 end-0 m-2 remove-card-btn">Remove</button>
+                                        @endif
+                                        <h5>News Card {{ $index + 1 }}</h5>
+
+                                        @if (!empty($card['image']))
+                                            <div class="mb-2">
+                                                <img src="{{ asset($card['image']) }}" width="100">
+                                            </div>
+                                        @endif
+
+                                        <label class="form-label mt-2">Image</label>
+                                        <input type="file" name="cards[{{ $index }}][image]"
+                                            class="form-control">
+
+                                        <label class="form-label mt-2">Date</label>
+                                        <input type="date" name="cards[{{ $index }}][date]"
+                                            class="form-control" value="{{ $card['date'] ?? '' }}">
+
+                                        <label class="form-label mt-2">Author</label>
+                                        <input type="text" name="cards[{{ $index }}][author]"
+                                            class="form-control" value="{{ $card['author'] ?? '' }}">
+
+                                        <label class="form-label mt-2">Title</label>
+                                        <input type="text" name="cards[{{ $index }}][title]"
+                                            class="form-control" value="{{ $card['title'] ?? '' }}">
+
+                                        <label class="form-label mt-2">Link Text</label>
+                                        <input type="text" name="cards[{{ $index }}][link_text]"
+                                            class="form-control" value="{{ $card['link_text'] ?? 'Read More' }}">
+                                    </div>
+                                @endforeach
+                            </div>
+
+                            <div class="text-start mt-3">
+                                <button type="button" class="btn btn-success" id="add-card-btn">Add New Card</button>
+                            </div>
+
+                            <div class="text-end mt-4">
+                                <button type="submit" class="btn btn-primary">Save Section</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
 
         </div>
 
@@ -588,120 +625,71 @@
         });
     </script>
 
-    {{-- For Add New Card in News Section --}}
+    {{-- For Showing Work Process Section --}}
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            let cardIndex = {{ count($cards) }};
-            const container = document.getElementById('news-card-container');
-            const addCardBtn = document.getElementById('add-card-btn');
+        $('#toggleWorkProcessForm').on('change', function() {
+            let toggle = $(this);
+            let status = toggle.is(':checked') ? 1 : 0;
 
-            function createCard(index) {
-                const card = document.createElement('div');
-                card.classList.add('news-card', 'mb-4', 'border', 'p-3', 'position-relative');
-                card.setAttribute('data-index', index);
-                card.innerHTML = `
-                <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 m-2 remove-card-btn">Remove</button>
-                <h5>News Card ${index + 1}</h5>
+            // Revert toggle temporarily until confirmation
+            toggle.prop('checked', !status);
 
-                <label class="form-label mt-2">Image</label>
-                <input type="file" name="cards[${index}][image]" class="form-control">
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "Do you want to " + (status ? "show" : "hide") + " the 'Work Process' section?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, proceed!'
+            }).then((result) => {
+                if (result.isConfirmed) {
 
-                <label class="form-label mt-2">Date</label>
-                <input type="date" name="cards[${index}][date]" class="form-control">
+                    // Disable toggle to prevent multiple clicks
+                    toggle.prop('disabled', true);
 
-                <label class="form-label mt-2">Author</label>
-                <input type="text" name="cards[${index}][author]" class="form-control">
-
-                <label class="form-label mt-2">Title</label>
-                <input type="text" name="cards[${index}][title]" class="form-control">
-
-                <label class="form-label mt-2">Link Text</label>
-                <input type="text" name="cards[${index}][link_text]" class="form-control" value="Read More">
-            `;
-                return card;
-            }
-
-            addCardBtn.addEventListener('click', function() {
-                const newCard = createCard(cardIndex);
-                container.appendChild(newCard);
-                cardIndex++;
-            });
-
-            container.addEventListener('click', function(e) {
-                if (e.target.classList.contains('remove-card-btn')) {
-                    e.target.closest('.news-card').remove();
-                }
-            });
-        });
-    </script>
-
-    {{-- For Submit News Section --}}
-    <script>
-        $(document).ready(function() {
-            $('#NewsForm').on('submit', function(event) {
-                event.preventDefault(); // Prevent default form submission
-
-                var url = "{{ route('Admin.SubmitNewsSection') }}";
-                $.ajax({
-                    url: url,
-                    type: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    data: new FormData(this),
-                    contentType: false,
-                    cache: false,
-                    processData: false,
-                    dataType: 'json',
-                    success: function(result) {
-                        if (result.status_code === 1) {
-                            Toastify({
-                                text: result.message,
-                                duration: 3000,
-                                gravity: "top",
-                                position: "right",
-                                style: {
-                                    background: "#28a745",
-                                },
-                            }).showToast();
-                            setTimeout(function() {
-                                location.reload();
-                            }, 750);
-                        } else if (result.status_code === 2) {
-                            Toastify({
-                                text: result.message,
-                                duration: 3000,
-                                gravity: "top",
-                                position: "right",
-                                style: {
-                                    background: "#c7ac14",
-                                },
-                            }).showToast();
-                        } else {
-                            Toastify({
-                                text: result.message,
-                                duration: 3000,
-                                gravity: "top",
-                                position: "right",
-                                style: {
-                                    background: "#c7ac14",
-                                },
-                            }).showToast();
+                    // Show loading alert
+                    Swal.fire({
+                        title: 'Processing...',
+                        text: 'Please wait while we update the section status.',
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        didOpen: () => {
+                            Swal.showLoading();
                         }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('AJAX Error:', error);
-                        Toastify({
-                            text: 'An error occurred. Please try again.',
-                            duration: 3000,
-                            gravity: "top",
-                            position: "right",
-                            style: {
-                                background: "#dc3545",
-                            },
-                        }).showToast();
-                    }
-                });
+                    });
+
+                    $.ajax({
+                        url: "{{ route('Admin.ShowingWorkProcessSection') }}",
+                        type: "POST",
+                        data: {
+                            _token: "{{ csrf_token() }}",
+                            status: status
+                        },
+                        success: function(response) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success!',
+                                text: response.message,
+                                timer: 1500,
+                                showConfirmButton: false
+                            });
+
+                            toggle.prop('checked', status);
+                        },
+                        error: function() {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: 'Something went wrong. Please try again.',
+                            });
+                        },
+                        complete: function() {
+                            // Re-enable toggle regardless of outcome
+                            toggle.prop('disabled', false);
+                        }
+                    });
+                }
             });
         });
     </script>
@@ -814,6 +802,74 @@
         });
     </script>
 
+    {{-- For Showing Brand Logo Section --}}
+    <script>
+        $('#toggleBrandForm').on('change', function() {
+            let toggle = $(this);
+            let status = toggle.is(':checked') ? 1 : 0;
+
+            // Revert toggle temporarily until confirmation
+            toggle.prop('checked', !status);
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "Do you want to " + (status ? "show" : "hide") + " the 'Brand Logo' section?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, proceed!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                    // Disable toggle to prevent multiple clicks
+                    toggle.prop('disabled', true);
+
+                    // Show loading alert
+                    Swal.fire({
+                        title: 'Processing...',
+                        text: 'Please wait while we update the section status.',
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+
+                    $.ajax({
+                        url: "{{ route('Admin.ShowingBrandSection') }}",
+                        type: "POST",
+                        data: {
+                            _token: "{{ csrf_token() }}",
+                            status: status
+                        },
+                        success: function(response) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success!',
+                                text: response.message,
+                                timer: 1500,
+                                showConfirmButton: false
+                            });
+
+                            toggle.prop('checked', status);
+                        },
+                        error: function() {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: 'Something went wrong. Please try again.',
+                            });
+                        },
+                        complete: function() {
+                            // Re-enable toggle regardless of outcome
+                            toggle.prop('disabled', false);
+                        }
+                    });
+                }
+            });
+        });
+    </script>
 
     {{-- For Submit Brand Section --}}
     <script>
@@ -942,27 +998,6 @@
         });
     </script>
 
-    {{-- For Add Features Point --}}
-    <script>
-        document.getElementById('add-point').addEventListener('click', function() {
-            const wrapper = document.getElementById('points-wrapper');
-            const div = document.createElement('div');
-            div.classList.add('input-group', 'mb-2');
-            div.innerHTML = `
-            <input type="text" name="points[]" class="form-control" placeholder="e.g. Another Point" required>
-            <button type="button" class="btn btn-danger remove-point">✕</button>
-        `;
-            wrapper.appendChild(div);
-        });
-
-        // Event delegation for dynamically added remove buttons
-        document.getElementById('points-wrapper').addEventListener('click', function(e) {
-            if (e.target && e.target.classList.contains('remove-point')) {
-                e.target.parentElement.remove();
-            }
-        });
-    </script>
-
     {{-- For Showing What We Are Section --}}
     <script>
         $('#toggleWhatWeAreForm').on('change', function() {
@@ -1032,6 +1067,26 @@
         });
     </script>
 
+    {{-- For Add Features Point --}}
+    <script>
+        document.getElementById('add-point').addEventListener('click', function() {
+            const wrapper = document.getElementById('points-wrapper');
+            const div = document.createElement('div');
+            div.classList.add('input-group', 'mb-2');
+            div.innerHTML = `
+            <input type="text" name="points[]" class="form-control" placeholder="e.g. Another Point" required>
+            <button type="button" class="btn btn-danger remove-point">✕</button>
+        `;
+            wrapper.appendChild(div);
+        });
+
+        // Event delegation for dynamically added remove buttons
+        document.getElementById('points-wrapper').addEventListener('click', function(e) {
+            if (e.target && e.target.classList.contains('remove-point')) {
+                e.target.parentElement.remove();
+            }
+        });
+    </script>
 
     {{-- For Submit What We Are Section --}}
     <script>
@@ -1040,6 +1095,193 @@
                 event.preventDefault(); // Prevent default form submission
 
                 var url = "{{ route('Admin.SubmitWhatWeAreSection') }}";
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    data: new FormData(this),
+                    contentType: false,
+                    cache: false,
+                    processData: false,
+                    dataType: 'json',
+                    success: function(result) {
+                        if (result.status_code === 1) {
+                            Toastify({
+                                text: result.message,
+                                duration: 3000,
+                                gravity: "top",
+                                position: "right",
+                                style: {
+                                    background: "#28a745",
+                                },
+                            }).showToast();
+                            setTimeout(function() {
+                                location.reload();
+                            }, 750);
+                        } else if (result.status_code === 2) {
+                            Toastify({
+                                text: result.message,
+                                duration: 3000,
+                                gravity: "top",
+                                position: "right",
+                                style: {
+                                    background: "#c7ac14",
+                                },
+                            }).showToast();
+                        } else {
+                            Toastify({
+                                text: result.message,
+                                duration: 3000,
+                                gravity: "top",
+                                position: "right",
+                                style: {
+                                    background: "#c7ac14",
+                                },
+                            }).showToast();
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('AJAX Error:', error);
+                        Toastify({
+                            text: 'An error occurred. Please try again.',
+                            duration: 3000,
+                            gravity: "top",
+                            position: "right",
+                            style: {
+                                background: "#dc3545",
+                            },
+                        }).showToast();
+                    }
+                });
+            });
+        });
+    </script>
+
+    {{-- For Showing News Section --}}
+    <script>
+        $('#toggleNewsForm').on('change', function() {
+            let toggle = $(this);
+            let status = toggle.is(':checked') ? 1 : 0;
+
+            // Revert toggle temporarily until confirmation
+            toggle.prop('checked', !status);
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "Do you want to " + (status ? "show" : "hide") + " the 'News' section?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, proceed!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                    // Disable toggle to prevent multiple clicks
+                    toggle.prop('disabled', true);
+
+                    // Show loading alert
+                    Swal.fire({
+                        title: 'Processing...',
+                        text: 'Please wait while we update the section status.',
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+
+                    $.ajax({
+                        url: "{{ route('Admin.ShowingNewsSection') }}",
+                        type: "POST",
+                        data: {
+                            _token: "{{ csrf_token() }}",
+                            status: status
+                        },
+                        success: function(response) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success!',
+                                text: response.message,
+                                timer: 1500,
+                                showConfirmButton: false
+                            });
+
+                            toggle.prop('checked', status);
+                        },
+                        error: function() {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: 'Something went wrong. Please try again.',
+                            });
+                        },
+                        complete: function() {
+                            // Re-enable toggle regardless of outcome
+                            toggle.prop('disabled', false);
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+
+    {{-- For Add New Card in News Section --}}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            let cardIndex = {{ count($cards) }};
+            const container = document.getElementById('news-card-container');
+            const addCardBtn = document.getElementById('add-card-btn');
+
+            function createCard(index) {
+                const card = document.createElement('div');
+                card.classList.add('news-card', 'mb-4', 'border', 'p-3', 'position-relative');
+                card.setAttribute('data-index', index);
+                card.innerHTML = `
+                <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 m-2 remove-card-btn">Remove</button>
+                <h5>News Card ${index + 1}</h5>
+
+                <label class="form-label mt-2">Image</label>
+                <input type="file" name="cards[${index}][image]" class="form-control">
+
+                <label class="form-label mt-2">Date</label>
+                <input type="date" name="cards[${index}][date]" class="form-control">
+
+                <label class="form-label mt-2">Author</label>
+                <input type="text" name="cards[${index}][author]" class="form-control">
+
+                <label class="form-label mt-2">Title</label>
+                <input type="text" name="cards[${index}][title]" class="form-control">
+
+                <label class="form-label mt-2">Link Text</label>
+                <input type="text" name="cards[${index}][link_text]" class="form-control" value="Read More">
+            `;
+                return card;
+            }
+
+            addCardBtn.addEventListener('click', function() {
+                const newCard = createCard(cardIndex);
+                container.appendChild(newCard);
+                cardIndex++;
+            });
+
+            container.addEventListener('click', function(e) {
+                if (e.target.classList.contains('remove-card-btn')) {
+                    e.target.closest('.news-card').remove();
+                }
+            });
+        });
+    </script>
+
+    {{-- For Submit News Section --}}
+    <script>
+        $(document).ready(function() {
+            $('#NewsForm').on('submit', function(event) {
+                event.preventDefault(); // Prevent default form submission
+
+                var url = "{{ route('Admin.SubmitNewsSection') }}";
                 $.ajax({
                     url: url,
                     type: 'POST',

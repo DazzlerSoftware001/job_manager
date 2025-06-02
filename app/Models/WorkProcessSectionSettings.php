@@ -13,6 +13,7 @@ class WorkProcessSectionSettings extends Model
     protected $table = 'work_process_section_settings';
 
     protected $fillable = [
+        'show_section',
         'work_title',
         'work_message',
         'cards',

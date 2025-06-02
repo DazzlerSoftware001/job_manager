@@ -2,13 +2,14 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\BrandSectionSetting;
 use App\Models\CustomPage;
 use App\Models\HomePageSettings;
 use App\Models\JobPost;
 use App\Models\MaintenanceMode;
 use App\Models\NewsSectionSettings;
-use App\Models\WorkProcessSectionSettings;
 use App\Models\WhatWeAreSectionSettings;
+use App\Models\WorkProcessSectionSettings;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -23,11 +24,12 @@ class HomeController extends Controller
         $location = JobPost::select('location')->where('status', 1)->where('admin_verify', 1)->whereDate('jobexpiry', '>=', $today)->distinct()->get();
         $type     = JobPost::select('type', DB::raw('count(*) as count'))->where('status', 1)->where('admin_verify', 1)->whereDate('jobexpiry', '>=', $today)->groupBy('type')->get();
 
-        $NewsSection = NewsSectionSettings::first();
         $WorkProcessSectionSettings = WorkProcessSectionSettings::first();
-        $WhatWeAreSectionSettings = WhatWeAreSectionSettings::first();
+        $BrandSectionSetting        = BrandSectionSetting::first();
+        $WhatWeAreSectionSettings   = WhatWeAreSectionSettings::first();
+        $NewsSection                = NewsSectionSettings::first();
 
-        return view('User.Home', compact('HomeSection', 'location', 'type', 'NewsSection', 'WorkProcessSectionSettings', 'WhatWeAreSectionSettings'));
+        return view('User.Home', compact('HomeSection', 'location', 'type', 'WorkProcessSectionSettings', 'BrandSectionSetting', 'WhatWeAreSectionSettings', 'NewsSection'));
     }
 
     public function ViewPage($slug)

@@ -7,8 +7,8 @@ use App\Models\GeneralSetting;
 use App\Models\HomePageSettings;
 use App\Models\MaintenanceMode;
 use App\Models\NewsSectionSettings;
-use App\Models\WorkProcessSectionSettings;
 use App\Models\WhatWeAreSectionSettings;
+use App\Models\WorkProcessSectionSettings;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Validator;
@@ -230,7 +230,7 @@ class SettingsController extends Controller
         $NewsSection                = NewsSectionSettings::first();
         $WorkProcessSectionSettings = WorkProcessSectionSettings::first();
         $BrandSectionSetting        = BrandSectionSetting::first();
-        $WhatWeAreSectionSettings = WhatWeAreSectionSettings::first();
+        $WhatWeAreSectionSettings   = WhatWeAreSectionSettings::first();
 
         return view('admin.Settings.HomeSectionSettings', compact('HomeSection', 'NewsSection', 'WorkProcessSectionSettings', 'BrandSectionSetting', 'WhatWeAreSectionSettings'));
     }
@@ -287,70 +287,24 @@ class SettingsController extends Controller
         ]);
     }
 
-    public function submitNewsSection(Request $request)
+    public function showingWorkProcessSection(Request $request)
     {
-        $data = $request->validate([
-            'news_title'         => 'nullable|string|max:255',
-            'news_message'       => 'nullable|string|max:255',
-            'cards'              => 'nullable|array',
-            'cards.*.date'       => 'nullable|string|max:255',
-            'cards.*.author'     => 'nullable|string|max:255',
-            'cards.*.title'      => 'nullable|string|max:255',
-            'cards.*.link_text'  => 'nullable|string|max:255',
-            'cards.*.image'      => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
-            'cards.*.image_path' => 'nullable|string',
-        ]);
+        $status = $request->status ? '1' : '0';
 
-        $newsSection = NewsSectionSettings::first() ?? new NewsSectionSettings();
+        $mode = WorkProcessSectionSettings::first();
 
-        // Decode existing cards if any
-        $existingCards = is_array($newsSection->cards) ? $newsSection->cards : [];
-
-        $cards = [];
-
-        if (! empty($request->cards)) {
-            foreach ($request->cards as $index => $card) {
-                $oldImagePath = $existingCards[$index]['image'] ?? null;
-
-                $cardData = [
-                    'date'      => $card['date'] ?? '',
-                    'author'    => $card['author'] ?? '',
-                    'title'     => $card['title'] ?? '',
-                    'link_text' => $card['link_text'] ?? 'Read More',
-                ];
-
-                if (! empty($card['image'])) {
-                    // Delete old image if a new one is uploaded
-                    if ($oldImagePath && file_exists(public_path($oldImagePath))) {
-                        @unlink(public_path($oldImagePath));
-                    }
-
-                    $image     = $card['image'];
-                    $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
-                    $image->move(public_path('settings/News/'), $imageName);
-                    $cardData['image'] = 'settings/News/' . $imageName;
-
-                } elseif (! empty($oldImagePath)) {
-                    // Keep old image path
-                    $cardData['image'] = $oldImagePath;
-
-                } else {
-                    // No image and no old image
-                    $cardData['image'] = null;
-                }
-
-                $cards[] = $cardData;
-            }
+        if (! $mode) {
+            WorkProcessSectionSettings::create(['show_section' => $status]);
+        } else {
+            $mode->show_section = $status;
+            $mode->save();
         }
 
-        $newsSection->news_title   = $request->news_title;
-        $newsSection->news_message = $request->news_message;
-        $newsSection->cards        = $cards;
-        $newsSection->save();
+        $message = $status ? 'Section is now visible.' : 'Section is now hidden.';
 
         return response()->json([
             'status_code' => 1,
-            'message'     => 'News section saved successfully!',
+            'message'     => $message,
         ]);
     }
 
@@ -415,6 +369,27 @@ class SettingsController extends Controller
         return response()->json([
             'status_code' => 1,
             'message'     => 'How Work Process Section saved successfully!',
+        ]);
+    }
+
+    public function showingBrandSection(Request $request)
+    {
+        $status = $request->status ? '1' : '0';
+
+        $mode = BrandSectionSetting::first();
+
+        if (! $mode) {
+            BrandSectionSetting::create(['show_section' => $status]);
+        } else {
+            $mode->show_section = $status;
+            $mode->save();
+        }
+
+        $message = $status ? 'Section is now visible.' : 'Section is now hidden.';
+
+        return response()->json([
+            'status_code' => 1,
+            'message'     => $message,
         ]);
     }
 
@@ -496,21 +471,7 @@ class SettingsController extends Controller
 
     public function showingWhatWeAreSection(Request $request)
     {
-
-        $mode = WhatWeAreSectionSettings::first();
-        //  dd($mode);
-        // dd($mode->maintenance);
-
-        if (! $mode) {
-            WhatWeAreSectionSettings::create(['show_section' => '1']);
-            $message = 'Section is now visible.';
-        } else {
-            $mode->show_section = $mode->show_section ? '0' : '1';
-            $mode->save();
-            $message = $mode->show_section ? 'Section is now visible.' : 'Section is now hidden.';
-        }
-
-        $status = $request->status ? 1 : 0;
+        $status = $request->status ? '1' : '0';
 
         $mode = WhatWeAreSectionSettings::first();
 
@@ -520,6 +481,8 @@ class SettingsController extends Controller
             $mode->show_section = $status;
             $mode->save();
         }
+
+        $message = $status ? 'Section is now visible.' : 'Section is now hidden.';
 
         return response()->json([
             'status_code' => 1,
@@ -578,6 +541,94 @@ class SettingsController extends Controller
         return response()->json([
             'status_code' => 1,
             'message'     => 'Section updated successfully!',
+        ]);
+    }
+
+    public function showingNewsSection(Request $request)
+    {
+        $status = $request->status ? '1' : '0';
+
+        $mode = NewsSectionSettings::first();
+
+        if (! $mode) {
+            NewsSectionSettings::create(['show_section' => $status]);
+        } else {
+            $mode->show_section = $status;
+            $mode->save();
+        }
+
+        $message = $status ? 'Section is now visible.' : 'Section is now hidden.';
+
+        return response()->json([
+            'status_code' => 1,
+            'message'     => $message,
+        ]);
+    }
+
+    public function submitNewsSection(Request $request)
+    {
+        $data = $request->validate([
+            'news_title'         => 'nullable|string|max:255',
+            'news_message'       => 'nullable|string|max:255',
+            'cards'              => 'nullable|array',
+            'cards.*.date'       => 'nullable|string|max:255',
+            'cards.*.author'     => 'nullable|string|max:255',
+            'cards.*.title'      => 'nullable|string|max:255',
+            'cards.*.link_text'  => 'nullable|string|max:255',
+            'cards.*.image'      => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'cards.*.image_path' => 'nullable|string',
+        ]);
+
+        $newsSection = NewsSectionSettings::first() ?? new NewsSectionSettings();
+
+        // Decode existing cards if any
+        $existingCards = is_array($newsSection->cards) ? $newsSection->cards : [];
+
+        $cards = [];
+
+        if (! empty($request->cards)) {
+            foreach ($request->cards as $index => $card) {
+                $oldImagePath = $existingCards[$index]['image'] ?? null;
+
+                $cardData = [
+                    'date'      => $card['date'] ?? '',
+                    'author'    => $card['author'] ?? '',
+                    'title'     => $card['title'] ?? '',
+                    'link_text' => $card['link_text'] ?? 'Read More',
+                ];
+
+                if (! empty($card['image'])) {
+                    // Delete old image if a new one is uploaded
+                    if ($oldImagePath && file_exists(public_path($oldImagePath))) {
+                        @unlink(public_path($oldImagePath));
+                    }
+
+                    $image     = $card['image'];
+                    $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+                    $image->move(public_path('settings/News/'), $imageName);
+                    $cardData['image'] = 'settings/News/' . $imageName;
+
+                } elseif (! empty($oldImagePath)) {
+                    // Keep old image path
+                    $cardData['image'] = $oldImagePath;
+
+                } else {
+                    // No image and no old image
+                    $cardData['image'] = null;
+                }
+
+                $cards[] = $cardData;
+            }
+        }
+
+        $newsSection->news_title   = $request->news_title;
+        $newsSection->news_message = $request->news_message;
+        $newsSection->cards        = $cards;
+        $newsSection->save();
+
+        return response()->json([
+            'status_code' => 1,
+            'message'     => 'News section saved successfully!',
         ]);
     }
 

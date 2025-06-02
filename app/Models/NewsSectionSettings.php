@@ -14,6 +14,7 @@ class NewsSectionSettings extends Model
     protected $table = 'news_section_settings';
 
     protected $fillable = [
+        'show_section',
         'news_title',
         'news_message',
         'cards',

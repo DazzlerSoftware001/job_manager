@@ -293,12 +293,16 @@ Route::prefix('Admin')->group(function () {
         Route::get('/FrontPageSettings', [SettingsController::class, 'frontPageSettings'])->name('Admin.FrontPageSettings');
         Route::get('/HomePageSettings', [SettingsController::class, 'homePageSettings'])->name('Admin.HomePageSettings');
         Route::post('SubmitHomeSection', [SettingsController::class, 'submitHomeSection'])->name('Admin.SubmitHomeSection');
-        Route::post('/SubmitNewsSection', [SettingsController::class, 'submitNewsSection'])->name('Admin.SubmitNewsSection');
+        Route::post('/ShowingWorkProcessSection', [SettingsController::class, 'showingWorkProcessSection'])->name('Admin.ShowingWorkProcessSection');
         Route::post('/SubmitWorkProcessSection', [SettingsController::class, 'submitWorkProcessSection'])->name('Admin.SubmitWorkProcessSection');
+        Route::post('/ShowingBrandSection', [SettingsController::class, 'showingBrandSection'])->name('Admin.ShowingBrandSection');
         Route::post('/SubmitBrandSection', [SettingsController::class, 'submitBrandSection'])->name('Admin.SubmitBrandSection');
         Route::post('/DeleteBrandLogo', [SettingsController::class, 'deleteBrandLogo'])->name('Admin.DeleteBrandLogo');
         Route::post('/ShowingWhatWeAreSection', [SettingsController::class, 'showingWhatWeAreSection'])->name('Admin.ShowingWhatWeAreSection');
         Route::post('/SubmitWhatWeAreSection', [SettingsController::class, 'submitWhatWeAreSection'])->name('Admin.SubmitWhatWeAreSection');
+        Route::post('/ShowingNewsSection', [SettingsController::class, 'showingNewsSection'])->name('Admin.ShowingNewsSection');
+        Route::post('/SubmitNewsSection', [SettingsController::class, 'submitNewsSection'])->name('Admin.SubmitNewsSection');
+        
 
 
         

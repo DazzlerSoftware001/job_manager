@@ -91,45 +91,46 @@
     </section>
     <!-- banner area end -->
     <!-- work process area -->
-    <section class="rts__section section__padding">
-        <div class="container">
-            <div class="row justify-content-center mb-60">
-                <div class="col-xl-6 col-lg-10">
-                    <div class="rts__section__content text-center wow animated fadeInUp">
-                        <h3 class="rts__section__title section__mb">
-                            {{ $WorkProcessSectionSettings->work_title ?? 'How careernext Works' }}</h3>
-                        <p class="rts__section__desc">
-                            {{ $WorkProcessSectionSettings->work_message ?? 'Our job board offers a wide range' }}</p>
+    @if ($WorkProcessSectionSettings == null || $WorkProcessSectionSettings->show_section !== '0')
+        <section class="rts__section section__padding">
+            <div class="container">
+                <div class="row justify-content-center mb-60">
+                    <div class="col-xl-6 col-lg-10">
+                        <div class="rts__section__content text-center wow animated fadeInUp">
+                            <h3 class="rts__section__title section__mb">
+                                {{ $WorkProcessSectionSettings->work_title ?? 'How careernext Works' }}</h3>
+                            <p class="rts__section__desc">
+                                {{ $WorkProcessSectionSettings->work_message ?? 'Our job board offers a wide range' }}</p>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="row g-30 justify-content-center">
-                @if (!empty($WorkProcessSectionSettings->cards))
-                    @foreach ($WorkProcessSectionSettings->cards as $card)
-                        <div class="col-lg-4 col-md-10 wow animated fadeInUp" data-wow-delay=".1s">
-                            <div class="rts__workprocess__box">
-                                <div class="rts__icon">
-                                    {{-- <img src="{{ url('user/assets/img/home-1/process/icon-1.svg') }}" alt=""> --}}
-                                    <img src="{{ asset($card['icon']) }}" alt="">
-                                </div>
-                                <span
-                                    class="process__title h6 d-block">{{ $card['title'] ?? 'Create a Free Account' }}</span>
-                                <p> {{ $card['description'] ??
-                                    'Consectetur adipisicing elit. Possimus
-                                                                                                                                                                                                                                                                                                                                    aut mollitia eum ipsum fugiat odio officiis odit mollitia eum ipsum.' }}
-                                </p>
-                                <div class="work__readmore mt-3">
-                                    <a href="#">{{ $card['button_text'] ?? 'Read More' }} <i
-                                            class="fas fa-arrow-right"></i></a>
+                <div class="row g-30 justify-content-center">
+                    @if (!empty($WorkProcessSectionSettings->cards))
+                        @foreach ($WorkProcessSectionSettings->cards as $card)
+                            <div class="col-lg-4 col-md-10 wow animated fadeInUp" data-wow-delay=".1s">
+                                <div class="rts__workprocess__box">
+                                    <div class="rts__icon">
+                                        {{-- <img src="{{ url('user/assets/img/home-1/process/icon-1.svg') }}" alt=""> --}}
+                                        <img src="{{ asset($card['icon']) }}" alt="">
+                                    </div>
+                                    <span
+                                        class="process__title h6 d-block">{{ $card['title'] ?? 'Create a Free Account' }}</span>
+                                    <p> {{ $card['description'] ??
+                                        'Consectetur adipisicing elit. Possimus
+                                                                                                                                                                                                                                                                                                                                                                                                                                                aut mollitia eum ipsum fugiat odio officiis odit mollitia eum ipsum.' }}
+                                    </p>
+                                    <div class="work__readmore mt-3">
+                                        <a href="#">{{ $card['button_text'] ?? 'Read More' }} <i
+                                                class="fas fa-arrow-right"></i></a>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    @endforeach
-                @else
-                    <p class="text-center">No news found.</p>
-                @endif
-                {{-- <div class="col-lg-4 col-md-10 wow animated fadeInUp" data-wow-delay=".2s">
+                        @endforeach
+                    @else
+                        <p class="text-center">No news found.</p>
+                    @endif
+                    {{-- <div class="col-lg-4 col-md-10 wow animated fadeInUp" data-wow-delay=".2s">
                     <div class="rts__workprocess__box">
                         <div class="rts__icon">
                             <img src="{{ url('user/assets/img/home-1/process/icon-2.svg') }}" alt="">
@@ -158,22 +159,24 @@
                     </div>
                 </div> --}}
 
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
+    @endif
     <!-- work process area end -->
 
     <!-- brand area -->
-    <div class="rts__section rts__brand pb-120 pt-50 text-center">
-        <div class="container">
-            <div class="row">
-                <div class="section__title mb-40">
-                    <span class="h6 d-block fw-semibold">Trusted by 300+ leading companies</span>
+    @if ($BrandSectionSetting == null || $BrandSectionSetting->show_section !== '0')
+        <div class="rts__section rts__brand mt-5 pb-120 pt-50 text-center">
+            <div class="container">
+                <div class="row">
+                    <div class="section__title mb-40">
+                        <span class="h6 d-block fw-semibold">Trusted by 300+ leading companies</span>
+                    </div>
                 </div>
-            </div>
-            <div class="row align-items-center">
-                <div class="rts__brand__slider overflow-hidden swiper-data"
-                    data-swiper='{
+                <div class="row align-items-center">
+                    <div class="rts__brand__slider overflow-hidden swiper-data"
+                        data-swiper='{
                         "slidesPerView":7,
                         "loop": true,
                         "speed": 1000,
@@ -203,70 +206,71 @@
                         }
 
                     }'>
-                    <div class="swiper-wrapper">
-                        <div class="swiper-slide">
-                            <div class="brand__item">
-                                <a href="#" class="brand__item__link" aria-label="brand">
-                                    <img src="{{ url('user/assets/img/home-1/brand/b51.svg') }}" alt="">
-                                </a>
+                        <div class="swiper-wrapper">
+                            <div class="swiper-slide">
+                                <div class="brand__item">
+                                    <a href="#" class="brand__item__link" aria-label="brand">
+                                        <img src="{{ url('user/assets/img/home-1/brand/b51.svg') }}" alt="">
+                                    </a>
+                                </div>
                             </div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="brand__item">
-                                <a href="#" class="brand__item__link" aria-label="brand">
-                                    <img src="{{ url('user/assets/img/home-1/brand/image1.svg') }}" alt="">
-                                </a>
+                            <div class="swiper-slide">
+                                <div class="brand__item">
+                                    <a href="#" class="brand__item__link" aria-label="brand">
+                                        <img src="{{ url('user/assets/img/home-1/brand/image1.svg') }}" alt="">
+                                    </a>
+                                </div>
                             </div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="brand__item">
-                                <a href="#" class="brand__item__link" aria-label="brand">
-                                    <img src="{{ url('user/assets/img/home-1/brand/image2.svg') }}" alt="">
-                                </a>
+                            <div class="swiper-slide">
+                                <div class="brand__item">
+                                    <a href="#" class="brand__item__link" aria-label="brand">
+                                        <img src="{{ url('user/assets/img/home-1/brand/image2.svg') }}" alt="">
+                                    </a>
+                                </div>
                             </div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="brand__item">
-                                <a href="#" class="brand__item__link" aria-label="brand">
-                                    <img src="{{ url('user/assets/img/home-1/brand/image3.svg') }}" alt="">
-                                </a>
+                            <div class="swiper-slide">
+                                <div class="brand__item">
+                                    <a href="#" class="brand__item__link" aria-label="brand">
+                                        <img src="{{ url('user/assets/img/home-1/brand/image3.svg') }}" alt="">
+                                    </a>
+                                </div>
                             </div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="brand__item">
-                                <a href="#" class="brand__item__link" aria-label="brand">
-                                    <img src="{{ url('user/assets/img/home-1/brand/image4.svg') }}" alt="">
-                                </a>
+                            <div class="swiper-slide">
+                                <div class="brand__item">
+                                    <a href="#" class="brand__item__link" aria-label="brand">
+                                        <img src="{{ url('user/assets/img/home-1/brand/image4.svg') }}" alt="">
+                                    </a>
+                                </div>
                             </div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="brand__item">
-                                <a href="#" class="brand__item__link" aria-label="brand">
-                                    <img src="{{ url('user/assets/img/home-1/brand/image5.svg') }}" alt="">
-                                </a>
+                            <div class="swiper-slide">
+                                <div class="brand__item">
+                                    <a href="#" class="brand__item__link" aria-label="brand">
+                                        <img src="{{ url('user/assets/img/home-1/brand/image5.svg') }}" alt="">
+                                    </a>
+                                </div>
                             </div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="brand__item">
-                                <a href="#" class="brand__item__link" aria-label="brand">
-                                    <img src="{{ url('user/assets/img/home-1/brand/image1.svg') }}" alt="">
-                                </a>
+                            <div class="swiper-slide">
+                                <div class="brand__item">
+                                    <a href="#" class="brand__item__link" aria-label="brand">
+                                        <img src="{{ url('user/assets/img/home-1/brand/image1.svg') }}" alt="">
+                                    </a>
+                                </div>
                             </div>
-                        </div>
-                        <div class="swiper-slide">
-                            <div class="brand__item">
-                                <a href="#" class="brand__item__link" aria-label="brand">
-                                    <img src="{{ url('user/assets/img/home-1/brand/linkedin-logo-png-20321.svg') }}"
-                                        alt="">
-                                </a>
+                            <div class="swiper-slide">
+                                <div class="brand__item">
+                                    <a href="#" class="brand__item__link" aria-label="brand">
+                                        <img src="{{ url('user/assets/img/home-1/brand/linkedin-logo-png-20321.svg') }}"
+                                            alt="">
+                                    </a>
+                                </div>
                             </div>
-                        </div>
 
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    @endif
     <!-- brand area end -->
 
     <!-- cat slider -->
@@ -612,7 +616,7 @@
     <!-- current open position end -->
 
     <!-- what we are -->
-    @if ($WhatWeAreSectionSettings && $WhatWeAreSectionSettings->show_section !== 0)
+    @if ($WhatWeAreSectionSettings == null || $WhatWeAreSectionSettings->show_section !== '0')
         <div class="rts__section pb-120">
             <div class="container">
                 <div class="row align-items-center g-5">
@@ -994,59 +998,61 @@
             </div>
         </div>
     </div> --}}
-    <div class="rts__section section__padding">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-xl-6 col-lg-10">
-                    <div class="rts__section__content text-center wow animated fadeIn mb-60">
-                        <h3 class="rts__section__title section__mb">
-                            {{ $NewsSection->news_title ?? 'Read Our Latest News' }}
-                        </h3>
-                        <p class="rts__section__desc">
-                            {{ $NewsSection->news_message ?? 'Looking for your next career opportunity. Look no further' }}
-                        </p>
+    @if ($NewsSection == null || $NewsSection->show_section !== '0')
+        <div class="rts__section section__padding">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-xl-6 col-lg-10">
+                        <div class="rts__section__content text-center wow animated fadeIn mb-60">
+                            <h3 class="rts__section__title section__mb">
+                                {{ $NewsSection->news_title ?? 'Read Our Latest News' }}
+                            </h3>
+                            <p class="rts__section__desc">
+                                {{ $NewsSection->news_message ?? 'Looking for your next career opportunity. Look no further' }}
+                            </p>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="row justify-content-center g-30">
-                @if (!empty($NewsSection->cards))
-                    @foreach ($NewsSection->cards as $card)
-                        <div class="col-lg-6 col-xl-4 col-md-10">
-                            <div class="rts__single__blog">
-                                <a href="#" class="blog__img">
-                                    <img src="{{ asset($card['image']) }}" class="mb-2" alt="blog">
-                                </a>
-                                <div class="blog__meta">
-                                    <div class="blog__meta__info d-flex gap-3 my-3">
-                                        <span class="d-flex gap-1 align-items-center">
-                                            <img class="svg" src="{{ url('user/assets/img/icon/calender.svg') }}"
-                                                alt="">
-                                            {{ $card['date'] ?? '' }}
-                                        </span>
-                                        <a href="#" class="d-flex gap-1 align-items-center">
-                                            <img class="svg" src="{{ url('user/assets/img/icon/user.svg') }}"
-                                                alt="">
-                                            {{ $card['author'] ?? '' }}
+                <div class="row justify-content-center g-30">
+                    @if (!empty($NewsSection->cards))
+                        @foreach ($NewsSection->cards as $card)
+                            <div class="col-lg-6 col-xl-4 col-md-10">
+                                <div class="rts__single__blog">
+                                    <a href="#" class="blog__img">
+                                        <img src="{{ asset($card['image']) }}" class="mb-2" alt="blog">
+                                    </a>
+                                    <div class="blog__meta">
+                                        <div class="blog__meta__info d-flex gap-3 my-3">
+                                            <span class="d-flex gap-1 align-items-center">
+                                                <img class="svg" src="{{ url('user/assets/img/icon/calender.svg') }}"
+                                                    alt="">
+                                                {{ $card['date'] ?? '' }}
+                                            </span>
+                                            <a href="#" class="d-flex gap-1 align-items-center">
+                                                <img class="svg" src="{{ url('user/assets/img/icon/user.svg') }}"
+                                                    alt="">
+                                                {{ $card['author'] ?? '' }}
+                                            </a>
+                                        </div>
+                                        <a href="#" class="h6 fw-semibold">
+                                            {{ $card['title'] ?? '' }}
+                                        </a>
+                                        <a href="#" class="readmore__btn d-flex mt-3 gap-2 align-items-center">
+                                            {{ $card['link_text'] ?? 'Read More' }}
+                                            <i class="fa-light fa-arrow-right"></i>
                                         </a>
                                     </div>
-                                    <a href="#" class="h6 fw-semibold">
-                                        {{ $card['title'] ?? '' }}
-                                    </a>
-                                    <a href="#" class="readmore__btn d-flex mt-3 gap-2 align-items-center">
-                                        {{ $card['link_text'] ?? 'Read More' }}
-                                        <i class="fa-light fa-arrow-right"></i>
-                                    </a>
                                 </div>
                             </div>
-                        </div>
-                    @endforeach
-                @else
-                    <p class="text-center">No news found.</p>
-                @endif
+                        @endforeach
+                    @else
+                        <p class="text-center">No news found.</p>
+                    @endif
+                </div>
             </div>
         </div>
-    </div>
+    @endif
 
     <!-- blog section end -->
 

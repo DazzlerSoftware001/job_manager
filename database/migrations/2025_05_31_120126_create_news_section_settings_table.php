@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('news_section_settings', function (Blueprint $table) {
             $table->id();
+            $table->enum('show_section', [0, 1])->default(1);
             $table->string('news_title')->nullable();
             $table->string('news_message')->nullable();
             $table->json('cards')->nullable(); // cards data stored as JSON

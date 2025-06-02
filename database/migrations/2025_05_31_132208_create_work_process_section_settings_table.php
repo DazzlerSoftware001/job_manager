@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('work_process_section_settings', function (Blueprint $table) {
             $table->id();
+            $table->enum('show_section', [0, 1])->default(1);
             $table->string('work_title')->nullable();
             $table->string('work_message')->nullable();
             $table->json('cards')->nullable();
