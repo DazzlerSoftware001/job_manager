@@ -35,9 +35,20 @@ class FilteredUsersExport implements FromCollection, WithHeadings
             $query->where('branch', $this->filters['Branch']);
         }
 
+        // if (!empty($this->filters['experience'])) {
+        //     $experienceArray = explode(',', $this->filters['experience']);
+        //     $query->whereIn('experience', $experienceArray);
+        // }
+
         if (!empty($this->filters['experience'])) {
-            $experienceArray = explode(',', $this->filters['experience']);
-            $query->whereIn('experience', $experienceArray);
+            $experience = explode(',', $this->filters['experience']);
+            $experience = array_map('intval', $experience);
+
+            if (!empty($experience)) {
+                $min = min($experience);
+                $max = max($experience);
+                $query->whereBetween('experience', [$min, $max]);
+            }
         }
 
         if (!empty($this->filters['skills'])) {
