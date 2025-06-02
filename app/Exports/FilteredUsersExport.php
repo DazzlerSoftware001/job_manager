@@ -27,29 +27,32 @@ class FilteredUsersExport implements FromCollection, WithHeadings
             $query->where('education_level', $this->filters['education_level']);
         }
 
+        if (!empty($this->filters['Qualification'])) {
+            $query->where('qualification', $this->filters['Qualification']);
+        }
+
+        if (!empty($this->filters['Branch'])) {
+            $query->where('branch', $this->filters['Branch']);
+        }
+
         if (!empty($this->filters['experience'])) {
-            $query->where('experience', $this->filters['experience']);
+            $experienceArray = explode(',', $this->filters['experience']);
+            $query->whereIn('experience', $experienceArray);
         }
 
         if (!empty($this->filters['skills'])) {
             $query->whereJsonContains('skills', $this->filters['skills']);
         }
 
-        // Add additional filters here if needed
-        // For example:
-        // if (!empty($this->filters['status'])) {
-        //     $query->where('status', $this->filters['status']);
-        // }
-
         return $query->orderBy('id', 'desc')->get([
-            'id', 'name', 'email', 'phone', 'experience', 'city', 'status', 'created_at'
+            'id', 'name', 'email', 'phone', 'experience', 'city', 'qualification', 'branch', 'status', 'created_at'
         ]);
     }
 
     public function headings(): array
     {
         return [
-            'ID', 'Name', 'Email', 'Phone', 'Experience', 'City', 'Status', 'Created At'
+            'ID', 'Name', 'Email', 'Phone', 'Experience', 'City', 'Qualification', 'Branch', 'Status', 'Created At'
         ];
     }
 }

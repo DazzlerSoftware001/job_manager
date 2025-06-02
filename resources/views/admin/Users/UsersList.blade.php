@@ -137,21 +137,21 @@
                                     </div> --}}
 
 
-                                    <div class="col-3 mt-5 text-end">
+                                   <div class="col-3 mt-5 text-end">
                                         <button type="button" class="btn btn-sm btn-outline-success" id="exportBtn">
                                             <i class="mdi mdi-file-excel"></i> Export All
                                         </button>
                                     </div>
 
                                     {{-- Place export form here, just after the button --}}
-                                    <form id="exportForm" method="POST" action="{{ route('Admin.FilteredUsersExportExcel') }}">
+                                   <form id="exportForm" method="POST" action="{{ route('Admin.FilteredUsersExportExcel') }}">
                                         @csrf
                                         <input type="hidden" name="city" id="export_city">
                                         <input type="hidden" name="education_level" id="export_education_level">
                                         <input type="hidden" name="Qualification" id="export_Qualification">
                                         <input type="hidden" name="Branch" id="export_Branch">
                                         <input type="hidden" name="experience" id="export_experience">
-                                        {{-- skills[] inputs will be dynamically appended via JS --}}
+                                        {{-- skills[] will be appended dynamically --}}
                                     </form>
 
 
@@ -267,42 +267,34 @@
         </script>
 
         <script>
-$(document).ready(function() {
+            $(document).ready(function () {
+                $('#exportBtn').on('click', function () {
+                    $('#export_city').val($('#cityFilter').val());
+                    $('#export_education_level').val($('#education_level').val());
+                    $('#export_Qualification').val($('#Qualification').val());
+                    $('#export_Branch').val($('#Branch').val());
 
-    $('#exportBtn').on('click', function() {
-        // Set hidden inputs with current filter values
-        $('#export_city').val($('#cityFilter').val());
-        $('#export_education_level').val($('#education_level').val());
-        $('#export_Qualification').val($('#Qualification').val());
-        $('#export_Branch').val($('#Branch').val());
+                    let experienceVals = $('input[name="experience[]"]:checked').map(function () {
+                        return this.value;
+                    }).get().join(',');
+                    $('#export_experience').val(experienceVals);
 
-        // For experience checkboxes, get checked values as comma separated string
-        let experienceVals = $('input[name="experience[]"]:checked').map(function() {
-            return this.value;
-        }).get().join(',');
-        $('#export_experience').val(experienceVals);
+                    $('#exportForm').find('input[name="skills[]"]').remove();
+                    let skills = $('#skills').val(); // array
+                    if (skills && skills.length > 0) {
+                        skills.forEach(function (skill) {
+                            $('<input>').attr({
+                                type: 'hidden',
+                                name: 'skills[]',
+                                value: skill
+                            }).appendTo('#exportForm');
+                        });
+                    }
 
-        // Remove old skills inputs if any
-        $('#exportForm').find('input[name="skills[]"]').remove();
-
-        // Add current selected skills as hidden inputs (multiple)
-        let skills = $('#skills').val(); // it's an array
-        if (skills && skills.length > 0) {
-            skills.forEach(function(skill) {
-                $('<input>').attr({
-                    type: 'hidden',
-                    name: 'skills[]',
-                    value: skill
-                }).appendTo('#exportForm');
+                    $('#exportForm').submit();
+                });
             });
-        }
-
-        // Submit the form
-        $('#exportForm').submit();
-    });
-
-});
-</script>
+        </script>
 
 
         <script>
