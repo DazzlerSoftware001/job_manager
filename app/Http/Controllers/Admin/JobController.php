@@ -25,6 +25,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class JobController extends Controller
 {
@@ -318,10 +319,21 @@ class JobController extends Controller
     public function addJobDepartment(Request $request)
     {
 
-        // Define validation rules
+        // // Define validation rules
+        // $rules = [
+        //     'category'   => 'required',
+        //     'department' => 'required|string|max:100|unique:job_department,department',
+        // ];
         $rules = [
             'category'   => 'required',
-            'department' => 'required|string|max:100|unique:job_department,department',
+            'department' => [
+                'required',
+                'string',
+                'max:100',
+                Rule::unique('job_department', 'department')->where(function ($query) use ($request) {
+                    return $query->where('category_name', $request->input('category'));
+                }),
+            ],
         ];
 
         // Validate the request
@@ -449,7 +461,9 @@ class JobController extends Controller
     // Role
     public function JobRole()
     {
-        $data['JobDepartment'] = JobDepartment::select('department')->get();
+        // $data['JobDepartment'] = JobDepartment::select('department')->get();
+        $data['JobDepartment'] = JobDepartment::where('status', '!=', 0)->select('department')->get();
+
         return view('admin.job.Jobrole', $data);
     }
 
@@ -531,9 +545,21 @@ class JobController extends Controller
     {
 
         // Define validation rules
+        // $rules = [
+        //     'department' => 'required',
+        //     'role'       => 'required|string|max:100|unique:job_role,role',
+        // ];
+
         $rules = [
-            'department' => 'required',
-            'role'       => 'required|string|max:100|unique:job_role,role',
+            'department'   => 'required',
+            'role' => [
+                'required',
+                'string',
+                'max:100',
+                Rule::unique('job_role', 'role')->where(function ($query) use ($request) {
+                    return $query->where('department_name', $request->input('department'));
+                }),
+            ],
         ];
 
         // Validate the request
@@ -3064,7 +3090,7 @@ class JobController extends Controller
     {
 
         // dd($request->all());
-        $job_id = $request->job_id;
+        $job_id      = $request->job_id;
         $decryptedId = null;
         if (! empty($job_id)) {
             $decryptedId = Crypt::decrypt($job_id);
