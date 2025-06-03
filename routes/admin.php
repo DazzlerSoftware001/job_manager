@@ -261,6 +261,10 @@ Route::prefix('Admin')->group(function () {
         Route::post('/SiteTitle', [SettingsController::class, 'SiteTitle'])->name('Admin.SiteTitle');
         Route::post('/update-timezone', [SettingsController::class, 'updateTimezone'])->name('Admin.Timezone');
 
+
+        Route::get('/EmailSetting', [SettingsController::class, 'EmailSetting'])->name('Admin.EmailSetting');
+        Route::post('/UpdateEmailSetting', [SettingsController::class, 'UpdateEmailSetting'])->name('Admin.UpdateEmailSetting');
+
          //  CacheClear
         Route::get('/clearCache', [SettingsController::class, 'clearCache'])->name('Admin.clearCache');
 

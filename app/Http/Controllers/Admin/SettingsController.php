@@ -9,9 +9,11 @@ use App\Models\MaintenanceMode;
 use App\Models\NewsSectionSettings;
 use App\Models\WhatWeAreSectionSettings;
 use App\Models\WorkProcessSectionSettings;
+use App\Models\MailSetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Crypt;
 
 class SettingsController extends Controller
 {
@@ -150,6 +152,120 @@ class SettingsController extends Controller
             'status_code' => 1,
             'message'     => 'Timezone updated successfully.',
         ]);
+    }
+
+    public function EmailSetting()
+    {
+        $mailSetting = MailSetting::first();
+        return view('admin.Settings.EmailSetting',compact('mailSetting'));
+
+    }
+
+    // public function UpdateEmailSetting(Request $request)
+    // {
+    //     $rules = [
+    //         'mail_mailer'        => 'nullable|string',
+    //         'mail_host'          => 'nullable|string',
+    //         'mail_port'          => 'nullable|integer',
+    //         'mail_username'      => 'nullable|string',
+    //         'mail_password'      => 'nullable|string',
+    //         'mail_encryption'    => 'nullable|string',
+    //         'mail_from_address'  => 'nullable|email',
+    //         'mail_from_name'     => 'nullable|string',
+    //     ];
+
+    //     $validator = Validator::make($request->all(), $rules);
+
+    //     if ($validator->fails()) {
+    //         return response()->json([
+    //             'status_code' => 0,
+    //             'message' => 'Validation failed',
+    //             'errors' => $validator->errors()
+    //         ]);
+    //     }
+
+    //     $data = $validator->validated();
+
+    //     $MailSetting = MailSetting::first();
+
+    //     if (!$MailSetting) {
+    //         $MailSetting = new MailSetting();
+    //         $MailSetting->fill($data);
+    //         $MailSetting->created_at = now();
+    //         $action = 'saved';
+    //     } else {
+    //         $MailSetting->fill($data);
+    //         $MailSetting->updated_at = now();
+    //         $action = 'updated';
+    //     }
+
+    //     if ($MailSetting->save()) {
+    //         return response()->json([
+    //             'status_code' => 1,
+    //             'message' => "Mail setting $action successfully"
+    //         ]);
+    //     } else {
+    //         return response()->json([
+    //             'status_code' => 0,
+    //             'message' => "Unable to $action mail setting"
+    //         ]);
+    //     }
+    // }
+
+    public function UpdateEmailSetting(Request $request)
+    {
+        $rules = [
+            'mail_mailer'       => 'nullable|string',
+            'mail_host'         => 'nullable|string',
+            'mail_port'         => 'nullable|integer',
+            'mail_username'     => 'nullable|string',
+            'mail_password'     => 'nullable|string',
+            'mail_encryption'   => 'nullable|string',
+            'mail_from_address' => 'nullable|email',
+            'mail_from_name'    => 'nullable|string',
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status_code' => 0,
+                'message' => 'Validation failed',
+                'errors' => $validator->errors()
+            ]);
+        }
+
+        $data = $validator->validated();
+
+        // Encrypt mail_password if present
+        if (!empty($data['mail_password'])) {
+            $data['mail_password'] = Crypt::encryptString($data['mail_password']);
+        }
+
+        $MailSetting = MailSetting::first();
+
+        if (!$MailSetting) {
+            $MailSetting = new MailSetting();
+            $MailSetting->fill($data);
+            $MailSetting->created_at = now();
+            $action = 'saved';
+        } else {
+            $MailSetting->fill($data);
+            $MailSetting->updated_at = now();
+            $action = 'updated';
+        }
+
+        if ($MailSetting->save()) {
+            return response()->json([
+                'status_code' => 1,
+                'message' => "Mail setting $action successfully"
+            ]);
+        } else {
+            return response()->json([
+                'status_code' => 0,
+                'message' => "Unable to $action mail setting"
+            ]);
+        }
     }
 
     public function Maintenance()
