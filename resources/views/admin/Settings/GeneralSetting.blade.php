@@ -8,8 +8,8 @@
 
 @section('main-container')
     <div class="main-content">
-        <div class="page-content">
-            <div class="col-md-12">
+        <div class="page-content row">
+            <div class="col-md-9">
                 <div class="card">
 
                     <div class="card-header">
@@ -74,7 +74,7 @@
                                         @endif
                                     </div>
                                     <div class="select__image">
-                                        <label for="image3" class="btn btn-primary">Upload Dark Logo</label>
+                                        <label for="image3" class="btn btn-primary">Upload Favicon</label>
                                         <input type="file" name="image3" id="image3" class="d-none" accept="image/*">
                                     </div>
                                 </div>
@@ -87,6 +87,37 @@
                     </form>
                 </div>
             </div>
+
+            {{-- Upload Favicon --}}
+            <div class="col-12 col-md-6 col-lg-3">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title mb-0">Change Favicon</h4>
+                    </div>
+
+                    <form id="FaviconForm" enctype="multipart/form-data" method="POST" class="py-5">
+                        @csrf
+                        <div class="d-flex justify-content-center mb-3">
+                            <div class="author__image me-3">
+                                @if ($GeneralSetting !== null)
+                                    <img id="favicon" src="{{ asset($GeneralSetting->favicon) }}"
+                                        onerror="this.onerror=null; this.src='{{ url('settings/logo/default.png') }}';"
+                                        alt="" width="250" height="150">
+                                @else
+                                    <img id="favicon" src="{{ url('settings/logo/default.png') }}" alt=""
+                                        width="250" height="150">
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="text-center">
+                            <label for="faviconInput" class="btn btn-primary">Upload Favicon</label>
+                            <input type="file" name="favicon" id="faviconInput" class="d-none" accept="image/*">
+                        </div>
+                    </form>
+                </div>
+            </div>
+
 
             <div class="row g-4">
                 <!-- Site Title Section -->
@@ -102,8 +133,8 @@
                                     <div class="col-md-8">
                                         <label for="site_title" class="form-label">Enter Site Title</label>
                                         <input type="text" name="site_title" id="site_title" class="form-control"
-                                            placeholder="e.g. CareerNest"
-                                            value="{{ $GeneralSetting->site_title ?? '' }}" required>
+                                            placeholder="e.g. CareerNest" value="{{ $GeneralSetting->site_title ?? '' }}"
+                                            required>
                                     </div>
                                     <div class="col-md-4 mt-md-0 mt-3">
                                         <button type="submit" class="btn btn-success w-100">Update Title</button>
@@ -249,6 +280,69 @@
                 });
             });
         </script>
+
+        {{-- Update Favicon --}}
+        <script>
+            $(document).ready(function() {
+                function readURL(input, previewId) {
+                    if (input.files && input.files[0]) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            $(previewId).attr('src', e.target.result);
+                        };
+                        reader.readAsDataURL(input.files[0]);
+                    }
+                }
+
+                $('#faviconInput').change(function() {
+                    readURL(this, '#favicon');
+                    $('#FaviconForm').submit(); // Optional: auto-submit after file selected
+                });
+
+                $('#FaviconForm').submit(function(e) {
+                    e.preventDefault();
+
+                    const formData = new FormData(this);
+
+                    $.ajax({
+                        url: "{{ route('Admin.Favicon') }}",
+                        type: "POST",
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            Toastify({
+                                text: response.message,
+                                duration: 3000,
+                                gravity: "top",
+                                position: "right",
+                                style: {
+                                    background: "#28a745",
+                                },
+                            }).showToast();
+                            setTimeout(function() {
+                                location.reload();
+                            }, 750);
+                        },
+                        error: function() {
+                            Toastify({
+                                text: "Upload failed. Please try again.",
+                                duration: 3000,
+                                gravity: "top",
+                                position: "right",
+                                style: {
+                                    background: "#dc3545",
+                                },
+                            }).showToast();
+                        }
+                    });
+                });
+            });
+        </script>
+
 
         {{-- Update Site Title --}}
         <script>

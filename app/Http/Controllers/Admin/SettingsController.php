@@ -70,6 +70,48 @@ class SettingsController extends Controller
         ]);
     }
 
+    public function favicon(Request $request)
+    {
+        // Define input and DB column name
+        $inputName = 'favicon';
+        $dbColumn  = 'favicon'; // Ensure this column exists in your GeneralSetting table
+
+        // Validate inputs
+        $request->validate([
+            $inputName => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+        ]);
+
+        // Get or create the GeneralSetting record (assuming only one row)
+        $GeneralSetting = GeneralSetting::first() ?? new GeneralSetting();
+
+        // Handle favicon upload
+        if ($request->hasFile($inputName)) {
+            // Delete the old favicon if it exists
+            $oldPath = public_path($GeneralSetting->$dbColumn);
+            if (! empty($GeneralSetting->$dbColumn) && file_exists($oldPath)) {
+                if (! unlink($oldPath)) {
+                    \Log::error("Failed to delete old favicon at: " . $oldPath);
+                }
+            }
+
+            // Save the new favicon
+            $image     = $request->file($inputName);
+            $imageName = time() . '_' . $inputName . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path('settings/favicon/'), $imageName);
+            $GeneralSetting->$dbColumn = 'settings/favicon/' . $imageName;
+        }
+
+        $GeneralSetting->save();
+
+        return response()->json([
+            'status_code' => 1,
+            'message'     => 'Favicon uploaded successfully',
+            'data'        => [
+                'favicon' => $GeneralSetting->$dbColumn,
+            ],
+        ]);
+    }
+
     public function SiteTitle(Request $request)
     {
         $request->validate([

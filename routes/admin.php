@@ -257,6 +257,7 @@ Route::prefix('Admin')->group(function () {
         
         Route::get('/GeneralSetting', [SettingsController::class, 'generalSetting'])->name('Admin.GeneralSetting');
         Route::post('/Profilelogo', [SettingsController::class, 'Profilelogo'])->name('Admin.Profilelogo');
+        Route::post('/Favicon', [SettingsController::class, 'favicon'])->name('Admin.Favicon');
         Route::post('/SiteTitle', [SettingsController::class, 'SiteTitle'])->name('Admin.SiteTitle');
         Route::post('/update-timezone', [SettingsController::class, 'updateTimezone'])->name('Admin.Timezone');
 
