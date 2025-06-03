@@ -23,6 +23,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Validator;
+use App\Mail\Recruiter\JobPostedMail;
+use Illuminate\Support\Facades\Mail;
 
 class JobController extends Controller
 {
@@ -129,7 +131,7 @@ class JobController extends Controller
             // dd($JobPost);
 
             $JobPost->save();
-
+            Mail::to(Auth::user()->email)->send(new JobPostedMail($JobPost));
             return response()->json(['status_code' => 1, 'message' => 'Job Posted successfully wait for admin action']);
             // } catch (\Exception $e) {
             // Handle any exception that occurs during saving
@@ -195,6 +197,7 @@ class JobController extends Controller
         return response()->json($JobEducation);
     }
 
+    // fetch job list
     public function JobList()
     {
         return view('recruiter.job.JobList');
