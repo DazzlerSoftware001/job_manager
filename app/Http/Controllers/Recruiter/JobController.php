@@ -24,6 +24,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Validator;
 use App\Mail\Recruiter\JobPostedMail;
+use App\Mail\Recruiter\JobPostedMailToAdmin;
 use Illuminate\Support\Facades\Mail;
 
 class JobController extends Controller
@@ -131,7 +132,14 @@ class JobController extends Controller
             // dd($JobPost);
 
             $JobPost->save();
-            Mail::to(Auth::user()->email)->send(new JobPostedMail($JobPost));
+            // Mail::to(Auth::user()->email)->send(new JobPostedMail($JobPost));
+            $recruiterName = Auth::user()->name . ' ' . Auth::user()->lname;
+            Mail::to(Auth::user()->email)->send(new JobPostedMail($JobPost, $recruiterName));
+           
+            // confirmation mail to admin 
+            $adminMail = UserProfile::where('user_type', 1)->where('user_details', 'Admin')->select('name', 'lname', 'email')->first();
+            Mail::to($adminMail->email)->send(new JobPostedMailToAdmin($JobPost, $recruiterName));
+
             return response()->json(['status_code' => 1, 'message' => 'Job Posted successfully wait for admin action']);
             // } catch (\Exception $e) {
             // Handle any exception that occurs during saving

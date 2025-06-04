@@ -13,12 +13,14 @@ class JobPostedMailToAdmin extends Mailable
 {
     use Queueable, SerializesModels;
     public $jobPost;
+    public $recruiterName;
     /**
      * Create a new message instance.
      */
-    public function __construct()
+    public function __construct($jobPost,$recruiterName)
     {
         $this->jobPost = $jobPost;
+        $this->recruiterName = $recruiterName;
     }
 
     /**
@@ -27,7 +29,7 @@ class JobPostedMailToAdmin extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Your Job Has Been Posted Successfully',
+            subject: 'New Job Post Submitted for Review',
         );
     }
 
@@ -38,7 +40,7 @@ class JobPostedMailToAdmin extends Mailable
     {
         return new Content(
            view: 'emails.recruiter.job_postedToAdmin',
-            with: ['jobPost' => $this->jobPost],
+            with: ['jobPost' => $this->jobPost,'recruiterName' =>$this->recruiterName],
         );
     }
 

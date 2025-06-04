@@ -2,19 +2,18 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Job Posted Confirmation</title>
+    <title>New Job Post</title>
 </head>
 <body>
-    <h2>Hello {{ $jobPost->com_name }},</h2>
+    <h2>New Job Post Submitted</h2>
 
-    <p>Your job titled <strong>{{ $jobPost->title }}</strong> has been successfully posted.</p>
+    <p>New job titled <strong>{{ $jobPost->title }}</strong> has been successfully posted by <strong>{{$recruiterName}} </strong></p>
 
-    <p>It is currently under review by our admin team. You will be notified once it goes live.</p>
-
-    <p>Thanks for choosing our platform!</p>
+    <p>Please review and approve the job post in the admin panel.</p>
 
     <br>
-    <p>Regards,</p>
-    <p><strong>Job Portal Team</strong></p>
+    <p>Thanks,</p>
+
+    <p><strong>Your Job Portal</strong></p>
 </body>
 </html>

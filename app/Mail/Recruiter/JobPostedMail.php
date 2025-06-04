@@ -14,12 +14,14 @@ class JobPostedMail extends Mailable
     use Queueable, SerializesModels;
 
     public $jobPost;
+    public $recruiterName;
     /**
      * Create a new message instance.
      */
-    public function __construct($jobPost)
+    public function __construct($jobPost,$recruiterName)
     {
         $this->jobPost = $jobPost;
+        $this->recruiterName = $recruiterName;
     }
 
     /**
@@ -39,7 +41,7 @@ class JobPostedMail extends Mailable
     {
         return new Content(
            view: 'emails.recruiter.job_posted',
-            with: ['jobPost' => $this->jobPost],
+            with: ['jobPost' => $this->jobPost,'recruiterName' => $this->recruiterName,],
         );
     }
 
