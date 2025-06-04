@@ -555,26 +555,6 @@
             });
         </script>
 
-        {{-- <script>
-        ClassicEditor
-            .create(document.querySelector('#job_description'))
-            .catch(error => {
-                console.error(error);
-            });
-
-            ClassicEditor
-            .create(document.querySelector('#job_resp'))
-            .catch(error => {
-                console.error(error);
-            });
-
-            ClassicEditor
-            .create(document.querySelector('#job_req'))
-            .catch(error => {
-                console.error(error);
-            });
-        </script> --}}
-
         <script>
             // Set tomorrow's date as the minimum
             const today = new Date();

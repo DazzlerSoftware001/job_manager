@@ -1108,10 +1108,10 @@
                                 }).showToast();
 
                                 // Redirect to another route after successful submission
-                                // setTimeout(function() {
-                                //     window.location.href =
-                                //         "{{ route('Recruiter.JobList') }}"; // Change this to your desired route
-                                // }, 1500);
+                                setTimeout(function() {
+                                    window.location.href =
+                                        "{{ route('Recruiter.JobList') }}"; // Change this to your desired route
+                                }, 1500);
                             } else if (result.status_code === 2) {
                                 Toastify({
                                     text: result.message,

@@ -25,6 +25,10 @@ use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Validator;
 use App\Mail\Recruiter\JobPostedMail;
 use App\Mail\Recruiter\JobPostedMailToAdmin;
+use App\Mail\Recruiter\JobStatusChangedMail;
+use App\Mail\Recruiter\JobStatusChangedMailToAdmin;
+use App\Mail\Recruiter\JobUpdatedMail;
+use App\Mail\Recruiter\JobUpdatedMailToAdmin;
 use Illuminate\Support\Facades\Mail;
 
 class JobController extends Controller
@@ -322,6 +326,18 @@ class JobController extends Controller
 
                 // Save the updated record
                 if ($JobPost->save()) {
+
+                    $recruiterName = Auth::user()->name . ' ' . Auth::user()->lname;
+
+                    // Send mail to recruiter
+                    Mail::to(Auth::user()->email)->send(new JobStatusChangedMail($JobPost, $recruiterName));
+                   
+                    // Send mail to admin
+                   
+                    $adminMail = UserProfile::where('user_type', 1)->where('user_details', 'Admin')->select('name', 'lname', 'email')->first();
+                    Mail::to($adminMail->email)->send(new JobStatusChangedMailToAdmin($JobPost, $recruiterName));
+
+
                     return response()->json(['status_code' => 1, 'message' => 'Status successfully changed']);
                 } else {
                     return response()->json(['status_code' => 0, 'message' => 'Unable to change status']);
@@ -462,6 +478,7 @@ class JobController extends Controller
                 // $JobPost->com_name = $request->input('company_name');
                 // $JobPost->com_logo = $request->input('company_logo');
                 $JobPost->com_details  = $request->input('company_details');
+                $JobPost->jobexpiry          = $request->input('jobExp');
                 $JobPost->job_desc     = $request->input('job_description');
                 $JobPost->job_resp     = $request->input('job_resp');
                 $JobPost->job_req      = $request->input('job_req');
@@ -472,6 +489,14 @@ class JobController extends Controller
                 $JobPost->save();
 
                 if ($JobPost->save()) {
+
+                    $recruiterName = Auth::user()->name . ' ' . Auth::user()->lname;
+                    Mail::to(Auth::user()->email)->send(new JobUpdatedMail($JobPost, $recruiterName));
+                
+                    // confirmation mail to admin 
+                    $adminMail = UserProfile::where('user_type', 1)->where('user_details', 'Admin')->select('name', 'lname', 'email')->first();
+                    Mail::to($adminMail->email)->send(new JobUpdatedMailToAdmin($JobPost, $recruiterName));
+
                     return response()->json(['status_code' => 1, 'message' => 'JobPost updated successfully']);
                 } else {
                     return response()->json(['status_code' => 0, 'message' => 'Unable to update data']);

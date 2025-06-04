@@ -2,12 +2,12 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Job Posted Confirmation</title>
+    <title>Job Updated Confirmation</title>
 </head>
 <body>
     <h2>Hello {{ $recruiterName }},</h2>
 
-    <p>Your job titled <strong>{{ $jobPost->title }}</strong> has been successfully posted.</p>
+    <p>Your job titled <strong>{{ $jobPost->title }}</strong> has been successfully Updated.</p>
 
     <p>It is currently under review by our admin team. You will be notified once it goes live.</p>
 
