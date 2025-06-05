@@ -29,6 +29,9 @@ use App\Mail\Recruiter\JobStatusChangedMail;
 use App\Mail\Recruiter\JobStatusChangedMailToAdmin;
 use App\Mail\Recruiter\JobUpdatedMail;
 use App\Mail\Recruiter\JobUpdatedMailToAdmin;
+use App\Mail\Recruiter\CandidateShortlist;
+use App\Mail\Recruiter\CandidateReject;
+use App\Mail\Recruiter\CandidateHire;
 use Illuminate\Support\Facades\Mail;
 
 class JobController extends Controller
@@ -614,6 +617,12 @@ public function JobApllicants($job_id)
                 $application->status = 'shortlisted';
 
                 if ($application->save()) {
+                    // send mail to candidate
+                    $candidate = UserProfile::where('id',$decryptedId)->first();
+                    $AppliedJob = JobPost::where('id',$DecJob_Id)->select('title')->first();
+                    // dd($AppliedJob);
+                    Mail::to($candidate->email)->send(new CandidateShortlist($candidate, $AppliedJob));
+
                     return response()->json(['status_code' => 1, 'message' => 'Candidate shortlisted.']);
                 } else {
                     return response()->json([
@@ -644,6 +653,10 @@ public function JobApllicants($job_id)
                 $application->status = 'rejected';
 
                 if ($application->save()) {
+                    $candidate = UserProfile::where('id',$decryptedId)->first();
+                    $AppliedJob = JobPost::where('id',$DecJob_Id)->select('title')->first();
+                    // dd($AppliedJob);
+                    Mail::to($candidate->email)->send(new CandidateReject($candidate, $AppliedJob));
                     return response()->json(['status_code' => 1, 'message' => 'Candidate rejected.']);
                 } else {
                     return response()->json([
@@ -673,6 +686,10 @@ public function JobApllicants($job_id)
                 $application->status = 'hired';
 
                 if ($application->save()) {
+                    $candidate = UserProfile::where('id',$decryptedId)->first();
+                    $AppliedJob = JobPost::where('id',$DecJob_Id)->select('title')->first();
+                    // dd($AppliedJob);
+                    Mail::to($candidate->email)->send(new CandidateHire($candidate, $AppliedJob));
                     return response()->json(['status_code' => 1, 'message' => 'Candidate hired.']);
                 } else {
                     return response()->json([

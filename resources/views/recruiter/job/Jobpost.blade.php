@@ -555,7 +555,7 @@
             });
         </script>
 
-        <script>
+            <script>
             // Set tomorrow's date as the minimum
             const today = new Date();
             today.setDate(today.getDate() + 1); // Add 1 day for tomorrow

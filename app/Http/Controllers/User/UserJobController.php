@@ -5,7 +5,11 @@ use App\Http\Controllers\Controller;
 use App\Models\JobApplication;
 use App\Models\JobPost;
 use App\Models\SaveJob;
+use App\Models\Recruiter;
+use App\Models\UserProfile;
 use Illuminate\Http\Request;
+use App\Mail\User\JobApply;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 
@@ -109,6 +113,16 @@ class UserJobController extends Controller
             'status'  => 'pending',
         ]);
 
+
+        $recruiterId = JobPost::where('status', 1)
+            ->whereDate('jobexpiry', '>=', Carbon::today())
+            ->where('id', $job_id)->select('recruiter_id')
+            ->first();
+
+        $Recruiter = Recruiter::where('id',$recruiterId->recruiter_id)->select('name','lname','email')->first();
+
+        $user = UserProfile::where('id',$user_id)->select('name','lname','email')->first();
+        Mail::to($Recruiter->email)->send(new JobApply($Recruiter, $user));
         return response()->json([
             'status_code' => 1,
             'message'     => 'Job Applied Seccessfully!',

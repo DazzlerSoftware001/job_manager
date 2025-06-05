@@ -9,18 +9,18 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class JobStatusChangedMail extends Mailable
+class CandidateShortlist extends Mailable
 {
     use Queueable, SerializesModels;
-    public $jobPost;
-    public $recruiterName;
+    public $candidate;
+    public $AppliedJob;
     /**
      * Create a new message instance.
      */
-    public function __construct($jobPost, $recruiterName)
+    public function __construct($candidate,$AppliedJob)
     {
-        $this->jobPost = $jobPost;
-        $this->recruiterName = $recruiterName;
+        $this->candidate = $candidate;
+        $this->AppliedJob = $AppliedJob;
     }
 
     /**
@@ -29,7 +29,7 @@ class JobStatusChangedMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Job Status ' . ($this->jobPost->status == 1 ? 'Activated and made live' : 'Inactived') . ' Mail',
+            subject: 'Job Shortlisted',
         );
     }
 
@@ -39,8 +39,8 @@ class JobStatusChangedMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.recruiter.job_status_changed',
-            with: ['jobPost' => $this->jobPost,'recruiterName' => $this->recruiterName,],
+            view: 'emails.recruiter.CandidateShortlisted',
+            with: ['candidate' => $this->candidate,'AppliedJob' => $this->AppliedJob,],
         );
     }
 
