@@ -239,7 +239,9 @@ class JobController extends Controller
         ];
 
         // $query = JobPost::query();
-        $query = JobPost::withCount('applications');
+        // $query = JobPost::withCount('applications');
+        $query = JobPost::where('recruiter_id', Auth::id()) // or Auth::user()->id
+                ->withCount('applications');
 
         // Count Data
 
