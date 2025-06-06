@@ -21,6 +21,12 @@ use App\Models\JobSkill;
 use App\Models\JobTypes;
 use App\Models\Recruiter;
 use App\Models\UserProfile;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\Admin\JobPostMailToRecruiter;
+use App\Mail\Admin\JobVerifyMailToRecruiter;
+use App\Mail\Admin\JobStatusMailToRecruiter;
+use App\Mail\Admin\JobUpdateMailToRecruiter;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Crypt;
@@ -2856,7 +2862,7 @@ class JobController extends Controller
         $validator = Validator::make($request->all(), $rules);
 
         if (! $validator->fails()) {
-            try {
+            // try {
                 $JobPost = new JobPost();
 
                 $JobPost->recruiter_id = $request->input('recruiter_id');
@@ -2897,12 +2903,16 @@ class JobController extends Controller
                 // dd($JobPost);
 
                 $JobPost->save();
+                // $adminMail = UserProfile::where('user_type', 1)->where('user_details', 'Admin')->select('name', 'lname', 'email')->first();
+                $recuiter = UserProfile::where('id',$request->input('recruiter_id'))->select('name','lname','email')->first();
+                Mail::to($recuiter->email)->send(new JobPostMailToRecruiter($JobPost, $recuiter));
+
 
                 return response()->json(['status_code' => 1, 'message' => 'Job Post added successfully']);
-            } catch (\Exception $e) {
-                // Handle any exception that occurs during saving
-                return response()->json(['status_code' => 0, 'message' => 'Unable to post Job']);
-            }
+            // } catch (\Exception $e) {
+            //     // Handle any exception that occurs during saving
+            //     return response()->json(['status_code' => 0, 'message' => 'Unable to post Job']);
+            // }
         } else {
             // Return validation errors
             return response()->json(['status_code' => 2, 'message' => $validator->errors()->first()]);
@@ -3040,17 +3050,24 @@ class JobController extends Controller
     public function verifyStatus(Request $request)
     {
         $id     = $request->input('id');
-        $status = $request->input('status'); // 1 for Verify, -1 for Reject
+        $status = $request->input('status');
 
         if (! empty($id)) {
             // Check if the record exists
             $JobPost = JobPost::find($id);
-
             if ($JobPost) {
-                // Update status (1 = Verified, -1 = Rejected)
-                JobPost::where('id', $id)->update(['admin_verify' => $status]);
+                
+                // JobPost::where('id', $id)->update(['admin_verify' => $status]);
+
+                $JobPost->admin_verify = $status;
+                $JobPost->save();
 
                 $message = $status == 1 ? 'Job Post verified successfully' : 'Job Post rejected successfully';
+               
+                $recuiter = UserProfile::where('id',$JobPost->recruiter_id)->select('name','lname','email')->first();
+               
+                Mail::to($recuiter->email)->send(new JobVerifyMailToRecruiter($JobPost, $recuiter));
+                
                 return response()->json(['status_code' => 1, 'message' => $message]);
             } else {
                 return response()->json(['status_code' => 0, 'message' => 'Job Post not found']);
@@ -3074,6 +3091,10 @@ class JobController extends Controller
 
                 // Save the updated record
                 if ($JobPost->save()) {
+
+                    $recruiter = UserProfile::where('id',$JobPost->recruiter_id)->select('name','lname','email')->first();
+                    Mail::to($recruiter->email)->send(new JobStatusMailToRecruiter($JobPost, $recruiter));
+                   
                     return response()->json(['status_code' => 1, 'message' => 'Status successfully changed']);
                 } else {
                     return response()->json(['status_code' => 0, 'message' => 'Unable to change status']);
@@ -3514,6 +3535,9 @@ class JobController extends Controller
                 $JobPost->save();
 
                 if ($JobPost->save()) {
+
+                    $recruiter = UserProfile::where('id',$request->input('recruiter_id'))->select('name','lname','email')->first();
+                    Mail::to($recruiter->email)->send(new JobUpdateMailToRecruiter($JobPost, $recruiter));
                     return response()->json(['status_code' => 1, 'message' => 'JobPost updated successfully']);
                 } else {
                     return response()->json(['status_code' => 0, 'message' => 'Unable to update data']);
