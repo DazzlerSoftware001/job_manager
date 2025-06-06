@@ -44,4 +44,11 @@ class HomeController extends Controller
         $maintenance = MaintenanceMode::first();
         return view('User.MaintenanceMode', compact('maintenance'));
     }
+
+    public function about() {
+        return view('User.About');
+    }
+    public function contact() {
+        return view('User.Contact-us');
+    }
 }

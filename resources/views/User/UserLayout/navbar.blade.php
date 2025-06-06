@@ -144,7 +144,7 @@
                                                             </li>
                                                         </ul>
                                                     </li>
-                                                    <li role="menuitem"><a href="about.html">About</a></li>
+                                                    <li role="menuitem"><a href="{{ route('User.About') }}">About</a></li>
                                                     <li role="menuitem"><a href="faq.html">Faq</a></li>
                                                     <li role="menuitem"><a href="tos.html">Terms &amp; Conditions</a></li>
                                                     <li role="menuitem"><a href="privacy.html">Privacy Policy</a></li>
@@ -153,7 +153,7 @@
                                             </li>
 
                                             <li class="navigation__menu--item has-child has-arrow">
-                                                <a href="#" class="navigation__menu--item__link">Contact</a>
+                                                <a href="{{ route('User.Contact') }}" class="navigation__menu--item__link">Contact</a>
                                                 <ul class="submenu sub__style" role="menu">
                                                     <li role="menuitem"><a href="contact-1.html">Co</a></li>
                                                     <li role="menuitem"><a href="contact-2.html">Contact Two</a></li>

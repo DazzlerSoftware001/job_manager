@@ -21,6 +21,8 @@ Route::post('loginInsert', [AuthController::class, 'loginInsert'])->name('User.l
 
 Route::get('JobList', [JobController::class, 'JobList'])->name('User.JobList');
 Route::get('JobDetails/{id}', [JobController::class, 'JobDetails'])->name('User.JobDetails');
+Route::get('/About', [HomeController::class, 'about'])->name('User.About');
+Route::get('/Contact', [HomeController::class, 'contact'])->name('User.Contact');
 
 Route::get('/{slug}', [HomeController::class, 'ViewPage'])->name('User.ViewPage');
 
