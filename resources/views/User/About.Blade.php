@@ -69,10 +69,10 @@
 </section>
 
 <!-- Call to Action -->
-<section class="text-white text-center py-5" style="background:#1967D2;">
+<section class="text-white text-center py-5" style="background:#2775e4;">
   <div class="container">
-    <h3 class="fw-bold mb-3">Ready to take the next step in your career?</h3>
-    <a href="/register" class="btn btn-light btn-lg fw-semibold px-4 py-2 rts__btn common__btn  fill__btn mt-50">Join CareerNext Today</a>
+    <h3 class="fw-bold mb-3 text-white">Ready to take the next step in your career?</h3>
+    <a href="/register" class="btn btn-light btn-lg text-primary fw-semibold px-4 py-2">Join CareerNext Today</a>
   </div>
 </section>
 

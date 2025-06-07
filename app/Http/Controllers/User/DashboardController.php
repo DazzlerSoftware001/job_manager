@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Mail\User\ChangeEmail;
 use App\Models\CandidateAward;
 use App\Models\CandidateEmployment;
 use App\Models\CandidateProfile;
@@ -9,8 +10,10 @@ use App\Models\CandidateQualifications;
 use App\Models\JobApplication;
 use App\Models\UserProfile;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
 class DashboardController extends Controller
@@ -157,6 +160,53 @@ class DashboardController extends Controller
 
     }
 
+    public function sendOtp(Request $request)
+    {
+        $request->validate(['email' => 'required|email']);
+
+        $email = $request->email;
+        $otp   = rand(100000, 999999);
+
+        // Optional: Delete old OTPs for this email
+        // UserProfile::where('email', $email)->delete();
+
+        // Store OTP in DB with expiry
+        UserProfile::where('email', Auth::user()->email)->update([
+            'otp_email'         => $otp,
+            'email_verified_at' => Carbon::now()->addMinutes(1),
+        ]);
+
+        // Send the OTP
+        Mail::to($email)->send(new ChangeEmail($otp));
+
+        return response()->json(['success' => true, 'message' => 'OTP sent']);
+    }
+
+    public function verifyOtp(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'otp'   => 'required',
+        ]);
+
+        // Find the user by OTP and check expiration
+        $user = UserProfile::where('otp_email', $request->otp)
+            ->where('email_verified_at', '>', now()) // check not expired
+            ->first();
+
+        if ($user) {
+            // Update the email and clear the otp
+            $user->email             = $request->email;
+            $user->otp_email         = null;
+            $user->email_verified_at = now(); // verified now
+            $user->save();
+
+            return response()->json(['success' => true, 'message' => 'Email updated successfully.']);
+        }
+
+        return response()->json(['success' => false, 'message' => 'Invalid or expired OTP']);
+    }
+
     // resume
     public function resume()
     {
@@ -285,14 +335,10 @@ class DashboardController extends Controller
         if (! $validator->fails()) {
 
             $userId    = Auth::id();
-            $candidate = CandidateProfile::where('user_id', $userId)->first();
-
-            if (! $candidate) {
-                return response()->json([
-                    'status_code' => 0,
-                    'message'     => 'Candidate profile not found.',
-                ]);
-            }
+            $candidate = CandidateProfile::firstOrCreate(
+                ['user_id' => $userId],
+                ['skill' => json_encode([])]
+            );
 
             // Normalize existing skills to array
             $candidateSkills = is_array($candidate->skill)
@@ -526,15 +572,15 @@ class DashboardController extends Controller
             ]);
         }
 
-        if($request->ending_date == null && $request->currently_working == '0') {
+        if ($request->ending_date == null && $request->currently_working == '0') {
             return response()->json([
                 'status_code' => 2,
-            'message'     => 'Please select your ending date',
+                'message'     => 'Please select your ending date',
             ]);
-        } elseif($request->currently_working == '1' && $request->notice_period == null) {
+        } elseif ($request->currently_working == '1' && $request->notice_period == null) {
             return response()->json([
                 'status_code' => 2,
-            'message'     => 'Select your notice period.',
+                'message'     => 'Select your notice period.',
             ]);
         }
 

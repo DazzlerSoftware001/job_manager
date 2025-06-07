@@ -38,11 +38,16 @@
                         <input type="text" id="lname" name="lname" value="{{ $user->lname }}"
                             placeholder="Last Name" required>
                     </div>
-                    <div class="rt-input-group">
-                        <label for="email">Email <span class="text-danger d-inline">*</span></label>
-                        <input type="email" id="email" name="email" value="{{ $user->email }}"
-                            placeholder="careernext@gmqail.com" required readonly>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <input type="email" id="email" name="email" value="{{ $user->email }}"
+                                class="form-control" placeholder="careernext@gmail.com" required readonly>
+                            <button type="button" class="btn btn-outline-primary" id="changeEmailBtn">Change Email</button>
+                        </div>
                     </div>
+
+
                     <div class="rt-input-group">
                         <label for="phone">Phone</label>
                         <div style="display: flex; gap: 10px;">
@@ -151,7 +156,7 @@
 
 
                     <div class="rt-input-group">
-                        <label for="show">Looking for a job ?  <span class="text-danger d-inline">*</span></label>
+                        <label for="show">Looking for a job ? <span class="text-danger d-inline">*</span></label>
                         <select name="jobSearch" id="jobSearch" class="form-select">
                             <option value="">Select</option>
                             <option value="1" {{ $user->look_job == '1' ? 'selected' : '' }}>Yes</option>
@@ -276,7 +281,93 @@
 @endsection
 @section('script')
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        document.getElementById('changeEmailBtn').addEventListener('click', async function() {
+            const currentEmail = document.getElementById('email').value;
 
+            const {
+                value: newEmail
+            } = await Swal.fire({
+                title: "Change Email",
+                input: "email",
+                inputLabel: "Enter new email",
+                inputValue: currentEmail,
+                inputPlaceholder: "example@gmail.com",
+                showCancelButton: true,
+                inputValidator: (value) => {
+                    if (!value) return "Email is required!";
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    if (!emailRegex.test(value)) return "Enter a valid email!";
+                }
+            });
+
+            if (!newEmail) return;
+
+            // Step 1: Send OTP to the new email
+            try {
+                const response = await fetch("{{ route('send.otp.email') }}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content
+                    },
+                    body: JSON.stringify({
+                        email: newEmail
+                    })
+                });
+
+                const result = await response.json();
+
+                if (!result.success) {
+                    return Swal.fire("Failed", result.message || "Something went wrong!", "error");
+                }
+
+                // Step 2: Ask for OTP input
+                const {
+                    value: enteredOtp
+                } = await Swal.fire({
+                    title: "Verify OTP",
+                    input: "text",
+                    inputLabel: `An OTP has been sent to ${newEmail}`,
+                    inputPlaceholder: "Enter OTP",
+                    showCancelButton: true,
+                    inputValidator: (value) => {
+                        if (!value) return "OTP is required!";
+                        if (value.length !== 6) return "OTP must be 6 digits!";
+                    }
+                });
+
+                if (!enteredOtp) return;
+
+                // Step 3: Verify OTP
+                const verifyResponse = await fetch("{{ route('verify.otp.email') }}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content
+                    },
+                    body: JSON.stringify({
+                        email: newEmail,
+                        otp: enteredOtp
+                    })
+                });
+
+                const verifyResult = await verifyResponse.json();
+
+                if (verifyResult.success) {
+                    document.getElementById('email').value = newEmail;
+                    Swal.fire("Success", "Email updated successfully!", "success");
+                } else {
+                    Swal.fire("Error", verifyResult.message || "OTP verification failed!", "error");
+                }
+
+            } catch (error) {
+                console.error("Error:", error);
+                Swal.fire("Error", "Unexpected error occurred!", "error");
+            }
+        });
+    </script>
 
     {{-- country_code --}}
     <script>
@@ -744,7 +835,7 @@
             // Loop through the countries array and append to the select element
             countries.forEach(function(country) {
                 const isSelected = country === selectedCountry ? 'selected' :
-                ''; // Check if the country is the selected one
+                    ''; // Check if the country is the selected one
                 $('#country').append(`<option value="${country}" ${isSelected}>${country}</option>`);
             });
         });

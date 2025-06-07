@@ -16,6 +16,7 @@ Route::get('/', [HomeController::class, 'Home'])->name('User.Home');
 
 Route::get('Register', [AuthController::class, 'register'])->name('User.register');
 Route::post('RegisterUser', [AuthController::class, 'RegisterUser'])->name('User.RegisterUser');
+Route::post('/verify-otp', [AuthController::class, 'verifyOtp'])->name('User.verifyOtp');
 Route::get('login', [AuthController::class, 'login'])->name('User.login');
 Route::post('loginInsert', [AuthController::class, 'loginInsert'])->name('User.loginInsert');
 
@@ -34,6 +35,12 @@ Route::prefix('User')->group(function () {
         Route::get('Profile', [DashboardController::class, 'Profile'])->name('User.Profile');
         Route::post('/updateProfileImage', [DashboardController::class, 'updateProfileImage'])->name('User.UpdateProfileImage');
         Route::post('/UpdateProfile', [DashboardController::class, 'updateProfile'])->name('User.UpdateProfile');
+
+        // web.php
+Route::post('/send-otp-email', [DashboardController::class, 'sendOtp'])->name('send.otp.email');
+Route::post('/verify-otp-email', [DashboardController::class, 'verifyOtp'])->name('verify.otp.email');
+
+
         Route::get('/Resume', [DashboardController::class, 'resume'])->name('User.Resume');
         Route::post('/UploadResume', [DashboardController::class, 'UploadResume'])->name('User.UploadResume');
         Route::post('/UploadCoverLetter', [DashboardController::class, 'UploadCoverLetter'])->name('User.UploadCoverLetter');
