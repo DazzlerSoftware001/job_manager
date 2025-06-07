@@ -9,18 +9,16 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class JobStatusMailToRecruiter extends Mailable
+class AddRecruiterMailToRecruiter extends Mailable
 {
     use Queueable, SerializesModels;
-    public $JobPost;
-    public $recruiter;
+    public $Recruiter;
     /**
      * Create a new message instance.
      */
-    public function __construct($JobPost,$recruiter)
+    public function __construct($Recruiter)
     {
-        $this->JobPost = $JobPost;
-        $this->recruiter = $recruiter;
+        $this->Recruiter = $Recruiter;
     }
 
     /**
@@ -29,7 +27,7 @@ class JobStatusMailToRecruiter extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Job ' . ($this->JobPost->status == 1 ? 'Activated and made live' : 'Inactived') . ' ',
+            subject: 'Profile Created',
         );
     }
 
@@ -39,8 +37,8 @@ class JobStatusMailToRecruiter extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.Admin.job_StatusToRecruiter',
-            with: ['JobPost' => $this->JobPost,'recruiter' =>$this->recruiter],
+            view: 'emails.Admin.AddRecruiterToRecruiter',
+            with: ['Recruiter' =>$this->Recruiter],
         );
     }
 

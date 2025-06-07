@@ -26,7 +26,6 @@ use App\Mail\Admin\JobPostMailToRecruiter;
 use App\Mail\Admin\JobVerifyMailToRecruiter;
 use App\Mail\Admin\JobStatusMailToRecruiter;
 use App\Mail\Admin\JobUpdateMailToRecruiter;
-
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Crypt;

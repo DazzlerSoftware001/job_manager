@@ -4,6 +4,10 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Jobpost;
 use App\Models\Recruiter;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\Admin\AddRecruiterMailToRecruiter;
+use App\Mail\Admin\RecruiterStatusMailToRecruiter;
+use App\Mail\Admin\RecruiterUpdateMailToRecruiter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -147,7 +151,7 @@ class RecruiterController extends Controller
                 $Recruiter->created_at = now();
 
                 $Recruiter->save();
-
+                Mail::to($Recruiter->email)->send(new AddRecruiterMailToRecruiter($Recruiter));
                 return response()->json(['status_code' => 1, 'message' => 'Recruiter created successfully']);
             } catch (\Exception $e) {
                 // Handle any exception that occurs during saving
@@ -173,6 +177,7 @@ class RecruiterController extends Controller
 
                 // Save the updated record
                 if ($Recruiter->save()) {
+                    Mail::to($Recruiter->email)->send(new RecruiterStatusMailToRecruiter($Recruiter));
                     return response()->json(['status_code' => 1, 'message' => 'Status successfully changed']);
                 } else {
                     return response()->json(['status_code' => 0, 'message' => 'Unable to change status']);
@@ -184,25 +189,6 @@ class RecruiterController extends Controller
             return response()->json(['status_code' => 2, 'message' => 'Id is required']);
         }
     }
-
-    // public function deleteRecruiter(Request $request)
-    // {
-    //     $id = $request->input('id');
-
-    //     if (!empty($id)) {
-    //         // Attempt to find and delete the record
-    //         $Recruiter = Recruiter::find($id);
-
-    //         if ($Recruiter) {
-    //             $Recruiter->delete();
-    //             return response()->json(['status_code' => 1, 'message' => 'Recruiter deleted successfully ']);
-    //         } else {
-    //             return response()->json(['status_code' => 0, 'message' => 'Recruiter not found']);
-    //         }
-    //     } else {
-    //         return response()->json(['status_code' => 2, 'message' => 'Id is required']);
-    //     }
-    // }
 
     public function deleteRecruiter(Request $request)
     {
@@ -288,7 +274,7 @@ class RecruiterController extends Controller
                 $Recruiter->name  = $request->input('editname');
                 $Recruiter->email = $request->input('editemail');
                 $Recruiter->phone = $request->input('editphone');
-
+                $Recruiter->status     = 0;
                 // Update logoPath if provided
                 if ($logoPath) {
                     $Recruiter->logo = $logoPath;
@@ -303,6 +289,7 @@ class RecruiterController extends Controller
                 $Recruiter->save();
 
                 if ($Recruiter->save()) {
+                     Mail::to($Recruiter->email)->send(new RecruiterUpdateMailToRecruiter($Recruiter));
                     return response()->json(['status_code' => 1, 'message' => 'Recruiter updated successfully']);
                 } else {
                     return response()->json(['status_code' => 0, 'message' => 'Unable to update data']);
