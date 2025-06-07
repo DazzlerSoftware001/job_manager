@@ -138,22 +138,27 @@
                                                         <ul class="sub__style" role="menu">
                                                             <li role="menuitem"><a href="blog-1.html">Blog One</a></li>
                                                             <li role="menuitem"><a href="blog-2.html">Blog Two</a></li>
-                                                            <li role="menuitem"><a href="blog-3.html">Blog Three</a></li>
+                                                            <li role="menuitem"><a href="blog-3.html">Blog Three</a>
+                                                            </li>
                                                             <li role="menuitem"><a href="blog-4.html">Blog Four</a></li>
-                                                            <li role="menuitem"><a href="blog-details.html">Blog Details</a>
+                                                            <li role="menuitem"><a href="blog-details.html">Blog
+                                                                    Details</a>
                                                             </li>
                                                         </ul>
                                                     </li>
-                                                    <li role="menuitem"><a href="{{ route('User.About') }}">About</a></li>
+                                                    <li role="menuitem"><a href="{{ route('User.About') }}">About</a>
+                                                    </li>
                                                     <li role="menuitem"><a href="faq.html">Faq</a></li>
-                                                    <li role="menuitem"><a href="tos.html">Terms &amp; Conditions</a></li>
+                                                    <li role="menuitem"><a href="tos.html">Terms &amp; Conditions</a>
+                                                    </li>
                                                     <li role="menuitem"><a href="privacy.html">Privacy Policy</a></li>
                                                     <li role="menuitem"><a href="pricing.html">Pricing</a></li>
                                                 </ul>
                                             </li>
 
                                             <li class="navigation__menu--item has-child has-arrow">
-                                                <a href="{{ route('User.Contact') }}" class="navigation__menu--item__link">Contact</a>
+                                                <a href="{{ route('User.Contact') }}"
+                                                    class="navigation__menu--item__link">Contact</a>
                                                 <ul class="submenu sub__style" role="menu">
                                                     <li role="menuitem"><a href="contact-1.html">Co</a></li>
                                                     <li role="menuitem"><a href="contact-2.html">Contact Two</a></li>
@@ -228,6 +233,22 @@
                                     <button class="d-md-block d-lg-none" type="button" data-bs-toggle="offcanvas"
                                         data-bs-target="#offcanvas" aria-controls="offcanvas"><i
                                             class="fa-sharp fa-regular fa-bars"></i></button>
+                                </div>
+                            @else
+                                <div class="header__right__btn d-flex align-items-center gap-3">
+                                    <!-- User Dashboard Button -->
+                                    <a href="{{ route('User.Dashboard') }}"
+                                        class="btn btn-outline-primary rounded-pill px-4 py-2 d-none d-sm-flex align-items-center shadow-sm fw-semibold"
+                                        aria-label="Login Button">
+                                        <i class="fa-solid fa-gauge-high me-2"></i> Go To User Dashboard
+                                    </a>
+
+                                    <!-- Hamburger Menu Button -->
+                                    <button class="btn btn-primary rounded-circle p-2 d-md-block d-lg-none shadow"
+                                        type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvas"
+                                        aria-controls="offcanvas">
+                                        <i class="fa-sharp fa-regular fa-bars fs-5 text-white"></i>
+                                    </button>
                                 </div>
                             @endif
                         </div>
