@@ -216,6 +216,7 @@
                                                 {{-- <th>Status</th> --}}
                                                 {{-- <th>Registered Date</th> --}}
                                                 <th>Excel</th>
+                                                <th>Profile</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>

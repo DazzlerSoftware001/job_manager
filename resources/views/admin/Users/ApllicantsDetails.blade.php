@@ -3,19 +3,19 @@
     Admin-All Apllicants
 @endsection
 @section('page-title')
-   All Apllicants
+    All Apllicants
 @endsection
 
 @section('main-container')
 
-   
+
     <div class="main-content">
         <div class="page-content">
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-lg-12">
                         <h3 class="border-bottom border-primary d-inline-block pb-1 mb-4 text-primary">
-                            <i class="bi bi-person-circle me-2">{{ $JobPost }}</i> 
+                            <i class="bi bi-person-circle me-2">{{ $JobPost }}</i>
                         </h3>
                         <div class="card">
                             <div class="card-body">
@@ -262,12 +262,14 @@
                                                 <h6 class="mb-0">{{ $employment->starting_date }}</h6>
                                             </div>
                                             <div class="col-12 mb-2">
-                                                <h6 class="mb-0">{{ $employment->currently_working == 1 ? 'Currently Working' : $employment->ending_date }}</h6>
+                                                <h6 class="mb-0">
+                                                    {{ $employment->currently_working == 1 ? 'Currently Working' : $employment->ending_date }}
+                                                </h6>
                                             </div>
-                                            @if($employment->notice_period !== null)
-                                            <div class="col-12 mb-2">
-                                                <h6 class="mb-0">{{$employment->notice_period}}</h6>
-                                            </div>
+                                            @if ($employment->notice_period !== null)
+                                                <div class="col-12 mb-2">
+                                                    <h6 class="mb-0">{{ $employment->notice_period }}</h6>
+                                                </div>
                                             @endif
                                             <div class="col-12 mb-2">
                                                 <h6 class="mb-0">{{ $employment->description }}</h6>
@@ -343,52 +345,66 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     @section('script')
 
-         <script>
-        $(document).ready(function() {
-            $('#shortlistBtn').on('click', function() {
-                var url =
-                    "{{ route('Admin.CandidateShortlist', [
-                        'userId' => Crypt::encrypt($user->id),
-                        'jobId' => Crypt::encrypt($DecJob_Id),
-                    ]) }}";
+        {{-- For Shortlist Candidate --}}
+        <script>
+            $(document).ready(function() {
+                $('#shortlistBtn').on('click', function() {
+                    var url =
+                        "{{ route('Admin.CandidateShortlist', [
+                            'userId' => Crypt::encrypt($user->id),
+                            'jobId' => Crypt::encrypt($DecJob_Id),
+                        ]) }}";
 
-                $.ajax({
-                    url: url,
-                    type: 'GET',
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    dataType: 'json',
-                    success: function(result) {
-                        if (result.status_code === 1) {
-                            Toastify({
-                                text: result.message,
-                                duration: 3000,
-                                gravity: "top",
-                                position: "right",
-                                style: {
-                                    background: "green",
-                                    color: "white"
-                                }
-                            }).showToast();
-                            setTimeout(function() {
-                                location.reload();
-                            }, 1000);
+                    $.ajax({
+                        url: url,
+                        type: 'GET',
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        dataType: 'json',
+                        success: function(result) {
+                            if (result.status_code === 1) {
+                                Toastify({
+                                    text: result.message,
+                                    duration: 3000,
+                                    gravity: "top",
+                                    position: "right",
+                                    style: {
+                                        background: "green",
+                                        color: "white"
+                                    }
+                                }).showToast();
+                                setTimeout(function() {
+                                    location.reload();
+                                }, 1000);
 
-                        } else if (result.status_code === 2) {
+                            } else if (result.status_code === 2) {
+                                Toastify({
+                                    text: result.message,
+                                    duration: 3000,
+                                    gravity: "top",
+                                    position: "right",
+                                    style: {
+                                        background: "#c7ac14",
+                                        color: "white"
+                                    }
+                                }).showToast();
+                            } else {
+                                Toastify({
+                                    text: result.message,
+                                    duration: 3000,
+                                    gravity: "top",
+                                    position: "right",
+                                    style: {
+                                        background: "red",
+                                        color: "white"
+                                    }
+                                }).showToast();
+                            }
+                        },
+                        error: function() {
                             Toastify({
-                                text: result.message,
-                                duration: 3000,
-                                gravity: "top",
-                                position: "right",
-                                style: {
-                                    background: "#c7ac14",
-                                    color: "white"
-                                }
-                            }).showToast();
-                        } else {
-                            Toastify({
-                                text: result.message,
+                                text: 'An error occurred. Please try again.',
                                 duration: 3000,
                                 gravity: "top",
                                 position: "right",
@@ -398,69 +414,70 @@
                                 }
                             }).showToast();
                         }
-                    },
-                    error: function() {
-                        Toastify({
-                            text: 'An error occurred. Please try again.',
-                            duration: 3000,
-                            gravity: "top",
-                            position: "right",
-                            style: {
-                                background: "red",
-                                color: "white"
-                            }
-                        }).showToast();
-                    }
+                    });
                 });
             });
-        });
-    </script>
+        </script>
 
-    <script>
-        $(document).ready(function() {
-            $('#RejectBtn').on('click', function() {
-                var url =
-                    "{{ route('Admin.CandidateReject', [
-                        'userId' => Crypt::encrypt($user->id),
-                        'jobId' => Crypt::encrypt($DecJob_Id),
-                    ]) }}";
+        {{-- For Reject Candidate --}}
+        <script>
+            $(document).ready(function() {
+                $('#RejectBtn').on('click', function() {
+                    var url =
+                        "{{ route('Admin.CandidateReject', [
+                            'userId' => Crypt::encrypt($user->id),
+                            'jobId' => Crypt::encrypt($DecJob_Id),
+                        ]) }}";
 
-                $.ajax({
-                    url: url,
-                    type: 'GET',
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    dataType: 'json',
-                    success: function(result) {
-                        if (result.status_code === 1) {
+                    $.ajax({
+                        url: url,
+                        type: 'GET',
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        dataType: 'json',
+                        success: function(result) {
+                            if (result.status_code === 1) {
+                                Toastify({
+                                    text: result.message,
+                                    duration: 3000,
+                                    gravity: "top",
+                                    position: "right",
+                                    style: {
+                                        background: "green",
+                                        color: "white"
+                                    }
+                                }).showToast();
+                                setTimeout(function() {
+                                    location.reload();
+                                }, 1000);
+                            } else if (result.status_code === 2) {
+                                Toastify({
+                                    text: result.message,
+                                    duration: 3000,
+                                    gravity: "top",
+                                    position: "right",
+                                    style: {
+                                        background: "#c7ac14",
+                                        color: "white"
+                                    }
+                                }).showToast();
+                            } else {
+                                Toastify({
+                                    text: result.message,
+                                    duration: 3000,
+                                    gravity: "top",
+                                    position: "right",
+                                    style: {
+                                        background: "red",
+                                        color: "white"
+                                    }
+                                }).showToast();
+                            }
+                        },
+                        error: function() {
                             Toastify({
-                                text: result.message,
-                                duration: 3000,
-                                gravity: "top",
-                                position: "right",
-                                style: {
-                                    background: "green",
-                                    color: "white"
-                                }
-                            }).showToast();
-                            setTimeout(function() {
-                                location.reload();
-                            }, 1000);
-                        } else if (result.status_code === 2) {
-                            Toastify({
-                                text: result.message,
-                                duration: 3000,
-                                gravity: "top",
-                                position: "right",
-                                style: {
-                                    background: "#c7ac14",
-                                    color: "white"
-                                }
-                            }).showToast();
-                        } else {
-                            Toastify({
-                                text: result.message,
+                                text: 'An error occurred. Please try again.',
                                 duration: 3000,
                                 gravity: "top",
                                 position: "right",
@@ -470,69 +487,70 @@
                                 }
                             }).showToast();
                         }
-                    },
-                    error: function() {
-                        Toastify({
-                            text: 'An error occurred. Please try again.',
-                            duration: 3000,
-                            gravity: "top",
-                            position: "right",
-                            style: {
-                                background: "red",
-                                color: "white"
-                            }
-                        }).showToast();
-                    }
+                    });
                 });
             });
-        });
-    </script>
+        </script>
 
-    <script>
-        $(document).ready(function() {
-            $('#HireBtn').on('click', function() {
-                var url =
-                    "{{ route('Admin.CandidateHire', [
-                        'userId' => Crypt::encrypt($user->id),
-                        'jobId' => Crypt::encrypt($DecJob_Id),
-                    ]) }}";
+        {{-- For Hire Candidate --}}
+        <script>
+            $(document).ready(function() {
+                $('#HireBtn').on('click', function() {
+                    var url =
+                        "{{ route('Admin.CandidateHire', [
+                            'userId' => Crypt::encrypt($user->id),
+                            'jobId' => Crypt::encrypt($DecJob_Id),
+                        ]) }}";
 
-                $.ajax({
-                    url: url,
-                    type: 'GET',
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    dataType: 'json',
-                    success: function(result) {
-                        if (result.status_code === 1) {
+                    $.ajax({
+                        url: url,
+                        type: 'GET',
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        dataType: 'json',
+                        success: function(result) {
+                            if (result.status_code === 1) {
+                                Toastify({
+                                    text: result.message,
+                                    duration: 3000,
+                                    gravity: "top",
+                                    position: "right",
+                                    style: {
+                                        background: "green",
+                                        color: "white"
+                                    }
+                                }).showToast();
+                                setTimeout(function() {
+                                    location.reload();
+                                }, 1000);
+                            } else if (result.status_code === 2) {
+                                Toastify({
+                                    text: result.message,
+                                    duration: 3000,
+                                    gravity: "top",
+                                    position: "right",
+                                    style: {
+                                        background: "#c7ac14",
+                                        color: "white"
+                                    }
+                                }).showToast();
+                            } else {
+                                Toastify({
+                                    text: result.message,
+                                    duration: 3000,
+                                    gravity: "top",
+                                    position: "right",
+                                    style: {
+                                        background: "red",
+                                        color: "white"
+                                    }
+                                }).showToast();
+                            }
+                        },
+                        error: function() {
                             Toastify({
-                                text: result.message,
-                                duration: 3000,
-                                gravity: "top",
-                                position: "right",
-                                style: {
-                                    background: "green",
-                                    color: "white"
-                                }
-                            }).showToast();
-                            setTimeout(function() {
-                                location.reload();
-                            }, 1000);
-                        } else if (result.status_code === 2) {
-                            Toastify({
-                                text: result.message,
-                                duration: 3000,
-                                gravity: "top",
-                                position: "right",
-                                style: {
-                                    background: "#c7ac14",
-                                    color: "white"
-                                }
-                            }).showToast();
-                        } else {
-                            Toastify({
-                                text: result.message,
+                                text: 'An error occurred. Please try again.',
                                 duration: 3000,
                                 gravity: "top",
                                 position: "right",
@@ -542,22 +560,8 @@
                                 }
                             }).showToast();
                         }
-                    },
-                    error: function() {
-                        Toastify({
-                            text: 'An error occurred. Please try again.',
-                            duration: 3000,
-                            gravity: "top",
-                            position: "right",
-                            style: {
-                                background: "red",
-                                color: "white"
-                            }
-                        }).showToast();
-                    }
+                    });
                 });
             });
-        });
-    </script>
-    
+        </script>
     @endsection

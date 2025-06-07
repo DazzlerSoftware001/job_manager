@@ -1,7 +1,12 @@
 <?php
 namespace App\Http\Controllers\Admin;
 
+use App\Exports\ApplicantExport;
+use App\Exports\FilterApplicantsExport;
+use App\Exports\FilteredUsersExport;
+use App\Exports\UsersExport;
 use App\Http\Controllers\Controller;
+use App\Mail\Admin\UserShortlistedMail;
 use App\Models\CandidateProfile;
 use App\Models\JobApplication;
 use App\Models\JobExperience;
@@ -9,13 +14,9 @@ use App\Models\Jobpost;
 use App\Models\Recruiter;
 use App\Models\UserProfile;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
-use App\Exports\UsersExport;
-use App\Exports\FilteredUsersExport;
-use App\Exports\FilterApplicantsExport;
-use App\Exports\ApplicantExport;
 use Maatwebsite\Excel\Facades\Excel;
 
 class UsersListController extends Controller
@@ -159,13 +160,13 @@ class UsersListController extends Controller
             $dataArray[] = '<img src="' . asset($record->logo) . '" alt="Logo" style="height: 50px; width: 50px; border-radius:50%; object-fit: cover; cursor: pointer;" onclick="openImageModal(\'' . asset($record->logo) . '\')">';
             // $dataArray[] = $record->experience;
 
-            $exp = $record->experience ?? null;
-            $years = $months = 0;
+            $exp                 = $record->experience ?? null;
+            $years               = $months               = 0;
             $formattedExperience = 'N/A';
 
             if ($exp) {
-                $parts = explode('.', number_format($exp, 2, '.', ''));
-                $years = (int) $parts[0];
+                $parts  = explode('.', number_format($exp, 2, '.', ''));
+                $years  = (int) $parts[0];
                 $months = isset($parts[1]) ? (int) round(($parts[1] / 100) * 12) : 0;
 
                 $formattedExperience = $years . ' Year' . ($years != 1 ? 's' : '');
@@ -177,7 +178,6 @@ class UsersListController extends Controller
             $dataArray[] = $formattedExperience;
             $dataArray[] = $record->city;
 
-
             $status = $record->status == 1
             ? '<div class="d-flex"><span onclick="changeStatus(' . $record->id . ');" class="badge bg-success text-uppercase"  style="cursor: pointer;">Active</span></div>'
             : '<div class="d-flex"><span onclick="changeStatus(' . $record->id . ');" class="badge bg-danger text-uppercase" style="cursor: pointer;">Inactive</span></div>';
@@ -186,10 +186,10 @@ class UsersListController extends Controller
 
             $dataArray[] = date('d-M-Y', strtotime($record->created_at));
 
-             $dataArray[] = '<div class="d-flex gap-2">
+            $dataArray[] = '<div class="d-flex gap-2">
                                 <a href="' . route('Admin.UsersDetails', [
-                                'userId' => Crypt::encrypt($record->id),
-                                 ]) . '" class="badge bg-success">View Profile</a>
+                'userId' => Crypt::encrypt($record->id),
+            ]) . '" class="badge bg-success">View Profile</a>
                             </div>';
 
             // $dataArray[] = '<div class="d-flex gap-2">
@@ -210,30 +210,27 @@ class UsersListController extends Controller
             //                         </a>
             //                     </div>
 
-
             //                 </div>';
 
             $dataArray[] = '<div class="d-flex gap-2">
                                 <!-- Edit -->
-                                <a href="' . route('Admin.EditUser', ['id' => Crypt::encrypt($record->id)]) . '" 
+                                <a href="' . route('Admin.EditUser', ['id' => Crypt::encrypt($record->id)]) . '"
                                 class="btn btn-sm btn-outline-primary d-flex align-items-center gap-1">
                                     <i class="far fa-edit"></i>
                                 </a>
 
                                 <!-- Delete -->
-                                <a href="javascript:void(0);" onclick="deleteRecord(' . $record->id . ');" 
+                                <a href="javascript:void(0);" onclick="deleteRecord(' . $record->id . ');"
                                 class="btn btn-sm btn-outline-danger d-flex align-items-center gap-1">
                                     <i class="far fa-trash-alt"></i>
                                 </a>
 
                                 <!-- Export Excel -->
-                                <a href="' . route('Admin.UsersExportExcel', ['id' => $record->id]) . '" 
+                                <a href="' . route('Admin.UsersExportExcel', ['id' => $record->id]) . '"
                                 class="btn btn-sm btn-outline-success d-flex align-items-center gap-1">
                                     <i class="mdi mdi-file-excel"></i> Export
                                 </a>
                             </div>';
-
-
 
             $data[] = $dataArray;
         }
@@ -404,8 +401,6 @@ class UsersListController extends Controller
         // Load user with candidate profile
         $user = UserProfile::with('candidateProfile', 'candidateQualification', 'candidateEmployment', 'candidateAward')->find($decryptedId);
 
-
-
         // Check and increment view_profile if candidate profile exists
         // if ($user && $user->candidateProfile) {
         //     if (is_null($user->candidateProfile->view_profile)) {
@@ -416,23 +411,18 @@ class UsersListController extends Controller
         //     }
         // }
 
-
         return view('admin.Users.UsersDetails', compact('user'));
     }
-
-    
 
     public function UsersExportExcel($id)
     {
         return Excel::download(new UsersExport($id), 'user_details.xlsx');
     }
-    
 
     // public function FilteredUsersExportExcel(Request $request)
     // {
     //     return Excel::download(new FilteredUsersExport($request->all()), 'Filtered_users_list.xlsx');
     // }
-
 
     public function FilteredUsersExportExcel(Request $request)
     {
@@ -444,13 +434,11 @@ class UsersListController extends Controller
             'Qualification',
             'Branch',
             'experience',
-            'skills',  // This will be an array if multiple skills selected
+            'skills', // This will be an array if multiple skills selected
         ]);
 
         return Excel::download(new FilteredUsersExport($filters), 'Filtered_users_list.xlsx');
     }
-
-    
 
     public function AllApplicants()
     {
@@ -461,7 +449,7 @@ class UsersListController extends Controller
         // $joblist = JobPost::select('id', 'title')->where('status', 1)->where('admin_verify', 1)->whereDate('jobexpiry', '>=', $today)->get();
 
         $cities = JobApplication::with('user')->get()->pluck('user.city')->filter()->unique()->values();
-       
+
         $skills = CandidateProfile::pluck('skill')
             ->filter()
             ->flatMap(function ($item) {
@@ -487,12 +475,10 @@ class UsersListController extends Controller
 
         $experience = JobExperience::pluck('experience');
 
-
-        return view('admin.Users.AllApplicants', compact('Recruiters','cities','skills','experience'));
+        return view('admin.Users.AllApplicants', compact('Recruiters', 'cities', 'skills', 'experience'));
     }
 
-
-     public function getApplicantsQualifications(Request $request)
+    public function getApplicantsQualifications(Request $request)
     {
         $education_level = $request->input('education_level');
 
@@ -518,7 +504,6 @@ class UsersListController extends Controller
         return response()->json($branches);
     }
 
-
     public function getJobsByRecruiter(Request $request)
     {
         $jobs = JobPost::select('id', 'title')
@@ -543,9 +528,9 @@ class UsersListController extends Controller
         $education_level = $request->input('education_level');
         $Qualification   = $request->input('Qualification');
         $Branch          = $request->input('Branch');
-        $city = $request->input('city');
-        $experience = $request->input('experience', []);
-        $skills = $request->input('skills'); // should be an array
+        $city            = $request->input('city');
+        $experience      = $request->input('experience', []);
+        $skills          = $request->input('skills'); // should be an array
 
         // dd($education_level,$Qualification,$Branch,$city,$experience,$skills);
 
@@ -665,14 +650,19 @@ class UsersListController extends Controller
             //                     </div>
             //                 </div>';
 
-
-
             $dataArray[] = '<div class="d-flex gap-2">
-                                <a href="' . route('Admin.ApplicantExportExcel', ['id' => $record->user->id]) . '" 
+                                <a href="' . route('Admin.ApplicantExportExcel', ['id' => $record->user->id]) . '"
                                     class="btn btn-sm btn-outline-success d-flex align-items-center gap-1">
                                     <i class="mdi mdi-file-excel"></i> Export
                                 </a>
                             </div>';
+
+            $dataArray[] = '<div class="d-flex gap-2">
+                            <a href="' . route('Admin.ApllicantsDetails', [
+                'userId' => Crypt::encrypt($record->user->id),
+                'jobId'  => Crypt::encrypt($record->jobPost->id),
+            ]) . '" class="badge bg-success">View Profile</a>
+                                </div>';
 
             $dataArray[] = '<div class="d-flex gap-2">
                                 <div class="edit">
@@ -680,10 +670,8 @@ class UsersListController extends Controller
                                         <i class="far fa-edit"></i>
                                     </a>
                                 </div>
-                               
-                            </div>';
 
-            
+                            </div>';
 
             $data[] = $dataArray;
         }
@@ -740,13 +728,13 @@ class UsersListController extends Controller
         return view('admin.Users.ApllicantsDetails', compact('user', 'DecJob_Id', 'application', 'JobPost'));
     }
 
-
     public function ApplicantExportExcel($id)
     {
         return Excel::download(new ApplicantExport($id), 'ApplicantExport.xlsx');
     }
 
-    public function FilteredApplicantsExportExcel(Request $request) {
+    public function FilteredApplicantsExportExcel(Request $request)
+    {
         $filters = $request->only([
             'recruiter',
             'job',
@@ -755,12 +743,41 @@ class UsersListController extends Controller
             'Qualification',
             'Branch',
             'experience',
-            'skills',  // This will be an array if multiple skills selected
+            'skills', // This will be an array if multiple skills selected
         ]);
 
         return Excel::download(new FilterApplicantsExport($filters), 'Filtered_applicants_list.xlsx');
     }
-    
+
+    // public function CandidateShortlist($userId, $Job_Id)
+    // {
+    //     try {
+    //         $decryptedId = Crypt::decrypt($userId);
+    //         $DecJob_Id   = Crypt::decrypt($Job_Id);
+
+    //         $application = JobApplication::where('user_id', $decryptedId)
+    //             ->where('job_id', $DecJob_Id)
+    //             ->first();
+
+    //         if ($application) {
+    //             $application->status = 'shortlisted';
+
+    //             if ($application->save()) {
+    //                 return response()->json(['status_code' => 1, 'message' => 'Candidate shortlisted.']);
+    //             } else {
+    //                 return response()->json([
+    //                     'status_code' => 0, 'message' => 'Failed to Candidate shortlist.']);
+    //             }
+
+    //         } else {
+    //             return response()->json(['status_code' => 0, 'message' => 'Application not found.']);
+    //         }
+
+    //     } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
+    //         abort(404, 'Invalid User ID');
+    //     }
+
+    // }
 
     public function CandidateShortlist($userId, $Job_Id)
     {
@@ -776,20 +793,34 @@ class UsersListController extends Controller
                 $application->status = 'shortlisted';
 
                 if ($application->save()) {
-                    return response()->json(['status_code' => 1, 'message' => 'Candidate shortlisted.']);
+                    // Get the user for email
+                    $user = UserProfile::find($decryptedId);
+
+                    if ($user) {
+                        Mail::to($user->email)->send(new UserShortlistedMail($user));
+                    }
+
+                    return response()->json([
+                        'status_code' => 1,
+                        'message'     => 'Candidate shortlisted and email sent.',
+                    ]);
                 } else {
                     return response()->json([
-                        'status_code' => 0, 'message' => 'Failed to Candidate shortlist.']);
+                        'status_code' => 0,
+                        'message'     => 'Failed to shortlist candidate.',
+                    ]);
                 }
 
             } else {
-                return response()->json(['status_code' => 0, 'message' => 'Application not found.']);
+                return response()->json([
+                    'status_code' => 0,
+                    'message'     => 'Application not found.',
+                ]);
             }
 
         } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
             abort(404, 'Invalid User ID');
         }
-
     }
 
     public function CandidateReject($userId, $Job_Id)

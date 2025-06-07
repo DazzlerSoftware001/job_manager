@@ -31,6 +31,7 @@
                                             <tr>
                                                 <th>#</th>
                                                 <th>Name</th>
+                                                <th>Last Name</th>
                                                 <th>Email</th>
                                                 <th>Phone</th>
                                                 <th>Logo</th>
@@ -84,8 +85,13 @@
                         <form method="POST" action="javascript:void(0)" id="AddRecruiter">
 
                             <div class="mb-3">
-                                <label for="name" class="form-label">Name<span class="text-danger">*</span></label>
+                                <label for="name" class="form-label">First Name<span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" name="name" id="name" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="lname" class="form-label">Last Name<span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="lname" id="lname" required>
                             </div>
 
                             <div class="mb-3">
@@ -162,8 +168,13 @@
                             </div>
 
                             <div class="mb-3">
-                                <label for="editname" class="form-label">Name<span class="text-danger">*</span></label>
+                                <label for="editname" class="form-label">First Name<span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" name="editname" id="editname" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="editlname" class="form-label">Last Name<span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="editlname" id="editlname" required>
                             </div>
 
                             <div class="mb-3">
@@ -516,28 +527,28 @@
         <script>
             function deleteRecord(id) {
                 let recruiterOptions = `
-        <div style="text-align: left; margin-top: 10px;">
-            <label for="newRecruiterId" style="font-weight:600; display:block; margin-bottom:5px;">
-                Select New Recruiter:
-            </label>
-            <select id="newRecruiterId" class="swal2-select" style="width:100%; padding:8px;">
-                <option value="">-- Choose Recruiter --</option>
-                @foreach ($recruiters as $r)
-                    <option value="{{ $r->id }}">{{ $r->name }}</option>
-                @endforeach
-            </select>
-        </div>
-    `;
+                    <div style="text-align: left; margin-top: 10px;">
+                        <label for="newRecruiterId" style="font-weight:600; display:block; margin-bottom:5px;">
+                            Select New Recruiter:
+                        </label>
+                        <select id="newRecruiterId" class="swal2-select" style="width:100%; padding:8px;">
+                            <option value="">-- Choose Recruiter --</option>
+                            @foreach ($recruiters as $r)
+                                <option value="{{ $r->id }}">{{ $r->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                `;
 
                 Swal.fire({
                     title: 'Reassign Jobs Before Deletion',
                     icon: 'warning',
                     html: `
-            <p style="font-size:15px; color:#333;">
-                This recruiter has assigned jobs. Please select another recruiter to transfer the jobs before deletion.
-            </p>
-            ${recruiterOptions}
-        `,
+                        <p style="font-size:15px; color:#333;">
+                            This recruiter has assigned jobs. Please select another recruiter to transfer the jobs before deletion.
+                        </p>
+                        ${recruiterOptions}
+                    `,
                     showCancelButton: true,
                     confirmButtonText: 'Transfer & Delete',
                     cancelButtonText: 'Cancel',
@@ -622,6 +633,7 @@
                         var record = result.data;
                         $('#edit-id').val(record.id);
                         $('#editname').val(record.name);
+                        $('#editlname').val(record.lname);
                         $('#editemail').val(record.email);
                         $('#editphone').val(record.phone);
                     },

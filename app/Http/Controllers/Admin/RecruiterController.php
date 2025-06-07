@@ -37,13 +37,14 @@ class RecruiterController extends Controller
         $columns = [
             0 => 'id',
             1 => 'name',
-            2 => 'email',
-            3 => 'phone',
-            4 => 'logo',
-            5 => 'status',
-            6 => 'job post',
-            7 => 'created_at',
-            8 => 'id',
+            2 => 'lname',
+            3 => 'email',
+            4 => 'phone',
+            5 => 'logo',
+            6 => 'status',
+            7 => 'job post',
+            8 => 'created_at',
+            9 => 'id',
         ];
 
         // $query = Recruiter::query()->where('user_type', 2);
@@ -75,6 +76,7 @@ class RecruiterController extends Controller
 
             $dataArray[] = $record->id;
             $dataArray[] = ucfirst($record->name);
+            $dataArray[] = ucfirst($record->lname);
             $dataArray[] = $record->email;
             $dataArray[] = $record->phone;
             // $dataArray[] = $record->logo;
@@ -119,6 +121,7 @@ class RecruiterController extends Controller
         // Define validation rules
         $rules = [
             'name'     => 'required|string|max:255',
+            'lname'     => 'required|string|max:255',
             'email'    => 'required|email|max:255|unique:users,email',
             'phone'    => 'required|digits_between:10,15|unique:users,phone',
             'logo'     => 'required|image|max:2048',
@@ -143,6 +146,7 @@ class RecruiterController extends Controller
                 $Recruiter->user_details = 'Recruiter';
 
                 $Recruiter->name       = $request->input('name');
+                $Recruiter->lname       = $request->input('lname');
                 $Recruiter->email      = $request->input('email');
                 $Recruiter->phone      = $request->input('phone');
                 $Recruiter->logo       = $logoPath;
@@ -245,6 +249,7 @@ class RecruiterController extends Controller
         $rules = [
             'edit-id'   => 'required|exists:users,id',
             'editname'  => 'required|string|max:255',
+            'editlname'  => 'required|string|max:255',
             'editemail' => 'required|email|max:255',
             'editphone' => 'required|digits_between:10,15',
             'editlogo'  => 'nullable|image|max:2048',
@@ -272,9 +277,10 @@ class RecruiterController extends Controller
 
             if ($Recruiter) {
                 $Recruiter->name  = $request->input('editname');
+                $Recruiter->lname  = $request->input('editlname');
                 $Recruiter->email = $request->input('editemail');
                 $Recruiter->phone = $request->input('editphone');
-                $Recruiter->status     = 0;
+                // $Recruiter->status     = 0;
                 // Update logoPath if provided
                 if ($logoPath) {
                     $Recruiter->logo = $logoPath;
