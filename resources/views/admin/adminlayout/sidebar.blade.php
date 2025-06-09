@@ -164,7 +164,7 @@
                         <ul class="sub-menu" aria-expanded="false">
                             <li><a href="{{route('Admin.GeneralSetting')}}" data-key="t-p-grid">General Setting</a></li>
                             <li><a href="{{route('Admin.EmailSetting')}}" data-key="t-p-grid">Email Setting</a></li>
-                            <li><a href="#" data-key="t-p-grid">Email Templates</a></li>
+                            <li><a href="{{route('Admin.EmailTemplates')}}" data-key="t-p-grid">Email Templates</a></li>
                             <li><a href="#" data-key="t-p-grid">Site Setting</a></li>
                             <li><a href="#" data-key="t-p-grid">Language</a></li>
                             <li><a href="#" data-key="t-p-grid">Cache</a></li>

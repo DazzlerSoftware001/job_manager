@@ -264,6 +264,10 @@ Route::prefix('Admin')->group(function () {
 
         Route::get('/EmailSetting', [SettingsController::class, 'EmailSetting'])->name('Admin.EmailSetting');
         Route::post('/UpdateEmailSetting', [SettingsController::class, 'UpdateEmailSetting'])->name('Admin.UpdateEmailSetting');
+        Route::get('/EmailTemplates', [SettingsController::class, 'EmailTemplates'])->name('Admin.EmailTemplates');
+        Route::post('/GetEmailTemplates', [SettingsController::class, 'getEmailTemplates'])->name('Admin.GetEmailTemplates');
+        Route::get('/EditEmailTemplates/{id}', [SettingsController::class, 'editEmailTemplates'])->name('Admin.EditEmailTemplates');
+        Route::post('/UpdateEmailTemplate', [SettingsController::class, 'updateEmailTemplate'])->name('Admin.UpdateEmailTemplate');
 
          //  CacheClear
         Route::get('/clearCache', [SettingsController::class, 'clearCache'])->name('Admin.clearCache');

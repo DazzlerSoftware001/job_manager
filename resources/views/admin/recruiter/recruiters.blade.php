@@ -262,7 +262,7 @@
             }
         </script>
 
-
+        {{-- Get Recruiter List --}}
         <script>
             $(document).ready(function() {
                 $('#myTable').DataTable({

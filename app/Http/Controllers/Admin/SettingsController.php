@@ -3,17 +3,18 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\BrandSectionSetting;
+use App\Models\EmailTemplates;
 use App\Models\GeneralSetting;
 use App\Models\HomePageSettings;
+use App\Models\MailSetting;
 use App\Models\MaintenanceMode;
 use App\Models\NewsSectionSettings;
 use App\Models\WhatWeAreSectionSettings;
 use App\Models\WorkProcessSectionSettings;
-use App\Models\MailSetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Validator;
 
 class SettingsController extends Controller
 {
@@ -157,7 +158,7 @@ class SettingsController extends Controller
     public function EmailSetting()
     {
         $mailSetting = MailSetting::first();
-        return view('admin.Settings.EmailSetting',compact('mailSetting'));
+        return view('admin.Settings.EmailSetting', compact('mailSetting'));
 
     }
 
@@ -230,40 +231,161 @@ class SettingsController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'status_code' => 0,
-                'message' => 'Validation failed',
-                'errors' => $validator->errors()
+                'message'     => 'Validation failed',
+                'errors'      => $validator->errors(),
             ]);
         }
 
         $data = $validator->validated();
 
         // Encrypt mail_password if present
-        if (!empty($data['mail_password'])) {
+        if (! empty($data['mail_password'])) {
             $data['mail_password'] = Crypt::encryptString($data['mail_password']);
         }
 
         $MailSetting = MailSetting::first();
 
-        if (!$MailSetting) {
+        if (! $MailSetting) {
             $MailSetting = new MailSetting();
             $MailSetting->fill($data);
             $MailSetting->created_at = now();
-            $action = 'saved';
+            $action                  = 'saved';
         } else {
             $MailSetting->fill($data);
             $MailSetting->updated_at = now();
-            $action = 'updated';
+            $action                  = 'updated';
         }
 
         if ($MailSetting->save()) {
             return response()->json([
                 'status_code' => 1,
-                'message' => "Mail setting $action successfully"
+                'message'     => "Mail setting $action successfully",
             ]);
         } else {
             return response()->json([
                 'status_code' => 0,
-                'message' => "Unable to $action mail setting"
+                'message'     => "Unable to $action mail setting",
+            ]);
+        }
+    }
+
+    public function EmailTemplates()
+    {
+        return view('admin.Settings.EmailTemplates');
+    }
+
+    public function getEmailTemplates(Request $request)
+    {
+        // dd($request->all());
+        $draw   = intval($request->input("draw"));
+        $offset = trim($request->input('start'));
+        // $limit = 10;
+        $limit = intval($request->input('length', 10));
+
+        $order   = $request->input("order");
+        $search  = $request->input("search");
+        $columns = [
+            0 => 'id',
+            1 => 'slug',
+            2 => 'subject',
+            3 => 'created_at',
+            4 => 'id',
+        ];
+
+        // $query = Recruiter::query()->where('user_type', 2);
+        $query = EmailTemplates::query();
+        // dd($query);
+
+        // Count Data
+        if (! empty($search)) {
+            $query->where(function ($q) use ($search) {
+                $q->where('slug', 'like', '%' . $search . '%')
+                    ->orWhere('subject', 'like', '%' . $search . '%');
+            });
+        }
+
+        if ($order) {
+            $column = $columns[$order[0]['column']];
+            $dir    = $order[0]['dir'];
+            $query->orderBy($column, $dir);
+        }
+
+        $totalRecords = $query->count();
+
+        $records = $query->offset($offset)->limit($limit)->orderBy('id', 'desc')->get();
+
+        $data = [];
+        foreach ($records as $record) {
+            $dataArray = [];
+
+            $dataArray[] = $record->id;
+            $dataArray[] = $record->name;
+            $dataArray[] = ucfirst($record->slug);
+            $dataArray[] = ucfirst($record->subject);
+
+            $dataArray[] = date('d M Y', strtotime($record->created_at));
+
+            $dataArray[] = '<div class="d-flex gap-2">
+                                <div class="edit">
+                                    <a href="' . route('Admin.EditEmailTemplates', ['id' => Crypt::encrypt($record->id)]) . '" class="edit-item-btn text-primary">
+                                        <i class="far fa-edit"></i>
+                                    </a>
+                                </div>
+                            </div>';
+
+            $data[] = $dataArray;
+        }
+
+        return response()->json([
+            "draw"            => $draw,
+            "recordsTotal"    => $totalRecords,
+            "recordsFiltered" => $totalRecords,
+            "data"            => $data,
+        ]);
+    }
+
+    public function editEmailTemplates($id)
+    {
+        try {
+            $decryptedId    = Crypt::decrypt($id);
+            $EmailTemplates = EmailTemplates::findOrFail($decryptedId);
+            return view('admin.Settings.EditEmailTemplates', compact('EmailTemplates'));
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Invalid Job ID!');
+        }
+    }
+
+    public function updateEmailTemplate(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'edit-id'     => 'required',
+            'slug'        => 'required|string|max:255',
+            'subject'     => 'required|string|max:255',
+            'description' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status'  => 0,
+                'message' => $validator->errors()->first(),
+            ]);
+        }
+
+        $template = EmailTemplates::find($request->input('edit-id'));
+
+        $template->slug    = $request->input('slug');
+        $template->subject = $request->input('subject');
+        $template->body    = $request->input('description');
+
+        if ($template->save()) {
+            return response()->json([
+                'status'  => 1,
+                'message' => 'Email template updated successfully.',
+            ]);
+        } else {
+            return response()->json([
+                'status'  => 0,
+                'message' => 'Failed to update template.',
             ]);
         }
     }
