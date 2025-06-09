@@ -8,6 +8,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 use App\Models\JobPost;
+use App\Models\Recruiter;
+use App\Models\UserProfile;
+use Illuminate\Support\Carbon;
 
 class DashboardController extends Controller
 {
@@ -15,7 +18,33 @@ class DashboardController extends Controller
   
 
     public function dashboard() {
-        return view('admin.dashboard');
+
+        $currentWeek = collect();
+        $previousWeek = collect();
+
+            foreach (range(0, 6) as $i) {
+                // Current week
+                $day = Carbon::now()->startOfWeek()->addDays($i);
+                
+
+                $count = UserProfile::where('user_type', 0)->whereDate('created_at', $day)->count();
+                $currentWeek->push($count);
+
+                // Previous week
+                $prevDay = Carbon::now()->subWeek()->startOfWeek()->addDays($i);
+                $prevCount = UserProfile::where('user_type', 0)
+                    ->whereDate('created_at', $prevDay)
+                    ->count();
+                $previousWeek->push($prevCount);
+
+             
+            }
+
+            $totalThisMonth = UserProfile::where('user_type', 0)
+            ->whereMonth('created_at', now()->month)
+            ->count();
+
+        return view('admin.dashboard',compact('currentWeek','previousWeek','totalThisMonth'));
     }
 
     public function getDashboardData() {
@@ -24,14 +53,24 @@ class DashboardController extends Controller
         $jobCount = JobPost::count();
 
         $user = Auth::user();
+        $RecruiterCount = Recruiter::where('user_type', 2)->count();
+
+        // for user activity
+           
+        // 
 
         return response()->json([
             'userCount' => $userCount,
             'jobCount' => $jobCount,
             'logo' => $user->logo,
             'name' => $user->name,
-            'email' => $user->email
+            'email' => $user->email,
+            'RecruiterCount' => $RecruiterCount,
+            
         ]);
+
+
+       
     }
 
     public function updateProfileImage (Request $request) {

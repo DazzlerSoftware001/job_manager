@@ -15,28 +15,27 @@
                         <div class="row">
                             <div class="col-xl-4 col-lg-6">
                                 <div class="card">
-                                    <div class="card-body">
-                                        <div class="d-flex align-items-center">
-                                            <div class="flex-shrink-0 me-3">
-                                                <div class="avatar">
-                                                    <div class="avatar-title rounded bg-primary bg-gradient">
-                                                        <i data-eva="pie-chart-2" class="fill-white"></i>
+                                    <a href="{{ route('Admin.UserList') }}" class="text-decoration-none text-dark">
+                                        <div class="card-body">
+                                            <div class="d-flex align-items-center">
+                                                <div class="flex-shrink-0 me-3">
+                                                    <div class="avatar">
+                                                        <div class="avatar-title rounded bg-primary bg-gradient">
+                                                            <i data-eva="pie-chart-2" class="fill-white"></i>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div class="flex-grow-1">
-                                                <p class="text-muted mb-1">Users</p>
-                                                <h4 class="mb-0" id="userCount">0</h4>
-                                            </div>
-
-                                            <div class="flex-shrink-0 align-self-end ms-2">
-                                                <div
-                                                    class="badge rounded-pill font-size-13 bg-success-subtle text-success ">
-                                                    + 2.65%
+                                                <div class="flex-grow-1">
+                                                    <p class="text-muted mb-1">Users</p>
+                                                    <h4 class="mb-0" id="userCount">0</h4>
+                                                </div>
+                                                <div class="flex-shrink-0 align-self-end ms-2">
+                                                    {{-- Optional badge here --}}
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </a>
+
                                     <!-- end card body -->
                                 </div>
                                 <!-- end card -->
@@ -44,27 +43,29 @@
                             <!-- end col -->
                             <div class="col-xl-4 col-lg-6">
                                 <div class="card">
-                                    <div class="card-body">
-                                        <div class="d-flex align-items-center">
-                                            <div class="flex-shrink-0 me-3">
-                                                <div class="avatar">
-                                                    <div class="avatar-title rounded bg-primary bg-gradient">
-                                                        <i data-eva="shopping-bag" class="fill-white"></i>
+                                    <a href="{{ route('Admin.JobList') }}" class="text-decoration-none text-dark">
+                                        <div class="card-body">
+                                            <div class="d-flex align-items-center">
+                                                <div class="flex-shrink-0 me-3">
+                                                    <div class="avatar">
+                                                        <div class="avatar-title rounded bg-primary bg-gradient">
+                                                            <i data-eva="shopping-bag" class="fill-white"></i>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div class="flex-grow-1">
-                                                <p class="text-muted mb-1">Job Post</p>
-                                                <h4 class="mb-0" id="jobCount">0</h4>
-                                            </div>
-                                            <div class="flex-shrink-0 align-self-end ms-2">
-                                                <div
-                                                    class="badge rounded-pill font-size-13  bg-danger-subtle  text-danger ">
-                                                    - 0.82%
+                                                <div class="flex-grow-1">
+                                                    <p class="text-muted mb-1">Job Post</p>
+                                                    <h4 class="mb-0" id="jobCount">0</h4>
+                                                </div>
+                                                <div class="flex-shrink-0 align-self-end ms-2">
+                                                    {{-- <div
+                                                        class="badge rounded-pill font-size-13  bg-danger-subtle  text-danger ">
+                                                        - 0.82%
+                                                    </div> --}}
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </a>
                                     <!-- end card body -->
                                 </div>
                                 <!-- end card -->
@@ -72,26 +73,28 @@
                             <!-- end col -->
                             <div class="col-xl-4">
                                 <div class="card">
-                                    <div class="card-body">
-                                        <div class="d-flex align-items-center">
-                                            <div class="flex-shrink-0 me-3">
-                                                <div class="avatar">
-                                                    <div class="avatar-title rounded bg-primary bg-gradient">
-                                                        <i data-eva="people" class="fill-white"></i>
+                                    <a href="{{ route('Admin.Recruiters') }}" class="text-decoration-none text-dark">
+                                        <div class="card-body">
+                                            <div class="d-flex align-items-center">
+                                                <div class="flex-shrink-0 me-3">
+                                                    <div class="avatar">
+                                                        <div class="avatar-title rounded bg-primary bg-gradient">
+                                                            <i data-eva="people" class="fill-white"></i>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div class="flex-grow-1">
-                                                <p class="text-muted mb-1">Customers</p>
-                                                <h4 class="mb-0">45,254</h4>
-                                            </div>
-                                            <div class="flex-shrink-0 align-self-end ms-2">
-                                                <div class="badge rounded-pill font-size-13 bg-danger-subtle text-danger">-
-                                                    1.04%
+                                                <div class="flex-grow-1">
+                                                    <p class="text-muted mb-1">Recruiter</p>
+                                                <h4 class="mb-0" id="RecruiterCount">0</h4>
+                                                </div>
+                                                <div class="flex-shrink-0 align-self-end ms-2">
+                                                    {{-- <div class="badge rounded-pill font-size-13 bg-danger-subtle text-danger">-
+                                                        1.04%
+                                                    </div> --}}
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </a>
                                     <!-- end card body -->
                                 </div>
                                 <!-- end card -->
@@ -100,7 +103,7 @@
                         </div>
                         <!-- end row -->
 
-                        <div class="card">
+                        {{-- <div class="card">
                             <div class="card-body pb-0">
                                 <div class="d-flex align-items-start">
                                     <div class="flex-grow-1">
@@ -192,11 +195,11 @@
                                 </div>
                             </div>
                             <!-- end card body -->
-                        </div>
+                        </div> --}}
                         <!-- end card -->
 
                         <div class="row">
-                            <div class="col-xl-4">
+                            <div class="col-xl-6">
                                 <div class="card">
                                     <div class="card-body">
                                         <div class="d-flex align-items-start">
@@ -206,37 +209,36 @@
                                             <div class="flex-shrink-0">
                                                 <div class="dropdown">
                                                     <a class="dropdown-toggle text-muted" href="#"
-                                                        data-bs-toggle="dropdown" aria-haspopup="true"
-                                                        aria-expanded="false">
-                                                        Weekly<i class="mdi mdi-chevron-down ms-1"></i>
+                                                    data-bs-toggle="dropdown" aria-haspopup="true"
+                                                    aria-expanded="false">
+                                                        Weekly
                                                     </a>
 
-                                                    <div class="dropdown-menu dropdown-menu-end">
+                                                    {{-- <div class="dropdown-menu dropdown-menu-end">
                                                         <a class="dropdown-item" href="#">Yearly</a>
                                                         <a class="dropdown-item" href="#">Monthly</a>
                                                         <a class="dropdown-item" href="#">Weekly</a>
                                                         <a class="dropdown-item" href="#">Today</a>
-                                                    </div>
+                                                    </div> --}}
                                                 </div>
                                             </div>
                                         </div>
 
                                         <div>
                                             <p class="text-muted mb-1">This Month</p>
-                                            <h4>16,543</h4>
+                                            <h4>{{ number_format($totalThisMonth) }}</h4>
                                         </div>
 
                                         <div class="m-n3">
-                                            <div id="chart-area" data-colors='["#3b76e1", "#f56e6e"]'
-                                                class="apex-charts"></div>
+                                            <div id="userActivity" data-colors='["#3b76e1", "#f56e6e"]' class="apex-charts"></div>
                                         </div>
                                     </div>
                                 </div>
-                                <!-- end card -->
                             </div>
+
                             <!-- end col -->
 
-                            <div class="col-xl-4 col-md-6">
+                            {{-- <div class="col-xl-4 col-md-6">
                                 <div class="card">
                                     <div class="card-body">
                                         <div class="d-flex align-items-start">
@@ -292,10 +294,10 @@
                                     <!-- end card body -->
                                 </div>
                                 <!-- end card -->
-                            </div>
+                            </div> --}}
                             <!-- end col -->
 
-                            <div class="col-xl-4 col-md-6">
+                            <div class="col-xl-6 col-md-6">
                                 <div class="card">
                                     <div class="card-body">
                                         <div class="d-flex align-items-start">
@@ -1298,6 +1300,8 @@
     @endsection
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
     @section('script')
         {{-- To get details --}}
         <script>
@@ -1311,6 +1315,7 @@
                     success: function(data) {
                         $('#userCount').text(data.userCount);
                         $('#jobCount').text(data.jobCount);
+                        $('#RecruiterCount').text(data.RecruiterCount);
 
                         // Check if logo exists and update the profile image
                         if (data.logo) {
@@ -1475,4 +1480,53 @@
                 });
             });
         </script>
+
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                setTimeout(function () {
+                    var options = {
+                        chart: {
+                            height: 250,
+                            type: 'area',
+                            toolbar: { show: false }
+                        },
+                        dataLabels: { enabled: false },
+                        stroke: { curve: 'smooth', width: 2 },
+                        series: [
+                            {
+                                name: "Current",
+                                data: @json($currentWeek)
+                            },
+                            {
+                                name: "Previous",
+                                data: @json($previousWeek)
+                            }
+                        ],
+                        colors: ['#3b76e1', '#f56e6e'],
+                        xaxis: {
+                            categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+                        },
+                        legend: {
+                            position: 'top',
+                            horizontalAlign: 'center'
+                        },
+                        fill: {
+                            type: 'gradient',
+                            gradient: {
+                                shadeIntensity: 1,
+                                opacityFrom: 0.7,
+                                opacityTo: 0.2,
+                                stops: [0, 90, 100]
+                            }
+                        }
+                    };
+
+                    var chart = new ApexCharts(document.querySelector("#userActivity"), options);
+                    chart.render();
+                }, 100); // slight delay for smoother load
+            });
+
+        </script>
+
     @endsection
