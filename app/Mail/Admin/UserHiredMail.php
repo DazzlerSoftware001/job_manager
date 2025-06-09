@@ -1,13 +1,15 @@
 <?php
+
 namespace App\Mail\Admin;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class UserShortlistedMail extends Mailable
+class UserHiredMail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -20,7 +22,7 @@ class UserShortlistedMail extends Mailable
     public function __construct($user, $job)
     {
         $this->user = $user;
-        $this->job  = $job;
+        $this->job = $job;
     }
 
     /**
@@ -29,7 +31,7 @@ class UserShortlistedMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'User Shortlisted Mail',
+            subject: 'User Hired Mail',
         );
     }
 
@@ -39,7 +41,7 @@ class UserShortlistedMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.Admin.CandidateShortlisted',
+            view: 'emails.Admin.CandidateHired',
             with: ['user' => $this->user, 'job' => $this->job],
         );
     }

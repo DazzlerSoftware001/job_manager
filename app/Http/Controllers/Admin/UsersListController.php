@@ -7,6 +7,8 @@ use App\Exports\FilteredUsersExport;
 use App\Exports\UsersExport;
 use App\Http\Controllers\Controller;
 use App\Mail\Admin\UserShortlistedMail;
+use App\Mail\Admin\UserRejectedMail;
+use App\Mail\Admin\UserHiredMail;
 use App\Models\CandidateProfile;
 use App\Models\JobApplication;
 use App\Models\JobExperience;
@@ -795,9 +797,10 @@ class UsersListController extends Controller
                 if ($application->save()) {
                     // Get the user for email
                     $user = UserProfile::find($decryptedId);
+                    $job  = JobPost::find($DecJob_Id);
 
-                    if ($user) {
-                        Mail::to($user->email)->send(new UserShortlistedMail($user));
+                    if ($user && $job) {
+                        Mail::to($user->email)->send(new UserShortlistedMail($user, $job));
                     }
 
                     return response()->json([
@@ -837,7 +840,15 @@ class UsersListController extends Controller
                 $application->status = 'rejected';
 
                 if ($application->save()) {
-                    return response()->json(['status_code' => 1, 'message' => 'Candidate rejected.']);
+
+                    $user = UserProfile::find($decryptedId);
+                    $job  = JobPost::find($DecJob_Id);
+
+                    if ($user && $job) {
+                        Mail::to($user->email)->send(new UserRejectedMail($user, $job));
+                    }
+
+                    return response()->json(['status_code' => 1, 'message' => 'Candidate rejected and email sent.']);
                 } else {
                     return response()->json([
                         'status_code' => 0, 'message' => 'Failed to Candidate reject.']);
@@ -866,7 +877,14 @@ class UsersListController extends Controller
                 $application->status = 'hired';
 
                 if ($application->save()) {
-                    return response()->json(['status_code' => 1, 'message' => 'Candidate hired.']);
+
+                    $user = UserProfile::find($decryptedId);
+                    $job  = JobPost::find($DecJob_Id);
+
+                    if ($user && $job) {
+                        Mail::to($user->email)->send(new UserHiredMail($user, $job));
+                    }
+                    return response()->json(['status_code' => 1, 'message' => 'Candidate hired and email sent.']);
                 } else {
                     return response()->json([
                         'status_code' => 0, 'message' => 'Failed to Candidate hire.']);
