@@ -5,6 +5,52 @@
 @section('page-title')
     Email Templates List
 @endsection
+<style>
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 40px;
+        height: 22px;
+    }
+
+    .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: .4s;
+        border-radius: 34px;
+    }
+
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 16px;
+        width: 16px;
+        left: 4px;
+        bottom: 3px;
+        background-color: white;
+        transition: .4s;
+        border-radius: 50%;
+    }
+
+    input:checked+.slider {
+        background-color: #4caf50;
+    }
+
+    input:checked+.slider:before {
+        transform: translateX(18px);
+    }
+</style>
 
 @section('main-container')
     <div class="main-content">
@@ -32,7 +78,7 @@
                                             <tr>
                                                 <th>#</th>
                                                 <th>Email Name</th>
-                                                <th>Template Name</th>
+                                                <th>Send Email</th>
                                                 <th>Subject</th>
                                                 <th>Created</th>
                                                 <th>Action</th>
@@ -96,4 +142,103 @@
             });
         });
     </script>
+    <script>
+        $(document).on('change', '.status-toggle', function() {
+            let id = $(this).data('id');
+            let status = $(this).is(':checked') ? 1 : 0;
+
+            // Revert toggle temporarily until confirmation
+            $(this).prop('checked', !status);
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "Do you want to " + (status ? "enable" : "disable") + " Mail Send?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, proceed!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "{{ route('Admin.SendEmail') }}",
+                        type: "POST",
+                        data: {
+                            _token: "{{ csrf_token() }}",
+                            status: status,
+                            id: id
+                        },
+                        success: function(response) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success!',
+                                text: response.message,
+                                timer: 1500,
+                                showConfirmButton: false
+                            });
+
+                            setTimeout(function() {
+                                location.reload();
+                            }, 750);
+                        },
+                        error: function() {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: 'Something went wrong. Please try again.',
+                            });
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+    {{-- <script>
+        $('.status-toggle').on('change', function() {
+            let status = $(this).is(':checked') ? 1 : 0;
+
+            // Revert toggle temporarily until confirmation
+            $(this).prop('checked', !status);
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "Do you want to " + (status ? "enable" : "disable") + " Mail Send?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, proceed!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "{{ route('Admin.SendEmail') }}",
+                        type: "POST",
+                        data: {
+                            _token: "{{ csrf_token() }}",
+                            status: status
+                        },
+                        success: function(response) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success!',
+                                text: response.message,
+                                timer: 1500,
+                                showConfirmButton: false
+                            });
+
+                            // Update toggle status only on success
+                            $('.status-toggle').prop('checked', status);
+                        },
+                        error: function() {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: 'Something went wrong. Please try again.',
+                            });
+                        }
+                    });
+                }
+            });
+        });
+    </script> --}}
 @endsection

@@ -320,7 +320,11 @@ class SettingsController extends Controller
 
             $dataArray[] = $record->id;
             $dataArray[] = $record->name;
-            $dataArray[] = ucfirst($record->slug);
+            $dataArray[] = '<label class="switch">
+                                <input type="checkbox" class="status-toggle" ' . ($record->show_email ? 'checked' : '') . ' data-id="' . $record->id . '">
+                                <span class="slider round"></span>
+                            </label>';
+
             $dataArray[] = ucfirst($record->subject);
 
             $dataArray[] = date('d M Y', strtotime($record->created_at));
@@ -344,6 +348,38 @@ class SettingsController extends Controller
         ]);
     }
 
+    public function sendEmail(Request $request) {
+        $id = $request->id;
+
+        $EmailTemplates = EmailTemplates::where('id', $id)->first();
+
+        if (! $EmailTemplates) {
+            EmailTemplates::create(['show_email' => '1']);
+            $message = 'Maintenance mode enabled.';
+        } else {
+            $EmailTemplates->show_email = $EmailTemplates->show_email ? '0' : '1';
+            $EmailTemplates->save();
+            $message = $EmailTemplates->show_email ? 'Send Mail enabled.' : 'Send Mail disabled.';
+        }
+
+        // $status = $request->status ? 1 : 0;
+
+        // $EmailTemplates = EmailTemplates::where('id', $id)->first();
+
+        // if (! $EmailTemplates) {
+        //     EmailTemplates::create(['show_email' => $status]);
+        // } else {
+        //     $EmailTemplates->show_email = $status;
+        //     $EmailTemplates->save();
+        // }
+
+        return response()->json([
+            'status_code' => 1,
+            'message'     => $message,
+        ]);
+
+    }
+
     public function editEmailTemplates($id)
     {
         try {
@@ -359,7 +395,6 @@ class SettingsController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'edit-id'     => 'required',
-            'slug'        => 'required|string|max:255',
             'subject'     => 'required|string|max:255',
             'description' => 'required|string',
         ]);
@@ -373,7 +408,6 @@ class SettingsController extends Controller
 
         $template = EmailTemplates::find($request->input('edit-id'));
 
-        $template->slug    = $request->input('slug');
         $template->subject = $request->input('subject');
         $template->body    = $request->input('description');
 

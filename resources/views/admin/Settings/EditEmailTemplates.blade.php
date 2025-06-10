@@ -93,7 +93,6 @@
                                     </button> 
                             </div> --}}
 
-                            <div class="card">
                                 <div class="card-body pb-0">
                                     <form method="POST" action="javascript:void(0)" id="UpdateEmailTemplate"
                                         enctype="multipart/form-data">
@@ -101,11 +100,6 @@
                                         <div class="row mb-3">
                                             <input type="hidden" name="edit-id" id="edit-id"
                                                 value="{{ $EmailTemplates->id }}">
-                                            <div class="col-xl-12">
-                                                <label for="slug">Job Title <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" id="slug" name="slug"
-                                                    value="{{ $EmailTemplates->slug }}" placeholder="Enter Template Name">
-                                            </div>
 
 
                                             <div class="col-xl-4 mt-3">
@@ -131,8 +125,31 @@
                                     </form>
                                 </div>
 
+                                
+
                                 <!-- end card body -->
-                            </div>
+
+                                    <div class="card-body">
+                                        <h3>Send By:
+                                            @if($EmailTemplates->user_type == '0')
+                                                User
+                                                @elseif ($EmailTemplates->user_type == '1')
+                                                Admin
+                                                @else
+                                                Recruiter
+                                                @endif
+                                        </h3>
+                                        <h3>Send To:
+                                           @if($EmailTemplates->user_type == '0')
+                                                User
+                                                @elseif ($EmailTemplates->user_type == '1')
+                                                Admin
+                                                @else
+                                                Recruiter
+                                                @endif
+                                        </h3>
+                                    </div>
+
 
                         </div>
 
@@ -160,7 +177,7 @@
         });
     </script>
 
-    {{--For Update EmailTemplate --}}
+    {{-- For Update EmailTemplate --}}
     <script>
         $(document).ready(function() {
             $('#UpdateEmailTemplate').on('submit', function(event) {

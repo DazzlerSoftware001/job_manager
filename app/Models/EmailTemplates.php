@@ -10,5 +10,5 @@ class EmailTemplates extends Model
     use HasFactory;
 
     protected $table = 'email_templates'; 
-    protected $fillable = ['name','slug', 'subject', 'body'];
+    protected $fillable = ['user_type','send_to','name','show_email', 'subject', 'body'];
 }

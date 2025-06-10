@@ -266,6 +266,7 @@ Route::prefix('Admin')->group(function () {
         Route::post('/UpdateEmailSetting', [SettingsController::class, 'UpdateEmailSetting'])->name('Admin.UpdateEmailSetting');
         Route::get('/EmailTemplates', [SettingsController::class, 'EmailTemplates'])->name('Admin.EmailTemplates');
         Route::post('/GetEmailTemplates', [SettingsController::class, 'getEmailTemplates'])->name('Admin.GetEmailTemplates');
+        Route::post('/SendEmail', [SettingsController::class, 'sendEmail'])->name('Admin.SendEmail');
         Route::get('/EditEmailTemplates/{id}', [SettingsController::class, 'editEmailTemplates'])->name('Admin.EditEmailTemplates');
         Route::post('/UpdateEmailTemplate', [SettingsController::class, 'updateEmailTemplate'])->name('Admin.UpdateEmailTemplate');
 

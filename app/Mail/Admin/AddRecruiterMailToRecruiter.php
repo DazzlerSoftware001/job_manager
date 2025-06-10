@@ -1,9 +1,8 @@
 <?php
-
 namespace App\Mail\Admin;
 
+use App\Models\EmailTemplates;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
@@ -13,12 +12,26 @@ class AddRecruiterMailToRecruiter extends Mailable
 {
     use Queueable, SerializesModels;
     public $Recruiter;
+    protected $subjectLine;
     /**
      * Create a new message instance.
      */
     public function __construct($Recruiter)
     {
         $this->Recruiter = $Recruiter;
+
+        // Fetch subject from EmailTemplates table using a specific key
+        $template          = EmailTemplates::where('id', '1')->first();
+        $this->subjectLine = $template?->subject ?? 'Profile Created';
+        $this->emailBody   = $template?->body ?? "
+    <h2>Hello {{ name }} {{ lname }},</h2>
+    <p>Your profile has been {{ status }}. by <strong>Admin</strong></p>
+    <p>Thanks for choosing our platform!</p>
+    <br>
+    <p>Regards,</p>
+    <p><strong>Job Portal Team</strong></p>
+";
+
     }
 
     /**
@@ -27,7 +40,7 @@ class AddRecruiterMailToRecruiter extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Profile Created',
+            subject: $this->subjectLine,
         );
     }
 
@@ -38,7 +51,7 @@ class AddRecruiterMailToRecruiter extends Mailable
     {
         return new Content(
             view: 'emails.Admin.AddRecruiterToRecruiter',
-            with: ['Recruiter' =>$this->Recruiter],
+            with: ['Recruiter' => $this->Recruiter, 'body' => $this->emailBody],
         );
     }
 

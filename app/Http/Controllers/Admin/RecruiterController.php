@@ -2,15 +2,17 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Jobpost;
-use App\Models\Recruiter;
-use Illuminate\Support\Facades\Mail;
 use App\Mail\Admin\AddRecruiterMailToRecruiter;
 use App\Mail\Admin\RecruiterStatusMailToRecruiter;
 use App\Mail\Admin\RecruiterUpdateMailToRecruiter;
+use App\Models\Jobpost;
+use App\Models\Recruiter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class RecruiterController extends Controller
 {
@@ -117,53 +119,78 @@ class RecruiterController extends Controller
 
     public function addRecruiter(Request $request)
     {
-
-        // Define validation rules
         $rules = [
             'name'     => 'required|string|max:255',
-            'lname'     => 'required|string|max:255',
+            'lname'    => 'required|string|max:255',
             'email'    => 'required|email|max:255|unique:users,email',
             'phone'    => 'required|digits_between:10,15|unique:users,phone',
             'logo'     => 'required|image|max:2048',
             'password' => 'required|min:8|max:100|confirmed',
         ];
 
-        // Validate the request
         $validator = Validator::make($request->all(), $rules);
 
-        if (! $validator->fails()) {
-            try {
-
-                if ($request->hasFile('logo')) {
-                    $logo     = $request->file('logo');
-                    $logoName = time() . '.' . $logo->getClientOriginalExtension();
-                    $logo->move(public_path('recruiter/logo'), $logoName);
-                    $logoPath = ('recruiter/logo/' . $logoName);
-                }
-
-                $Recruiter               = new Recruiter();
-                $Recruiter->user_type    = 2;
-                $Recruiter->user_details = 'Recruiter';
-
-                $Recruiter->name       = $request->input('name');
-                $Recruiter->lname       = $request->input('lname');
-                $Recruiter->email      = $request->input('email');
-                $Recruiter->phone      = $request->input('phone');
-                $Recruiter->logo       = $logoPath;
-                $Recruiter->password   = Hash::make($request->input('password'));
-                $Recruiter->status     = 0;
-                $Recruiter->created_at = now();
-
-                $Recruiter->save();
-                Mail::to($Recruiter->email)->send(new AddRecruiterMailToRecruiter($Recruiter));
-                return response()->json(['status_code' => 1, 'message' => 'Recruiter created successfully']);
-            } catch (\Exception $e) {
-                // Handle any exception that occurs during saving
-                return response()->json(['status_code' => 0, 'message' => 'Unable to add data']);
-            }
-        } else {
-            // Return validation errors
+        if ($validator->fails()) {
             return response()->json(['status_code' => 2, 'message' => $validator->errors()->first()]);
+        }
+
+        DB::beginTransaction();
+
+        try {
+            // Upload logo
+            $logoPath = null;
+            if ($request->hasFile('logo')) {
+                $logo     = $request->file('logo');
+                $logoName = time() . '.' . $logo->getClientOriginalExtension();
+                $logo->move(public_path('recruiter/logo'), $logoName);
+                $logoPath = 'recruiter/logo/' . $logoName;
+            }
+
+            // Create Recruiter
+            $Recruiter               = new Recruiter();
+            $Recruiter->user_type    = 2;
+            $Recruiter->user_details = 'Recruiter';
+            $Recruiter->name         = $request->input('name');
+            $Recruiter->lname        = $request->input('lname');
+            $Recruiter->email        = $request->input('email');
+            $Recruiter->phone        = $request->input('phone');
+            $Recruiter->logo         = $logoPath;
+            $Recruiter->password     = Hash::make($request->input('password'));
+            $Recruiter->status       = 0;
+            $Recruiter->created_at   = now();
+
+            $Recruiter->save();
+
+            // Try sending the mail
+            try {
+                Mail::to($Recruiter->email)->send(new AddRecruiterMailToRecruiter($Recruiter));
+            } catch (\Exception $mailException) {
+                // Rollback if email fails
+                DB::rollBack();
+
+                // Optional: Log the error for admin
+                Log::error('Recruiter email send failed: ' . $mailException->getMessage());
+
+                return response()->json([
+                    'status_code' => 0,
+                    'message'     => 'Recruiter creation failed while sending email.',
+                ]);
+            }
+
+            DB::commit();
+
+            return response()->json(['status_code' => 1, 'message' => 'Recruiter created and email sent successfully.']);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            // Optional: Log any general exception
+            Log::error('Recruiter creation error: ' . $e->getMessage());
+
+            return response()->json([
+                'status_code' => 0,
+                'message'     => 'Unable to add recruiter.',
+            ]);
         }
     }
 
@@ -249,7 +276,7 @@ class RecruiterController extends Controller
         $rules = [
             'edit-id'   => 'required|exists:users,id',
             'editname'  => 'required|string|max:255',
-            'editlname'  => 'required|string|max:255',
+            'editlname' => 'required|string|max:255',
             'editemail' => 'required|email|max:255',
             'editphone' => 'required|digits_between:10,15',
             'editlogo'  => 'nullable|image|max:2048',
@@ -277,7 +304,7 @@ class RecruiterController extends Controller
 
             if ($Recruiter) {
                 $Recruiter->name  = $request->input('editname');
-                $Recruiter->lname  = $request->input('editlname');
+                $Recruiter->lname = $request->input('editlname');
                 $Recruiter->email = $request->input('editemail');
                 $Recruiter->phone = $request->input('editphone');
                 // $Recruiter->status     = 0;
@@ -295,7 +322,7 @@ class RecruiterController extends Controller
                 $Recruiter->save();
 
                 if ($Recruiter->save()) {
-                     Mail::to($Recruiter->email)->send(new RecruiterUpdateMailToRecruiter($Recruiter));
+                    Mail::to($Recruiter->email)->send(new RecruiterUpdateMailToRecruiter($Recruiter));
                     return response()->json(['status_code' => 1, 'message' => 'Recruiter updated successfully']);
                 } else {
                     return response()->json(['status_code' => 0, 'message' => 'Unable to update data']);
