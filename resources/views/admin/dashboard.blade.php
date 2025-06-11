@@ -795,7 +795,7 @@
                                                         <div class="d-flex gap-2">
                                                             <a href="{{ route('Admin.EditJobPost', ['id' => Crypt::encrypt($exp->id)]) }}"
                                                             class="btn btn-primary bg-gradient btn-sm"
-                                                            data-bs-toggle="tooltip" data-bs-placement="top" title="View">
+                                                            data-bs-toggle="tooltip" data-bs-placement="top" title="Edit">
                                                                  <i data-eva="edit" data-eva-height="14" data-eva-width="14"
                                                                 class="fill-white align-text-top"></i>
                                                             </a>
