@@ -7,7 +7,6 @@
 @endsection
 
 @section('main-container')
-
     <style>
         .choices {
             border: var(--bs-border-width) solid var(--bs-border-color);
@@ -88,9 +87,10 @@
                             <div class="px-3 mt-3 d-flex align-items-center gap-2">
                                 <input type="text" id="search" name="search"
                                     class="form-control form-control-sm bg-light rounded w-25" placeholder="Search...">
-                                    <button class="btn btn-primary btn-sm" onclick="window.location.href='{{ route('Admin.CreateJob') }}'">
-                                        + Create Job
-                                    </button>
+                                <button class="btn btn-primary btn-sm"
+                                    onclick="window.location.href='{{ route('Admin.CreateJob') }}'">
+                                    + Create Job
+                                </button>
                             </div>
 
                             <div class="card-body">
@@ -177,7 +177,7 @@
 
 
         {{-- Change Admin Verify Status --}}
-        <script>
+        {{-- <script>
             function changeVerifyStatus(id, status) {
                 let actionText = status === 1 ? 'verify' : 'reject';
                 let confirmButtonText = status === 1 ? 'Yes, verify it!' : 'Yes, reject it!';
@@ -242,20 +242,89 @@
                     }
                 });
             }
+        </script> --}}
+        <script>
+            function changeVerifyStatus(id, status) {
+                let actionText = status === 1 ? 'verify' : 'reject';
+                let confirmButtonText = status === 1 ? 'Yes, verify it!' : 'Yes, reject it!';
+                let successMessage = status === 1 ? 'Job Post has been verified successfully!' :
+                    'Job Post has been rejected successfully!';
+                let confirmColor = status === 1 ? '#28a745' : '#dc3545';
+
+                Swal.fire({
+                    title: `Are you sure?`,
+                    text: `Do you really want to ${actionText} this job post?`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: confirmColor,
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: confirmButtonText,
+                    cancelButtonText: 'No, cancel!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            type: 'POST',
+                            url: "{{ route('Admin.VerifyStatus') }}",
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            data: {
+                                id: id,
+                                status: status
+                            },
+                            dataType: 'json',
+                            success: function(response) {
+                                let icon = response.status_code === 1 ? 'success' : 'error';
+                                let bgColor = response.status_code === 1 ? '#28a745' : '#dc3545';
+
+                                Swal.fire({
+                                    title: response.status_code === 1 ? 'Success!' : 'Error!',
+                                    text: response.message,
+                                    icon: icon,
+                                    confirmButtonText: 'Okay',
+                                    confirmButtonColor: bgColor
+                                });
+
+                                if (response.status_code === 1) {
+                                    $('#myTable').DataTable().ajax.reload(null, false);
+                                }
+                            },
+                            error: function() {
+                                Swal.fire({
+                                    title: 'Error!',
+                                    text: 'Something went wrong. Please try again later.',
+                                    icon: 'error',
+                                    confirmButtonText: 'Okay',
+                                    confirmButtonColor: '#dc3545'
+                                });
+                            }
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Cancelled',
+                            text: 'No changes were made.',
+                            icon: 'info',
+                            confirmButtonText: 'Okay',
+                            confirmButtonColor: '#17a2b8'
+                        });
+                    }
+                });
+            }
         </script>
+
 
         {{-- change Status --}}
         <script>
             function changeStatus(id) {
-                
+
                 Swal.fire({
-                title: 'Are you sure?',
-                text: 'Do you want to change the status of this record?',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Yes, change it!',
-                cancelButtonText: 'No, cancel!',
-                background: '#ffc107',
+                    title: 'Are you sure?',
+                    text: 'Do you want to change the status of this record?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes, change it!',
+                    cancelButtonText: 'No, cancel!',
+                    background: '#ffc107',
                 }).then((response) => {
                     if (response.isConfirmed) {
 
