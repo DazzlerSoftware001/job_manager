@@ -140,9 +140,9 @@
                                                 @endif
                                         </h3>
                                         <h3>Send To:
-                                           @if($EmailTemplates->user_type == '0')
+                                           @if($EmailTemplates->send_to == '0')
                                                 User
-                                                @elseif ($EmailTemplates->user_type == '1')
+                                                @elseif ($EmailTemplates->send_to == '1')
                                                 Admin
                                                 @else
                                                 Recruiter

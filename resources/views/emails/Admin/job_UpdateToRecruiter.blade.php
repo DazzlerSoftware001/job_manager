@@ -5,16 +5,14 @@
     <title>Job Updated Confirmation</title>
 </head>
 <body>
-    <h2>Hello {{ $recruiter->name.' '.$recruiter->lname }},</h2>
+    @php
+        $parsedBody = str_replace(
+            ['{{ name }}', '{{ lname }}', '{{ title }}'],
+            [$recruiter->name, $recruiter->lname, $JobPost->title],
+            $body,
+        );
+    @endphp
 
-    <p>Your job titled <strong>{{ $JobPost->title }}</strong> has been successfully Updated by <strong>Admin</strong>
-
-    <p>It is currently under review. You will be notified once it goes live.</p>
-
-    <p>Thanks for choosing our platform!</p>
-
-    <br>
-    <p>Regards,</p>
-    <p><strong>Job Portal Team</strong></p>
+    {!! $parsedBody !!}
 </body>
 </html>

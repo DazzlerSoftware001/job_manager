@@ -1,9 +1,8 @@
 <?php
-
 namespace App\Mail\Admin;
 
+use App\Models\EmailTemplates;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
@@ -14,13 +13,31 @@ class JobUpdateMailToRecruiter extends Mailable
     use Queueable, SerializesModels;
     public $JobPost;
     public $recruiter;
+    protected $subjectLine;
     /**
      * Create a new message instance.
      */
-    public function __construct($JobPost,$recruiter)
+    public function __construct($JobPost, $recruiter)
     {
-        $this->JobPost = $JobPost;
+        $this->JobPost   = $JobPost;
         $this->recruiter = $recruiter;
+
+        // Fetch subject from EmailTemplates table using a specific key
+        $template          = EmailTemplates::where('id', '7')->first();
+        $this->subjectLine = $template?->subject ?? 'Job Update by Admin';
+        $this->emailBody   = $template?->body ?? "
+    Hello {{ name }} {{ lname }},
+Your job titled {{ title }} has been successfully Updated by Admin
+
+It is currently under review. You will be notified once it goes live.
+
+Thanks for choosing our platform!
+
+
+Regards,
+
+Job Portal Team
+";
     }
 
     /**
@@ -29,7 +46,7 @@ class JobUpdateMailToRecruiter extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Job Update by Admin',
+            subject: $this->subjectLine,
         );
     }
 
@@ -39,8 +56,8 @@ class JobUpdateMailToRecruiter extends Mailable
     public function content(): Content
     {
         return new Content(
-             view: 'emails.Admin.job_UpdateToRecruiter',
-            with: ['JobPost' => $this->JobPost,'recruiter' =>$this->recruiter],
+            view: 'emails.Admin.job_UpdateToRecruiter',
+            with: ['JobPost' => $this->JobPost, 'recruiter' => $this->recruiter, 'body' => $this->emailBody],
         );
     }
 

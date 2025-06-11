@@ -5,14 +5,15 @@ use App\Http\Controllers\Controller;
 use App\Mail\Admin\AddRecruiterMailToRecruiter;
 use App\Mail\Admin\RecruiterStatusMailToRecruiter;
 use App\Mail\Admin\RecruiterUpdateMailToRecruiter;
+use App\Models\EmailTemplates;
 use App\Models\Jobpost;
 use App\Models\Recruiter;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class RecruiterController extends Controller
 {
@@ -158,33 +159,32 @@ class RecruiterController extends Controller
             $Recruiter->password     = Hash::make($request->input('password'));
             $Recruiter->status       = 0;
             $Recruiter->created_at   = now();
-
             $Recruiter->save();
 
-            // Try sending the mail
-            try {
-                Mail::to($Recruiter->email)->send(new AddRecruiterMailToRecruiter($Recruiter));
-            } catch (\Exception $mailException) {
-                // Rollback if email fails
-                DB::rollBack();
-
-                // Optional: Log the error for admin
-                Log::error('Recruiter email send failed: ' . $mailException->getMessage());
-
-                return response()->json([
-                    'status_code' => 0,
-                    'message'     => 'Recruiter creation failed while sending email.',
-                ]);
+            // Send email only if template allows
+            $template = EmailTemplates::find(1);
+            if ($template && $template->show_email == '1') {
+                try {
+                    Mail::to($Recruiter->email)->send(new AddRecruiterMailToRecruiter($Recruiter));
+                } catch (\Exception $mailException) {
+                    DB::rollBack();
+                    Log::error('Recruiter email send failed: ' . $mailException->getMessage());
+                    return response()->json([
+                        'status_code' => 0,
+                        'message'     => 'Recruiter creation failed while sending email.',
+                    ]);
+                }
             }
 
             DB::commit();
+            $message = ($template && $template->show_email == '1') ?
+            'Recruiter created and email sent successfully.' :
+            'Recruiter created successfully.';
 
-            return response()->json(['status_code' => 1, 'message' => 'Recruiter created and email sent successfully.']);
+            return response()->json(['status_code' => 1, 'message' => $message]);
 
         } catch (\Exception $e) {
             DB::rollBack();
-
-            // Optional: Log any general exception
             Log::error('Recruiter creation error: ' . $e->getMessage());
 
             return response()->json([
@@ -208,8 +208,26 @@ class RecruiterController extends Controller
 
                 // Save the updated record
                 if ($Recruiter->save()) {
-                    Mail::to($Recruiter->email)->send(new RecruiterStatusMailToRecruiter($Recruiter));
-                    return response()->json(['status_code' => 1, 'message' => 'Status successfully changed']);
+                    // Send email only if template allows
+                    $template = EmailTemplates::find(6);
+                    if ($template && $template->show_email == '1') {
+                        try {
+                            Mail::to($Recruiter->email)->send(new RecruiterStatusMailToRecruiter($Recruiter));
+                        } catch (\Exception $mailException) {
+                            DB::rollBack();
+                            Log::error('Status Change email send failed: ' . $mailException->getMessage());
+                            return response()->json([
+                                'status_code' => 0,
+                                'message'     => 'Status Change failed while sending email.',
+                            ]);
+                        }
+                    }
+
+                    $message = ($template && $template->show_email == '1') ?
+                    'Status Change and email sent successfully.' :
+                    'Status Change successfully.';
+
+                    return response()->json(['status_code' => 1, 'message' => $message]);
                 } else {
                     return response()->json(['status_code' => 0, 'message' => 'Unable to change status']);
                 }
@@ -246,10 +264,17 @@ class RecruiterController extends Controller
             'recruiter_id' => $newRecruiterId,
         ]);
 
-        // Step 2: Delete the recruiter
-        $recruiter->delete();
+        // Step 2: Attempt to delete the recruiter
+        if ($recruiter->delete()) {
+            // Step 3: Only unlink logo if recruiter deleted successfully
+            if ($recruiter->logo && file_exists(public_path($recruiter->logo))) {
+                unlink(public_path($recruiter->logo));
+            }
 
-        return response()->json(['status_code' => 1, 'message' => 'Recruiter deleted and jobs reassigned.']);
+            return response()->json(['status_code' => 1, 'message' => 'Recruiter deleted and jobs reassigned.']);
+        } else {
+            return response()->json(['status_code' => 0, 'message' => 'Recruiter deletion failed.']);
+        }
     }
 
     public function editRecruiter(Request $request)

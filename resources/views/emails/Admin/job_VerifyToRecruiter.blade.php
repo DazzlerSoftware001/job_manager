@@ -15,5 +15,15 @@
     <p>Thanks,</p>
 
     <p><strong>Your Job Portal</strong></p>
+
+    @php
+        $parsedBody = str_replace(
+            ['{{ name }}', '{{ lname }}', '{{ title }}', '{{ admin_verify }}'],
+            [$recuiter->name, $recuiter->lname, $JobPost->title, $JobPost->admin_verify == 1 ? 'Verified' : 'Inactived'],
+            $body,
+        );
+    @endphp
+
+    {!! $parsedBody !!}
 </body>
 </html>
