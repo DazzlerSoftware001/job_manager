@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Models\JobPost;
 use App\Models\Recruiter;
 use App\Models\UserProfile;
+use App\Models\JobApplication;
 use Illuminate\Support\Carbon;
 
 class DashboardController extends Controller
@@ -44,7 +45,26 @@ class DashboardController extends Controller
             ->whereMonth('created_at', now()->month)
             ->count();
 
-        return view('admin.dashboard',compact('currentWeek','previousWeek','totalThisMonth'));
+            $recentJob = JobPost::select('id', 'title','role','location','min_exp','max_exp','education')
+                ->where('admin_verify', 1)->where('status', 1)->latest()->take(10)->get();
+
+            $RecentApplicant = JobApplication::with([
+                'user:id,name,lname,email,phone,logo,education_level,qualification,branch,city,experience',
+                'user.candidateProfile:skill',
+                'jobPost:id,title',
+            ])
+            ->select(['id', 'user_id', 'job_id', 'status', 'recruiter_view', 'created_at'])->latest()->take(10)->get();
+
+
+            $tomorrow = Carbon::tomorrow(); // Gets tomorrow's date
+
+            $jobExpiry = JobPost::where('admin_verify', 1)
+                ->where('status', 1)
+                ->whereDate('jobexpiry', $tomorrow)
+                ->get();
+
+
+        return view('admin.dashboard',compact('currentWeek','previousWeek','totalThisMonth','recentJob','RecentApplicant','jobExpiry'));
     }
 
     public function getDashboardData() {
