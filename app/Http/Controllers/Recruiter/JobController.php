@@ -33,7 +33,8 @@ use App\Mail\Recruiter\CandidateShortlist;
 use App\Mail\Recruiter\CandidateReject;
 use App\Mail\Recruiter\CandidateHire;
 use Illuminate\Support\Facades\Mail;
-
+use App\Notifications\JobPostedByRecruiter;
+use Illuminate\Support\Facades\Notification;
 class JobController extends Controller
 {
     public function jobpost()
@@ -146,6 +147,13 @@ class JobController extends Controller
             // confirmation mail to admin 
             $adminMail = UserProfile::where('user_type', 1)->where('user_details', 'Admin')->select('name', 'lname', 'email')->first();
             Mail::to($adminMail->email)->send(new JobPostedMailToAdmin($JobPost, $recruiterName));
+
+           $adminProfile = UserProfile::where('user_type', 1)->where('user_details', 'Admin')->first();
+
+            if ($adminProfile && $adminProfile->user) {
+                $adminProfile->user->notify(new JobPostedByRecruiter($JobPost, $recruiterName));
+            }
+
 
             return response()->json(['status_code' => 1, 'message' => 'Job Posted successfully wait for admin action']);
             // } catch (\Exception $e) {
