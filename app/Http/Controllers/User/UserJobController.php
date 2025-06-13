@@ -81,6 +81,7 @@ class UserJobController extends Controller
     // }
     public function applyjob(Request $request)
     {
+        dd($request->all());
         $user_id = Auth::id();
         $job_id  = $request->input('job_id'); // Receive job_id from AJAX request
 

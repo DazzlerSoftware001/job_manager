@@ -10,7 +10,7 @@ use App\Models\JobPost;
 class JobPostedByRecruiter extends Notification
 {
     use Queueable;
-      protected $jobPost;
+    protected $jobPost;
     protected $recruiterName;
     /**
      * Create a new notification instance.

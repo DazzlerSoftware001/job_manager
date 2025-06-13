@@ -7,7 +7,7 @@ use Illuminate\Notifications\Notifiable;
 class UserProfile extends Model
 {
     use HasFactory;
-
+    use Notifiable;
     protected $table = 'users';
 
     protected $fillable = ['id', 'user_type', 'user_details', 'name', 'lname', 'email','otp_email', 'email_verified_at','email_verified', 'phone', 'address', 'logo', 'status', 'password', 'date_of_birth', 'gender', 'education_level', 'qualification', 'branch', 'language', 'experience', 'look_job', 'description', 'social_links', 'country', 'state', 'city', 'postal_code'];
