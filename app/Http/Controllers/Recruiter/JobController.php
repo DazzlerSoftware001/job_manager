@@ -2,6 +2,15 @@
 namespace App\Http\Controllers\Recruiter;
 
 use App\Http\Controllers\Controller;
+use App\Mail\Recruiter\CandidateHire;
+use App\Mail\Recruiter\CandidateReject;
+use App\Mail\Recruiter\CandidateShortlist;
+use App\Mail\Recruiter\JobPostedMail;
+use App\Mail\Recruiter\JobPostedMailToAdmin;
+use App\Mail\Recruiter\JobStatusChangedMail;
+use App\Mail\Recruiter\JobStatusChangedMailToAdmin;
+use App\Mail\Recruiter\JobUpdatedMail;
+use App\Mail\Recruiter\JobUpdatedMailToAdmin;
 use App\Models\Companies;
 use App\Models\JobApplication;
 use App\Models\JobCategory;
@@ -19,22 +28,13 @@ use App\Models\JobSkill;
 use App\Models\JobTypes;
 use App\Models\Recruiter;
 use App\Models\UserProfile;
+use App\Notifications\JobPostedByRecruiter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
-use Illuminate\Support\Facades\Validator;
-use App\Mail\Recruiter\JobPostedMail;
-use App\Mail\Recruiter\JobPostedMailToAdmin;
-use App\Mail\Recruiter\JobStatusChangedMail;
-use App\Mail\Recruiter\JobStatusChangedMailToAdmin;
-use App\Mail\Recruiter\JobUpdatedMail;
-use App\Mail\Recruiter\JobUpdatedMailToAdmin;
-use App\Mail\Recruiter\CandidateShortlist;
-use App\Mail\Recruiter\CandidateReject;
-use App\Mail\Recruiter\CandidateHire;
 use Illuminate\Support\Facades\Mail;
-use App\Notifications\JobPostedByRecruiter;
-use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Validator;
+
 class JobController extends Controller
 {
     public function jobpost()
@@ -143,17 +143,16 @@ class JobController extends Controller
             // Mail::to(Auth::user()->email)->send(new JobPostedMail($JobPost));
             $recruiterName = Auth::user()->name . ' ' . Auth::user()->lname;
             Mail::to(Auth::user()->email)->send(new JobPostedMail($JobPost, $recruiterName));
-           
-            // confirmation mail to admin 
+
+            // confirmation mail to admin
             $adminMail = UserProfile::where('user_type', 1)->where('user_details', 'Admin')->select('name', 'lname', 'email')->first();
             Mail::to($adminMail->email)->send(new JobPostedMailToAdmin($JobPost, $recruiterName));
 
-           $adminProfile = UserProfile::where('user_type', 1)->where('user_details', 'Admin')->first();
+            $adminProfile = UserProfile::where('user_type', 1)->where('user_details', 'Admin')->first();
 
             if ($adminProfile && $adminProfile->user) {
                 $adminProfile->user->notify(new JobPostedByRecruiter($JobPost, $recruiterName));
             }
-
 
             return response()->json(['status_code' => 1, 'message' => 'Job Posted successfully wait for admin action']);
             // } catch (\Exception $e) {
@@ -246,10 +245,10 @@ class JobController extends Controller
             5 => 'id',
         ];
 
-        // $query = JobPost::query();
-        // $query = JobPost::withCount('applications');
+                                                            // $query = JobPost::query();
+                                                            // $query = JobPost::withCount('applications');
         $query = JobPost::where('recruiter_id', Auth::id()) // or Auth::user()->id
-                ->withCount('applications');
+            ->withCount('applications');
 
         // Count Data
 
@@ -344,12 +343,11 @@ class JobController extends Controller
 
                     // Send mail to recruiter
                     Mail::to(Auth::user()->email)->send(new JobStatusChangedMail($JobPost, $recruiterName));
-                   
+
                     // Send mail to admin
-                   
+
                     $adminMail = UserProfile::where('user_type', 1)->where('user_details', 'Admin')->select('name', 'lname', 'email')->first();
                     Mail::to($adminMail->email)->send(new JobStatusChangedMailToAdmin($JobPost, $recruiterName));
-
 
                     return response()->json(['status_code' => 1, 'message' => 'Status successfully changed']);
                 } else {
@@ -491,7 +489,7 @@ class JobController extends Controller
                 // $JobPost->com_name = $request->input('company_name');
                 // $JobPost->com_logo = $request->input('company_logo');
                 $JobPost->com_details  = $request->input('company_details');
-                $JobPost->jobexpiry          = $request->input('jobExp');
+                $JobPost->jobexpiry    = $request->input('jobExp');
                 $JobPost->job_desc     = $request->input('job_description');
                 $JobPost->job_resp     = $request->input('job_resp');
                 $JobPost->job_req      = $request->input('job_req');
@@ -505,8 +503,8 @@ class JobController extends Controller
 
                     $recruiterName = Auth::user()->name . ' ' . Auth::user()->lname;
                     Mail::to(Auth::user()->email)->send(new JobUpdatedMail($JobPost, $recruiterName));
-                
-                    // confirmation mail to admin 
+
+                    // confirmation mail to admin
                     $adminMail = UserProfile::where('user_type', 1)->where('user_details', 'Admin')->select('name', 'lname', 'email')->first();
                     Mail::to($adminMail->email)->send(new JobUpdatedMailToAdmin($JobPost, $recruiterName));
 
@@ -542,30 +540,30 @@ class JobController extends Controller
 
 //         return view('recruiter.applicants.JobApllicants', compact('job', 'applicants'));
 //     }
-public function JobApllicants($job_id)
-{
-    try {
-        $decryptedId = Crypt::decrypt($job_id);
-    } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
-        abort(404, 'Invalid Job ID');
+    public function JobApllicants($job_id)
+    {
+        try {
+            $decryptedId = Crypt::decrypt($job_id);
+        } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
+            abort(404, 'Invalid Job ID');
+        }
+
+        $job = JobPost::with(['applications.user.candidateProfile'])->findOrFail($decryptedId);
+
+        // Sort the applications by 'recruiter_view' (0 first, then 1)
+        $sortedApplications = $job->applications->sortBy('recruiter_view');
+
+        // Now you can pluck 'recruiter_view' from the sorted applications
+        $sortedViews = $sortedApplications->pluck('recruiter_view');
+
+        // You can also access other applicant details if needed
+        $applicants = $sortedApplications->pluck('user');
+
+        // For debugging, dd() will show sorted recruiter_view values
+        // dd($sortedViews);
+
+        return view('recruiter.applicants.JobApllicants', compact('job', 'applicants'));
     }
-
-    $job = JobPost::with(['applications.user.candidateProfile'])->findOrFail($decryptedId);
-
-    // Sort the applications by 'recruiter_view' (0 first, then 1)
-    $sortedApplications = $job->applications->sortBy('recruiter_view');
-
-    // Now you can pluck 'recruiter_view' from the sorted applications
-    $sortedViews = $sortedApplications->pluck('recruiter_view');
-
-    // You can also access other applicant details if needed
-    $applicants = $sortedApplications->pluck('user');
-
-    // For debugging, dd() will show sorted recruiter_view values
-    // dd($sortedViews);
-
-    return view('recruiter.applicants.JobApllicants', compact('job', 'applicants'));
-}
 
     public function ApllicantsDetails($userId, $jobId)
     {
@@ -577,7 +575,7 @@ public function JobApllicants($job_id)
         }
 
         // Load user with candidate profile
-        $user = UserProfile::with('candidateProfile', 'candidateQualification', 'candidateEmployment','candidateAward')->find($decryptedId);
+        $user = UserProfile::with('candidateProfile', 'candidateQualification', 'candidateEmployment', 'candidateAward')->find($decryptedId);
 
         $application = JobApplication::where('user_id', $decryptedId)
             ->where('job_id', $DecJob_Id)
@@ -608,8 +606,7 @@ public function JobApllicants($job_id)
 
         $JobPost = JobPost::findOrFail($DecJob_Id)->title;
 
-        
-        return view('recruiter.applicants.ApllicantsDetails', compact('user', 'DecJob_Id', 'application','JobPost'));
+        return view('recruiter.applicants.ApllicantsDetails', compact('user', 'DecJob_Id', 'application', 'JobPost'));
     }
 
     public function CandidateShortlist($userId, $Job_Id)
@@ -628,8 +625,8 @@ public function JobApllicants($job_id)
 
                 if ($application->save()) {
                     // send mail to candidate
-                    $candidate = UserProfile::where('id',$decryptedId)->first();
-                    $AppliedJob = JobPost::where('id',$DecJob_Id)->select('title')->first();
+                    $candidate  = UserProfile::where('id', $decryptedId)->first();
+                    $AppliedJob = JobPost::where('id', $DecJob_Id)->select('title')->first();
                     // dd($AppliedJob);
                     Mail::to($candidate->email)->send(new CandidateShortlist($candidate, $AppliedJob));
 
@@ -663,8 +660,8 @@ public function JobApllicants($job_id)
                 $application->status = 'rejected';
 
                 if ($application->save()) {
-                    $candidate = UserProfile::where('id',$decryptedId)->first();
-                    $AppliedJob = JobPost::where('id',$DecJob_Id)->select('title')->first();
+                    $candidate  = UserProfile::where('id', $decryptedId)->first();
+                    $AppliedJob = JobPost::where('id', $DecJob_Id)->select('title')->first();
                     // dd($AppliedJob);
                     Mail::to($candidate->email)->send(new CandidateReject($candidate, $AppliedJob));
                     return response()->json(['status_code' => 1, 'message' => 'Candidate rejected.']);
@@ -696,8 +693,31 @@ public function JobApllicants($job_id)
                 $application->status = 'hired';
 
                 if ($application->save()) {
-                    $candidate = UserProfile::where('id',$decryptedId)->first();
-                    $AppliedJob = JobPost::where('id',$DecJob_Id)->select('title')->first();
+                    $candidate  = UserProfile::where('id', $decryptedId)->first();
+                    $AppliedJob = JobPost::where('id', $DecJob_Id)->select('title')->first();
+
+                    $template = EmailTemplates::find(11);
+
+                    if ($template && $template->show_email == '1') {
+                        try {
+                            Mail::to($user->email)->send(new UserHiredMail($user, $job));
+                        } catch (\Exception $mailException) {
+                            DB::rollBack(); // rollback if email fails
+                            Log::error('Candidate Hired email send failed: ' . $mailException->getMessage());
+                            return response()->json([
+                                'status_code' => 0,
+                                'message'     => 'Candidate hiring failed while sending email.',
+                            ]);
+                        }
+                    }
+
+                    DB::commit(); // commit only if everything goes well
+
+                    $message = ($template && $template->show_email == '1') ?
+                    'Candidate hired and email sent successfully.' :
+                    'Candidate hired without sending email.';
+
+                    return response()->json(['status_code' => 1, 'message' => $message]);
                     // dd($AppliedJob);
                     Mail::to($candidate->email)->send(new CandidateHire($candidate, $AppliedJob));
                     return response()->json(['status_code' => 1, 'message' => 'Candidate hired.']);
@@ -721,14 +741,12 @@ public function JobApllicants($job_id)
             $decryptedId = Crypt::decrypt($userId);
             // dd($decryptedId);
 
-            $user = UserProfile::with('candidateProfile')->findOrFail($decryptedId);
+            $user   = UserProfile::with('candidateProfile')->findOrFail($decryptedId);
             $resume = $user->candidateProfile->resume;
             // dd($resume);
-            if($resume !== null) {
+            if ($resume !== null) {
 
-            
                 $path = public_path($resume);
-
 
                 // dd($path);
 

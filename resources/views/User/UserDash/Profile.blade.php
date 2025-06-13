@@ -319,7 +319,7 @@
 
                 const result = await response.json();
 
-                if (!result.success) {
+                if (result.status_code !== 1) {
                     return Swal.fire("Failed", result.message || "Something went wrong!", "error");
                 }
 

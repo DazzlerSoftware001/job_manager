@@ -1,9 +1,8 @@
 <?php
-
 namespace App\Mail\Recruiter;
 
+use App\Models\EmailTemplates;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
@@ -14,13 +13,26 @@ class CandidateHire extends Mailable
     use Queueable, SerializesModels;
     public $candidate;
     public $AppliedJob;
+    protected $subjectLine;
     /**
      * Create a new message instance.
      */
-    public function __construct($candidate,$AppliedJob)
+    public function __construct($candidate, $AppliedJob)
     {
-        $this->candidate = $candidate;
+        $this->candidate  = $candidate;
         $this->AppliedJob = $AppliedJob;
+
+        // Fetch subject from EmailTemplates table using a specific key
+        $template          = EmailTemplates::where('id', '11')->first();
+        $this->subjectLine = $template?->subject ?? 'Job Hire';
+        $this->emailBody   = $template?->body ?? "
+            <h2>Hello {{ name }} {{ lname }},</h2>
+            <p>Your profile has been {{ status }}. by <strong>Admin</strong></p>
+            <p>Thanks for choosing our platform!</p>
+            <br>
+            <p>Regards,</p>
+            <p><strong>Job Portal Team</strong></p>
+        ";
     }
 
     /**
@@ -29,7 +41,7 @@ class CandidateHire extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Job Hire',
+            subject: $this->subjectLine,
         );
     }
 
@@ -40,7 +52,7 @@ class CandidateHire extends Mailable
     {
         return new Content(
             view: 'emails.recruiter.CandidateHired',
-            with: ['candidate' => $this->candidate,'AppliedJob' => $this->AppliedJob,],
+            with: ['candidate' => $this->candidate, 'AppliedJob' => $this->AppliedJob, 'body' => $this->emailBody],
         );
     }
 

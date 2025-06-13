@@ -10,11 +10,12 @@ use App\Models\CandidateQualifications;
 use App\Models\JobApplication;
 use App\Models\UserProfile;
 use App\Models\EmailTemplates;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class DashboardController extends Controller
@@ -210,7 +211,7 @@ class DashboardController extends Controller
             // Check if sending email is enabled via template (ID 22 assumed)
             $template = EmailTemplates::find(22);
 
-            if ($template && $template->show_email == '1') {
+            // if ($template && $template->show_email == '1') {
                 try {
                     Mail::to($email)->send(new ChangeEmail($otp));
                 } catch (\Exception $mailException) {
@@ -221,7 +222,7 @@ class DashboardController extends Controller
                         'message'     => 'Failed to send OTP email.',
                     ]);
                 }
-            }
+            // }
 
             DB::commit();
 

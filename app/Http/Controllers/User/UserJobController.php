@@ -2,16 +2,19 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Mail\User\JobApply;
+use App\Models\EmailTemplates;
 use App\Models\JobApplication;
 use App\Models\JobPost;
-use App\Models\SaveJob;
 use App\Models\Recruiter;
+use App\Models\SaveJob;
 use App\Models\UserProfile;
 use Illuminate\Http\Request;
-use App\Mail\User\JobApply;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use App\Notifications\JobAppliedByUser;
+use Illuminate\Support\Facades\Notification;
 
 class UserJobController extends Controller
 {
@@ -81,10 +84,10 @@ class UserJobController extends Controller
     // }
     public function applyjob(Request $request)
     {
-        dd($request->all());
         $user_id = Auth::id();
-        $job_id  = $request->input('job_id'); // Receive job_id from AJAX request
+        $job_id  = $request->input('job_id');
 
+        // Check if job is active and not expired
         $job = JobPost::where('status', 1)
             ->whereDate('jobexpiry', '>=', Carbon::today())
             ->where('id', $job_id)
@@ -97,6 +100,7 @@ class UserJobController extends Controller
             ]);
         }
 
+        // Check if user already applied
         $alreadyApplied = JobApplication::where('user_id', $user_id)
             ->where('job_id', $job_id)
             ->exists();
@@ -108,26 +112,61 @@ class UserJobController extends Controller
             ]);
         }
 
+        // Create application
         JobApplication::create([
             'user_id' => $user_id,
             'job_id'  => $job_id,
             'status'  => 'pending',
         ]);
 
+        // Fetch Recruiter  and user info
+  
 
-        $recruiterId = JobPost::where('status', 1)
+            $recruiterId = JobPost::where('status', 1)
             ->whereDate('jobexpiry', '>=', Carbon::today())
             ->where('id', $job_id)->select('recruiter_id')
             ->first();
 
-        $Recruiter = Recruiter::where('id',$recruiterId->recruiter_id)->select('name','lname','email')->first();
+             $RecruiterProfile = UserProfile::where('id', $recruiterId->recruiter_id)
+            ->where('user_type', 2)
+            ->first();
 
-        $user = UserProfile::where('id',$user_id)->select('name','lname','email')->first();
-        Mail::to($Recruiter->email)->send(new JobApply($Recruiter, $user));
-        return response()->json([
-            'status_code' => 1,
-            'message'     => 'Job Applied Seccessfully!',
-        ]);
+        if ($RecruiterProfile) {
+            $RecruiterProfile->notify(new JobAppliedByUser($user, $job));
+        }
+
+        $user = UserProfile::where('id', $user_id)
+            ->select('name', 'lname', 'email')
+            ->first();
+                  $Recruiter  = Recruiter::where('id', $recruiterId)
+            ->select('name', 'lname', 'email')
+            ->first();
+
+        // Check if email notifications are enabled
+        $template = EmailTemplates::find(23);
+
+        if ($template && $template->show_email == '1') {
+            try {
+                Mail::to($Recruiter ->email)->send(new JobApply($Recruiter , $user));
+            } catch (\Exception $e) {
+                Log::error('Job application email failed: ' . $e->getMessage());
+                return response()->json([
+                    'status_code' => 0,
+                    'message'     => 'Failed to send application email.',
+                ]);
+            }
+
+            return response()->json([
+                'status_code' => 1,
+                'message'     => 'Job applied and Email sent successfully!.',
+            ]);
+        } else {
+            return response()->json([
+                'status_code' => 1,
+                'message'     => 'Job applied successfully! But email notification is disabled.',
+            ]);
+        }
+
     }
 
     public function appliedjob()
