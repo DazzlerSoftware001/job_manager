@@ -13,8 +13,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
-use App\Notifications\JobAppliedByUser;
-use Illuminate\Support\Facades\Notification;
 
 class UserJobController extends Controller
 {
@@ -120,25 +118,11 @@ class UserJobController extends Controller
         ]);
 
         // Fetch Recruiter  and user info
-  
-
-            $recruiterId = JobPost::where('status', 1)
-            ->whereDate('jobexpiry', '>=', Carbon::today())
-            ->where('id', $job_id)->select('recruiter_id')
-            ->first();
-
-             $RecruiterProfile = UserProfile::where('id', $recruiterId->recruiter_id)
-            ->where('user_type', 2)
-            ->first();
-
-        if ($RecruiterProfile) {
-            $RecruiterProfile->notify(new JobAppliedByUser($user, $job));
-        }
-
-        $user = UserProfile::where('id', $user_id)
+        $Recruiter  = Recruiter::where('id', $job->recruiter_id)
             ->select('name', 'lname', 'email')
             ->first();
-                  $Recruiter  = Recruiter::where('id', $recruiterId)
+
+        $user = UserProfile::where('id', $user_id)
             ->select('name', 'lname', 'email')
             ->first();
 
