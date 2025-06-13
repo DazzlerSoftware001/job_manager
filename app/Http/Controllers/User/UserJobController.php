@@ -13,6 +13,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\JobAppliedByUser;
 
 class UserJobController extends Controller
 {
@@ -126,6 +128,13 @@ class UserJobController extends Controller
             ->select('name', 'lname', 'email')
             ->first();
 
+        $RecruiterProfile = UserProfile::where('id', $recruiterId->recruiter_id)
+            ->where('user_type', 2)
+            ->first();
+
+        if ($RecruiterProfile) {
+            $RecruiterProfile->notify(new JobAppliedByUser($user, $job));
+        }
         // Check if email notifications are enabled
         $template = EmailTemplates::find(23);
 
