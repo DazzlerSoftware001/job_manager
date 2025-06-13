@@ -5,13 +5,14 @@
     <title>Profile Updated</title>
 </head>
 <body>
-    <h2>Hello {{ $Recruiter->name.' '.$Recruiter->lname}},</h2>
+    @php
+        $parsedBody = str_replace(
+            ['{{ name }}', '{{ lname }}'],
+            [$Recruiter->name, $Recruiter->lname],
+            $body,
+        );
+    @endphp
 
-    <p>Your profile has been Updated. by <strong>Admin</strong></p>
-    <p>It is currently under review. You will be notified once it activated.</p>
-    <p>Thanks for choosing our platform!</p>
-    <br>
-    <p>Regards,</p>
-    <p><strong>Job Portal Team</strong></p>
+    {!! $parsedBody !!}
 </body>
 </html>

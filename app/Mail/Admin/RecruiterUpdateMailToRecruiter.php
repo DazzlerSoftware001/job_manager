@@ -2,6 +2,7 @@
 
 namespace App\Mail\Admin;
 
+use App\Models\EmailTemplates;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -13,12 +14,25 @@ class RecruiterUpdateMailToRecruiter extends Mailable
 {
     use Queueable, SerializesModels;
     public $Recruiter;
+    protected $subjectLine;
     /**
      * Create a new message instance.
      */
     public function __construct($Recruiter)
     {
         $this->Recruiter = $Recruiter;
+
+        // Fetch subject from EmailTemplates table using a specific key
+        $template          = EmailTemplates::where('id', '10')->first();
+        $this->subjectLine = $template?->subject ?? 'Profile Updated';
+        $this->emailBody   = $template?->body ?? "
+            <h2>Hello {{ name }} {{ lname }},</h2>
+            <p>Your profile has been Updated. by <strong>Admin</strong></p>
+            <p>Thanks for choosing our platform!</p>
+            <br>
+            <p>Regards,</p>
+            <p><strong>Job CareerNext</strong></p>
+        ";
     }
 
     /**
@@ -27,7 +41,7 @@ class RecruiterUpdateMailToRecruiter extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Profile Updated',
+            subject: $this->subjectLine,
         );
     }
 
@@ -38,7 +52,7 @@ class RecruiterUpdateMailToRecruiter extends Mailable
     {
         return new Content(
             view: 'emails.Admin.RecruiterUpdateToRecruiter',
-            with: ['Recruiter' =>$this->Recruiter],
+            with: ['Recruiter' =>$this->Recruiter, 'body' => $this->emailBody],
         );
     }
 

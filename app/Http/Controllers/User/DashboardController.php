@@ -9,9 +9,10 @@ use App\Models\CandidateProfile;
 use App\Models\CandidateQualifications;
 use App\Models\JobApplication;
 use App\Models\UserProfile;
+use App\Models\EmailTemplates;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
@@ -160,26 +161,87 @@ class DashboardController extends Controller
 
     }
 
+    // public function sendOtp(Request $request)
+    // {
+    //     $request->validate(['email' => 'required|email']);
+
+    //     $email = $request->email;
+    //     $otp   = rand(100000, 999999);
+
+    //     // Optional: Delete old OTPs for this email
+    //     // UserProfile::where('email', $email)->delete();
+
+    //     // Store OTP in DB with expiry
+    //     UserProfile::where('email', Auth::user()->email)->update([
+    //         'otp_email'         => $otp,
+    //         'email_verified_at' => Carbon::now()->addMinutes(1),
+    //     ]);
+
+    //     // Send the OTP
+    //     Mail::to($email)->send(new ChangeEmail($otp));
+
+    //     return response()->json(['success' => true, 'message' => 'OTP sent']);
+    // }
+
     public function sendOtp(Request $request)
     {
         $request->validate(['email' => 'required|email']);
 
-        $email = $request->email;
-        $otp   = rand(100000, 999999);
+        try {
+            DB::beginTransaction();
 
-        // Optional: Delete old OTPs for this email
-        // UserProfile::where('email', $email)->delete();
+            $email = $request->email;
+            $otp   = rand(100000, 999999);
 
-        // Store OTP in DB with expiry
-        UserProfile::where('email', Auth::user()->email)->update([
-            'otp_email'         => $otp,
-            'email_verified_at' => Carbon::now()->addMinutes(1),
-        ]);
+            // Store OTP in DB with expiry
+            $updated = UserProfile::where('email', Auth::user()->email)->update([
+                'otp_email'         => $otp,
+                'email_verified_at' => now()->addMinutes(1),
+            ]);
 
-        // Send the OTP
-        Mail::to($email)->send(new ChangeEmail($otp));
+            if (! $updated) {
+                DB::rollBack();
+                return response()->json([
+                    'status_code' => 0,
+                    'message'     => 'Failed to generate OTP.',
+                ]);
+            }
 
-        return response()->json(['success' => true, 'message' => 'OTP sent']);
+            // Check if sending email is enabled via template (ID 22 assumed)
+            $template = EmailTemplates::find(22);
+
+            if ($template && $template->show_email == '1') {
+                try {
+                    Mail::to($email)->send(new ChangeEmail($otp));
+                } catch (\Exception $mailException) {
+                    DB::rollBack();
+                    Log::error('OTP email send failed: ' . $mailException->getMessage());
+                    return response()->json([
+                        'status_code' => 0,
+                        'message'     => 'Failed to send OTP email.',
+                    ]);
+                }
+            }
+
+            DB::commit();
+
+            $message = ($template && $template->show_email == '1') ?
+            'OTP sent successfully to your email.' :
+            'OTP generated but email not sent (disabled).';
+
+            return response()->json([
+                'status_code' => 1,
+                'message'     => $message,
+            ]);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('sendOtp error: ' . $e->getMessage());
+            return response()->json([
+                'status_code' => 0,
+                'message'     => 'Something went wrong while sending OTP.',
+            ]);
+        }
     }
 
     public function verifyOtp(Request $request)

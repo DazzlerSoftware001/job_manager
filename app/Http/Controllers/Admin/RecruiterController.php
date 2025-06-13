@@ -209,7 +209,7 @@ class RecruiterController extends Controller
                 // Save the updated record
                 if ($Recruiter->save()) {
                     // Send email only if template allows
-                    $template = EmailTemplates::find(6);
+                    $template = EmailTemplates::find(9);
                     if ($template && $template->show_email == '1') {
                         try {
                             Mail::to($Recruiter->email)->send(new RecruiterStatusMailToRecruiter($Recruiter));
@@ -347,8 +347,27 @@ class RecruiterController extends Controller
                 $Recruiter->save();
 
                 if ($Recruiter->save()) {
-                    Mail::to($Recruiter->email)->send(new RecruiterUpdateMailToRecruiter($Recruiter));
-                    return response()->json(['status_code' => 1, 'message' => 'Recruiter updated successfully']);
+
+                    // Send email only if template allows
+                    $template = EmailTemplates::find(10);
+                    if ($template && $template->show_email == '1') {
+                        try {
+                            Mail::to($Recruiter->email)->send(new RecruiterUpdateMailToRecruiter($Recruiter));
+                        } catch (\Exception $mailException) {
+                            DB::rollBack();
+                            Log::error('Recruiter updated email send failed: ' . $mailException->getMessage());
+                            return response()->json([
+                                'status_code' => 0,
+                                'message'     => 'Recruiter updated failed while sending email.',
+                            ]);
+                        }
+                    }
+
+                    $message = ($template && $template->show_email == '1') ?
+                    'Recruiter updated and email sent successfully.' :
+                    'Recruiter updated successfully.';
+
+                    return response()->json(['status_code' => 1, 'message' => $message]);
                 } else {
                     return response()->json(['status_code' => 0, 'message' => 'Unable to update data']);
                 }

@@ -6,10 +6,11 @@ use App\Exports\FilterApplicantsExport;
 use App\Exports\FilteredUsersExport;
 use App\Exports\UsersExport;
 use App\Http\Controllers\Controller;
-use App\Mail\Admin\UserShortlistedMail;
-use App\Mail\Admin\UserRejectedMail;
 use App\Mail\Admin\UserHiredMail;
+use App\Mail\Admin\UserRejectedMail;
+use App\Mail\Admin\UserShortlistedMail;
 use App\Models\CandidateProfile;
+use App\Models\EmailTemplates;
 use App\Models\JobApplication;
 use App\Models\JobExperience;
 use App\Models\Jobpost;
@@ -17,6 +18,7 @@ use App\Models\Recruiter;
 use App\Models\UserProfile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
@@ -787,42 +789,61 @@ class UsersListController extends Controller
             $decryptedId = Crypt::decrypt($userId);
             $DecJob_Id   = Crypt::decrypt($Job_Id);
 
+            DB::beginTransaction(); // Start DB transaction
+
             $application = JobApplication::where('user_id', $decryptedId)
                 ->where('job_id', $DecJob_Id)
                 ->first();
 
-            if ($application) {
-                $application->status = 'shortlisted';
+            if (! $application) {
+                return response()->json(['status_code' => 0, 'message' => 'Application not found.']);
+            }
 
-                if ($application->save()) {
-                    // Get the user for email
-                    $user = UserProfile::find($decryptedId);
-                    $job  = JobPost::find($DecJob_Id);
+            $application->status = 'shortlisted';
 
-                    if ($user && $job) {
-                        Mail::to($user->email)->send(new UserShortlistedMail($user, $job));
-                    }
+            if (! $application->save()) {
+                DB::rollBack();
+                return response()->json(['status_code' => 0, 'message' => 'Failed to shortlist candidate.']);
+            }
 
-                    return response()->json([
-                        'status_code' => 1,
-                        'message'     => 'Candidate shortlisted and email sent.',
-                    ]);
-                } else {
+            $user = UserProfile::find($decryptedId);
+            $job  = JobPost::find($DecJob_Id);
+
+            if (! $user || ! $job) {
+                DB::rollBack();
+                return response()->json(['status_code' => 0, 'message' => 'User or Job not found.']);
+            }
+
+            // Fetch email template for shortlist (assume ID 12 is for shortlist emails)
+            $template = EmailTemplates::find(4);
+
+            if ($template && $template->show_email == '1') {
+                try {
+                    Mail::to($user->email)->send(new UserShortlistedMail($user, $job));
+                } catch (\Exception $mailException) {
+                    DB::rollBack();
+                    Log::error('Candidate Shortlist email send failed: ' . $mailException->getMessage());
                     return response()->json([
                         'status_code' => 0,
-                        'message'     => 'Failed to shortlist candidate.',
+                        'message'     => 'Candidate shortlist failed while sending email.',
                     ]);
                 }
-
-            } else {
-                return response()->json([
-                    'status_code' => 0,
-                    'message'     => 'Application not found.',
-                ]);
             }
+
+            DB::commit();
+
+            $message = ($template && $template->show_email == '1') ?
+            'Candidate shortlisted and email sent successfully.' :
+            'Candidate shortlisted.';
+
+            return response()->json(['status_code' => 1, 'message' => $message]);
 
         } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
             abort(404, 'Invalid User ID');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Error in CandidateShortlist: ' . $e->getMessage());
+            return response()->json(['status_code' => 0, 'message' => 'An error occurred.']);
         }
     }
 
@@ -832,34 +853,61 @@ class UsersListController extends Controller
             $decryptedId = Crypt::decrypt($userId);
             $DecJob_Id   = Crypt::decrypt($Job_Id);
 
+            DB::beginTransaction(); // Start DB transaction
+
             $application = JobApplication::where('user_id', $decryptedId)
                 ->where('job_id', $DecJob_Id)
                 ->first();
 
-            if ($application) {
-                $application->status = 'rejected';
-
-                if ($application->save()) {
-
-                    $user = UserProfile::find($decryptedId);
-                    $job  = JobPost::find($DecJob_Id);
-
-                    if ($user && $job) {
-                        Mail::to($user->email)->send(new UserRejectedMail($user, $job));
-                    }
-
-                    return response()->json(['status_code' => 1, 'message' => 'Candidate rejected and email sent.']);
-                } else {
-                    return response()->json([
-                        'status_code' => 0, 'message' => 'Failed to Candidate reject.']);
-                }
-
-            } else {
+            if (! $application) {
                 return response()->json(['status_code' => 0, 'message' => 'Application not found.']);
             }
 
+            $application->status = 'rejected';
+
+            if (! $application->save()) {
+                DB::rollBack();
+                return response()->json(['status_code' => 0, 'message' => 'Failed to reject candidate.']);
+            }
+
+            $user = UserProfile::find($decryptedId);
+            $job  = JobPost::find($DecJob_Id);
+
+            if (! $user || ! $job) {
+                DB::rollBack();
+                return response()->json(['status_code' => 0, 'message' => 'User or Job not found.']);
+            }
+
+            // Fetch email template for rejection (assume ID 11 is for rejection emails)
+            $template = EmailTemplates::find(3);
+
+            if ($template && $template->show_email == '1') {
+                try {
+                    Mail::to($user->email)->send(new UserRejectedMail($user, $job));
+                } catch (\Exception $mailException) {
+                    DB::rollBack();
+                    Log::error('Candidate Rejected email send failed: ' . $mailException->getMessage());
+                    return response()->json([
+                        'status_code' => 0,
+                        'message'     => 'Candidate rejection failed while sending email.',
+                    ]);
+                }
+            }
+
+            DB::commit();
+
+            $message = ($template && $template->show_email == '1') ?
+            'Candidate rejected and email sent successfully.' :
+            'Candidate rejected.';
+
+            return response()->json(['status_code' => 1, 'message' => $message]);
+
         } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
             abort(404, 'Invalid User ID');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Error in CandidateReject: ' . $e->getMessage());
+            return response()->json(['status_code' => 0, 'message' => 'An error occurred.']);
         }
     }
 
@@ -869,33 +917,60 @@ class UsersListController extends Controller
             $decryptedId = Crypt::decrypt($userId);
             $DecJob_Id   = Crypt::decrypt($Job_Id);
 
+            DB::beginTransaction(); // Start transaction
+
             $application = JobApplication::where('user_id', $decryptedId)
                 ->where('job_id', $DecJob_Id)
                 ->first();
 
-            if ($application) {
-                $application->status = 'hired';
-
-                if ($application->save()) {
-
-                    $user = UserProfile::find($decryptedId);
-                    $job  = JobPost::find($DecJob_Id);
-
-                    if ($user && $job) {
-                        Mail::to($user->email)->send(new UserHiredMail($user, $job));
-                    }
-                    return response()->json(['status_code' => 1, 'message' => 'Candidate hired and email sent.']);
-                } else {
-                    return response()->json([
-                        'status_code' => 0, 'message' => 'Failed to Candidate hire.']);
-                }
-
-            } else {
+            if (! $application) {
                 return response()->json(['status_code' => 0, 'message' => 'Application not found.']);
             }
 
+            $application->status = 'hired';
+
+            if (! $application->save()) {
+                DB::rollBack();
+                return response()->json(['status_code' => 0, 'message' => 'Failed to hire candidate.']);
+            }
+
+            $user = UserProfile::find($decryptedId);
+            $job  = JobPost::find($DecJob_Id);
+
+            if (! $user || ! $job) {
+                DB::rollBack();
+                return response()->json(['status_code' => 0, 'message' => 'User or Job not found.']);
+            }
+
+            $template = EmailTemplates::find(2);
+
+            if ($template && $template->show_email == '1') {
+                try {
+                    Mail::to($user->email)->send(new UserHiredMail($user, $job));
+                } catch (\Exception $mailException) {
+                    DB::rollBack(); // rollback if email fails
+                    Log::error('Candidate Hired email send failed: ' . $mailException->getMessage());
+                    return response()->json([
+                        'status_code' => 0,
+                        'message'     => 'Candidate hiring failed while sending email.',
+                    ]);
+                }
+            }
+
+            DB::commit(); // commit only if everything goes well
+
+            $message = ($template && $template->show_email == '1') ?
+            'Candidate hired and email sent successfully.' :
+            'Candidate hired without sending email.';
+
+            return response()->json(['status_code' => 1, 'message' => $message]);
+
         } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
             abort(404, 'Invalid User ID');
+        } catch (\Exception $e) {
+            DB::rollBack(); // rollback on any other exception
+            Log::error('Error in CandidateHire: ' . $e->getMessage());
+            return response()->json(['status_code' => 0, 'message' => 'An error occurred.']);
         }
     }
 

@@ -3,9 +3,11 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Mail\User\VerifyEmail;
+use App\Models\EmailTemplates;
 use App\Models\UserProfile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
@@ -61,6 +63,57 @@ class AuthController extends Controller
     //     }
     // }
 
+    // public function RegisterUser(Request $request)
+    // {
+    //     $rules = [
+    //         'sname'    => 'required|string|max:100',
+    //         'lname'    => 'required|string|max:100',
+    //         'email'    => 'required|email|unique:users,email',
+    //         'password' => 'required|min:6|confirmed',
+    //     ];
+
+    //     $validator = Validator::make($request->all(), $rules);
+    //     if ($validator->fails()) {
+    //         return response()->json([
+    //             'status_code' => 2,
+    //             'message'     => $validator->errors()->first(),
+    //         ]);
+    //     }
+
+    //     try {
+    //         $user               = new UserProfile();
+    //         $user->user_type    = 0;
+    //         $user->user_details = 'User';
+    //         $user->name         = $request->sname;
+    //         $user->lname        = $request->lname;
+    //         $user->email        = $request->email;
+    //         $user->password     = bcrypt($request->password);
+    //         $user->created_at   = now();
+
+    //         // Generate OTP
+    //         $otp = rand(100000, 999999);
+
+    //         // Save OTP and expiration time
+    //         $user->otp_email         = $otp;
+    //         $user->email_verified_at = now()->addMinutes(5);
+
+    //         $user->save();
+
+    //         // Send OTP email
+    //         Mail::to($user->email)->send(new VerifyEmail($otp));
+
+    //         return response()->json([
+    //             'status_code' => 1,
+    //             'message'     => 'OTP sent to your email.',
+    //         ]);
+    //     } catch (\Exception $e) {
+    //         return response()->json([
+    //             'status_code' => 0,
+    //             'message'     => 'Something went wrong while registering.',
+    //         ]);
+    //     }
+    // }
+
     public function RegisterUser(Request $request)
     {
         $rules = [
@@ -79,6 +132,8 @@ class AuthController extends Controller
         }
 
         try {
+            DB::beginTransaction(); // Start DB transaction
+
             $user               = new UserProfile();
             $user->user_type    = 0;
             $user->user_details = 'User';
@@ -89,22 +144,41 @@ class AuthController extends Controller
             $user->created_at   = now();
 
             // Generate OTP
-            $otp = rand(100000, 999999);
-
-            // Save OTP and expiration time
+            $otp                     = rand(100000, 999999);
             $user->otp_email         = $otp;
             $user->email_verified_at = now()->addMinutes(5);
 
-            $user->save();
+            if (! $user->save()) {
+                DB::rollBack();
+                return response()->json([
+                    'status_code' => 0,
+                    'message'     => 'Failed to register user.',
+                ]);
+            }
 
-            // Send OTP email
-            Mail::to($user->email)->send(new VerifyEmail($otp));
+            // Fetch email template for rejection (assume ID 11 is for rejection emails)
+            $template = EmailTemplates::find(24);
 
-            return response()->json([
-                'status_code' => 1,
-                'message'     => 'OTP sent to your email.',
-            ]);
+            // if ($template && $template->show_email == '1') {
+            try {
+                Mail::to($user->email)->send(new VerifyEmail($otp));
+            } catch (\Exception $mailException) {
+                DB::rollBack();
+                Log::error('Registration email send failed: ' . $mailException->getMessage());
+                return response()->json([
+                    'status_code' => 0,
+                    'message'     => 'Registration failed while sending email.',
+                ]);
+            }
+            // }
+
+            DB::commit();
+
+            return response()->json(['status_code' => 1, 'message' => 'OTP sent to your email.']);
+
         } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Error in RegisterUser: ' . $e->getMessage());
             return response()->json([
                 'status_code' => 0,
                 'message'     => 'Something went wrong while registering.',
@@ -230,6 +304,49 @@ class AuthController extends Controller
     //     }
     // }
 
+    // public function loginInsert(Request $request)
+    // {
+    //     $rules = [
+    //         'email'    => 'required|email',
+    //         'password' => 'required',
+    //     ];
+
+    //     $validator = Validator::make($request->all(), $rules);
+    //     if ($validator->fails()) {
+    //         return response()->json([
+    //             'status_code' => 2,
+    //             'message'     => $validator->errors()->first(),
+    //         ]);
+    //     }
+
+    //     $credentials = $request->only('email', 'password');
+    //     $remember    = $request->has('remember'); // true if checkbox is checked
+
+    //     if (Auth::attempt($credentials, $remember)) {
+    //         $user = Auth::user();
+
+    //         if ($user->user_type == 0) {
+    //             $redirectUrl = session()->pull('url.intended', route('User.Dashboard'));
+
+    //             return response()->json([
+    //                 'status_code'  => 1,
+    //                 'message'      => 'Login Successful',
+    //                 'redirect_url' => $redirectUrl,
+    //             ]);
+    //         } else {
+    //             return response()->json([
+    //                 'status_code' => 2,
+    //                 'message'     => 'Something went wrong',
+    //             ]);
+    //         }
+    //     } else {
+    //         return response()->json([
+    //             'status_code' => 2,
+    //             'message'     => 'Invalid credentials',
+    //         ]);
+    //     }
+    // }
+
     public function loginInsert(Request $request)
     {
         $rules = [
@@ -245,30 +362,39 @@ class AuthController extends Controller
             ]);
         }
 
-        $credentials = $request->only('email', 'password');
-        $remember    = $request->has('remember'); // true if checkbox is checked
+        try {
+            $credentials = $request->only('email', 'password');
+            $remember    = $request->has('remember'); // true if checkbox is checked
 
-        if (Auth::attempt($credentials, $remember)) {
-            $user = Auth::user();
+            if (Auth::attempt($credentials, $remember)) {
+                $user = Auth::user();
 
-            if ($user->user_type == 0) {
-                $redirectUrl = session()->pull('url.intended', route('User.Dashboard'));
+                if ($user->user_type == 0 && $user->email_verified == 1) {
+                    $redirectUrl = session()->pull('url.intended', route('User.Dashboard'));
 
-                return response()->json([
-                    'status_code'  => 1,
-                    'message'      => 'Login Successful',
-                    'redirect_url' => $redirectUrl,
-                ]);
+                    return response()->json([
+                        'status_code'  => 1,
+                        'message'      => 'Login Successful',
+                        'redirect_url' => $redirectUrl,
+                    ]);
+                } else {
+                    Auth::logout();
+                    return response()->json([
+                        'status_code' => 2,
+                        'message'     => 'Email not verified or user type mismatch.',
+                    ]);
+                }
             } else {
                 return response()->json([
                     'status_code' => 2,
-                    'message'     => 'Something went wrong',
+                    'message'     => 'Invalid credentials',
                 ]);
             }
-        } else {
+        } catch (\Exception $e) {
+            Log::error('Login error: ' . $e->getMessage());
             return response()->json([
-                'status_code' => 2,
-                'message'     => 'Invalid credentials',
+                'status_code' => 0,
+                'message'     => 'Something went wrong during login.',
             ]);
         }
     }

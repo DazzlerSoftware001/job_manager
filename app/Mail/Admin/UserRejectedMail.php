@@ -1,9 +1,8 @@
 <?php
-
 namespace App\Mail\Admin;
 
+use App\Models\EmailTemplates;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
@@ -15,14 +14,31 @@ class UserRejectedMail extends Mailable
 
     public $user;
     public $job;
-
+    protected $subjectLine;
     /**
      * Create a new message instance.
      */
     public function __construct($user, $job)
     {
         $this->user = $user;
-        $this->job = $job;
+        $this->job  = $job;
+
+        // Fetch subject from EmailTemplates table using a specific key
+        $template          = EmailTemplates::where('id', '3')->first();
+        $this->subjectLine = $template?->subject ?? 'User Rejected Mail';
+        $this->emailBody   = $template?->body ?? "
+            <h2>Hello {{ name }} {{ lname }},</h2>
+
+            <p>Thank you for applying to the job <strong>{{ title }}</strong> at <strong>{{ com_name }}</strong>.</p>
+
+            <p>After careful consideration, we regret to inform you that you have not been selected for this position.</p>
+
+            <p>We appreciate your interest and encourage you to apply for future opportunities that match your profile.</p>
+
+            <br>
+            <p>Best wishes,</p>
+            <p>CareerNext Team</p>
+        ";
     }
 
     /**
@@ -31,7 +47,7 @@ class UserRejectedMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'User Rejected Mail',
+            subject: $this->subjectLine,
         );
     }
 
@@ -42,7 +58,7 @@ class UserRejectedMail extends Mailable
     {
         return new Content(
             view: 'emails.Admin.CandidateRejected',
-            with: ['user' => $this->user, 'job' => $this->job],
+            with: ['user' => $this->user, 'job' => $this->job, 'body' => $this->emailBody],
         );
     }
 
