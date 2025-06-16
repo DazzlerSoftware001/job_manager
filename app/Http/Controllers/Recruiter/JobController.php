@@ -12,6 +12,7 @@ use App\Mail\Recruiter\JobStatusChangedMailToAdmin;
 use App\Mail\Recruiter\JobUpdatedMail;
 use App\Mail\Recruiter\JobUpdatedMailToAdmin;
 use App\Models\Companies;
+use App\Models\EmailTemplates;
 use App\Models\JobApplication;
 use App\Models\JobCategory;
 use App\Models\JobCurrency;
@@ -32,6 +33,7 @@ use App\Notifications\JobPostedByRecruiter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
@@ -141,12 +143,26 @@ class JobController extends Controller
 
             $JobPost->save();
             // Mail::to(Auth::user()->email)->send(new JobPostedMail($JobPost));
+
             $recruiterName = Auth::user()->name . ' ' . Auth::user()->lname;
-            Mail::to(Auth::user()->email)->send(new JobPostedMail($JobPost, $recruiterName));
+
+            $templateRecruiter = EmailTemplates::find(14);
+            if ($templateRecruiter && $templateRecruiter->show_email == '1') {
+                Mail::to(Auth::user()->email)->send(new JobPostedMail($JobPost, $recruiterName));
+            }
+
+            $templateAdmin = EmailTemplates::find(15);
+            if ($templateAdmin && $templateAdmin->show_email == '1') {
+                $admin = UserProfile::where('user_type', 1)
+                    ->where('user_details', 'Admin')
+                    ->select('name', 'lname', 'email')
+                    ->first();
+                if ($admin) {
+                    Mail::to($admin->email)->send(new JobPostedMailToAdmin($JobPost, $recruiterName));
+                }
+            }
 
             // confirmation mail to admin
-            $adminMail = UserProfile::where('user_type', 1)->where('user_details', 'Admin')->select('name', 'lname', 'email')->first();
-            Mail::to($adminMail->email)->send(new JobPostedMailToAdmin($JobPost, $recruiterName));
 
             $adminProfile = UserProfile::where('user_type', 1)->where('user_details', 'Admin')->first();
 
@@ -154,7 +170,11 @@ class JobController extends Controller
                 $adminProfile->user->notify(new JobPostedByRecruiter($JobPost, $recruiterName));
             }
 
-            return response()->json(['status_code' => 1, 'message' => 'Job Posted successfully wait for admin action']);
+            $message = (($templateRecruiter && $templateRecruiter->show_email == '1') || ($templateAdmin && $templateAdmin->show_email == '1')) ?
+            'Job Posted and Email successfully wait for admin action.' :
+            'Job Posted successfully wait for admin action.';
+
+            return response()->json(['status_code' => 1, 'message' => $message]);
             // } catch (\Exception $e) {
             // Handle any exception that occurs during saving
             return response()->json(['status_code' => 0, 'message' => 'Unable to post job']);
@@ -627,10 +647,30 @@ class JobController extends Controller
                     // send mail to candidate
                     $candidate  = UserProfile::where('id', $decryptedId)->first();
                     $AppliedJob = JobPost::where('id', $DecJob_Id)->select('title')->first();
-                    // dd($AppliedJob);
-                    Mail::to($candidate->email)->send(new CandidateShortlist($candidate, $AppliedJob));
 
-                    return response()->json(['status_code' => 1, 'message' => 'Candidate shortlisted.']);
+                    // Fetch email template for shortlist (assume ID 12 is for shortlist emails)
+                    $template = EmailTemplates::find(13);
+
+                    if ($template && $template->show_email == '1') {
+                        try {
+                            Mail::to($candidate->email)->send(new CandidateShortlist($candidate, $AppliedJob));
+                        } catch (\Exception $mailException) {
+                            DB::rollBack();
+                            Log::error('Candidate Shortlist email send failed: ' . $mailException->getMessage());
+                            return response()->json([
+                                'status_code' => 0,
+                                'message'     => 'Candidate shortlist failed while sending email.',
+                            ]);
+                        }
+                    }
+
+                    DB::commit();
+
+                    $message = ($template && $template->show_email == '1') ?
+                    'Candidate shortlisted and email sent successfully.' :
+                    'Candidate shortlisted.';
+
+                    return response()->json(['status_code' => 1, 'message' => $message]);
                 } else {
                     return response()->json([
                         'status_code' => 0, 'message' => 'Failed to Candidate shortlist.']);
@@ -662,9 +702,30 @@ class JobController extends Controller
                 if ($application->save()) {
                     $candidate  = UserProfile::where('id', $decryptedId)->first();
                     $AppliedJob = JobPost::where('id', $DecJob_Id)->select('title')->first();
-                    // dd($AppliedJob);
-                    Mail::to($candidate->email)->send(new CandidateReject($candidate, $AppliedJob));
-                    return response()->json(['status_code' => 1, 'message' => 'Candidate rejected.']);
+
+                    // Fetch email template for rejection (assume ID 11 is for rejection emails)
+                    $template = EmailTemplates::find(12);
+
+                    if ($template && $template->show_email == '1') {
+                        try {
+                            Mail::to($candidate->email)->send(new CandidateReject($candidate, $AppliedJob));
+                        } catch (\Exception $mailException) {
+                            DB::rollBack();
+                            Log::error('Candidate Rejected email send failed: ' . $mailException->getMessage());
+                            return response()->json([
+                                'status_code' => 0,
+                                'message'     => 'Candidate rejection failed while sending email.',
+                            ]);
+                        }
+                    }
+
+                    DB::commit();
+
+                    $message = ($template && $template->show_email == '1') ?
+                    'Candidate rejected and email sent successfully.' :
+                    'Candidate rejected.';
+
+                    return response()->json(['status_code' => 1, 'message' => $message]);
                 } else {
                     return response()->json([
                         'status_code' => 0, 'message' => 'Failed to Candidate reject.']);
@@ -700,7 +761,7 @@ class JobController extends Controller
 
                     if ($template && $template->show_email == '1') {
                         try {
-                            Mail::to($user->email)->send(new UserHiredMail($user, $job));
+                            Mail::to($candidate->email)->send(new CandidateHire($candidate, $AppliedJob));
                         } catch (\Exception $mailException) {
                             DB::rollBack(); // rollback if email fails
                             Log::error('Candidate Hired email send failed: ' . $mailException->getMessage());
@@ -718,9 +779,6 @@ class JobController extends Controller
                     'Candidate hired without sending email.';
 
                     return response()->json(['status_code' => 1, 'message' => $message]);
-                    // dd($AppliedJob);
-                    Mail::to($candidate->email)->send(new CandidateHire($candidate, $AppliedJob));
-                    return response()->json(['status_code' => 1, 'message' => 'Candidate hired.']);
                 } else {
                     return response()->json([
                         'status_code' => 0, 'message' => 'Failed to Candidate hire.']);

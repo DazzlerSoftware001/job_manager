@@ -2,6 +2,7 @@
 
 namespace App\Mail\Recruiter;
 
+use App\Models\EmailTemplates;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -14,6 +15,7 @@ class JobStatusChangedMail extends Mailable
     use Queueable, SerializesModels;
     public $jobPost;
     public $recruiterName;
+    protected $subjectLine;
     /**
      * Create a new message instance.
      */
@@ -21,6 +23,20 @@ class JobStatusChangedMail extends Mailable
     {
         $this->jobPost = $jobPost;
         $this->recruiterName = $recruiterName;
+
+        // Fetch subject from EmailTemplates table using a specific key
+        $template          = EmailTemplates::where('id', '11')->first();
+        $this->subjectLine = $template?->subject ?? 'Job Status';
+        $this->emailBody   = $template?->body ?? "
+            <h2>Hello {{ recruiterName }},</h2>
+
+            <p>Your job titled <strong>{{ title }}</strong> has been {{ status }}.</p>
+
+            <p>Thanks for choosing our platform!</p>
+            <br>
+            <p>Regards,</p>
+            <p><strong>Job CareerNext</strong></p>
+        ";
     }
 
     /**
@@ -29,7 +45,7 @@ class JobStatusChangedMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Job Status ' . ($this->jobPost->status == 1 ? 'Activated and made live' : 'Inactived') . ' Mail',
+            subject: $this->subjectLine. ' - ' . ($this->JobPost->status == 1 ? 'Activated and made live' : 'Inactivated'),
         );
     }
 
@@ -40,7 +56,7 @@ class JobStatusChangedMail extends Mailable
     {
         return new Content(
             view: 'emails.recruiter.job_status_changed',
-            with: ['jobPost' => $this->jobPost,'recruiterName' => $this->recruiterName,],
+            with: ['jobPost' => $this->jobPost,'recruiterName' => $this->recruiterName, 'body' => $this->emailBody],
         );
     }
 

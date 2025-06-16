@@ -26,12 +26,14 @@ class CandidateHire extends Mailable
         $template          = EmailTemplates::where('id', '11')->first();
         $this->subjectLine = $template?->subject ?? 'Job Hire';
         $this->emailBody   = $template?->body ?? "
-            <h2>Hello {{ name }} {{ lname }},</h2>
-            <p>Your profile has been {{ status }}. by <strong>Admin</strong></p>
+            <h2>Hello {{ name }} {{ lname }}, Congratulations,</h2>
+
+            <p>You are Hired for the job <strong>{{ title }}</strong>.</p>
+
             <p>Thanks for choosing our platform!</p>
             <br>
             <p>Regards,</p>
-            <p><strong>Job Portal Team</strong></p>
+            <p><strong>Job CareerNext</strong></p>
         ";
     }
 

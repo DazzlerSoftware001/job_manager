@@ -1,9 +1,8 @@
 <?php
-
 namespace App\Mail\Recruiter;
 
+use App\Models\EmailTemplates;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
@@ -15,13 +14,31 @@ class JobPostedMail extends Mailable
 
     public $jobPost;
     public $recruiterName;
+    protected $subjectLine;
     /**
      * Create a new message instance.
      */
-    public function __construct($jobPost,$recruiterName)
+    public function __construct($jobPost, $recruiterName)
     {
-        $this->jobPost = $jobPost;
+        $this->jobPost       = $jobPost;
         $this->recruiterName = $recruiterName;
+
+        // Fetch subject from EmailTemplates table using a specific key
+        $template          = EmailTemplates::where('id', '14')->first();
+        $this->subjectLine = $template?->subject ?? 'Your Job Has Been Posted Successfully';
+        $this->emailBody   = $template?->body ?? "
+            <h2>Hello {{ recruiterName }},</h2>
+
+            <p>Your job titled <strong>{{ title }}</strong> has been successfully posted.</p>
+
+            <p>It is currently under review by our admin team. You will be notified once it goes live.</p>
+
+            <p>Thanks for choosing our platform!</p>
+
+            <br>
+            <p>Regards,</p>
+            <p><strong>Job CareerNext</strong></p>
+        ";
     }
 
     /**
@@ -30,7 +47,7 @@ class JobPostedMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Your Job Has Been Posted Successfully',
+            subject: $this->subjectLine,
         );
     }
 
@@ -40,8 +57,8 @@ class JobPostedMail extends Mailable
     public function content(): Content
     {
         return new Content(
-           view: 'emails.recruiter.job_posted',
-            with: ['jobPost' => $this->jobPost,'recruiterName' => $this->recruiterName,],
+            view: 'emails.recruiter.job_posted',
+            with: ['jobPost' => $this->jobPost, 'recruiterName' => $this->recruiterName, 'body' => $this->emailBody],
         );
     }
 

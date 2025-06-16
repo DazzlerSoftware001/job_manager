@@ -5,14 +5,15 @@
     <title>Job Rejected</title>
 </head>
 <body>
-    <h2>Hello {{ $candidate->name . ' ' . $candidate->lname }} </h2>
+    @php
+        $parsedBody = str_replace(
+            ['{{ name }}', '{{ lname }}', '{{ title }}'],
+            [$candidate->name, $candidate->lname, $AppliedJob->title],
+            $body,
+        );
+    @endphp
 
-    <p>You are Rejected for the job <strong>{{ $AppliedJob->title }}</strong>.</p>
-
-    <p>Thanks for choosing our platform!</p>
-    <br>
-    <p>Regards,</p>
-    <p><strong>Job Portal Team</strong></p>
+    {!! $parsedBody !!}
 </body>
 </html>
 

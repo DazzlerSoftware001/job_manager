@@ -5,13 +5,14 @@
     <title>Job Status Change</title>
 </head>
 <body>
-    <h2>Hello {{ $recruiterName}},</h2>
+    @php
+        $parsedBody = str_replace(
+            ['{{ recruiterName }}', '{{ title }}', '{{ status }}'],
+            [$recruiterName, $jobPost->title, $jobPost->status == 1 ? 'Activated and made live' : 'Inactivated'],
+            $body,
+        );
+    @endphp
 
-    <p>Your job titled <strong>{{ $jobPost->title }}</strong> has been {{ $jobPost->status == 1 ? 'Activated and made live' : 'Inactived' }}.</p>
-
-    <p>Thanks for choosing our platform!</p>
-    <br>
-    <p>Regards,</p>
-    <p><strong>Job Portal Team</strong></p>
+    {!! $parsedBody !!}
 </body>
 </html>

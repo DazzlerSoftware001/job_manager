@@ -128,7 +128,7 @@ class UserJobController extends Controller
             ->select('name', 'lname', 'email')
             ->first();
 
-        $RecruiterProfile = UserProfile::where('id', $recruiterId->recruiter_id)
+        $RecruiterProfile = UserProfile::where('id',$job->recruiter_id)
             ->where('user_type', 2)
             ->first();
 

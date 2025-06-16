@@ -2,6 +2,7 @@
 
 namespace App\Mail\Recruiter;
 
+use App\Models\EmailTemplates;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -14,6 +15,7 @@ class CandidateShortlist extends Mailable
     use Queueable, SerializesModels;
     public $candidate;
     public $AppliedJob;
+    protected $subjectLine;
     /**
      * Create a new message instance.
      */
@@ -21,6 +23,20 @@ class CandidateShortlist extends Mailable
     {
         $this->candidate = $candidate;
         $this->AppliedJob = $AppliedJob;
+
+        // Fetch subject from EmailTemplates table using a specific key
+        $template          = EmailTemplates::where('id', '13')->first();
+        $this->subjectLine = $template?->subject ?? 'Job Shortlisted';
+        $this->emailBody   = $template?->body ?? "
+            <h2>Hello {{ name }} {{ lname }}, Congratulations,</h2>
+
+            <p>You are shortlisted for the job <strong>{{ title }}</strong>.</p>
+
+            <p>Thanks for choosing our platform!</p>
+            <br>
+            <p>Regards,</p>
+            <p><strong>Job CareerNext</strong></p>
+        ";
     }
 
     /**
@@ -29,7 +45,7 @@ class CandidateShortlist extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Job Shortlisted',
+            subject: $this->subjectLine,
         );
     }
 
@@ -40,7 +56,7 @@ class CandidateShortlist extends Mailable
     {
         return new Content(
             view: 'emails.recruiter.CandidateShortlisted',
-            with: ['candidate' => $this->candidate,'AppliedJob' => $this->AppliedJob,],
+            with: ['candidate' => $this->candidate,'AppliedJob' => $this->AppliedJob, 'body' => $this->emailBody],
         );
     }
 
