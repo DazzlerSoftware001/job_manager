@@ -128,6 +128,10 @@ class UserJobController extends Controller
             ->select('name', 'lname', 'email')
             ->first();
 
+        $adminProfile = UserProfile::where('user_type', 1)->where('user_details', 'Admin')->first();
+        if ($adminProfile) {
+            $adminProfile->notify(new JobAppliedByUser($user, $job));
+        }
         $RecruiterProfile = UserProfile::where('id',$job->recruiter_id)
             ->where('user_type', 2)
             ->first();

@@ -54,10 +54,32 @@ class JobAppliedByUser extends Notification
         return [
             'title' => 'New Application',
             'message' => "{$this->user->name} {$this->user->lname} applied for job: {$this->job->title}",
-            'url' => url('/recruiter/job/' . $this->job->id), // optional
+            'url' => url('/Recruiter/allApplicants'), 
             'job_id' => $this->job->id,
             'user' => $this->user->name.''. $this->user->lname,
             'created_at' => now(),
         ];
     }
+
+    // public function toArray(object $notifiable): array
+    // {
+    //     // Define base data
+    //     $data = [
+    //         'title' => 'New Application',
+    //         'message' => "{$this->user->name} {$this->user->lname} applied for job: {$this->job->title}",
+    //         'job_id' => $this->job->id,
+    //         'user' => $this->user->name . ' ' . $this->user->lname,
+    //         'created_at' => now(),
+    //     ];
+
+    //     // Custom URL based on user_type (1 = Admin, 2 = Recruiter)
+    //     if ($notifiable->user_type == 1) {
+    //         $data['url'] = url('/Admin/All-Applicants');
+    //     } elseif ($notifiable->user_type == 2) {
+    //         $data['url'] = url('/Recruiter/allApplicants');
+    //     }
+
+    //     return $data;
+    // }
+
 }
