@@ -452,7 +452,7 @@
             <div class="col-md-6">
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <h4 class="card-title">News Section</h4>
+                        <h4 class="card-title">Testimonial Section</h4>
                         <div class="from-group">
                             <label class="switch d-flex align-items-center mb-0">
                                 <input type="checkbox" id="toggleNewsForm"

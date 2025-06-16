@@ -15,14 +15,14 @@
                         <div class="col-md-2 mb-2">
                             <a href="{{ route('Admin.HomePageSettings') }}" class="btn btn-primary w-100">Home Page</a>
                         </div>
-                        <div class="col-md-2 mb-2">
+                        {{-- <div class="col-md-2 mb-2">
                             <a href="/page2" class="btn btn-success w-100">Go to Page 2</a>
                         </div>
                         <div class="col-md-2 mb-2">
                             <a href="/page3" class="btn btn-warning w-100">Go to Page 3</a>
                         </div>
                         <div class="col-md-2 mb-2">
-                            <a href="/page4" class="btn btn-danger w-100">Go to Page 4</a>
+                            <a href="/page4" class="btn btn-danger w-100">Go to Page 4</a> --}}
                         </div>
                     </div>
                 </div>
