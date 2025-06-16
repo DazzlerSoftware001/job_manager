@@ -29,7 +29,9 @@ use App\Models\JobSkill;
 use App\Models\JobTypes;
 use App\Models\Recruiter;
 use App\Models\UserProfile;
+use Illuminate\Support\Facades\Notification;
 use App\Notifications\JobPostedByRecruiter;
+use App\Notifications\JobUpdatedByRecruiter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
@@ -166,8 +168,8 @@ class JobController extends Controller
 
             $adminProfile = UserProfile::where('user_type', 1)->where('user_details', 'Admin')->first();
 
-            if ($adminProfile && $adminProfile->user) {
-                $adminProfile->user->notify(new JobPostedByRecruiter($JobPost, $recruiterName));
+            if ($adminProfile) {
+                $adminProfile->notify(new JobPostedByRecruiter($JobPost, $recruiterName));
             }
 
             $message = (($templateRecruiter && $templateRecruiter->show_email == '1') || ($templateAdmin && $templateAdmin->show_email == '1')) ?
@@ -533,7 +535,13 @@ class JobController extends Controller
 
                 if ($JobPost->save()) {
 
+                   
+
                     $recruiterName = Auth::user()->name . ' ' . Auth::user()->lname;
+                    $adminProfile = UserProfile::where('user_type', 1)->where('user_details', 'Admin')->first();
+                    if ($adminProfile) {
+                        $adminProfile->notify(new JobUpdatedByRecruiter($JobPost, $recruiterName));
+                    }
 
                     // Send mail to recruiter
                     $templateRecruiter = EmailTemplates::find(20);
@@ -544,6 +552,8 @@ class JobController extends Controller
                     // Send mail to admin
                     $adminMail = UserProfile::where('user_type', 1)->where('user_details', 'Admin')->select('name', 'lname', 'email')->first();
                     $templateAdmin = EmailTemplates::find(21);
+
+                    
                     if ($templateAdmin && $templateAdmin->show_email == '1') {
                         if ($adminMail) {
                             Mail::to($adminMail->email)->send(new JobUpdatedMailToAdmin($JobPost, $recruiterName));

@@ -7,7 +7,8 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use App\Models\JobPost;
-class JobPostedByRecruiter extends Notification
+
+class JobUpdatedByRecruiter extends Notification
 {
     use Queueable;
     protected $jobPost;
@@ -28,7 +29,7 @@ class JobPostedByRecruiter extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['database'];
+       return ['database'];
     }
 
     /**
@@ -37,8 +38,8 @@ class JobPostedByRecruiter extends Notification
     public function toDatabase($notifiable)
     {
         return [
-            'title' => 'New Job Posted',
-            'message' => "{$this->recruiterName} posted a new job: {$this->jobPost->title}",
+            'title' => 'Job Updated',
+            'message' => "{$this->recruiterName} updated a job: {$this->jobPost->title}",
             'url' => url('/Admin/JobList'), // adjust this to your admin job view route
         ];
     }
@@ -51,8 +52,8 @@ class JobPostedByRecruiter extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            'title' => 'New Job Posted',
-            'message' => "{$this->recruiterName} posted a new job: {$this->jobPost->title}",
+            'title' => 'Job Updated',
+            'message' => "{$this->recruiterName} updated a job: {$this->jobPost->title}",
             'url' => url('/Admin/JobList'),
             'job_id' => $this->jobPost->id,
             'recruiter' => $this->recruiterName,
