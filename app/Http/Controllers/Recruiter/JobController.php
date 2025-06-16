@@ -362,14 +362,26 @@ class JobController extends Controller
                     $recruiterName = Auth::user()->name . ' ' . Auth::user()->lname;
 
                     // Send mail to recruiter
-                    Mail::to(Auth::user()->email)->send(new JobStatusChangedMail($JobPost, $recruiterName));
+                    $templateRecruiter = EmailTemplates::find(19);
+                    if ($templateRecruiter && $templateRecruiter->show_email == '1') {
+                        Mail::to(Auth::user()->email)->send(new JobStatusChangedMail($JobPost, $recruiterName));
+                    }
 
                     // Send mail to admin
+                    $adminMail     = UserProfile::where('user_type', 1)->where('user_details', 'Admin')->select('name', 'lname', 'email')->first();
+                    $templateAdmin = EmailTemplates::find(16);
+                    if ($templateAdmin && $templateAdmin->show_email == '1') {
+                        if ($adminMail) {
+                            Mail::to($adminMail->email)->send(new JobStatusChangedMailToAdmin($JobPost, $recruiterName));
+                        }
+                    }
 
-                    $adminMail = UserProfile::where('user_type', 1)->where('user_details', 'Admin')->select('name', 'lname', 'email')->first();
-                    Mail::to($adminMail->email)->send(new JobStatusChangedMailToAdmin($JobPost, $recruiterName));
+                    $message = (($templateRecruiter && $templateRecruiter->show_email == '1') || ($templateAdmin && $templateAdmin->show_email == '1')) ?
+                    'Status Changed and Email sent successfully.' :
+                    'Status Changed Successfully.';
 
-                    return response()->json(['status_code' => 1, 'message' => 'Status successfully changed']);
+                    return response()->json(['status_code' => 1, 'message' => $message]);
+
                 } else {
                     return response()->json(['status_code' => 0, 'message' => 'Unable to change status']);
                 }
@@ -522,13 +534,27 @@ class JobController extends Controller
                 if ($JobPost->save()) {
 
                     $recruiterName = Auth::user()->name . ' ' . Auth::user()->lname;
-                    Mail::to(Auth::user()->email)->send(new JobUpdatedMail($JobPost, $recruiterName));
 
-                    // confirmation mail to admin
+                    // Send mail to recruiter
+                    $templateRecruiter = EmailTemplates::find(20);
+                    if ($templateRecruiter && $templateRecruiter->show_email == '1') {
+                        Mail::to(Auth::user()->email)->send(new JobUpdatedMail($JobPost, $recruiterName));
+                    }
+
+                    // Send mail to admin
                     $adminMail = UserProfile::where('user_type', 1)->where('user_details', 'Admin')->select('name', 'lname', 'email')->first();
-                    Mail::to($adminMail->email)->send(new JobUpdatedMailToAdmin($JobPost, $recruiterName));
+                    $templateAdmin = EmailTemplates::find(21);
+                    if ($templateAdmin && $templateAdmin->show_email == '1') {
+                        if ($adminMail) {
+                            Mail::to($adminMail->email)->send(new JobUpdatedMailToAdmin($JobPost, $recruiterName));
+                        }
+                    }
 
-                    return response()->json(['status_code' => 1, 'message' => 'JobPost updated successfully']);
+                    $message = (($templateRecruiter && $templateRecruiter->show_email == '1') || ($templateAdmin && $templateAdmin->show_email == '1')) ?
+                    'JobPost Updated and Email sent successfully.' :
+                    'JobPost Updated Successfully.';
+
+                    return response()->json(['status_code' => 1, 'message' => $message]);
                 } else {
                     return response()->json(['status_code' => 0, 'message' => 'Unable to update data']);
                 }

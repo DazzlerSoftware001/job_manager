@@ -115,7 +115,7 @@
             <div class="col-md-6">
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="card-title">Home Section</h4>
+                        <h4 class="card-title">Hero Section</h4>
                     </div>
                     <form action="javascript:void(0)" method="post" class="row px-3 w-100" id="BannerForm"
                         enctype="multipart/form-data">
@@ -161,7 +161,7 @@
             <div class="col-md-6">
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <h4 class="card-title">Work Process Section</h4>
+                        <h4 class="card-title">Feature's Section</h4>
                         <div class="from-group">
                             <label class="switch d-flex align-items-center mb-0">
                                 <input type="checkbox" id="toggleWorkProcessForm"
@@ -256,7 +256,7 @@
             <div class="col-md-6">
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <h4 class="card-title">Brand Section</h4>
+                        <h4 class="card-title">Client Partner Slider Section</h4>
                         <div class="from-group">
                             <label class="switch d-flex align-items-center mb-0">
                                 <input type="checkbox" id="toggleBrandForm"
@@ -361,7 +361,7 @@
             <div class="col-md-6">
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <h4 class="card-title">What We are Section</h4>
+                        <h4 class="card-title">Our Services Section</h4>
                         <div class="from-group">
                             <label class="switch d-flex align-items-center mb-0">
                                 <input type="checkbox" id="toggleWhatWeAreForm"

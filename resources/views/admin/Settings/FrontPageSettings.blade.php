@@ -13,7 +13,7 @@
                 <div class="card p-3">
                     <div class="row">
                         <div class="col-md-2 mb-2">
-                            <a href="{{ route('Admin.HomePageSettings') }}" class="btn btn-primary w-100">Home Section</a>
+                            <a href="{{ route('Admin.HomePageSettings') }}" class="btn btn-primary w-100">Home Page</a>
                         </div>
                         <div class="col-md-2 mb-2">
                             <a href="/page2" class="btn btn-success w-100">Go to Page 2</a>

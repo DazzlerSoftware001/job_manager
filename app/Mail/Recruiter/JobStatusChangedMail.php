@@ -25,7 +25,7 @@ class JobStatusChangedMail extends Mailable
         $this->recruiterName = $recruiterName;
 
         // Fetch subject from EmailTemplates table using a specific key
-        $template          = EmailTemplates::where('id', '11')->first();
+        $template          = EmailTemplates::where('id', '19')->first();
         $this->subjectLine = $template?->subject ?? 'Job Status';
         $this->emailBody   = $template?->body ?? "
             <h2>Hello {{ recruiterName }},</h2>
@@ -45,7 +45,7 @@ class JobStatusChangedMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: $this->subjectLine. ' - ' . ($this->JobPost->status == 1 ? 'Activated and made live' : 'Inactivated'),
+            subject: $this->subjectLine. ' - ' . ($this->jobPost->status == 1 ? 'Activated and made live' : 'Inactivated'),
         );
     }
 
