@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\SignUp;
 
 class AuthController extends Controller
 {
@@ -162,6 +164,12 @@ class AuthController extends Controller
             // if ($template && $template->show_email == '1') {
             try {
                 Mail::to($user->email)->send(new VerifyEmail($otp));
+
+                $adminProfile = UserProfile::where('user_type', 1)->where('user_details', 'Admin')->first();
+                if ($adminProfile) {
+                    $adminProfile->notify(new SignUp($user));
+                }
+
             } catch (\Exception $mailException) {
                 DB::rollBack();
                 Log::error('Registration email send failed: ' . $mailException->getMessage());
@@ -186,33 +194,7 @@ class AuthController extends Controller
         }
     }
 
-    // public function verifyOtp(Request $request)
-    // {
-    //     $email = $request->email;
-    //     $otp   = $request->otp;
-
-    //     $user = UserProfile::where('email', $email)
-    //         ->where('otp_email', $otp)
-    //         ->where('email_verified_at', '>=', now())
-    //         ->first();
-
-    //     if ($user) {
-    //         $user->email_verified_at = now(); // confirmed
-    //         $user->otp_email         = null;  // clear OTP
-    //         $user->save();
-
-    //         return response()->json([
-    //             'status_code'  => 1,
-    //             'message'      => 'Email verified successfully!',
-    //             'redirect_url' => route('User.login'), // or home
-    //         ]);
-    //     } else {
-    //         return response()->json([
-    //             'status_code' => 0,
-    //             'message'     => 'Invalid or expired OTP.',
-    //         ]);
-    //     }
-    // }
+    
 
     public function verifyOtp(Request $request)
     {
@@ -265,87 +247,7 @@ class AuthController extends Controller
         return view('User.Auth.login');
     }
 
-    // public function loginInsert(Request $request)
-    // {
-    //     // Define validation rules
-    //     $rules = [
-    //         'email'    => 'required|email',
-    //         'password' => 'required',
-    //     ];
-
-    //     // Validate the input
-    //     $validator = Validator::make($request->all(), $rules);
-    //     if ($validator->fails()) {
-    //         return response()->json(['status_code' => 2, 'message' => $validator->errors()->first()]);
-    //     }
-
-    //     $credentials = $request->only('email', 'password');
-
-    //     if (Auth::attempt($credentials)) {
-    //         $user = Auth::user();
-
-    //         if ($user->user_type == 0) {
-    //             $redirectUrl = session()->pull('url.intended', route('User.Dashboard'));
-
-    //             return response()->json([
-    //                 'status_code'  => 1,
-    //                 'message'      => 'Login Successful',
-    //                 'redirect_url' => $redirectUrl,
-    //             ]);
-    //         } else {
-    //             return response()->json([
-    //                 'status_code' => 2,
-    //                 'message'     => 'Somethis went Wrong',
-
-    //             ]);
-    //         }
-    //     } else {
-    //         return response()->json(['status_code' => 2, 'message' => 'Invalid credentials']);
-    //     }
-    // }
-
-    // public function loginInsert(Request $request)
-    // {
-    //     $rules = [
-    //         'email'    => 'required|email',
-    //         'password' => 'required',
-    //     ];
-
-    //     $validator = Validator::make($request->all(), $rules);
-    //     if ($validator->fails()) {
-    //         return response()->json([
-    //             'status_code' => 2,
-    //             'message'     => $validator->errors()->first(),
-    //         ]);
-    //     }
-
-    //     $credentials = $request->only('email', 'password');
-    //     $remember    = $request->has('remember'); // true if checkbox is checked
-
-    //     if (Auth::attempt($credentials, $remember)) {
-    //         $user = Auth::user();
-
-    //         if ($user->user_type == 0) {
-    //             $redirectUrl = session()->pull('url.intended', route('User.Dashboard'));
-
-    //             return response()->json([
-    //                 'status_code'  => 1,
-    //                 'message'      => 'Login Successful',
-    //                 'redirect_url' => $redirectUrl,
-    //             ]);
-    //         } else {
-    //             return response()->json([
-    //                 'status_code' => 2,
-    //                 'message'     => 'Something went wrong',
-    //             ]);
-    //         }
-    //     } else {
-    //         return response()->json([
-    //             'status_code' => 2,
-    //             'message'     => 'Invalid credentials',
-    //         ]);
-    //     }
-    // }
+    
 
     public function loginInsert(Request $request)
     {

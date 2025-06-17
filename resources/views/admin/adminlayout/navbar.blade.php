@@ -173,6 +173,7 @@
                                 ->where('user_details', 'Admin')
                                 ->first();
                             $notifications = $adminProfile ? $adminProfile->unreadNotifications : collect();
+                            // dd($notifications);
                         @endphp
 
 

@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\CustomPageController;
 use App\Http\Controllers\Admin\FooterController;
 use App\Http\Controllers\Admin\DatabaseController;
 use App\Http\Controllers\Admin\UsersListController;
+use Illuminate\Support\Facades\Auth;
 // 
 
 Route::prefix('Admin')->group(function () {
@@ -314,8 +315,15 @@ Route::prefix('Admin')->group(function () {
         Route::post('/ShowingNewsSection', [SettingsController::class, 'showingNewsSection'])->name('Admin.ShowingNewsSection');
         Route::post('/SubmitNewsSection', [SettingsController::class, 'submitNewsSection'])->name('Admin.SubmitNewsSection');
         
-      Route::get('/notifications/mark-all-read', function () {
-            Auth::user()->unreadNotifications->markAsRead();
+        // Route::get('/notifications/mark-all-read', function () {
+        //     Auth::user()->unreadNotifications->markAsRead();
+        //     return back();
+        // })->name('notifications.markAllRead');
+
+        Route::get('/notifications/mark-all-read', function () {
+            if (Auth::check()) {
+                Auth::user()->unreadNotifications->markAsRead();
+            }
             return back();
         })->name('notifications.markAllRead');
 
