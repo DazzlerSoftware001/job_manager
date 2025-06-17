@@ -63,8 +63,27 @@ class DashboardController extends Controller
                 ->whereDate('jobexpiry', $tomorrow)
                 ->get();
 
+             $weeklyApplications = [];
 
-        return view('admin.dashboard',compact('currentWeek','previousWeek','totalThisMonth','recentJob','RecentApplicant','jobExpiry'));
+    // Loop through each day of the current week (Monday to Sunday)
+    foreach (range(0, 6) as $i) {
+        $date = Carbon::now()->startOfWeek()->addDays($i)->startOfDay();
+        $nextDate = (clone $date)->endOfDay();
+
+        $count = JobApplication::whereBetween('created_at', [$date, $nextDate])->count();
+
+        $weeklyApplications[] = [
+            'x' => $date->toDateString(), // For x-axis (date)
+            'y' => $count                // Number of applications
+        ];
+    }
+
+            $JobApplicationMonth = JobApplication::whereMonth('created_at', now()->month)->count();
+
+            $JobApplicationYear = JobApplication::whereYear('created_at', now()->year)->count();
+
+
+        return view('admin.dashboard',compact('currentWeek','previousWeek','totalThisMonth','recentJob','RecentApplicant','jobExpiry','weeklyApplications','JobApplicationMonth','JobApplicationYear'));
     }
 
     public function getDashboardData() {

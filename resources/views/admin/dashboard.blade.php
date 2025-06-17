@@ -35,7 +35,7 @@
                                             </div>
                                         </div>
                                     </a>
-                                    
+
                                     <!-- end card body -->
                                 </div>
                                 <!-- end card -->
@@ -85,7 +85,7 @@
                                                 </div>
                                                 <div class="flex-grow-1">
                                                     <p class="text-muted mb-1">Recruiter</p>
-                                                <h4 class="mb-0" id="RecruiterCount">0</h4>
+                                                    <h4 class="mb-0" id="RecruiterCount">0</h4>
                                                 </div>
                                                 <div class="flex-shrink-0 align-self-end ms-2">
                                                     {{-- <div class="badge rounded-pill font-size-13 bg-danger-subtle text-danger">-
@@ -209,8 +209,8 @@
                                             <div class="flex-shrink-0">
                                                 <div class="dropdown">
                                                     <a class="dropdown-toggle text-muted" href="#"
-                                                    data-bs-toggle="dropdown" aria-haspopup="true"
-                                                    aria-expanded="false">
+                                                        data-bs-toggle="dropdown" aria-haspopup="true"
+                                                        aria-expanded="false">
                                                         Weekly
                                                     </a>
 
@@ -230,7 +230,8 @@
                                         </div>
 
                                         <div class="m-n3">
-                                            <div id="userActivity" data-colors='["#3b76e1", "#f56e6e"]' class="apex-charts"></div>
+                                            <div id="userActivity" data-colors='["#3b76e1", "#f56e6e"]' class="apex-charts">
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -300,114 +301,15 @@
                             <div class="col-xl-6 col-md-6">
                                 <div class="card">
                                     <div class="card-body">
-                                        <div class="d-flex align-items-start">
-                                            <div class="flex-grow-1">
-                                                <h5 class="card-title mb-3">Top Product</h5>
-                                            </div>
-                                            <div class="flex-shrink-0">
-                                                <div class="dropdown">
-                                                    <a class="dropdown-toggle text-muted" href="#"
-                                                        data-bs-toggle="dropdown" aria-haspopup="true"
-                                                        aria-expanded="false">
-                                                        Monthly<i class="mdi mdi-chevron-down ms-1"></i>
-                                                    </a>
+                                        <h5 class="card-title mb-3">Top Product</h5>
 
-                                                    <div class="dropdown-menu dropdown-menu-end">
-                                                        <a class="dropdown-item" href="#">Yearly</a>
-                                                        <a class="dropdown-item" href="#">Monthly</a>
-                                                        <a class="dropdown-item" href="#">Weekly</a>
-                                                        <a class="dropdown-item" href="#">Today</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        <div id="candlestick-chart"></div>
 
                                         <div class="mx-n4" data-simplebar style="max-height: 296px;">
-                                            <ul class="list-unstyled mb-0">
-                                                <li class="py-3">
-                                                    <div class="d-flex align-items-center">
-                                                        <div class="flex-shrink-0 me-3">
-                                                            <div class="avatar-sm">
-                                                                <div class="avatar-title bg-primary bg-gradient rounded">
-                                                                    #1
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="flex-grow-1 overflow-hidden">
-                                                            <p class="text-muted mb-1 text-truncate">Polo blue T-shirt
-                                                            </p>
-                                                            <div class="fw-semibold font-size-15">$ 25.4</div>
-                                                        </div>
-                                                        <div class="flex-shrink-0">
-                                                            <h5
-                                                                class="font-size-14 mb-0 text-truncate w-xs bg-light p-2 rounded text-center">
-                                                                3.82k</h5>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                                <li class="py-3">
-                                                    <div class="d-flex align-items-center">
-                                                        <div class="flex-shrink-0 me-3">
-                                                            <div class="avatar-sm">
-                                                                <div class="avatar-title bg-primary bg-gradient rounded">
-                                                                    #2
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="flex-grow-1 overflow-hidden">
-                                                            <p class="text-muted mb-1 text-truncate">Hoodie for men</p>
-                                                            <div class="fw-semibold font-size-15">$ 24.5</div>
-                                                        </div>
-                                                        <div class="flex-shrink-0">
-                                                            <h5
-                                                                class="font-size-14 mb-0 text-truncate w-xs bg-light p-2 rounded text-center">
-                                                                3.14k</h5>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                                <li class="py-3">
-                                                    <div class="d-flex align-items-center">
-                                                        <div class="flex-shrink-0 me-3">
-                                                            <div class="avatar-sm">
-                                                                <div class="avatar-title bg-primary bg-gradient rounded">
-                                                                    #3
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="flex-grow-1 overflow-hidden">
-                                                            <p class="text-muted mb-1 text-truncate">Red color Cap</p>
-                                                            <div class="fw-semibold font-size-15">$ 22.5</div>
-                                                        </div>
-                                                        <div class="flex-shrink-0">
-                                                            <h5
-                                                                class="font-size-14 mb-0 text-truncate w-xs bg-light p-2 rounded text-center">
-                                                                2.84k</h5>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                                <li class="py-3">
-                                                    <div class="d-flex align-items-center">
-                                                        <div class="flex-shrink-0 me-3">
-                                                            <div class="avatar-sm">
-                                                                <div class="avatar-title bg-primary bg-gradient rounded">
-                                                                    #4
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="flex-grow-1 overflow-hidden">
-                                                            <p class="text-muted mb-1 text-truncate">Pocket T-shirt</p>
-                                                            <div class="fw-semibold font-size-15">$ 21.5</div>
-                                                        </div>
-                                                        <div class="flex-shrink-0">
-                                                            <h5
-                                                                class="font-size-14 mb-0 text-truncate w-xs bg-light p-2 rounded text-center">
-                                                                2.06k</h5>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                            </ul>
+                                            <!-- your product list here -->
                                         </div>
                                     </div>
+
                                 </div>
                                 <!-- end card -->
                             </div>
@@ -457,7 +359,8 @@
                                         <div class="text-center">
                                             <!-- Profile Image with Camera Icon -->
                                             <div class="position-relative d-inline-block">
-                                                <img id="profileImage" src="{{url('admin/logo/default.png')}}" onerror="this.onerror=null; this.src='{{ url('admin/logo/default.png') }}';"
+                                                <img id="profileImage" src="{{ url('admin/logo/default.png') }}"
+                                                    onerror="this.onerror=null; this.src='{{ url('admin/logo/default.png') }}';"
                                                     alt="" class="avatar-xl rounded-circle img-thumbnail">
                                                 <button
                                                     class="btn btn-sm btn-primary position-absolute bottom-0 end-0 rounded-circle"
@@ -470,7 +373,7 @@
                                             <div class="mt-3">
                                                 <!-- Editable Name with Pencil Icon -->
                                                 <h5 class="mb-1 d-inline-block position-relative" id="nameDisplay">
-                                                    </h5>
+                                                </h5>
                                                 <input type="text" id="nameInput" class="form-control d-none"
                                                     value="">
                                                 <button class="btn btn-sm btn-outline-secondary ms-2 p-1"
@@ -657,35 +560,37 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach ( $recentJob as $job)
+                                            @foreach ($recentJob as $job)
                                                 <tr>
                                                     <td><a href="javascript: void(0);"
-                                                            class="text-body fw-semibold">{{$job->title}}</a> </td>
-                                                    <td>{{$job->role}}</td>
+                                                            class="text-body fw-semibold">{{ $job->title }}</a> </td>
+                                                    <td>{{ $job->role }}</td>
                                                     <td>
-                                                        {{$job->location}}
+                                                        {{ $job->location }}
                                                     </td>
                                                     <td>
-                                                        {{$job->min_exp.' - '.$job->max_exp}}
+                                                        {{ $job->min_exp . ' - ' . $job->max_exp }}
                                                     </td>
                                                     <td class="text-center">
                                                         {{-- <span class="badge badge-pill bg-success-subtle text-success  font-size-11">Paid</span> --}}
-                                                        {{$job->education}}
+                                                        {{ $job->education }}
                                                     </td>
                                                     <td>
                                                         <div class="d-flex gap-2">
                                                             <a href="{{ route('Admin.ViewJobPost', ['id' => Crypt::encrypt($job->id)]) }}"
-                                                            class="btn btn-primary bg-gradient btn-sm"
-                                                            data-bs-toggle="tooltip" data-bs-placement="top" title="View">
-                                                                <i data-eva="eye" data-eva-height="14" data-eva-width="14"
-                                                                class="fill-white align-text-top"></i>
+                                                                class="btn btn-primary bg-gradient btn-sm"
+                                                                data-bs-toggle="tooltip" data-bs-placement="top"
+                                                                title="View">
+                                                                <i data-eva="eye" data-eva-height="14"
+                                                                    data-eva-width="14"
+                                                                    class="fill-white align-text-top"></i>
                                                             </a>
                                                         </div>
 
                                                     </td>
                                                 </tr>
                                             @endforeach
-                                           
+
 
                                         </tbody>
                                     </table>
@@ -718,33 +623,36 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach ( $RecentApplicant as $applicants)
+                                            @foreach ($RecentApplicant as $applicants)
                                                 <tr>
                                                     <td><a href="javascript: void(0);"
-                                                            class="text-body fw-semibold">{{$applicants->user->name.' '.$applicants->user->lname}}</a> </td>
-                                                    <td>{{$applicants->user->email}}</td>
-                                                    <td>
-                                                        {{$applicants->phone}}
+                                                            class="text-body fw-semibold">{{ $applicants->user->name . ' ' . $applicants->user->lname }}</a>
                                                     </td>
-                                                   
-                                                    
+                                                    <td>{{ $applicants->user->email }}</td>
+                                                    <td>
+                                                        {{ $applicants->phone }}
+                                                    </td>
+
+
                                                     <td>
                                                         <div class="d-flex gap-2">
                                                             <a href="{{ route('Admin.ApllicantsDetails', [
-                                                                    'userId' => Crypt::encrypt($applicants->user->id),
-                                                                    'jobId'  => Crypt::encrypt($applicants->jobPost->id),
-                                                                ]) }}"
-                                                            class="btn btn-primary bg-gradient btn-sm"
-                                                            data-bs-toggle="tooltip" data-bs-placement="top" title="View">
-                                                                <i data-eva="eye" data-eva-height="14" data-eva-width="14"
-                                                                class="fill-white align-text-top"></i>
+                                                                'userId' => Crypt::encrypt($applicants->user->id),
+                                                                'jobId' => Crypt::encrypt($applicants->jobPost->id),
+                                                            ]) }}"
+                                                                class="btn btn-primary bg-gradient btn-sm"
+                                                                data-bs-toggle="tooltip" data-bs-placement="top"
+                                                                title="View">
+                                                                <i data-eva="eye" data-eva-height="14"
+                                                                    data-eva-width="14"
+                                                                    class="fill-white align-text-top"></i>
                                                             </a>
                                                         </div>
 
                                                     </td>
                                                 </tr>
                                             @endforeach
-                                           
+
 
                                         </tbody>
                                     </table>
@@ -778,33 +686,36 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach ( $jobExpiry as $exp)
+                                            @foreach ($jobExpiry as $exp)
                                                 <tr>
                                                     <td><a href="javascript: void(0);"
-                                                            class="text-body fw-semibold">{{$exp->title}}</a> </td>
-                                                    <td>{{$exp->recruiter->name}}</td>
+                                                            class="text-body fw-semibold">{{ $exp->title }}</a> </td>
+                                                    <td>{{ $exp->recruiter->name }}</td>
                                                     <td>
-                                                        {{$exp->location}}
+                                                        {{ $exp->location }}
                                                     </td>
                                                     <td>
-                                                        <span class="badge badge-pill bg-danger-subtle text-danger  font-size-11">
+                                                        <span
+                                                            class="badge badge-pill bg-danger-subtle text-danger  font-size-11">
                                                             {{ date('d-M-Y', strtotime($exp->jobexpiry)) }}
-                                                       </span>
+                                                        </span>
                                                     </td>
                                                     <td>
                                                         <div class="d-flex gap-2">
                                                             <a href="{{ route('Admin.EditJobPost', ['id' => Crypt::encrypt($exp->id)]) }}"
-                                                            class="btn btn-primary bg-gradient btn-sm"
-                                                            data-bs-toggle="tooltip" data-bs-placement="top" title="Edit">
-                                                                 <i data-eva="edit" data-eva-height="14" data-eva-width="14"
-                                                                class="fill-white align-text-top"></i>
+                                                                class="btn btn-primary bg-gradient btn-sm"
+                                                                data-bs-toggle="tooltip" data-bs-placement="top"
+                                                                title="Edit">
+                                                                <i data-eva="edit" data-eva-height="14"
+                                                                    data-eva-width="14"
+                                                                    class="fill-white align-text-top"></i>
                                                             </a>
                                                         </div>
 
                                                     </td>
                                                 </tr>
                                             @endforeach
-                                           
+
 
                                         </tbody>
                                     </table>
@@ -833,7 +744,7 @@
         <script>
             $(document).ready(function() {
                 var defaultImage = "{{ url('admin/logo/default.png') }}";
-                
+
                 $.ajax({
                     url: "{{ route('Admin.dashboardData') }}",
                     type: 'GET',
@@ -1009,18 +920,24 @@
 
 
         <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                setTimeout(function () {
+            document.addEventListener("DOMContentLoaded", function() {
+                setTimeout(function() {
                     var options = {
                         chart: {
                             height: 250,
                             type: 'area',
-                            toolbar: { show: false }
+                            toolbar: {
+                                show: false
+                            }
                         },
-                        dataLabels: { enabled: false },
-                        stroke: { curve: 'smooth', width: 2 },
-                        series: [
-                            {
+                        dataLabels: {
+                            enabled: false
+                        },
+                        stroke: {
+                            curve: 'smooth',
+                            width: 2
+                        },
+                        series: [{
                                 name: "Current",
                                 data: @json($currentWeek)
                             },
@@ -1052,7 +969,44 @@
                     chart.render();
                 }, 100); // slight delay for smoother load
             });
-
         </script>
+
+       <script>
+    var weeklyData = @json($weeklyApplications);
+
+    var chartOptions = {
+        series: [{
+            name: "Applications",
+            data: weeklyData.map(item => ({
+                x: new Date(item.x).getTime(),
+                y: item.y
+            }))
+        }],
+        chart: {
+            type: 'bar', // Using bar for better clarity on count
+            height: 300
+        },
+        xaxis: {
+            type: 'datetime',
+            labels: {
+                format: 'dd MMM'
+            }
+        },
+        yaxis: {
+            title: {
+                text: 'Applications'
+            }
+        },
+        tooltip: {
+            x: {
+                format: 'dddd, dd MMMM yyyy'
+            }
+        }
+    };
+
+    var chart = new ApexCharts(document.querySelector("#candlestick-chart"), chartOptions);
+    chart.render();
+</script>
+
 
     @endsection
