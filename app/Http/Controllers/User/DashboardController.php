@@ -17,6 +17,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Notifications\DatabaseNotification;
+
 
 class DashboardController extends Controller
 {
@@ -1027,5 +1029,25 @@ class DashboardController extends Controller
             return response()->json(['status_code' => 2, 'message' => $validator->errors()->first()]);
         }
     }
+
+
+    public function destroy($id)
+    {
+        // dd($id);
+        $notification = DatabaseNotification::findOrFail($id);
+        $notification->delete();
+
+        return response()->json(['success' => true, 'id' => $id]);
+    }
+
+    // public function destroy($id)
+    // {
+    //     auth()->user()->notifications()->where('id', $id)->delete();
+
+    //     return response()->json([
+    //         'success' => true,
+    //         'message' => 'Notification deleted successfully.',
+    //     ]);
+    // }
 
 }

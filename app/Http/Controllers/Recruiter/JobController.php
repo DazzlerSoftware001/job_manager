@@ -32,6 +32,7 @@ use App\Models\UserProfile;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\JobPostedByRecruiter;
 use App\Notifications\JobUpdatedByRecruiter;
+use App\Notifications\CandidateHireNotify;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
@@ -790,8 +791,17 @@ class JobController extends Controller
                 $application->status = 'hired';
 
                 if ($application->save()) {
+
+
                     $candidate  = UserProfile::where('id', $decryptedId)->first();
                     $AppliedJob = JobPost::where('id', $DecJob_Id)->select('title')->first();
+
+                    
+                    if ($candidate && $AppliedJob) {
+                        $candidate->notify(new CandidateHireNotify($AppliedJob,));
+                    }
+
+                    
 
                     $template = EmailTemplates::find(11);
 

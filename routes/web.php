@@ -37,8 +37,8 @@ Route::prefix('User')->group(function () {
         Route::post('/UpdateProfile', [DashboardController::class, 'updateProfile'])->name('User.UpdateProfile');
 
         // web.php
-Route::post('/send-otp-email', [DashboardController::class, 'sendOtp'])->name('send.otp.email');
-Route::post('/verify-otp-email', [DashboardController::class, 'verifyOtp'])->name('verify.otp.email');
+        Route::post('/send-otp-email', [DashboardController::class, 'sendOtp'])->name('send.otp.email');
+        Route::post('/verify-otp-email', [DashboardController::class, 'verifyOtp'])->name('verify.otp.email');
 
 
         Route::get('/Resume', [DashboardController::class, 'resume'])->name('User.Resume');
@@ -60,6 +60,9 @@ Route::post('/verify-otp-email', [DashboardController::class, 'verifyOtp'])->nam
         Route::get('ChangePassword', [DashboardController::class, 'ChangePassword'])->name('User.ChangePassword');
         Route::post('UpdatePassword', [DashboardController::class, 'UpdatePassword'])->name('User.UpdatePassword');
 
+       Route::delete('/notifications/{id}', [DashboardController::class, 'destroy'])->name('notifications.delete');
+
+
         Route::post('/ApplyForJOb', [UserJobController::class, 'applyjob'])->name('User.ApplyForJOb');
         Route::get('/AppliedJob', [UserJobController::class, 'appliedjob'])->name('User.AplliedJob');
         Route::get('/ShortList', [UserJobController::class, 'ShortList'])->name('User.ShortList');
@@ -72,6 +75,8 @@ Route::post('/verify-otp-email', [DashboardController::class, 'verifyOtp'])->nam
         Route::post('/removeSavedJob', [JobController::class, 'removeSavedJob'])->name('User.RemoveSavedJob');
 
         Route::post('/logout', [AuthController::class, 'logout'])->name('User.logout');
+
+
     });
 
 
