@@ -809,8 +809,7 @@ class UsersListController extends Controller
                 return response()->json(['status_code' => 0, 'message' => 'Failed to shortlist candidate.']);
             }
 
-            $user = UserProfile::find($decryptedId)->first();
-            dd($user);
+            $user = UserProfile::where('id',$decryptedId)->first();
             $job  = JobPost::find($DecJob_Id);
 
             $AppliedJob = JobPost::where('id', $DecJob_Id)->select('title')->first();
@@ -881,7 +880,7 @@ class UsersListController extends Controller
                 return response()->json(['status_code' => 0, 'message' => 'Failed to reject candidate.']);
             }
 
-            $user = UserProfile::find($decryptedId)->first();
+            $user = UserProfile::where('id',$decryptedId)->first();
             $job  = JobPost::find($DecJob_Id);
 
             $AppliedJob = JobPost::where('id', $DecJob_Id)->select('title')->first();
@@ -951,7 +950,7 @@ class UsersListController extends Controller
                 return response()->json(['status_code' => 0, 'message' => 'Failed to hire candidate.']);
             }
 
-            $user = UserProfile::find($decryptedId)->first();
+            $user = UserProfile::where('id',$decryptedId)->first();
             $job  = JobPost::find($DecJob_Id);
 
             $AppliedJob = JobPost::where('id', $DecJob_Id)->select('title')->first();

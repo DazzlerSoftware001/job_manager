@@ -183,7 +183,7 @@
                                     ->where('id', Auth::id()) 
                                     ->first();
                                 $notifications = $User ? $User->unreadNotifications : collect();
-                                dd($notifications);
+                                // dd($notifications);
                             @endphp
 
 
