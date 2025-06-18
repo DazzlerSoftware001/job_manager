@@ -33,6 +33,8 @@ use Illuminate\Support\Facades\Notification;
 use App\Notifications\JobPostedByRecruiter;
 use App\Notifications\JobUpdatedByRecruiter;
 use App\Notifications\CandidateHireNotify;
+use App\Notifications\CandidateRejectNotify;
+use App\Notifications\CandidateShortListNotify;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
@@ -684,7 +686,10 @@ class JobController extends Controller
                     // send mail to candidate
                     $candidate  = UserProfile::where('id', $decryptedId)->first();
                     $AppliedJob = JobPost::where('id', $DecJob_Id)->select('title')->first();
-
+                   
+                    if ($candidate && $AppliedJob) {
+                        $candidate->notify(new CandidateShortListNotify($AppliedJob,));
+                    }
                     // Fetch email template for shortlist (assume ID 12 is for shortlist emails)
                     $template = EmailTemplates::find(13);
 
@@ -739,6 +744,10 @@ class JobController extends Controller
                 if ($application->save()) {
                     $candidate  = UserProfile::where('id', $decryptedId)->first();
                     $AppliedJob = JobPost::where('id', $DecJob_Id)->select('title')->first();
+
+                    if ($candidate && $AppliedJob) {
+                        $candidate->notify(new CandidateRejectNotify($AppliedJob,));
+                    }
 
                     // Fetch email template for rejection (assume ID 11 is for rejection emails)
                     $template = EmailTemplates::find(12);

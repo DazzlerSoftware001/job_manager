@@ -183,7 +183,7 @@
                                     ->where('id', Auth::id()) 
                                     ->first();
                                 $notifications = $User ? $User->unreadNotifications : collect();
-                                // dd($notifications);
+                                dd($notifications);
                             @endphp
 
 
@@ -203,19 +203,19 @@
                                         <div class="notification__body">
                                             @forelse($notifications as $notification)
                                                <div class="single__notification" id="notification-{{ $notification->id }}">
-    <div class="notification__content">
-        <p>{{ $notification->data['message'] ?? '' }}</p>
-    </div>
-    <div class="time">
-        <span>{{ $notification->created_at->diffForHumans() }}</span>
-    </div>
-    <button class="delete-notification border-0 bg-transparent p-0 m-0"
-            data-id="{{ $notification->id }}"
-            data-url="{{ route('notifications.delete', $notification->id) }}"
-            title="Delete">
-        <i class="fa fa-trash text-danger"></i>
-    </button>
-</div>
+                                                    <div class="notification__content">
+                                                        <p>{{ $notification->data['message'] ?? '' }}</p>
+                                                    </div>
+                                                    <div class="time">
+                                                        <span>{{ $notification->created_at->diffForHumans() }}</span>
+                                                    </div>
+                                                    <button class="delete-notification border-0 bg-transparent p-0 m-0"
+                                                            data-id="{{ $notification->id }}"
+                                                            data-url="{{ route('notifications.delete', $notification->id) }}"
+                                                            title="Delete">
+                                                        <i class="fa fa-trash text-danger"></i>
+                                                    </button>
+                                                </div>
                                                 
                                             @empty
                                                 <p class="text-muted px-2">No new notifications</p>

@@ -22,7 +22,10 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
-
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\CandidateHireNotify;
+use App\Notifications\CandidateRejectNotify;
+use App\Notifications\CandidateShortListNotify;
 class UsersListController extends Controller
 {
     public function userList()
@@ -806,8 +809,16 @@ class UsersListController extends Controller
                 return response()->json(['status_code' => 0, 'message' => 'Failed to shortlist candidate.']);
             }
 
-            $user = UserProfile::find($decryptedId);
+            $user = UserProfile::find($decryptedId)->first();
+            dd($user);
             $job  = JobPost::find($DecJob_Id);
+
+            $AppliedJob = JobPost::where('id', $DecJob_Id)->select('title')->first();
+            
+            if ($user && $AppliedJob) {
+                $user->notify(new CandidateShortListNotify($AppliedJob,));
+            }
+
 
             if (! $user || ! $job) {
                 DB::rollBack();
@@ -870,8 +881,14 @@ class UsersListController extends Controller
                 return response()->json(['status_code' => 0, 'message' => 'Failed to reject candidate.']);
             }
 
-            $user = UserProfile::find($decryptedId);
+            $user = UserProfile::find($decryptedId)->first();
             $job  = JobPost::find($DecJob_Id);
+
+            $AppliedJob = JobPost::where('id', $DecJob_Id)->select('title')->first();
+
+            if ($user && $AppliedJob) {
+                $user->notify(new CandidateRejectNotify($AppliedJob));
+            }
 
             if (! $user || ! $job) {
                 DB::rollBack();
@@ -934,8 +951,16 @@ class UsersListController extends Controller
                 return response()->json(['status_code' => 0, 'message' => 'Failed to hire candidate.']);
             }
 
-            $user = UserProfile::find($decryptedId);
+            $user = UserProfile::find($decryptedId)->first();
             $job  = JobPost::find($DecJob_Id);
+
+            $AppliedJob = JobPost::where('id', $DecJob_Id)->select('title')->first();
+
+                    
+            if ($user && $AppliedJob) {
+                $user->notify(new CandidateHireNotify($AppliedJob,));
+            }
+
 
             if (! $user || ! $job) {
                 DB::rollBack();
