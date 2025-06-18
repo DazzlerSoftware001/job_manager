@@ -301,7 +301,11 @@
                             <div class="col-xl-6 col-md-6">
                                 <div class="card">
                                     <div class="card-body">
-                                        <h5 class="card-title mb-3">Top Product</h5>
+                                        <div class="d-flex align-items-start">
+                                            <div class="flex-grow-1">
+                                                <h5 class="card-title mb-3">Applicants</h5>
+                                            </div>
+                                        </div>
 
                                         <div id="candlestick-chart"></div>
 
@@ -331,7 +335,7 @@
                                             <div>
                                                 <div class="user-nav p-3">
                                                     <div class="d-flex justify-content-end">
-                                                        <div class="dropdown">
+                                                        {{-- <div class="dropdown">
                                                             <a class="dropdown-toggle" href="#" role="button"
                                                                 data-bs-toggle="dropdown" aria-expanded="false">
                                                                 <i data-eva="more-horizontal-outline" data-eva-width="20"
@@ -347,7 +351,7 @@
                                                                 <li><a class="dropdown-item" href="#">Something else
                                                                         here</a></li>
                                                             </ul>
-                                                        </div>
+                                                        </div> --}}
                                                     </div>
                                                 </div>
                                             </div>
@@ -971,42 +975,44 @@
             });
         </script>
 
-       <script>
-    var weeklyData = @json($weeklyApplications);
+        {{-- For Showing the Applicants Graph Data --}}
+        <script>
+            var weeklyData = @json($weeklyApplications);
 
-    var chartOptions = {
-        series: [{
-            name: "Applications",
-            data: weeklyData.map(item => ({
-                x: new Date(item.x).getTime(),
-                y: item.y
-            }))
-        }],
-        chart: {
-            type: 'bar', // Using bar for better clarity on count
-            height: 300
-        },
-        xaxis: {
-            type: 'datetime',
-            labels: {
-                format: 'dd MMM'
-            }
-        },
-        yaxis: {
-            title: {
-                text: 'Applications'
-            }
-        },
-        tooltip: {
-            x: {
-                format: 'dddd, dd MMMM yyyy'
-            }
-        }
-    };
+            var chartOptions = {
+                series: [{
+                    name: "Applications",
+                    data: weeklyData.map(item => ({
+                        x: new Date(item.x).getTime(),
+                        y: item.y
+                    }))
+                }],
+                chart: {
+                    type: 'bar', // Using bar for better clarity on count
+                    height: 0,
+                    toolbar: {
+                        show: false // ✅ disables the toolbar icons
+                    }
+                },
+                xaxis: {
+                    type: 'datetime',
+                    labels: {
+                        format: 'dd MMM'
+                    }
+                },
+                yaxis: {
+                    title: {
+                        text: 'Applications'
+                    }
+                },
+                tooltip: {
+                    x: {
+                        format: 'dddd, dd MMMM yyyy'
+                    }
+                }
+            };
 
-    var chart = new ApexCharts(document.querySelector("#candlestick-chart"), chartOptions);
-    chart.render();
-</script>
-
-
+            var chart = new ApexCharts(document.querySelector("#candlestick-chart"), chartOptions);
+            chart.render();
+        </script>
     @endsection
