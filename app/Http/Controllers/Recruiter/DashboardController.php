@@ -31,24 +31,24 @@ class DashboardController extends Controller
         foreach (range(0, 6) as $i) {
             // Current week
             $day = Carbon::now()->startOfWeek()->addDays($i);
+            // dd($day);
             
 
-            $count = UserProfile::where('user_type', 0)->whereDate('created_at', $day)->count();
+            $count = JobApplication::whereDate('created_at', $day)->count();
             $currentWeek->push($count);
 
             // Previous week
             $prevDay = Carbon::now()->subWeek()->startOfWeek()->addDays($i);
-            $prevCount = UserProfile::where('user_type', 0)
-                ->whereDate('created_at', $prevDay)
-                ->count();
+            // $prevCount = UserProfile::where('user_type', 0)
+            //     ->whereDate('created_at', $prevDay)
+            //     ->count();
+            $prevCount = JobApplication::whereDate('created_at', $prevDay)->count();
             $previousWeek->push($prevCount);
 
             
         }
 
-        $totalThisMonth = UserProfile::where('user_type', 0)
-        ->whereMonth('created_at', now()->month)
-        ->count();
+        $totalThisMonth = JobApplication::whereMonth('created_at', now()->month)->count();
 
         $recentJob = JobPost::select('id', 'title','role','location','min_exp','max_exp','education')->where('recruiter_id', Auth::id())
                 ->where('admin_verify', 1)->where('status', 1)->latest()->take(10)->get();

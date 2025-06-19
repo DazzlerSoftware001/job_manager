@@ -237,6 +237,7 @@ class JobController extends Controller
         }
 
         $JobEducation = JobEducation::where('education', $request->education)
+            ->whereNotNull('branch')
             ->select('branch')
             ->distinct()
             ->get();

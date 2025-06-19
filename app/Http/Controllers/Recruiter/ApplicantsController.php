@@ -414,4 +414,60 @@ class ApplicantsController extends Controller
         ]);
     }
 
+    public function verifyStatus(Request $request)
+    {
+        $id     = $request->input('id');
+        $status = $request->input('status'); // 1 = Verified, 0 = Rejected
+
+        if (empty($id)) {
+            return response()->json(['status_code' => 2, 'message' => 'Job ID is required']);
+        }
+
+        $JobPost = JobPost::find($id);
+        if (! $JobPost) {
+            return response()->json(['status_code' => 0, 'message' => 'Job Post not found']);
+        }
+
+        $JobPost->admin_verify = $status;
+
+        if (! $JobPost->save()) {
+            return response()->json([
+                'status_code' => 0,
+                'message'     => 'Unable to update job verification status.',
+            ]);
+        }
+
+        $recruiter = UserProfile::where('id', $JobPost->recruiter_id)
+            ->select('name', 'lname', 'email')
+            ->first();
+
+        $template = EmailTemplates::find(8); // Template 8 for job verification email
+
+        if ($template && $template->show_email === '1' && $recruiter) {
+            try {
+                Mail::to($recruiter->email)->send(new JobVerifyMailToRecruiter($JobPost, $recruiter));
+            } catch (\Exception $e) {
+                \Log::error('Email failed: ' . $e->getMessage());
+
+                return response()->json([
+                    'status_code' => 0,
+                    'message'     => 'Job status updated, but failed to send email.',
+                ]);
+            }
+        }
+
+        $msg = $status == 1
+        ? 'Job Post verified successfully'
+        : 'Job Post rejected successfully';
+
+        if ($template && $template->show_email === '1') {
+            $msg .= ' and email sent to recruiter.';
+        }
+
+        return response()->json([
+            'status_code' => 1,
+            'message'     => $msg,
+        ]);
+    }
+
 }
