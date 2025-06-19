@@ -4,9 +4,22 @@
 @endsection
 @section('page-title')
     All Apllicants
+     <div class="breadcrumb">
+        {!! Breadcrumbs::render('Admin.ApllicantsDetails', $userId, $jobId) !!}
+    </div>
 @endsection
 
+
+
 @section('main-container')
+
+
+    <style>
+        .breadcrumb {
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+    </style>
 
 
     <div class="main-content">

@@ -732,7 +732,7 @@ class UsersListController extends Controller
 
         $JobPost = JobPost::findOrFail($DecJob_Id)->title;
 
-        return view('admin.Users.ApllicantsDetails', compact('user', 'DecJob_Id', 'application', 'JobPost'));
+        return view('admin.Users.ApllicantsDetails', compact('user', 'DecJob_Id', 'application', 'JobPost', 'userId', 'jobId'));
     }
 
     public function ApplicantExportExcel($id)

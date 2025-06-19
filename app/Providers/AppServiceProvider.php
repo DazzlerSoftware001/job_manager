@@ -34,19 +34,24 @@ class AppServiceProvider extends ServiceProvider
 
         // mail configration 
         if (Schema::hasTable('mail_settings')) {
-        $mail = MailSetting::first();
-        if ($mail) {
-            config([
-                'mail.default' => $mail->mail_mailer ?? 'smtp',
-                'mail.mailers.smtp.host' => $mail->mail_host,
-                'mail.mailers.smtp.port' => $mail->mail_port,
-                'mail.mailers.smtp.username' => $mail->mail_username,
-                'mail.mailers.smtp.password' => $mail->mail_password,
-                'mail.mailers.smtp.encryption' => $mail->mail_encryption,
-                'mail.from.address' => $mail->mail_from_address,
-                'mail.from.name' => $mail->mail_from_name,
-            ]);
+            $mail = MailSetting::first();
+            if ($mail) {
+                config([
+                    'mail.default' => $mail->mail_mailer ?? 'smtp',
+                    'mail.mailers.smtp.host' => $mail->mail_host,
+                    'mail.mailers.smtp.port' => $mail->mail_port,
+                    'mail.mailers.smtp.username' => $mail->mail_username,
+                    'mail.mailers.smtp.password' => $mail->mail_password,
+                    'mail.mailers.smtp.encryption' => $mail->mail_encryption,
+                    'mail.from.address' => $mail->mail_from_address,
+                    'mail.from.name' => $mail->mail_from_name,
+                ]);
+            }
         }
-    }
+
+        if (file_exists(base_path('routes/breadcrumbs/admin.php'))) {
+            require base_path('routes/breadcrumbs/admin.php');
+        }
+
     }
 }

@@ -6,6 +6,9 @@
     Dashboard
 @endsection
 @section('main-container')
+{!! Breadcrumbs::render('Admin.dashboard') !!}
+
+
     <div class="main-content">
         <div class="page-content">
             <div class="container-fluid">
