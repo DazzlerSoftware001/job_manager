@@ -42,7 +42,9 @@ Breadcrumbs::for('Admin.JobCategory', function (BreadcrumbTrail $trail) {
     $trail->push('JobCategory', route('Admin.JobCategory'));
 });
 
-
+Breadcrumbs::for('Admin.JobDepartment', function (BreadcrumbTrail $trail) {
+    $trail->push('JobDepartment', route('Admin.JobDepartment'));
+});
 
 
 
