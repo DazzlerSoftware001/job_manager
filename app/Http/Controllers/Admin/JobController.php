@@ -3516,7 +3516,7 @@ class JobController extends Controller
             $Recruiter = Recruiter::where('id', $job->recruiter_id)->first();
             // dd($Recruiter);
 
-            return view('admin.job.ViewJob', compact('job', 'Recruiter'));
+            return view('admin.job.ViewJob', compact('job', 'Recruiter','decryptedId'));
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Invalid Job ID!');
         }

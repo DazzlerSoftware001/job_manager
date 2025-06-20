@@ -3,7 +3,15 @@
     Admin-Rejected Job List
 @endsection
 @section('page-title')
-Rejected Job List
+<div class="breadcrumb mt-2">
+        {!! Breadcrumbs::render('Admin.ShowRejectedJobs') !!}
+    </div>
+    <style>
+        .breadcrumb {
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+    </style>
 @endsection
 
 @section('main-container')

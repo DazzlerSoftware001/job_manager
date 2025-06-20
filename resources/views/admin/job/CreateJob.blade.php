@@ -3,7 +3,15 @@
     Admin-Create Job
 @endsection
 @section('page-title')
-    Create Job
+    <div class="breadcrumb mt-2">
+        {!! Breadcrumbs::render('Admin.CreateJob') !!}
+    </div>
+    <style>
+        .breadcrumb {
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+    </style>
 @endsection
 @section('main-container')
     <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-lite.min.css" rel="stylesheet">

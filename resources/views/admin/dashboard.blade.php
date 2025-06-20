@@ -3,10 +3,17 @@
     Admin-Dashboard
 @endsection
 @section('page-title')
-    Dashboard
+    <div class="breadcrumb mt-2">
+        {!! Breadcrumbs::render('Admin.dashboard') !!}
+    </div>
+    <style>
+        .breadcrumb {
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+    </style>
 @endsection
 @section('main-container')
-{!! Breadcrumbs::render('Admin.dashboard') !!}
 
 
     <div class="main-content">

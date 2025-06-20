@@ -2,7 +2,16 @@
 @section('title', 'Admin - View Job Post')
 
 @section('page-title')
-    View Job Post
+    <div class="breadcrumb mt-2">
+        {!! Breadcrumbs::render('Admin.ViewJobPost', $decryptedId) !!}
+    </div>
+
+    <style>
+        .breadcrumb {
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+    </style>
 @endsection
 
 @section('main-container')

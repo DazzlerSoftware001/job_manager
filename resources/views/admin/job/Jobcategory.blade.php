@@ -3,7 +3,16 @@
     Admin-Job Category
 @endsection
 @section('page-title')
-    Job Category
+    <div class="breadcrumb mt-2">
+        {!! Breadcrumbs::render('Admin.JobCategory') !!}
+    </div>
+
+    <style>
+        .breadcrumb {
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+    </style>
 @endsection
 
 @section('main-container')

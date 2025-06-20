@@ -3,16 +3,13 @@
     Admin-All Apllicants
 @endsection
 @section('page-title')
-    All Apllicants
-     <div class="breadcrumb">
+    {{-- All Apllicants --}}
+    <div class="breadcrumb mt-2">
         {!! Breadcrumbs::render('Admin.ApllicantsDetails', $userId, $jobId) !!}
     </div>
 @endsection
 
-
-
 @section('main-container')
-
 
     <style>
         .breadcrumb {
