@@ -644,7 +644,7 @@
                                                     </td>
                                                     <td>{{ $applicants->user->email }}</td>
                                                     <td>
-                                                        {{ $applicants->phone }}
+                                                        {{ $applicants->user->phone }}
                                                     </td>
 
 
