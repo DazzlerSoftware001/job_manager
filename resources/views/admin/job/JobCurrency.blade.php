@@ -3,7 +3,16 @@
     Admin-Job Currency
 @endsection
 @section('page-title')
-    Job Currency
+    <div class="breadcrumb mt-2">
+        {!! Breadcrumbs::render('Admin.JobCurrency') !!}
+    </div>
+
+    <style>
+        .breadcrumb {
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+    </style>
 @endsection
 
 @section('main-container')

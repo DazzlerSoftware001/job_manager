@@ -3,7 +3,16 @@
     Admin-Job Experience
 @endsection
 @section('page-title')
-    Job Experience
+    <div class="breadcrumb mt-2">
+        {!! Breadcrumbs::render('Admin.JobExperience') !!}
+    </div>
+
+    <style>
+        .breadcrumb {
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+    </style>
 @endsection
 
 @section('main-container')

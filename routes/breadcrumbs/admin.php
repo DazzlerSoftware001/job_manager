@@ -46,13 +46,73 @@ Breadcrumbs::for('Admin.JobDepartment', function (BreadcrumbTrail $trail) {
     $trail->push('JobDepartment', route('Admin.JobDepartment'));
 });
 
+Breadcrumbs::for('Admin.JobRole', function (BreadcrumbTrail $trail) {
+    $trail->push('JobRole', route('Admin.JobRole'));
+});
+
+Breadcrumbs::for('Admin.JobLocation', function (BreadcrumbTrail $trail) {
+    $trail->push('JobLocation', route('Admin.JobLocation'));
+});
+
+Breadcrumbs::for('Admin.JobTypes', function (BreadcrumbTrail $trail) {
+    $trail->push('Job types', route('Admin.JobTypes'));
+});
 
 
+Breadcrumbs::for('Admin.JobMode', function (BreadcrumbTrail $trail) {
+    $trail->push('Job Mode', route('Admin.JobMode'));
+});
+
+Breadcrumbs::for('Admin.JobShift', function (BreadcrumbTrail $trail) {
+    $trail->push('Job Shift', route('Admin.JobShift'));
+});
 
 
+Breadcrumbs::for('Admin.JobExperience', function (BreadcrumbTrail $trail) {
+    $trail->push('Job Experience', route('Admin.JobExperience'));
+});
 
+Breadcrumbs::for('Admin.JobCurrency', function (BreadcrumbTrail $trail) {
+    $trail->push('Job Currency', route('Admin.JobCurrency'));
+});
 
+Breadcrumbs::for('Admin.JobSalary', function (BreadcrumbTrail $trail) {
+    $trail->push('Job Salary', route('Admin.JobSalary'));
+});
 
+Breadcrumbs::for('Admin.JobIntType', function (BreadcrumbTrail $trail) {
+    $trail->push('Job Interview', route('Admin.JobIntType'));
+});
+
+Breadcrumbs::for('Admin.JobEducation', function (BreadcrumbTrail $trail) {
+    $trail->push('Job Education', route('Admin.JobEducation'));
+});
+
+Breadcrumbs::for('Admin.Companies', function (BreadcrumbTrail $trail) {
+    $trail->push('Companies', route('Admin.Companies'));
+});
+
+Breadcrumbs::for('Admin.Recruiters', function (BreadcrumbTrail $trail) {
+    $trail->push('Recruiters', route('Admin.Recruiters'));
+});
+
+Breadcrumbs::for('Admin.UserList', function (BreadcrumbTrail $trail) {
+    $trail->push('UserList', route('Admin.UserList'));
+});
+
+Breadcrumbs::for('Admin.UsersDetails', function (BreadcrumbTrail $trail) {
+    $trail->parent('Admin.UserList');
+    $trail->push('User Details', route('Admin.UsersDetails', [
+        'userId' => request()->route('userId')
+    ]));
+});
+
+Breadcrumbs::for('Admin.EditUser', function (BreadcrumbTrail $trail) {
+    $trail->parent('Admin.UserList');
+    $trail->push('EditUser', route('Admin.EditUser', [
+        'id' => request()->route('id')
+    ]));
+});
 
 
 

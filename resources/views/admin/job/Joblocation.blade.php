@@ -3,7 +3,16 @@
     Admin-Job Location
 @endsection
 @section('page-title')
-    Job Location
+    <div class="breadcrumb mt-2">
+        {!! Breadcrumbs::render('Admin.JobLocation') !!}
+    </div>
+
+    <style>
+        .breadcrumb {
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+    </style>
 @endsection
 
 @section('main-container')

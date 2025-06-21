@@ -3,7 +3,16 @@
     Admin-Companies
 @endsection
 @section('page-title')
-    Companies
+    <div class="breadcrumb mt-2">
+        {!! Breadcrumbs::render('Admin.Companies') !!}
+    </div>
+
+    <style>
+        .breadcrumb {
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+    </style>
 @endsection
 
 

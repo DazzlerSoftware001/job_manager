@@ -3,7 +3,16 @@
     Admin-Job Mode
 @endsection
 @section('page-title')
-    Job Mode
+    <div class="breadcrumb mt-2">
+        {!! Breadcrumbs::render('Admin.JobMode') !!}
+    </div>
+
+    <style>
+        .breadcrumb {
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+    </style>
 @endsection
 
 @section('main-container')

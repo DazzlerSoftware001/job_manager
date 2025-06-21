@@ -3,7 +3,16 @@
     Admin-Recruiters
 @endsection
 @section('page-title')
-    Recruiters
+    <div class="breadcrumb mt-2">
+        {!! Breadcrumbs::render('Admin.Recruiters') !!}
+    </div>
+
+    <style>
+        .breadcrumb {
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+    </style>
 @endsection
 
 @section('main-container')

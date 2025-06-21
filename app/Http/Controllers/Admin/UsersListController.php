@@ -309,7 +309,7 @@ class UsersListController extends Controller
         // dd($decryptedId);
 
         $user = UserProfile::findOrFail($decryptedId);
-        return view('admin.Users.EditUser', compact('user'));
+        return view('admin.Users.EditUser', compact('user','decryptedId'));
     }
 
     public function UpdateUser(Request $request)
@@ -418,7 +418,7 @@ class UsersListController extends Controller
         //     }
         // }
 
-        return view('admin.Users.UsersDetails', compact('user'));
+        return view('admin.Users.UsersDetails', compact('user','decryptedId'));
     }
 
     public function UsersExportExcel($id)

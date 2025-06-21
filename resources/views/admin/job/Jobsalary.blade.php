@@ -3,7 +3,16 @@
     Admin-Job Salary
 @endsection
 @section('page-title')
-    Job Salary
+    <div class="breadcrumb mt-2">
+        {!! Breadcrumbs::render('Admin.JobSalary') !!}
+    </div>
+
+    <style>
+        .breadcrumb {
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+    </style>
 @endsection
 
 @section('main-container')
