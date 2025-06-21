@@ -135,3 +135,44 @@ Breadcrumbs::for('Admin.ApllicantsDetails', function (BreadcrumbTrail $trail) {
     ]));
 });
 
+
+Breadcrumbs::for('Admin.menu', function (BreadcrumbTrail $trail) {
+    $trail->push('menu', route('Admin.menu'));
+});
+
+Breadcrumbs::for('Admin.FrontPageSettings', function (BreadcrumbTrail $trail) {
+    $trail->push('FrontPage', route('Admin.FrontPageSettings'));
+});
+
+Breadcrumbs::for('Admin.HomePageSettings', function (BreadcrumbTrail $trail) {
+    $trail->push('HomePage', route('Admin.HomePageSettings'));
+});
+
+Breadcrumbs::for('Admin.PageSettings', function (BreadcrumbTrail $trail) {
+    $trail->push('PageSettings', route('Admin.PageSettings'));
+});
+
+Breadcrumbs::for('Admin.Footer', function (BreadcrumbTrail $trail) {
+    $trail->push('Footer', route('Admin.Footer'));
+});
+
+Breadcrumbs::for('Admin.GeneralSetting', function (BreadcrumbTrail $trail) {
+    $trail->push('GeneralSetting', route('Admin.GeneralSetting'));
+});
+
+Breadcrumbs::for('Admin.EmailSetting', function (BreadcrumbTrail $trail) {
+    $trail->push('EmailSetting', route('Admin.EmailSetting'));
+});
+
+Breadcrumbs::for('Admin.EmailTemplates', function (BreadcrumbTrail $trail) {
+    $trail->push('EmailTemplates', route('Admin.EmailTemplates'));
+});
+
+Breadcrumbs::for('Admin.Database', function (BreadcrumbTrail $trail) {
+    $trail->push('Database', route('Admin.Database'));
+});
+
+Breadcrumbs::for('Admin.Maintenance', function (BreadcrumbTrail $trail) {
+    $trail->push('Maintenance', route('Admin.Maintenance'));
+});
+

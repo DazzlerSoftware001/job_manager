@@ -3,7 +3,16 @@
     Admin-Email Setting
 @endsection
 @section('page-title')
-Email Setting
+<div class="breadcrumb mt-2">
+        {!! Breadcrumbs::render('Admin.EmailSetting') !!}
+    </div>
+
+    <style>
+        .breadcrumb {
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+    </style>
 @endsection
 
 @section('main-container')

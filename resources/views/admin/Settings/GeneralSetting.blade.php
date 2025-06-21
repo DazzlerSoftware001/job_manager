@@ -3,7 +3,16 @@
     Admin-General Setting
 @endsection
 @section('page-title')
-    General Setting
+   <div class="breadcrumb mt-2">
+        {!! Breadcrumbs::render('Admin.GeneralSetting') !!}
+    </div>
+
+    <style>
+        .breadcrumb {
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+    </style>
 @endsection
 
 @section('main-container')

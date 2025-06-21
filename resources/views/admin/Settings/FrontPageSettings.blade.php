@@ -3,7 +3,16 @@
     Admin-General Setting
 @endsection
 @section('page-title')
-    Front Page Setting
+    <div class="breadcrumb mt-2">
+        {!! Breadcrumbs::render('Admin.FrontPageSettings') !!}
+    </div>
+
+    <style>
+        .breadcrumb {
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+    </style>
 @endsection
 
 @section('main-container')

@@ -3,7 +3,16 @@
     Admin-General Setting
 @endsection
 @section('page-title')
-    Home Page Setting
+   <div class="breadcrumb mt-2">
+        {!! Breadcrumbs::render('Admin.HomePageSettings') !!}
+    </div>
+
+    <style>
+        .breadcrumb {
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+    </style>
 @endsection
 
 <style>

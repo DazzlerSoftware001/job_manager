@@ -3,7 +3,16 @@
     Admin-All Apllicants
 @endsection
 @section('page-title')
-    All Apllicants
+    <div class="breadcrumb mt-2">
+        {!! Breadcrumbs::render('Admin.AllApplicants') !!}
+    </div>
+
+    <style>
+        .breadcrumb {
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+    </style>
 @endsection
 
 @section('main-container')

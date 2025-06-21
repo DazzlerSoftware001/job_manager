@@ -3,7 +3,16 @@
     Admin-Email Templates
 @endsection
 @section('page-title')
-    Email Templates List
+   <div class="breadcrumb mt-2">
+        {!! Breadcrumbs::render('Admin.EmailTemplates') !!}
+    </div>
+
+    <style>
+        .breadcrumb {
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+    </style>
 @endsection
 <style>
     .switch {
