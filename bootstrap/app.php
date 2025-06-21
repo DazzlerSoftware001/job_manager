@@ -7,6 +7,7 @@ use App\Http\Middleware\UserMiddleware;
 use App\Http\Middleware\RecruiterMiddleware;
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\MaintenanceMiddleware;
+use App\Http\Middleware\CheckInstallation;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -20,6 +21,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'recruiter' => RecruiterMiddleware::class,
             'admin' => AdminMiddleware::class,
             'maintenance' => MaintenanceMiddleware::class,
+            'installed' => CheckInstallation::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

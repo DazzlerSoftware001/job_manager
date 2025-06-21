@@ -1,4 +1,17 @@
- <body data-sidebar="dark">
+<style>
+    .list-group-item:hover {
+        background-color: #f0f0f0;
+        cursor: pointer;
+    }
+
+    #breadcrumb-search:focus {
+        outline: none;
+        box-shadow: 0 0 0 0.15rem rgba(0, 123, 255, 0.25);
+    }
+</style>
+
+
+<body data-sidebar="dark">
 
      <!-- <body data-layout="horizontal"> -->
 
@@ -44,6 +57,34 @@
                      </div>
 
                  </div>
+                 @php
+                     $breadcrumbs = [
+                         ['name' => 'Dashboard', 'route' => route('Admin.dashboard')],
+                         ['name' => 'Create Job', 'route' => route('Admin.CreateJob')],
+                         ['name' => 'Job List', 'route' => route('Admin.JobList')],// Use '#' for dynamic routes
+                         ['name' => 'Verified Jobs', 'route' => route('Admin.ShowVerifiedJobs')],
+                         ['name' => 'Rejected Jobs', 'route' => route('Admin.ShowRejectedJobs')],
+                         ['name' => 'Pending Jobs', 'route' => route('Admin.ShowPendingJobs')],
+                         ['name' => 'Job Skill', 'route' => route('Admin.JobSkill')],
+                         ['name' => 'Job Category', 'route' => route('Admin.JobCategory')],
+                         ['name' => 'Job Department', 'route' => route('Admin.JobDepartment')],
+                         ['name' => 'Job Role', 'route' => route('Admin.JobRole')],
+                         ['name' => 'Job Location', 'route' => route('Admin.JobLocation')],
+                         ['name' => 'Job Types', 'route' => route('Admin.JobTypes')],
+                         ['name' => 'Job Mode', 'route' => route('Admin.JobMode')],
+                         ['name' => 'Job Shift', 'route' => route('Admin.JobShift')],
+                         ['name' => 'Job Experience', 'route' => route('Admin.JobExperience')],
+                         ['name' => 'Job Currency', 'route' => route('Admin.JobCurrency')],
+                         ['name' => 'Job Salary', 'route' => route('Admin.JobSalary')],
+                         ['name' => 'Job Interview', 'route' => route('Admin.JobIntType')],
+                         ['name' => 'Job Education', 'route' => route('Admin.JobEducation')],
+                         ['name' => 'Companies', 'route' => route('Admin.Companies')],
+                         ['name' => 'Recruiters', 'route' => route('Admin.Recruiters')],
+                         ['name' => 'User List', 'route' => route('Admin.UserList')],
+                         ['name' => 'All Applicants', 'route' => route('Admin.AllApplicants')],
+                     ];
+                 @endphp
+
 
                  <div class="d-flex">
                      <div class="dropdown">
@@ -57,18 +98,33 @@
                              <i class="icon-sm" data-eva="search-outline"></i>
                          </button>
 
-                         <div class="dropdown-menu dropdown-menu-end dropdown-menu-md p-0">
-                             <form class="p-2">
-                                 <div class="search-box">
-                                     <div class="position-relative">
-                                         <input type="text" class="form-control bg-light border-0"
-                                             placeholder="Search...">
-                                         <i class="search-icon" data-eva="search-outline" data-eva-height="26"
-                                             data-eva-width="26"></i>
-                                     </div>
-                                 </div>
-                             </form>
-                         </div>
+                         <div class="dropdown-menu dropdown-menu-end p-0 shadow rounded-3" style="width: 320px;">
+    <form class="p-3">
+        <div class="mb-2 position-relative">
+            <input type="text" class="form-control form-control-sm rounded-pill ps-4" id="breadcrumb-search"
+                placeholder="🔍 Search menu..." style="border: 1px solid #ccc;">
+        </div>
+
+        <div id="breadcrumb-list" class="list-group list-group-flush" style="max-height: 300px; overflow-y: auto;">
+            @foreach($breadcrumbs as $item)
+                <a href="{{ $item['route'] }}"
+                   class="list-group-item list-group-item-action border-0 breadcrumb-item"
+                   data-name="{{ strtolower($item['name'] . ' ' . ($item['parent'] ?? '')) }}">
+                    <div class="d-flex flex-column">
+                        @if(isset($item['parent']))
+                            <small class="text-muted">{{ $item['parent'] }}</small>
+                        @endif
+                        <span class="fw-semibold">{{ $item['name'] }}</span>
+                    </div>
+                </a>
+            @endforeach
+        </div>
+
+        <div id="no-results" class="text-muted small text-center py-2 d-none">No matches found</div>
+    </form>
+</div>
+
+
                      </div>
 
                      {{-- <div class="dropdown d-inline-block language-switch">
@@ -179,7 +235,6 @@
                      @endphp
 
 
-                     
                      <div class="dropdown d-inline-block">
                          <button type="button" class="btn header-item noti-icon"
                              id="page-header-notifications-dropdown-v" data-bs-toggle="dropdown" aria-haspopup="true"
@@ -215,7 +270,8 @@
                                                  </span>
                                              </div>
                                              <div class="flex-grow-1">
-                                                 <h6 class="mb-1">{{ $notification->data['title'] ?? 'Notification' }}
+                                                 <h6 class="mb-1">
+                                                     {{ $notification->data['title'] ?? 'Notification' }}
                                                  </h6>
                                                  <div class="font-size-13 text-muted">
                                                      <p class="mb-1">{{ $notification->data['message'] ?? '' }}</p>
@@ -370,3 +426,20 @@
                  });
              });
          </script>
+<script>
+    document.getElementById('breadcrumb-search').addEventListener('input', function () {
+        let filter = this.value.toLowerCase().trim();
+        let items = document.querySelectorAll('#breadcrumb-list .breadcrumb-item');
+        let anyVisible = false;
+
+        items.forEach(function (item) {
+            let name = item.getAttribute('data-name');
+            let visible = name.includes(filter);
+            item.style.display = visible ? 'block' : 'none';
+            if (visible) anyVisible = true;
+        });
+
+        document.getElementById('no-results').classList.toggle('d-none', anyVisible);
+    });
+</script>
+

@@ -422,7 +422,7 @@
                                             <div>
                                                 <div class="user-nav p-3">
                                                     <div class="d-flex justify-content-end">
-                                                        <div class="dropdown">
+                                                        {{-- <div class="dropdown">
                                                             <a class="dropdown-toggle" href="#" role="button"
                                                                 data-bs-toggle="dropdown" aria-expanded="false">
                                                                 <i data-eva="more-horizontal-outline" data-eva-width="20"
@@ -438,7 +438,7 @@
                                                                 <li><a class="dropdown-item" href="#">Something else
                                                                         here</a></li>
                                                             </ul>
-                                                        </div>
+                                                        </div> --}}
                                                     </div>
                                                 </div>
                                             </div>
@@ -722,13 +722,13 @@
                                                     </td>
                                                     <td>{{ $applicants->user->email }}</td>
                                                     <td>
-                                                        {{ $applicants->phone }}
+                                                        {{ $applicants->user->phone }}
                                                     </td>
 
 
                                                     <td>
                                                         <div class="d-flex gap-2">
-                                                            <a href="{{ route('Admin.ApllicantsDetails', [
+                                                            <a href="{{ route('Recruiter.ApllicantsDetails', [
                                                                 'userId' => Crypt::encrypt($applicants->user->id),
                                                                 'jobId' => Crypt::encrypt($applicants->jobPost->id),
                                                             ]) }}"
@@ -795,7 +795,7 @@
                                                     </td>
                                                     <td>
                                                         <div class="d-flex gap-2">
-                                                            <a href="{{ route('Admin.EditJobPost', ['id' => Crypt::encrypt($exp->id)]) }}"
+                                                            <a href="{{ route('Recruiter.EditJobPost', ['id' => Crypt::encrypt($exp->id)]) }}"
                                                                 class="btn btn-primary bg-gradient btn-sm"
                                                                 data-bs-toggle="tooltip" data-bs-placement="top"
                                                                 title="Edit">

@@ -113,7 +113,7 @@
         </script>
 
         {{-- change Status --}}
-        <script>
+        {{-- <script>
             function changeVerifyStatus(id, status) {
                 let actionText = status.charAt(0).toUpperCase() + status.slice(1); // Capitalized
                 let confirmButtonText = `Yes, mark as ${actionText}`;
@@ -179,7 +179,7 @@
                     }
                 });
             }
-        </script>
+        </script> --}}
 
 
 

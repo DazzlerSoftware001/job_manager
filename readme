@@ -1,0 +1,56 @@
+
+# CareerNext
+
+CareerNext is a Laravel-based job portal platform designed to help users explore careers, apply for jobs, and manage their profiles through an intuitive admin and user interface.
+
+## 🚀 Features
+
+- Admin Dashboard with Authentication
+- Job Posting and Application System
+- User Registration & Login
+- Fully Responsive Design
+- Database Seeding for Demo Data
+
+## 🛠️ Technologies Used
+
+- Laravel 10+
+- PHP 8.1+
+- MySQL
+- Composer
+- Bootstrap
+- JavaScript
+
+## 📦 Installation
+
+For complete installation steps, please refer to the [INSTALL.md](INSTALL.md) file.
+
+## 🔐 Admin Login Credentials
+
+```
+Email: admin@gmail.com
+Password: 12345678
+```
+
+## 📁 Project Structure
+
+```
+CareerNext/
+├── app/
+├── bootstrap/
+├── config/
+├── database/
+├── public/
+├── resources/
+├── routes/
+├── storage/
+├── tests/
+├── .env.example
+├── composer.json
+├── package.json
+├── README.md
+└── INSTALL.md
+```
+
+## 🧾 License
+
+This project is open-source and available under the [MIT license](LICENSE).
