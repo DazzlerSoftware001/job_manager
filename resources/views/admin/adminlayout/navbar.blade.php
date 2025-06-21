@@ -82,6 +82,16 @@
                          ['name' => 'Recruiters', 'route' => route('Admin.Recruiters')],
                          ['name' => 'User List', 'route' => route('Admin.UserList')],
                          ['name' => 'All Applicants', 'route' => route('Admin.AllApplicants')],
+                         ['name' => 'Menus', 'route' => route('Admin.menu')],
+                         ['name' => 'Front Page Setting', 'route' => route('Admin.FrontPageSettings')],
+                         ['name' => 'Home Page Setting', 'route' => route('Admin.HomePageSettings')],
+                         ['name' => 'Custom Pages', 'route' => route('Admin.PageSettings')],
+                         ['name' => 'Footer Settings', 'route' => route('Admin.Footer')],
+                         ['name' => 'General Settings', 'route' => route('Admin.GeneralSetting')],
+                         ['name' => 'Email Settings', 'route' => route('Admin.EmailSetting')],
+                         ['name' => 'Email Templates', 'route' => route('Admin.EmailTemplates')],
+                         ['name' => 'Database - Import/Export', 'route' => route('Admin.Database')],
+                         ['name' => 'Maintenance Mode', 'route' => route('Admin.Maintenance')],
                      ];
                  @endphp
 
