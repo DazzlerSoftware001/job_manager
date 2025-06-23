@@ -91,7 +91,7 @@
                         ['name' => 'Email Settings', 'route' => route('Admin.EmailSetting')],
                         ['name' => 'Email Templates', 'route' => route('Admin.EmailTemplates')],
                         ['name' => 'Database - Import/Export', 'route' => route('Admin.Database')],
-                        ['name' => 'Maintenance M', 'route' => route('Admin.Maintenance')],
+                        ['name' => 'Maintenance Mode', 'route' => route('Admin.Maintenance')],
                     ];
                 @endphp
 
@@ -119,13 +119,14 @@
                                 <div id="breadcrumb-list" class="list-group list-group-flush"
                                     style="max-height: 300px; overflow-y: auto;">
                                     @foreach ($breadcrumbs as $item)
+                                        @php
+                                            $isActive = url()->current() === $item['route'];
+                                        @endphp
+
                                         <a href="{{ $item['route'] }}"
-                                            class="list-group-item list-group-item-action border-0 breadcrumb-item"
-                                            data-name="{{ strtolower($item['name'] . ' ' . ($item['parent'] ?? '')) }}">
+                                            class="list-group-item list-group-item-action border-0 breadcrumb-item {{ $isActive ? 'active' : '' }}"
+                                            data-name="{{ strtolower($item['name'] ?? '') }}">
                                             <div class="d-flex flex-column">
-                                                @if (isset($item['parent']))
-                                                    <small class="text-muted">{{ $item['parent'] }}</small>
-                                                @endif
                                                 <span class="fw-semibold">{{ $item['name'] }}</span>
                                             </div>
                                         </a>

@@ -475,63 +475,63 @@
 
         {{-- DeleteRecruiter --}}
         {{-- <script>
-        function deleteRecord(id) {
-            // First AJAX to show confirmation modal
-            Swal.fire({
-                title: 'Are you sure?',
-                text: 'Do you really want to delete this record?',
-                icon: 'warning',
-                showCancelButton: true, // Show cancel button
-                confirmButtonText: 'Yes, delete it!',
-                cancelButtonText: 'No, cancel!',
-                background: '#28a745',
-            }).then((response) => {
-                // If user clicks "Yes, delete it!"
-                if (response.isConfirmed) {
-                    // Second AJAX for actual deletion
-                    $.ajax({
-                        type: 'POST',
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        },
-                        url: "{{ route('Admin.DeleteRecruiter') }}",
-                        data: { id: id },
-                        dataType: 'json',
-                        success: function (deleteResult) {
-                            if (deleteResult.status_code == 1) {
-                                // Reload the DataTable after successful deletion
-                                $('#myTable').DataTable().ajax.reload(null, false);
-                                Swal.fire({
-                                    title: 'Deleted!',
-                                    text: 'Record deleted successfully!',
-                                    icon: 'success',
-                                    confirmButtonText: 'Okay',
-                                    background: '#28a745'
-                                });
-                            } else {
-                                Swal.fire({
-                                    title: 'Error!',
-                                    text: deleteResult.message,
-                                    icon: 'error',
-                                    confirmButtonText: 'Okay',
-                                    background: '#dc3545'
-                                });
+            function deleteRecord(id) {
+                // First AJAX to show confirmation modal
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: 'Do you really want to delete this record?',
+                    icon: 'warning',
+                    showCancelButton: true, // Show cancel button
+                    confirmButtonText: 'Yes, delete it!',
+                    cancelButtonText: 'No, cancel!',
+                    background: '#28a745',
+                }).then((response) => {
+                    // If user clicks "Yes, delete it!"
+                    if (response.isConfirmed) {
+                        // Second AJAX for actual deletion
+                        $.ajax({
+                            type: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            url: "{{ route('Admin.DeleteRecruiter') }}",
+                            data: { id: id },
+                            dataType: 'json',
+                            success: function (deleteResult) {
+                                if (deleteResult.status_code == 1) {
+                                    // Reload the DataTable after successful deletion
+                                    $('#myTable').DataTable().ajax.reload(null, false);
+                                    Swal.fire({
+                                        title: 'Deleted!',
+                                        text: 'Record deleted successfully!',
+                                        icon: 'success',
+                                        confirmButtonText: 'Okay',
+                                        background: '#28a745'
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        title: 'Error!',
+                                        text: deleteResult.message,
+                                        icon: 'error',
+                                        confirmButtonText: 'Okay',
+                                        background: '#dc3545'
+                                    });
+                                }
                             }
-                        }
-                    });
-                } else {
-                    // If user clicks "Cancel", show the info message and no deletion happens
-                    Swal.fire({
-                        title: 'Cancelled',
-                        text: 'Your record was not deleted.',
-                        icon: 'info',
-                        confirmButtonText: 'Okay',
-                        background: '#17a2b8'
-                    });
-                }
-            });
-        }
-    </script> --}}
+                        });
+                    } else {
+                        // If user clicks "Cancel", show the info message and no deletion happens
+                        Swal.fire({
+                            title: 'Cancelled',
+                            text: 'Your record was not deleted.',
+                            icon: 'info',
+                            confirmButtonText: 'Okay',
+                            background: '#17a2b8'
+                        });
+                    }
+                });
+            }
+        </script> --}}
 
         <script>
             function deleteRecord(id) {
@@ -543,7 +543,7 @@
                         <select id="newRecruiterId" class="swal2-select" style="width:100%; padding:8px;">
                             <option value="">-- Choose Recruiter --</option>
                             @foreach ($recruiters as $r)
-                                <option value="{{ $r->id }}">{{ $r->name }}</option>
+                                <option value="{{ $r->id }}">{{ $r->name }} {{ $r->lname }</option>
                             @endforeach
                         </select>
                     </div>
