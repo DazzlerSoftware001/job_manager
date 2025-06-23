@@ -33,7 +33,7 @@
                                 <input type="text" id="search" name="search"
                                     class="form-control form-control-sm bg-light rounded w-25" placeholder="Search...">
                             </div>
-
+{{--  --}}
 
                             {{-- <div class="px-3 mt-3 d-flex align-items-center gap-2">
                                 <input type="text" id="search" name="search"
