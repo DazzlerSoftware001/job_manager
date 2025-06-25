@@ -543,7 +543,7 @@
                         <select id="newRecruiterId" class="swal2-select" style="width:100%; padding:8px;">
                             <option value="">-- Choose Recruiter --</option>
                             @foreach ($recruiters as $r)
-                                <option value="{{ $r->id }}">{{ $r->name }} {{ $r->lname }</option>
+                                <option value="{{ $r->id }}">{{ $r->name }} {{ $r->lname }}</option>
                             @endforeach
                         </select>
                     </div>
