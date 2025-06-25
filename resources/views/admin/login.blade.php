@@ -50,7 +50,7 @@
                                                         </div>
                                                         <form class="mt-4 pt-2" method="POST" action="javascript:void(0)" id="Login"> {{--  --}}
                                                             <div class="form-floating form-floating-custom mb-4">
-                                                              <input type="email" class="form-control" id="input-username" name="email" value="admin@gmail.com" placeholder="Enter Email" required>
+                                                              <input type="email" class="form-control" id="input-username" name="email" value="" placeholder="Enter Email" required>
                                                               <label for="input-username">Email</label>
                                                               <div class="form-floating-icon">
                                                                 <i data-eva="email-outline"></i>
@@ -58,7 +58,7 @@
                                                             </div>
                                                           
                                                             <div class="form-floating form-floating-custom mb-4 auth-pass-inputgroup">
-                                                              <input type="password" class="form-control pe-5" id="password-input" name="password" value="12345678" placeholder="Enter Password" required>
+                                                              <input type="password" class="form-control pe-5" id="password-input" name="password" value="" placeholder="Enter Password" required>
                                                               <button type="button" class="btn btn-link position-absolute h-100 end-0 top-0" id="password-addon">
                                                                 <i class="mdi mdi-eye-outline font-size-18 text-muted"></i>
                                                               </button>

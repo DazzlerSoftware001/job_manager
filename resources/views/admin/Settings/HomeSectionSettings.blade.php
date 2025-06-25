@@ -3,7 +3,7 @@
     Admin-General Setting
 @endsection
 @section('page-title')
-   <div class="breadcrumb mt-2">
+    <div class="breadcrumb mt-2">
         {!! Breadcrumbs::render('Admin.HomePageSettings') !!}
     </div>
 
@@ -952,7 +952,7 @@
     </script>
 
     {{-- For Delete Brand Logo --}}
-    <script>
+    {{-- <script>
         $(document).on('click', '.remove-btn', function() {
             const logoPath = $(this).data('logo');
             const $imageContainer = $(this).closest('.preview-image');
@@ -1005,7 +1005,73 @@
                 });
             }
         });
+    </script> --}}
+
+    <script>
+        $(document).on('click', '.remove-btn', function() {
+            const logoPath = $(this).data('logo');
+            const $imageContainer = $(this).closest('.preview-image');
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#28a745',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "{{ route('Admin.DeleteBrandLogo') }}",
+                        type: "POST",
+                        headers: {
+                            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
+                        },
+                        data: {
+                            logo: logoPath
+                        },
+                        success: function(response) {
+                            if (response.status_code === 1) {
+                                Toastify({
+                                    text: response.message,
+                                    duration: 3000,
+                                    gravity: "top",
+                                    position: "right",
+                                    style: {
+                                        background: "#28a745"
+                                    },
+                                }).showToast();
+                                $imageContainer.remove();
+                            } else {
+                                Toastify({
+                                    text: response.message,
+                                    duration: 3000,
+                                    gravity: "top",
+                                    position: "right",
+                                    style: {
+                                        background: "#c7ac14"
+                                    },
+                                }).showToast();
+                            }
+                        },
+                        error: function() {
+                            Toastify({
+                                text: "An error occurred while deleting.",
+                                duration: 3000,
+                                gravity: "top",
+                                position: "right",
+                                style: {
+                                    background: "#dc3545"
+                                },
+                            }).showToast();
+                        }
+                    });
+                }
+            });
+        });
     </script>
+
 
     {{-- For Showing What We Are Section --}}
     <script>

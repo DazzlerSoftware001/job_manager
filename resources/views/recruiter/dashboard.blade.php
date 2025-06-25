@@ -528,8 +528,8 @@
                                         <hr class="mb-4">
 
 
-                                        <div class="mb-4">
-                                            {{-- <div class="d-flex align-items-start">
+                                       {{-- <div class="mb-4">
+                                             <div class="d-flex align-items-start">
                                                 <div class="flex-grow-1">
                                                     <h5 class="card-title mb-3">Earning</h5>
                                                 </div>
@@ -538,7 +538,7 @@
                                                         <i data-eva="info-outline" class="fill-muted" data-eva-height="20" data-eva-width="20"></i>
                                                     </button>
                                                 </div>
-                                            </div> --}}
+                                            </div>
 
                                             <div id="chart-radialBar" class="apex-charts" data-colors='["#3b76e1"]'>
                                             </div>
@@ -555,7 +555,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div> --}}
 
                                         {{-- <hr class="mb-4"> --}}
                                         {{-- <div class="px-4 mx-n3" data-simplebar style="height: 258px;">

@@ -118,7 +118,7 @@
                                         class="process__title h6 d-block">{{ $card['title'] ?? 'Create a Free Account' }}</span>
                                     <p> {{ $card['description'] ??
                                         'Consectetur adipisicing elit. Possimus
-                                                                                                                                                                                                                                                                                                                                                                                                                                                aut mollitia eum ipsum fugiat odio officiis odit mollitia eum ipsum.' }}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    aut mollitia eum ipsum fugiat odio officiis odit mollitia eum ipsum.' }}
                                     </p>
                                     <div class="work__readmore mt-3">
                                         <a href="#">{{ $card['button_text'] ?? 'Read More' }} <i
@@ -171,7 +171,8 @@
             <div class="container">
                 <div class="row">
                     <div class="section__title mb-40">
-                        <span class="h6 d-block fw-semibold">Trusted by 300+ leading companies</span>
+                        <span
+                            class="h6 d-block fw-semibold">{{ $BrandSectionSetting->title ?? 'Trusted by 300+ leading companies' }}</span>
                     </div>
                 </div>
                 <div class="row align-items-center">
@@ -207,64 +208,81 @@
 
                     }'>
                         <div class="swiper-wrapper">
-                            <div class="swiper-slide">
-                                <div class="brand__item">
-                                    <a href="#" class="brand__item__link" aria-label="brand">
-                                        <img src="{{ url('user/assets/img/home-1/brand/b51.svg') }}" alt="">
-                                    </a>
+                            @if (!empty($BrandSectionSetting->logos))
+                                @foreach ($BrandSectionSetting->logos as $logo)
+                                    <div class="swiper-slide">
+                                        <div class="brand__item">
+                                            <a href="#" class="brand__item__link" aria-label="brand">
+                                                <img src="{{ url($logo) }}" alt="">
+                                            </a>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            @else
+                                <div class="swiper-slide">
+                                    <div class="brand__item">
+                                        <a href="#" class="brand__item__link" aria-label="brand">
+                                            <img src="{{ url('user/assets/img/home-1/brand/b51.svg') }}" alt="">
+                                        </a>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="swiper-slide">
-                                <div class="brand__item">
-                                    <a href="#" class="brand__item__link" aria-label="brand">
-                                        <img src="{{ url('user/assets/img/home-1/brand/image1.svg') }}" alt="">
-                                    </a>
+                                <div class="swiper-slide">
+                                    <div class="brand__item">
+                                        <a href="#" class="brand__item__link" aria-label="brand">
+                                            <img src="{{ url('user/assets/img/home-1/brand/image1.svg') }}"
+                                                alt="">
+                                        </a>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="swiper-slide">
-                                <div class="brand__item">
-                                    <a href="#" class="brand__item__link" aria-label="brand">
-                                        <img src="{{ url('user/assets/img/home-1/brand/image2.svg') }}" alt="">
-                                    </a>
+                                <div class="swiper-slide">
+                                    <div class="brand__item">
+                                        <a href="#" class="brand__item__link" aria-label="brand">
+                                            <img src="{{ url('user/assets/img/home-1/brand/image2.svg') }}"
+                                                alt="">
+                                        </a>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="swiper-slide">
-                                <div class="brand__item">
-                                    <a href="#" class="brand__item__link" aria-label="brand">
-                                        <img src="{{ url('user/assets/img/home-1/brand/image3.svg') }}" alt="">
-                                    </a>
+                                <div class="swiper-slide">
+                                    <div class="brand__item">
+                                        <a href="#" class="brand__item__link" aria-label="brand">
+                                            <img src="{{ url('user/assets/img/home-1/brand/image3.svg') }}"
+                                                alt="">
+                                        </a>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="swiper-slide">
-                                <div class="brand__item">
-                                    <a href="#" class="brand__item__link" aria-label="brand">
-                                        <img src="{{ url('user/assets/img/home-1/brand/image4.svg') }}" alt="">
-                                    </a>
+                                <div class="swiper-slide">
+                                    <div class="brand__item">
+                                        <a href="#" class="brand__item__link" aria-label="brand">
+                                            <img src="{{ url('user/assets/img/home-1/brand/image4.svg') }}"
+                                                alt="">
+                                        </a>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="swiper-slide">
-                                <div class="brand__item">
-                                    <a href="#" class="brand__item__link" aria-label="brand">
-                                        <img src="{{ url('user/assets/img/home-1/brand/image5.svg') }}" alt="">
-                                    </a>
+                                <div class="swiper-slide">
+                                    <div class="brand__item">
+                                        <a href="#" class="brand__item__link" aria-label="brand">
+                                            <img src="{{ url('user/assets/img/home-1/brand/image5.svg') }}"
+                                                alt="">
+                                        </a>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="swiper-slide">
-                                <div class="brand__item">
-                                    <a href="#" class="brand__item__link" aria-label="brand">
-                                        <img src="{{ url('user/assets/img/home-1/brand/image1.svg') }}" alt="">
-                                    </a>
+                                <div class="swiper-slide">
+                                    <div class="brand__item">
+                                        <a href="#" class="brand__item__link" aria-label="brand">
+                                            <img src="{{ url('user/assets/img/home-1/brand/image1.svg') }}"
+                                                alt="">
+                                        </a>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="swiper-slide">
-                                <div class="brand__item">
-                                    <a href="#" class="brand__item__link" aria-label="brand">
-                                        <img src="{{ url('user/assets/img/home-1/brand/linkedin-logo-png-20321.svg') }}"
-                                            alt="">
-                                    </a>
+                                <div class="swiper-slide">
+                                    <div class="brand__item">
+                                        <a href="#" class="brand__item__link" aria-label="brand">
+                                            <img src="{{ url('user/assets/img/home-1/brand/linkedin-logo-png-20321.svg') }}"
+                                                alt="">
+                                        </a>
+                                    </div>
                                 </div>
-                            </div>
-
+                            @endif
                         </div>
                     </div>
                 </div>

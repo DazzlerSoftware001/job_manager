@@ -64,7 +64,7 @@
                                                             <div class="form-floating form-floating-custom mb-4">
                                                                 <input type="email" class="form-control"
                                                                     id="input-username" name="email"
-                                                                    placeholder="Enter Email" value="akash@gmail.com" required>
+                                                                    placeholder="Enter Email" value="" required>
                                                                 <label for="input-username">Email</label>
                                                                 <div class="form-floating-icon">
                                                                     <i data-eva="email-outline"></i>
@@ -75,7 +75,7 @@
                                                                 class="form-floating form-floating-custom mb-4 auth-pass-inputgroup">
                                                                 <input type="password" class="form-control pe-5"
                                                                     id="password-input" name="password"
-                                                                    placeholder="Enter Password" value="12345678" required>
+                                                                    placeholder="Enter Password" value="" required>
                                                                 <button type="button"
                                                                     class="btn btn-link position-absolute h-100 end-0 top-0"
                                                                     id="password-addon">

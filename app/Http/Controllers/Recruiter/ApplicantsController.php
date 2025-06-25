@@ -10,6 +10,7 @@ use App\Models\UserProfile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Auth;
 
 class ApplicantsController extends Controller
 {
@@ -22,7 +23,7 @@ class ApplicantsController extends Controller
             $decryptedId = Crypt::decrypt($job_id);
         }
         $today   = Carbon::today();
-        $joblist = JobPost::select('id', 'title')->where('status', 1)->where('admin_verify', 1)->whereDate('jobexpiry', '>=', $today)->get();
+        $joblist = JobPost::select('id', 'title')->where('recruiter_id', Auth::user()->id)->where('status', 1)->where('admin_verify', 1)->whereDate('jobexpiry', '>=', $today)->get();
         $cities  = JobApplication::with('user')->get()->pluck('user.city')->filter()->unique()->values();
         $skills  = CandidateProfile::pluck('skill')
             ->filter()
@@ -219,7 +220,14 @@ class ApplicantsController extends Controller
 
             // $dataArray[] = ucfirst($record->user->name) .' '.$record->user->lname;
             $dataArray[] = $record->user->email ?? 'N/A';
-            $dataArray[] = '<img src="' . asset($record->user->logo) . '" alt="Logo" style="height: 50px; width: 50px;border-radius:50px;" onclick="openImageModal(\'' . asset($record->user->logo) . '\')">';
+            $logo        = $record->user->logo ? asset($record->user->logo) : asset('user/assets/img/profile/default.png');
+
+            $dataArray[] = '<img
+    src="' . $logo . '"
+    alt="Logo"
+    style="height: 50px; width: 50px; border-radius:50px;"
+    onclick="openImageModal(\'' . $logo . '\')"
+    onerror="this.onerror=null; this.src=\'' . asset('user/assets/img/profile/default.png') . '\';">';
 
             $dataArray[] = $record->user->city ?? 'N/A';
 
@@ -385,7 +393,7 @@ class ApplicantsController extends Controller
             //                 </div>';
             // }
 
-            $dataArray[] = '<span class="badge bg-success">' . ucfirst($record->status) . '</span>';;
+            $dataArray[] = '<span class="badge bg-success">' . ucfirst($record->status) . '</span>';
 
             $dataArray[] = date('d-M-Y', strtotime($record->created_at));
 

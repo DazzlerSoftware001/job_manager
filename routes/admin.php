@@ -314,23 +314,6 @@ Route::prefix('Admin')->group(function () {
         Route::post('/SubmitWhatWeAreSection', [SettingsController::class, 'submitWhatWeAreSection'])->name('Admin.SubmitWhatWeAreSection');
         Route::post('/ShowingNewsSection', [SettingsController::class, 'showingNewsSection'])->name('Admin.ShowingNewsSection');
         Route::post('/SubmitNewsSection', [SettingsController::class, 'submitNewsSection'])->name('Admin.SubmitNewsSection');
-        
-        // Route::get('/notifications/mark-all-read', function () {
-        //     Auth::user()->unreadNotifications->markAsRead();
-        //     return back();
-        // })->name('notifications.markAllRead');
-
-        Route::get('/notifications/mark-all-read', function () {
-            if (Auth::check()) {
-                Auth::user()->unreadNotifications->markAsRead();
-            }
-            return back();
-        })->name('notifications.markAllRead');
-
-        Route::get('/notifications/all', function () {
-            $notifications = Auth::user()->notifications;
-            return view('notifications.all', compact('notifications'));
-        })->name('notifications.all');
 
         
         Route::post('/logout', [AuthController::class, 'logout'])->name('Admin.logout');

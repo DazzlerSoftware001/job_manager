@@ -395,7 +395,6 @@
                                                     data-bs-target="#editNameModal">
                                                     <i class="fa fa-pencil-alt"></i>
                                                 </button>
-                                                <p class="text-muted">Product Designer</p>
                                             </div>
                                             <button class="btn btn-success mt-3 d-none" id="saveChangesButton">Save
                                                 Changes</button>
@@ -429,7 +428,7 @@
                                     </div>
                                     <!-- Edit Name Modal End -->
 
-                                    <div class="p-3">
+                                    {{-- <div class="p-3">
                                         <div class="row text-center pb-3">
                                             <div class="col-6 border-end">
                                                 <div class="p-1">
@@ -443,12 +442,12 @@
                                                     <p class="text-muted mb-0">Followers</p>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div> --}}
 
                                         <hr class="mb-4">
 
 
-                                        {{-- <div class="mb-4">
+                                       {{-- <div class="mb-4">
                                             <div class="d-flex align-items-start">
                                                 <div class="flex-grow-1">
                                                     <h5 class="card-title mb-3">Earning</h5>
@@ -477,10 +476,10 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div> --}}
-                                        {{--     
-                                        <hr class="mb-4"> --}}
-                                        {{-- <div class="px-4 mx-n3" data-simplebar style="height: 258px;">
+                                        </div>
+                                        
+                                        <hr class="mb-4"> 
+                                        <div class="px-4 mx-n3" data-simplebar style="height: 258px;">
     
                                             <div>
                                                 <h5 class="card-title mb-3">Recent Activity</h5>
@@ -538,8 +537,8 @@
                                                     </li>
                                                 </ul>
                                             </div>
-                                        </div> --}}
-                                    </div>
+                                        </div>
+                                    </div> --}}
                                 </div>
                                 <!-- end card body -->
                             </div>
@@ -999,7 +998,7 @@
                 }],
                 chart: {
                     type: 'bar', // Using bar for better clarity on count
-                    height: 0,
+                    height: 270,
                     toolbar: {
                         show: false // ✅ disables the toolbar icons
                     }

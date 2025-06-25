@@ -78,9 +78,10 @@
                                        
                                         {{-- $user->id
                                     $DecJob_Id --}}
-
+                                        @if(!empty($user->candidateProfile->resume))
                                         <a href="{{ route('Admin.CandidateCVDownload', ['userId' => Crypt::encrypt($user->id)]) }}"
                                             class="btn btn-primary mt-1">Cv Download</a>
+                                        @endif
 
                                         @if (session('error'))
                                             <script>

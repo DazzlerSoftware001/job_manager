@@ -27,7 +27,7 @@
                 </div>
 
                 <!-- footer menu -->
-                <div class="rts__footer__widget max-content">
+                {{-- <div class="rts__footer__widget max-content">
                     <div class="font-20 fw-medium mb-3 h6">Links</div>
                     <ul class="list-unstyled">
                         <li><a href="job-list-1.html" aria-label="footer__menu__link">Browse Jobs</a></li>
@@ -36,7 +36,7 @@
                         <li><a href="faq.html" aria-label="footer__menu__link">FAQ Question</a></li>
                         <li><a href="#" aria-label="footer__menu__link">Job Alerts</a></li>
                     </ul>
-                </div>
+                </div> --}}
 
                 <div class="rts__footer__widget max-content">
                     <div class="font-20 fw-medium mb-3 h6 ">
@@ -68,26 +68,49 @@
                                 @endif
                             </a></li>
                     </ul>
-                    <div class="font-20 fw-medium mb-20 text-dark">
+                    <div class="font-20 fw-medium text-dark">
                         Social Link
                     </div>
-                    <div class="rts__social d-flex gap-4">
-                        <a target="_blank" href="https://facebook.com/" aria-label="facebook">
-                            <i class="fa-brands fa-facebook"></i>
-                        </a>
-                        <a target="_blank" href="https://instagram.com/" aria-label="instagram">
-                            <i class="fa-brands fa-instagram"></i>
-                        </a>
-                        <a target="_blank" href="https://linkedin.com/" aria-label="linkedin">
-                            <i class="fa-brands fa-linkedin"></i>
-                        </a>
-                        <a target="_blank" href="https://pinterest.com/" aria-label="pinterest">
-                            <i class="fa-brands fa-pinterest"></i>
-                        </a>
-                        <a target="_blank" href="https://youtube.com/" aria-label="youtube">
-                            <i class="fa-brands fa-youtube"></i>
-                        </a>
-                    </div>
+                    @php
+                        $socialLinks = [];
+
+                        if (!empty($footerSettings->social_links)) {
+                            if (is_string($footerSettings->social_links)) {
+                                $socialLinks = json_decode($footerSettings->social_links, true) ?? [];
+                            } elseif (is_array($footerSettings->social_links)) {
+                                $socialLinks = $footerSettings->social_links;
+                            }
+                        }
+                    @endphp
+
+                    @if (!empty($socialLinks))
+                        <div class="rts__social d-flex gap-4">
+                            @foreach ($socialLinks as $social)
+                                <a target="_blank" href="{{ $social['link'] ?? '#' }}"
+                                    aria-label="{{ strtolower($social['name'] ?? 'social') }}">
+                                    <i class="{{ $social['icon'] ?? 'fas fa-globe' }}"></i>
+                                </a>
+                            @endforeach
+                        </div>
+                    @else
+                        <div class="rts__social d-flex gap-4">
+                            <a target="_blank" href="https://facebook.com/" aria-label="facebook">
+                                <i class="fa-brands fa-facebook"></i>
+                            </a>
+                            <a target="_blank" href="https://instagram.com/" aria-label="instagram">
+                                <i class="fa-brands fa-instagram"></i>
+                            </a>
+                            <a target="_blank" href="https://linkedin.com/" aria-label="linkedin">
+                                <i class="fa-brands fa-linkedin"></i>
+                            </a>
+                            <a target="_blank" href="https://pinterest.com/" aria-label="pinterest">
+                                <i class="fa-brands fa-pinterest"></i>
+                            </a>
+                            <a target="_blank" href="https://youtube.com/" aria-label="youtube">
+                                <i class="fa-brands fa-youtube"></i>
+                            </a>
+                        </div>
+                    @endif
                 </div>
 
                 {{-- <!-- newsletter form -->

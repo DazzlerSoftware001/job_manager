@@ -102,7 +102,7 @@
     @endsection
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     @section('script')
-        <script>
+    <script>
         $(document).ready(function() {
             $('#mailSettingData').on('submit', function(event) {
                 event.preventDefault(); // Prevent default form submission

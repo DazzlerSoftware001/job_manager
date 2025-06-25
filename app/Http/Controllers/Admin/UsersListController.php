@@ -16,16 +16,16 @@ use App\Models\JobExperience;
 use App\Models\Jobpost;
 use App\Models\Recruiter;
 use App\Models\UserProfile;
+use App\Notifications\CandidateHireNotify;
+use App\Notifications\CandidateRejectNotify;
+use App\Notifications\CandidateShortListNotify;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
-use Illuminate\Support\Facades\Notification;
-use App\Notifications\CandidateHireNotify;
-use App\Notifications\CandidateRejectNotify;
-use App\Notifications\CandidateShortListNotify;
+
 class UsersListController extends Controller
 {
     public function userList()
@@ -163,8 +163,15 @@ class UsersListController extends Controller
             $dataArray[] = $record->id;
             $dataArray[] = ucfirst($record->name . ' ' . $record->lname);
             $dataArray[] = $record->email;
-            $dataArray[] = $record->phone;
-            $dataArray[] = '<img src="' . asset($record->logo) . '" alt="Logo" style="height: 50px; width: 50px; border-radius:50%; object-fit: cover; cursor: pointer;" onclick="openImageModal(\'' . asset($record->logo) . '\')">';
+            $dataArray[] = $record->phone ?? '-';
+            $logoPath    = $record->logo ? asset($record->logo) : asset('user/assets/img/profile/default.png');
+
+            $dataArray[] = '<img src="' . $logoPath . '"
+    alt="Logo"
+    style="height: 50px; width: 50px; border-radius:50%; object-fit: cover; cursor: pointer;"
+    onclick="openImageModal(\'' . $logoPath . '\')"
+    onerror="this.onerror=null; this.src=\'' . asset('user/assets/img/profile/default.png') . '\';">';
+
             // $dataArray[] = $record->experience;
 
             $exp                 = $record->experience ?? null;
@@ -183,7 +190,7 @@ class UsersListController extends Controller
             }
 
             $dataArray[] = $formattedExperience;
-            $dataArray[] = $record->city;
+            $dataArray[] = $record->city ?? '-';
 
             $status = $record->status == 1
             ? '<div class="d-flex"><span onclick="changeStatus(' . $record->id . ');" class="badge bg-success text-uppercase"  style="cursor: pointer;">Active</span></div>'
@@ -309,7 +316,7 @@ class UsersListController extends Controller
         // dd($decryptedId);
 
         $user = UserProfile::findOrFail($decryptedId);
-        return view('admin.Users.EditUser', compact('user','decryptedId'));
+        return view('admin.Users.EditUser', compact('user', 'decryptedId'));
     }
 
     public function UpdateUser(Request $request)
@@ -418,7 +425,7 @@ class UsersListController extends Controller
         //     }
         // }
 
-        return view('admin.Users.UsersDetails', compact('user','decryptedId'));
+        return view('admin.Users.UsersDetails', compact('user', 'decryptedId'));
     }
 
     public function UsersExportExcel($id)
@@ -633,8 +640,12 @@ class UsersListController extends Controller
             $dataArray[] = ucfirst($record->user->name) . ' ' . $record->user->lname;
 
             $dataArray[] = $record->user->email;
-            $dataArray[] = $record->user->phone;
-            $dataArray[] = '<img src="' . asset($record->user->logo) . '" alt="Logo" style="height: 50px; width: 50px; border-radius:50%; object-fit: cover; cursor: pointer;" onclick="openImageModal(\'' . asset($record->logo) . '\')">';
+            $dataArray[] = $record->user->phone ?? '-';
+
+            $logoPath = $record->logo ? asset($record->logo) : asset('default/logo.png');
+
+            $dataArray[] = '<img src="' . asset($record->user->logo) . '" alt="Logo" style="height: 50px; width: 50px; border-radius:50%; object-fit: cover; cursor: pointer;" onclick="openImageModal(\'' . asset($record->user->logo) . '\')"
+    onerror="this.onerror=null; this.src=\'' . asset('user/assets/img/profile/default.png') . '\';">';
 
             // $status = $record->status == 1
             // ? '<div class="d-flex"><span onclick="changeStatus(' . $record->user->id . ');" class="badge bg-success text-uppercase"  style="cursor: pointer;">Active</span></div>'
@@ -809,15 +820,14 @@ class UsersListController extends Controller
                 return response()->json(['status_code' => 0, 'message' => 'Failed to shortlist candidate.']);
             }
 
-            $user = UserProfile::where('id',$decryptedId)->first();
+            $user = UserProfile::where('id', $decryptedId)->first();
             $job  = JobPost::find($DecJob_Id);
 
             $AppliedJob = JobPost::where('id', $DecJob_Id)->select('title')->first();
-            
-            if ($user && $AppliedJob) {
-                $user->notify(new CandidateShortListNotify($AppliedJob,));
-            }
 
+            if ($user && $AppliedJob) {
+                $user->notify(new CandidateShortListNotify($AppliedJob, ));
+            }
 
             if (! $user || ! $job) {
                 DB::rollBack();
@@ -880,7 +890,7 @@ class UsersListController extends Controller
                 return response()->json(['status_code' => 0, 'message' => 'Failed to reject candidate.']);
             }
 
-            $user = UserProfile::where('id',$decryptedId)->first();
+            $user = UserProfile::where('id', $decryptedId)->first();
             $job  = JobPost::find($DecJob_Id);
 
             $AppliedJob = JobPost::where('id', $DecJob_Id)->select('title')->first();
@@ -950,16 +960,14 @@ class UsersListController extends Controller
                 return response()->json(['status_code' => 0, 'message' => 'Failed to hire candidate.']);
             }
 
-            $user = UserProfile::where('id',$decryptedId)->first();
+            $user = UserProfile::where('id', $decryptedId)->first();
             $job  = JobPost::find($DecJob_Id);
 
             $AppliedJob = JobPost::where('id', $DecJob_Id)->select('title')->first();
 
-                    
             if ($user && $AppliedJob) {
-                $user->notify(new CandidateHireNotify($AppliedJob,));
+                $user->notify(new CandidateHireNotify($AppliedJob, ));
             }
-
 
             if (! $user || ! $job) {
                 DB::rollBack();
