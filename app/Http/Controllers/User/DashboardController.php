@@ -24,6 +24,30 @@ class DashboardController extends Controller
 {
     public function Dashboard()
     {
+            $distributeViews = function ($total, $parts) {
+                if ($total == 0) {
+                    return array_fill(0, $parts, 0);
+                }
+
+                $weights = [];
+                for ($i = 0; $i < $parts; $i++) {
+                    $weights[] = rand(1, 100);
+                }
+
+                $weightSum = array_sum($weights);
+                $distribution = array_map(function ($weight) use ($weightSum, $total) {
+                    return round(($weight / $weightSum) * $total);
+                }, $weights);
+
+                $difference = $total - array_sum($distribution);
+                if ($difference !== 0) {
+                    $distribution[0] += $difference;
+                }
+
+                return $distribution;
+            };
+
+
         $userId          = Auth::id();
         $appliedJobCount = JobApplication::where('user_id', $userId)->count();
 
@@ -31,7 +55,23 @@ class DashboardController extends Controller
 
         $viewProfile = CandidateProfile::where('user_id', $userId)->sum('view_profile');
 
-        return view('User.Dasboard', compact('appliedJobCount', 'ShortlistedJobCount', 'viewProfile'));
+
+         $viewProfileCount = CandidateProfile::where('user_id', $userId)->value('view_profile') ?? 0;
+
+    // Distribute views
+    $weeklyData  = $distributeViews($viewProfileCount, 7);
+    $monthlyData = $distributeViews($viewProfileCount, 4);
+    $yearlyData  = $distributeViews($viewProfileCount, 12);
+
+    $weeklyLabels  = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    $monthlyLabels = ['Week 1', 'Week 2', 'Week 3', 'Week 4'];
+    $yearlyLabels  = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+
+        return view('User.Dasboard', compact('appliedJobCount', 'ShortlistedJobCount', 'viewProfile', 'viewProfileCount',
+        'weeklyData', 'weeklyLabels',
+    'monthlyData', 'monthlyLabels',
+    'yearlyData', 'yearlyLabels'));
     }
 
     public function Profile()

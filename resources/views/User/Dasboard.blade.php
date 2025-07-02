@@ -69,13 +69,13 @@
             </div>
             <div class="tab-content" id="myTabContent" role="tablist">
                 <div class="tab-pane fade show active" id="weakly" role="tabpanel">
-                    <div id="spline__chart__candidate"></div>
+                    <div id="chart-weekly"></div>
                 </div>
                 <div class="tab-pane fade" id="mothly" role="tabpanel">
-                    <div id="spline__chart__candidate__monthly"></div>
+                    <div id="chart-monthly"></div>
                 </div>
                 <div class="tab-pane fade" id="yearly" role="tabpanel">
-                    <div id="spline__chart__candidate__yearly"></div>
+                    <div id="chart-yearly"></div>
                 </div>
             </div>
         </div>
@@ -243,8 +243,42 @@
 @endsection
 @section('script')
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-    </script>
+  <script>
+    const weeklyLabels = @json($weeklyLabels);
+    const weeklyData   = @json($weeklyData);
+    const monthlyLabels = @json($monthlyLabels);
+    const monthlyData   = @json($monthlyData);
+    const yearlyLabels = @json($yearlyLabels);
+    const yearlyData   = @json($yearlyData);
+
+    function renderChart(elementId, labels, data) {
+        var options = {
+            chart: {
+                type: 'line',
+                height: 250,
+                toolbar: { show: false }
+            },
+            series: [{
+                name: 'Profile Views',
+                data: data
+            }],
+            xaxis: {
+                categories: labels
+            },
+            colors: ['#3b82f6'],
+            stroke: {
+                curve: 'smooth',
+                width: 2
+            }
+        };
+
+        new ApexCharts(document.querySelector(`#${elementId}`), options).render();
+    }
+
+    renderChart('chart-weekly', weeklyLabels, weeklyData);
+    renderChart('chart-monthly', monthlyLabels, monthlyData);
+    renderChart('chart-yearly', yearlyLabels, yearlyData);
+</script>
 
 
 @endsection 
