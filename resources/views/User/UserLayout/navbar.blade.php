@@ -105,10 +105,10 @@
                                             </ul>
                                         </li> --}}
 
-                                            <li class="navigation__menu--item has-child">
+                                           {{-- <li class="navigation__menu--item has-child">
                                                 <a href="{{ route('User.Dashboard') }}"
                                                     class="navigation__menu--item__link">Candidates</a>
-                                                {{-- <ul class="submenu sub__style" role="menu">
+                                                 <ul class="submenu sub__style" role="menu">
                                                     <li role="menuitem" class="has-child has-arrow">
                                                         <a href="candidate-1.html">Candidate Style</a>
                                                         <ul class="sub__style" role="menu">
@@ -127,8 +127,8 @@
                                                         </ul>
                                                     </li>
                                                     <li role="menuitem"><a href="candidate-dashboard.html">Candidate Dashboard</a></li>
-                                                </ul> --}}
-                                            </li>
+                                                </ul> 
+                                            </li>--}}
 
                                             <li class="navigation__menu--item has-child has-arrow">
                                                 <a href="#" class="navigation__menu--item__link">Pages</a>
@@ -225,7 +225,7 @@
                             @php
                                 $user = Auth::user();
                             @endphp
-                            @if (empty($user) || $user->user_type != '0')
+                            {{-- @if (empty($user) || $user->user_type != '0')
                                 <div class="header__right__btn d-flex gap-3">
                                     <a href="{{ route('User.login') }}"
                                         class="small__btn d-none d-sm-flex no__fill__btn border-6 font-xs"
@@ -234,13 +234,13 @@
                                         data-bs-target="#offcanvas" aria-controls="offcanvas"><i
                                             class="fa-sharp fa-regular fa-bars"></i></button>
                                 </div>
-                            @else
+                            @else --}}
                                 <div class="header__right__btn d-flex align-items-center gap-3">
                                     <!-- User Dashboard Button -->
                                     <a href="{{ route('User.Dashboard') }}"
                                         class="btn btn-outline-primary rounded-pill px-4 py-2 d-none d-sm-flex align-items-center shadow-sm fw-semibold"
                                         aria-label="Login Button">
-                                        <i class="fa-solid fa-gauge-high me-2"></i> Go To User Dashboard
+                                        <i class="fa-solid fa-gauge-high me-2"></i>Dashboard
                                     </a>
 
                                     <!-- Hamburger Menu Button -->
@@ -250,7 +250,7 @@
                                         <i class="fa-sharp fa-regular fa-bars fs-5 text-white"></i>
                                     </button>
                                 </div>
-                            @endif
+                            {{-- @endif --}}
                         </div>
                     </div>
                 </div>
