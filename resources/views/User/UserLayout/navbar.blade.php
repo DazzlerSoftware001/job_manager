@@ -130,9 +130,9 @@
                                                 </ul> 
                                             </li>--}}
 
-                                            <li class="navigation__menu--item has-child has-arrow">
-                                                <a href="#" class="navigation__menu--item__link">Pages</a>
-                                                <ul class="submenu sub__style" role="menu">
+                                            <li class="navigation__menu--item has-child">
+                                                <a href="{{ route('User.About') }}" class="navigation__menu--item__link">About</a>
+                                                {{-- <ul class="submenu sub__style" role="menu">
                                                     <li role="menuitem" class="has-child has-arrow">
                                                         <a href="about.html">Blog</a>
                                                         <ul class="sub__style" role="menu">
@@ -153,16 +153,16 @@
                                                     </li>
                                                     <li role="menuitem"><a href="privacy.html">Privacy Policy</a></li>
                                                     <li role="menuitem"><a href="pricing.html">Pricing</a></li>
-                                                </ul>
+                                                </ul> --}}
                                             </li>
 
-                                            <li class="navigation__menu--item has-child has-arrow">
+                                            <li class="navigation__menu--item has-child">
                                                 <a href="{{ route('User.Contact') }}"
                                                     class="navigation__menu--item__link">Contact</a>
-                                                <ul class="submenu sub__style" role="menu">
+                                                {{-- <ul class="submenu sub__style" role="menu">
                                                     <li role="menuitem"><a href="contact-1.html">Co</a></li>
                                                     <li role="menuitem"><a href="contact-2.html">Contact Two</a></li>
-                                                </ul>
+                                                </ul> --}}
                                             </li>
 
                                         </ul>
