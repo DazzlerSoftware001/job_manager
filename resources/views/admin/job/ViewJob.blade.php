@@ -135,8 +135,8 @@
                             </div>
                             <div class="col-md-4 text-center">
                                 <p class="info-box"><strong>Company Logo:</strong>
-                                <img id="imagePreview" src="{{ asset($job->com_logo) }}" 
-                                     onerror="this.onerror=null; this.src='{{ url('recruiter/logo/default.png') }}';"
+                                <img id="imagePreview" src="{{ url($job->com_logo) }}" 
+                                     onerror="this.onerror=null; this.src='{{ url('company/logo/default.png') }}';"
                                      alt="Company Logo" class="company-logo"></p>
                             </div>
                             <div class="col-md-8 text-center">
