@@ -60,7 +60,7 @@
                         <h1 class="breadcrumb-title h3 mb-3">Job List</h1>
                         <nav>
                             <ul class="breadcrumb m-0 lh-1">
-                                <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                                <li class="breadcrumb-item"><a href="{{ route('User.Home') }}">Home</a></li>
                                 <li class="breadcrumb-item active" aria-current="page">Job List</li>
                             </ul>
                         </nav>
@@ -276,10 +276,6 @@
                                 <!-- single item -->
                                 @foreach ($jobs as $data)
                                     <div class="col-lg-12 position-relative style__gradient rts__job__card__big">
-                                        {{-- <button type="button" class="bookmark__btn"
-                                            onclick="handleBookmarkClick(event, {{ $data->id }})">
-                                            <i class="rt-bookmark"></i>
-                                        </button> --}}
                                         @php
                                             $isSaved = in_array($data->id, $savedJobs ?? []);
                                         @endphp
@@ -293,10 +289,6 @@
 
 
                                         <div class="position-absolute top-0 end-0 m-2 z-100">
-                                            {{-- <button type="button" class="bookmark__btn"
-                                                onclick="handleBookmarkClick(event)">
-                                                <i class="rt-bookmark"></i>
-                                            </button> --}}
 
 
                                         </div>
@@ -374,33 +366,51 @@
 
 
 
-                    <div class="rts__pagination mx-auto pt-60 max-content">
-                        <ul class="d-flex gap-2">
-                            {{-- Previous Page Link --}}
-                            @if ($jobs->onFirstPage())
-                                <li><span class="inactive"><i class="rt-chevron-left"></i></span></li>
-                            @else
-                                <li><a href="{{ $jobs->previousPageUrl() }}"><i class="rt-chevron-left"></i></a></li>
-                            @endif
+                    @php
+    $current = $jobs->currentPage();
+    $last = $jobs->lastPage();
+@endphp
 
-                            {{-- Pagination Numbers --}}
-                            @for ($page = 1; $page <= $jobs->lastPage(); $page++)
-                                <li>
-                                    <a href="{{ $jobs->url($page) }}"
-                                        class="{{ $page == $jobs->currentPage() ? 'active' : '' }}">
-                                        {{ $page }}
-                                    </a>
-                                </li>
-                            @endfor
+@if ($jobs->total() > $jobs->perPage())
+    <div class="rts__pagination mx-auto pt-60 max-content">
+        <ul class="d-flex gap-2">
 
-                            {{-- Next Page Link --}}
-                            @if ($jobs->hasMorePages())
-                                <li><a href="{{ $jobs->nextPageUrl() }}"><i class="rt-chevron-right"></i></a></li>
-                            @else
-                                <li><span class="inactive"><i class="rt-chevron-right"></i></span></li>
-                            @endif
-                        </ul>
-                    </div>
+            {{-- Previous Page --}}
+            @if ($jobs->onFirstPage())
+                <li><span class="inactive"><i class="rt-chevron-left"></i></span></li>
+            @else
+                <li><a href="{{ $jobs->previousPageUrl() }}"><i class="rt-chevron-left"></i></a></li>
+            @endif
+
+            {{-- Always show page 1 --}}
+            <li><a href="{{ $jobs->url(1) }}" class="{{ $current == 1 ? 'active' : '' }}">1</a></li>
+
+            {{-- Middle Pages --}}
+            @for ($i = max(2, $current - 1); $i <= min($last - 1, $current + 1); $i++)
+                <li><a href="{{ $jobs->url($i) }}" class="{{ $i == $current ? 'active' : '' }}">{{ $i }}</a></li>
+            @endfor
+
+            {{-- Right Ellipsis --}}
+            @if ($current < $last - 3)
+                <li><span class="inactive">...</span></li>
+            @endif
+
+            {{-- Always show last page if more than 1 --}}
+            @if ($last > 1)
+                <li><a href="{{ $jobs->url($last) }}" class="{{ $current == $last ? 'active' : '' }}">{{ $last }}</a></li>
+            @endif
+
+            {{-- Next Page --}}
+            @if ($jobs->hasMorePages())
+                <li><a href="{{ $jobs->nextPageUrl() }}"><i class="rt-chevron-right"></i></a></li>
+            @else
+                <li><span class="inactive"><i class="rt-chevron-right"></i></span></li>
+            @endif
+
+        </ul>
+    </div>
+@endif
+
 
 
                 </div>
@@ -524,17 +534,7 @@
         });
     </script>
 
-
-
-    <script>
-        function handleBookmarkClick(event) {
-            event.preventDefault(); // Prevent the anchor tag's default behavior
-            event.stopPropagation(); // Stop it from bubbling to the stretched link
-            // Optionally handle bookmark logic here (like AJAX call or toggle class)
-        }
-    </script>
-
-    <script>
+    {{-- <script>
         function handleBookmarkClick(event, jobId, el) {
             event.preventDefault();
 
@@ -598,5 +598,91 @@
                     }).showToast();
                 });
         }
+    </script> --}}
+
+    <script>
+        function handleBookmarkClick(event, jobId, el) {
+            event.preventDefault();
+
+            let isSaved = el.getAttribute('data-saved') === 'true';
+            let url = isSaved ? '{{ route('User.RemoveSavedJob') }}' : '{{ route('User.SaveJob') }}';
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ job_id: jobId })
+            })
+            .then(async res => {
+                const result = await res.json();
+
+                // Handle redirect if unauthenticated
+                if (res.status === 401 && result.redirect_url) {
+                    window.location.href = result.redirect_url;
+                    return;
+                }
+
+                let className = "bg-danger";
+
+                if (result.status_code === 1) {
+                    className = "bg-success";
+
+                    const icon = el.querySelector('i');
+                    if (isSaved) {
+                        icon.classList.remove('filled', 'bg-grey', 'text-black');
+                        el.setAttribute('data-saved', 'false');
+                    } else {
+                        icon.classList.add('filled', 'bg-grey', 'text-black');
+                        el.setAttribute('data-saved', 'true');
+                    }
+
+                    // Optional reload
+                    setTimeout(() => {
+                        if (result.redirect_url) {
+                            window.location.href = result.redirect_url;
+                        } else {
+                            location.reload();
+                        }
+                    }, 750);
+                } else if (result.status_code === 2) {
+                    className = "bg-warning";
+                }
+
+                Toastify({
+                    text: result.message || "Something went wrong.",
+                    duration: 3000,
+                    gravity: "top",
+                    position: "right",
+                    className: className
+                }).showToast();
+            })
+            .catch(async error => {
+                // If error is 401 with JSON, redirect
+                try {
+                    const res = error instanceof Response ? error : null;
+                    if (res && res.status === 401) {
+                        const result = await res.json();
+                        if (result.redirect_url) {
+                            window.location.href = result.redirect_url;
+                            return;
+                        }
+                    }
+                } catch (_) {
+                    // fallback
+                }
+
+                Toastify({
+                    text: "Something went wrong!",
+                    duration: 3000,
+                    gravity: "top",
+                    position: "right",
+                    className: "bg-danger"
+                }).showToast();
+            });
+        }
     </script>
+
+
 @endsection

@@ -3,6 +3,12 @@
 
 <!--  index.html   11:17:20 GMT -->
 <head>
+
+    @php
+        use App\Models\GeneralSetting;
+        $title = GeneralSetting::value('site_title');
+        $favicon = GeneralSetting::value('favicon');
+        @endphp
     
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -20,19 +26,18 @@
     <meta name="twitter:title" content="Your Ultimate Job HTML Template">
     <meta name="twitter:description" content="Your Ultimate Job HTML Template">
     <!-- fabicon -->
-    <link rel="shortcut-icon" href="{{url('user/assets/img/favicon-16x16.png')}}" type="image/x-icon">
+    {{-- <link rel="shortcut-icon" href="{{url('user/assets/img/favicon-16x16.png')}}" type="image/x-icon"> --}}
+    <link rel="shortcut-icon" href="{{ url($favicon) }}" type="image/x-icon">
 
 
 
     <link rel="preconnect" href="https://fonts.googleapis.com/">
     <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200..800&amp;display=swap" rel="stylesheet">
-    <link rel="shortcut icon" href="{{url('user/assets/img/favicon.ico')}}" type="image/x-icon">
+    {{-- <link rel="shortcut icon" href="{{url('user/assets/img/favicon.ico')}}" type="image/x-icon"> --}}
+    <link rel="shortcut icon" href="{{url($favicon)}}" type="image/x-icon">
     {{-- <title>careernest - Job Seeker &amp; Job Holder HTML Template</title> --}}
-     @php
-        use App\Models\GeneralSetting;
-        $title = GeneralSetting::value('site_title');
-        @endphp
+     
 
     <title>{{ $title ?? 'CareerNest' }} -  @yield('title')</title>
     <!-- rt icons -->

@@ -30,7 +30,7 @@ class SettingsController extends Controller
         $request->validate([
             'image1' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
             'image2' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
-            'image3' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+            // 'image3' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
         ]);
 
         // Get or create the GeneralSetting record (assuming only one)
@@ -40,7 +40,7 @@ class SettingsController extends Controller
         foreach ([
             'image1' => 'logo',
             'image2' => 'light_logo',
-            'image3' => 'dark_logo',
+            // 'image3' => 'dark_logo',
         ] as $inputName => $dbColumn) {
 
             if ($request->hasFile($inputName)) {
@@ -68,7 +68,7 @@ class SettingsController extends Controller
             'data'        => [
                 'logo'       => $GeneralSetting->logo,
                 'light_logo' => $GeneralSetting->light_logo,
-                'dark_logo'  => $GeneralSetting->dark_logo,
+                // 'dark_logo'  => $GeneralSetting->dark_logo,
             ],
         ]);
     }

@@ -28,7 +28,7 @@
                         @csrf
                         <div class="row" id="info">
                             <!-- Image 1 -->
-                            <div class="col-md-4 my__details">
+                            <div class="col-md-6 my__details">
                                 <div class="info__top d-flex align-items-center justify-content-center">
                                     <div class="author__image me-3">
                                         @if ($GeneralSetting !== null)
@@ -50,7 +50,7 @@
 
 
                             <!-- Image 2 -->
-                            <div class="col-md-4 my__details">
+                            <div class="col-md-6 my__details">
                                 <div class="info__top d-flex align-items-center justify-content-center">
                                     <div class="author__image me-3">
                                         @if ($GeneralSetting !== null)
@@ -70,7 +70,7 @@
                             </div>
 
                             <!-- Image 3 -->
-                            <div class="col-md-4 my__details">
+                            {{-- <div class="col-md-4 my__details">
                                 <div class="info__top d-flex align-items-center justify-content-center">
                                     <div class="author__image me-3">
                                         @if ($GeneralSetting !== null)
@@ -87,7 +87,7 @@
                                         <input type="file" name="image3" id="image3" class="d-none" accept="image/*">
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
                         </div>
 
                         <div class="text-center mt-4">
@@ -241,9 +241,9 @@
                     readURL(this, '#preview2');
                 });
 
-                $('#image3').change(function() {
-                    readURL(this, '#preview3');
-                });
+                // $('#image3').change(function() {
+                //     readURL(this, '#preview3');
+                // });
 
                 // Form submit handler
                 $('#multiImageForm').submit(function(e) {
