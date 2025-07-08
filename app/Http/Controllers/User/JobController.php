@@ -72,13 +72,28 @@ class JobController extends Controller
         return view('User.JobList', compact('jobs', 'location', 'industry', 'DatePost', 'type', 'experience', 'salaryoffer', 'filters', 'savedJobs'));
     }
 
+    // public function saveJob(Request $request)
+    // {
+    //     $userId = Auth::id();
+    //     $jobId  = $request->input('id');
+
+    //     $exists = SaveJob::where('user_id', $userId)->where('job_id', $jobId)->first();
+
+    //     SaveJob::create([
+    //         'user_id' => $userId,
+    //         'job_id'  => $jobId,
+    //     ]);
+
+    //     return response()->json([
+    //         'status_code' => 1,
+    //         'message'     => 'Job saved successfully!',
+    //     ]);
+    // }
+
     public function saveJob(Request $request)
     {
-        dd($request->all());
         $userId = Auth::id();
-        $jobId  = $request->input('job_id');
-
-        $exists = SaveJob::where('user_id', $userId)->where('job_id', $jobId)->first();
+        $jobId  = $request->input('id');
 
         SaveJob::create([
             'user_id' => $userId,
@@ -94,19 +109,19 @@ class JobController extends Controller
     public function removeSavedJob(Request $request)
     {
         $userId = Auth::id();
-        $jobId  = $request->input('job_id');
+        $jobId  = $request->input('id');
 
         $deleted = SaveJob::where('user_id', $userId)->where('job_id', $jobId)->delete();
 
         if ($deleted) {
             return response()->json([
                 'status_code' => 1,
-                'message'     => 'Job removed successfully.',
+                'message'     => 'Job Unsaved successfully.',
             ]);
         } else {
             return response()->json([
                 'status_code' => 2,
-                'message'     => 'Job not found or already removed.',
+                'message'     => 'Job not found or already Unsaved.',
             ]);
         }
     }

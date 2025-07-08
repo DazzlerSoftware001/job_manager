@@ -5,9 +5,15 @@
             <div class="rts__menu__background mw-100 px-20 mobile__padding rounded-0">
                 <div class="row">
                     <div class="d-flex align-items-center justify-content-between">
+                        @php
+                            use App\Models\GeneralSetting;
+                            $footerLogo = GeneralSetting::value('logo');
+                        @endphp
                         <div class="rts__logo">
                             <a href="index.html">
-                                <img class="logo__image" src="{{ url('user/assets/img/logo/header__one.png') }}"
+                                {{-- <img class="logo__image" src="{{ url('user/assets/img/logo/header__one.png') }}"
+                                    width="160" height="40" alt="logo"> --}}
+                                <img class="logo__image" src="{{ asset($footerLogo) }}"
                                     width="160" height="40" alt="logo">
                             </a>
                         </div>

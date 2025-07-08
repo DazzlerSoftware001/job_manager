@@ -281,14 +281,15 @@
                                         @endphp
 
                                         {{-- <button type="button" class="bookmark__btn"
-                                            onclick="handleBookmarkClick(event, {{ $data->id }}, this)"
+                                            onclick="SaveJob( {{ $data->id }} )"
                                             data-saved="{{ $isSaved ? 'true' : 'false' }}"
                                             {{ $isSaved ? 'disabled' : '' }}>
                                             <i class="rt-bookmark {{ $isSaved ? 'filled bg-grey text-black' : '' }}"></i>
                                         </button> --}}
                                         <button type="button" class="bookmark__btn"
-                                            onclick="SaveJob({{ $data->id }})">
-                                            <i class="rt-bookmarkk"></i>
+                                            onclick="SaveJob({{ $data->id }}, this)"
+                                            data-saved="{{ $isSaved ? 'true' : 'false' }}">
+                                            <i class="rt-bookmark {{ $isSaved ? 'filled bg-grey text-black' : '' }}"></i>
                                         </button>
 
 
@@ -544,229 +545,6 @@
     </script>
 
     {{-- <script>
-        function handleBookmarkClick(event, jobId, el) {
-            event.preventDefault();
-
-            let isSaved = el.getAttribute('data-saved') === 'true';
-            let url = isSaved ? '{{ route('User.RemoveSavedJob') }}' : '{{ route('User.SaveJob') }}';
-
-            fetch(url, {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        job_id: jobId
-                    })
-                })
-                .then(res => res.json())
-                .then(result => {
-                    let className = "bg-danger";
-
-                    if (result.status_code === 1) {
-                        className = "bg-success";
-
-                        // Update bookmark icon
-                        const icon = el.querySelector('i');
-                        if (isSaved) {
-                            icon.classList.remove('filled', 'bg-grey', 'text-black');
-                            el.setAttribute('data-saved', 'false');
-                        } else {
-                            icon.classList.add('filled', 'bg-grey', 'text-black');
-                            el.setAttribute('data-saved', 'true');
-                        }
-
-                        // Optional redirect or reload
-                        setTimeout(() => {
-                            if (result.redirect_url) {
-                                window.location.href = result.redirect_url;
-                            } else {
-                                location.reload();
-                            }
-                        }, 750);
-                    } else if (result.status_code === 2) {
-                        className = "bg-warning";
-                    }
-
-                    Toastify({
-                        text: result.message || "Something went wrong.",
-                        duration: 3000,
-                        gravity: "top",
-                        position: "right",
-                        className: className
-                    }).showToast();
-                })
-                .catch(() => {
-                    Toastify({
-                        text: "Something went wrong!",
-                        duration: 3000,
-                        gravity: "top",
-                        position: "right",
-                        className: "bg-danger"
-                    }).showToast();
-                });
-        }
-    </script> --}}
-
-    {{-- <script>
-        function handleBookmarkClick(event, jobId, el) {
-            event.preventDefault();
-
-            let isSaved = el.getAttribute('data-saved') === 'true';
-            let url = isSaved ? '{{ route('User.RemoveSavedJob') }}' : '{{ route('User.SaveJob') }}';
-
-            fetch(url, {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ job_id: jobId })
-            })
-            .then(async res => {
-                const result = await res.json();
-
-                // Handle redirect if unauthenticated
-                if (res.status === 401 && result.redirect_url) {
-                    window.location.href = result.redirect_url;
-                    return;
-                }
-
-                let className = "bg-danger";
-
-                if (result.status_code === 1) {
-                    className = "bg-success";
-
-                    const icon = el.querySelector('i');
-                    if (isSaved) {
-                        icon.classList.remove('filled', 'bg-grey', 'text-black');
-                        el.setAttribute('data-saved', 'false');
-                    } else {
-                        icon.classList.add('filled', 'bg-grey', 'text-black');
-                        el.setAttribute('data-saved', 'true');
-                    }
-
-                    // Optional reload
-                    setTimeout(() => {
-                        if (result.redirect_url) {
-                            window.location.href = result.redirect_url;
-                        } else {
-                            location.reload();
-                        }
-                    }, 750);
-                } else if (result.status_code === 2) {
-                    className = "bg-warning";
-                }
-
-                Toastify({
-                    text: result.message || "Something went wrong.",
-                    duration: 3000,
-                    gravity: "top",
-                    position: "right",
-                    className: className
-                }).showToast();
-            })
-            .catch(async error => {
-                // If error is 401 with JSON, redirect
-                try {
-                    const res = error instanceof Response ? error : null;
-                    if (res && res.status === 401) {
-                        const result = await res.json();
-                        if (result.redirect_url) {
-                            window.location.href = result.redirect_url;
-                            return;
-                        }
-                    }
-                } catch (_) {
-                    // fallback
-                }
-
-                Toastify({
-                    text: "Something went wrong!",
-                    duration: 3000,
-                    gravity: "top",
-                    position: "right",
-                    className: "bg-danger"
-                }).showToast();
-            });
-        }
-    </script> --}}
-
-    {{-- <script>
-        function handleBookmarkClick(event, jobId, el) {
-            event.preventDefault();
-
-            var url = "{{ route('User.SaveJob') }}"; // Your SaveJob route
-
-            $.ajax({
-                url: url,
-                type: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                data: {
-                    job_id: jobId
-                },
-                dataType: 'json',
-                success: function(result) {
-                    if (result.status_code === 1) {
-                        Toastify({
-                            text: result.message,
-                            duration: 3000,
-                            gravity: "top",
-                            position: "right",
-                            style: {
-                                background: "green",
-                                color: "white"
-                            }
-                        }).showToast();
-
-                        // Update the button UI
-                        el.setAttribute('data-saved', 'true');
-                        el.setAttribute('disabled', 'disabled');
-                        el.querySelector('i').classList.add('filled', 'bg-grey', 'text-black');
-
-                    } else if (result.status_code === 2) {
-                        Toastify({
-                            text: result.message,
-                            duration: 3000,
-                            gravity: "top",
-                            position: "right",
-                            style: {
-                                background: "#c7ac14",
-                                color: "white"
-                            }
-                        }).showToast();
-                    } else {
-                        Toastify({
-                            text: result.message,
-                            duration: 3000,
-                            gravity: "top",
-                            position: "right",
-                            style: {
-                                background: "red",
-                                color: "white"
-                            }
-                        }).showToast();
-                    }
-                },
-                error: function(xhr, status, error) {
-                    Toastify({
-                        text: 'An error occurred. Please try again.',
-                        duration: 3000,
-                        gravity: "top",
-                        position: "right",
-                        style: {
-                            background: "red",
-                            color: "white"
-                        }
-                    }).showToast();
-                }
-            });
-        }
-    </script> --}}
-    <script>
         function SaveJob(id) {
             $.ajax({
                 type: 'GET',
@@ -796,5 +574,55 @@
             });
         }
 
+    </script> --}}
+
+    <script>
+        function SaveJob(id, el) {
+            const isSaved = el.getAttribute('data-saved') === 'true';
+            const url = isSaved ?
+                "{{ route('User.RemoveSavedJob') }}" :
+                "{{ route('User.SaveJob') }}";
+
+            $.ajax({
+                type: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                url: url,
+                data: {
+                    id: id
+                },
+                dataType: 'json',
+                success: function(response) {
+                    Toastify({
+                        text: response.message,
+                        duration: 2000,
+                        gravity: "top",
+                        position: "right",
+                        backgroundColor: response.status_code == 1 ? "#28a745" : "#dc3545",
+                    }).showToast();
+
+                    if (response.status_code == 1) {
+
+                        setTimeout(() => {
+                            location.reload();
+                        }, 2000);
+                    }
+                },
+                error: function(xhr) {
+                    if (xhr.status === 401 && xhr.responseJSON?.redirect) {
+                        window.location.href = xhr.responseJSON.redirect;
+                    } else {
+                        Toastify({
+                            text: "Something went wrong.",
+                            duration: 3000,
+                            gravity: "top",
+                            position: "right",
+                            backgroundColor: "#dc3545",
+                        }).showToast();
+                    }
+                }
+            });
+        }
     </script>
 @endsection

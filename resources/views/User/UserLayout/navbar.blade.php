@@ -18,10 +18,16 @@
             <div class="rts__menu__background">
                 <div class="row">
                     <div class="d-flex align-items-center justify-content-between">
+                        @php
+                            use App\Models\GeneralSetting;
+                            $footerLogo = GeneralSetting::value('logo');
+                        @endphp
                         <div class="rts__logo">
                             <a href="{{ route('User.Home') }}">
-                                <img class="logo__image" src="{{ url('user/assets/img/logo/header__one.png') }}"
+                                <img class="logo__image" src="{{ asset($footerLogo) }}"
                                     width="160" height="40" alt="logo">
+                                {{-- <img class="logo__image" src="{{ url('user/assets/img/logo/header__one.png') }}"
+                                    width="160" height="40" alt="logo"> --}}
                             </a>
                         </div>
                         <div class="rts__menu d-flex gap-5 gap-lg-4 gap-xl-5 align-items-center">

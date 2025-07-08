@@ -3,7 +3,11 @@
 
 <!--  index.html   11:17:20 GMT -->
 <head>
-    
+    @php
+        use App\Models\GeneralSetting;
+        $title = GeneralSetting::value('site_title');
+        $favicon = GeneralSetting::value('favicon');
+    @endphp
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -29,10 +33,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200..800&amp;display=swap" rel="stylesheet">
     {{-- <link rel="shortcut icon" href="{{url('user/assets/img/favicon.ico')}}" type="image/x-icon"> --}}
     {{-- <title>careernest - Job Seeker &amp; Job Holder HTML Template</title> --}}
-     @php
-        use App\Models\GeneralSetting;
-        $title = GeneralSetting::value('site_title');
-        @endphp
+    <link rel="shortcut icon" href="{{url($favicon)}}" type="image/x-icon">
+    
 
     <title>{{ $title ?? 'CareerNest' }} -  @yield('title')</title>
     <!-- rt icons -->
