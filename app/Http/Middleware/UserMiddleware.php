@@ -20,16 +20,7 @@ class UserMiddleware
 
             return $next($request);
         }
-
-         // Check if AJAX or expects JSON
-        if ($request->expectsJson()) {
-            return response()->json([
-                'status_code' => 0,
-                'message' => 'You must be logged in to perform this action.',
-                'redirect_url' => route('User.login')
-            ], 401);
-        }
-
+        
         return redirect()->route('User.login');
     }
 }

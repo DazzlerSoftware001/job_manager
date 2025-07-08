@@ -48,7 +48,7 @@ class JobController extends Controller
         }
         
 
-        $jobs = $query->paginate(1)->withQueryString(); // Adjust pagination as needed
+        $jobs = $query->paginate(5)->withQueryString(); // Adjust pagination as needed
                                                         // $JobCategory = JobCategory::all();
         $location = JobPost::select('location')->where('status', 1)->where('admin_verify', 1)->whereDate('jobexpiry', '>=', $today)->distinct()->get();
         $industry = JobPost::select('industry')->where('status', 1)->where('admin_verify', 1)->whereDate('jobexpiry', '>=', $today)->distinct()->get();
@@ -74,6 +74,7 @@ class JobController extends Controller
 
     public function saveJob(Request $request)
     {
+        dd($request->all());
         $userId = Auth::id();
         $jobId  = $request->input('job_id');
 

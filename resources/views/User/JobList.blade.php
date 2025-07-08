@@ -280,10 +280,15 @@
                                             $isSaved = in_array($data->id, $savedJobs ?? []);
                                         @endphp
 
-                                        <button type="button" class="bookmark__btn"
+                                        {{-- <button type="button" class="bookmark__btn"
                                             onclick="handleBookmarkClick(event, {{ $data->id }}, this)"
-                                            data-saved="{{ $isSaved ? 'true' : 'false' }}">
+                                            data-saved="{{ $isSaved ? 'true' : 'false' }}"
+                                            {{ $isSaved ? 'disabled' : '' }}>
                                             <i class="rt-bookmark {{ $isSaved ? 'filled bg-grey text-black' : '' }}"></i>
+                                        </button> --}}
+                                        <button type="button" class="bookmark__btn"
+                                            onclick="SaveJob({{ $data->id }})">
+                                            <i class="rt-bookmarkk"></i>
                                         </button>
 
 
@@ -367,49 +372,51 @@
 
 
                     @php
-    $current = $jobs->currentPage();
-    $last = $jobs->lastPage();
-@endphp
+                        $current = $jobs->currentPage();
+                        $last = $jobs->lastPage();
+                    @endphp
 
-@if ($jobs->total() > $jobs->perPage())
-    <div class="rts__pagination mx-auto pt-60 max-content">
-        <ul class="d-flex gap-2">
+                    @if ($jobs->total() > $jobs->perPage())
+                        <div class="rts__pagination mx-auto pt-60 max-content">
+                            <ul class="d-flex gap-2">
 
-            {{-- Previous Page --}}
-            @if ($jobs->onFirstPage())
-                <li><span class="inactive"><i class="rt-chevron-left"></i></span></li>
-            @else
-                <li><a href="{{ $jobs->previousPageUrl() }}"><i class="rt-chevron-left"></i></a></li>
-            @endif
+                                {{-- Previous Page --}}
+                                @if ($jobs->onFirstPage())
+                                    <li><span class="inactive"><i class="rt-chevron-left"></i></span></li>
+                                @else
+                                    <li><a href="{{ $jobs->previousPageUrl() }}"><i class="rt-chevron-left"></i></a></li>
+                                @endif
 
-            {{-- Always show page 1 --}}
-            <li><a href="{{ $jobs->url(1) }}" class="{{ $current == 1 ? 'active' : '' }}">1</a></li>
+                                {{-- Always show page 1 --}}
+                                <li><a href="{{ $jobs->url(1) }}" class="{{ $current == 1 ? 'active' : '' }}">1</a></li>
 
-            {{-- Middle Pages --}}
-            @for ($i = max(2, $current - 1); $i <= min($last - 1, $current + 1); $i++)
-                <li><a href="{{ $jobs->url($i) }}" class="{{ $i == $current ? 'active' : '' }}">{{ $i }}</a></li>
-            @endfor
+                                {{-- Middle Pages --}}
+                                @for ($i = max(2, $current - 1); $i <= min($last - 1, $current + 1); $i++)
+                                    <li><a href="{{ $jobs->url($i) }}"
+                                            class="{{ $i == $current ? 'active' : '' }}">{{ $i }}</a></li>
+                                @endfor
 
-            {{-- Right Ellipsis --}}
-            @if ($current < $last - 3)
-                <li><span class="inactive">...</span></li>
-            @endif
+                                {{-- Right Ellipsis --}}
+                                @if ($current < $last - 3)
+                                    <li><span class="inactive">...</span></li>
+                                @endif
 
-            {{-- Always show last page if more than 1 --}}
-            @if ($last > 1)
-                <li><a href="{{ $jobs->url($last) }}" class="{{ $current == $last ? 'active' : '' }}">{{ $last }}</a></li>
-            @endif
+                                {{-- Always show last page if more than 1 --}}
+                                @if ($last > 1)
+                                    <li><a href="{{ $jobs->url($last) }}"
+                                            class="{{ $current == $last ? 'active' : '' }}">{{ $last }}</a></li>
+                                @endif
 
-            {{-- Next Page --}}
-            @if ($jobs->hasMorePages())
-                <li><a href="{{ $jobs->nextPageUrl() }}"><i class="rt-chevron-right"></i></a></li>
-            @else
-                <li><span class="inactive"><i class="rt-chevron-right"></i></span></li>
-            @endif
+                                {{-- Next Page --}}
+                                @if ($jobs->hasMorePages())
+                                    <li><a href="{{ $jobs->nextPageUrl() }}"><i class="rt-chevron-right"></i></a></li>
+                                @else
+                                    <li><span class="inactive"><i class="rt-chevron-right"></i></span></li>
+                                @endif
 
-        </ul>
-    </div>
-@endif
+                            </ul>
+                        </div>
+                    @endif
 
 
 
@@ -527,7 +534,7 @@
         });
     </script>
 
-{{-- for Submit Experience --}}
+    {{-- for Submit Experience --}}
     <script>
         document.querySelectorAll('.experience-select input[type="checkbox"]').forEach(function(checkbox) {
             checkbox.addEventListener('change', function() {
@@ -602,7 +609,7 @@
         }
     </script> --}}
 
-    <script>
+    {{-- <script>
         function handleBookmarkClick(event, jobId, el) {
             event.preventDefault();
 
@@ -684,7 +691,104 @@
                 }).showToast();
             });
         }
+    </script> --}}
+
+    {{-- <script>
+        function handleBookmarkClick(event, jobId, el) {
+            event.preventDefault();
+
+            var url = "{{ route('User.SaveJob') }}"; // Your SaveJob route
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: {
+                    job_id: jobId
+                },
+                dataType: 'json',
+                success: function(result) {
+                    if (result.status_code === 1) {
+                        Toastify({
+                            text: result.message,
+                            duration: 3000,
+                            gravity: "top",
+                            position: "right",
+                            style: {
+                                background: "green",
+                                color: "white"
+                            }
+                        }).showToast();
+
+                        // Update the button UI
+                        el.setAttribute('data-saved', 'true');
+                        el.setAttribute('disabled', 'disabled');
+                        el.querySelector('i').classList.add('filled', 'bg-grey', 'text-black');
+
+                    } else if (result.status_code === 2) {
+                        Toastify({
+                            text: result.message,
+                            duration: 3000,
+                            gravity: "top",
+                            position: "right",
+                            style: {
+                                background: "#c7ac14",
+                                color: "white"
+                            }
+                        }).showToast();
+                    } else {
+                        Toastify({
+                            text: result.message,
+                            duration: 3000,
+                            gravity: "top",
+                            position: "right",
+                            style: {
+                                background: "red",
+                                color: "white"
+                            }
+                        }).showToast();
+                    }
+                },
+                error: function(xhr, status, error) {
+                    Toastify({
+                        text: 'An error occurred. Please try again.',
+                        duration: 3000,
+                        gravity: "top",
+                        position: "right",
+                        style: {
+                            background: "red",
+                            color: "white"
+                        }
+                    }).showToast();
+                }
+            });
+        }
+    </script> --}}
+    <script>
+        function SaveJob(id) {
+            $.ajax({
+                type: 'GET',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                url: "{{ route('User.SaveJob') }}",
+                data: {
+                    id: id
+                },
+                dataType: 'json',
+                success: function(response) {
+                    if (response.status_code == 1) {
+                        alert('Job saved successfully.');
+                    } else {
+                        alert('Error: ' + response.message);
+                    }
+                },
+                error: function() {
+                    alert('An error occurred while saving the job.');
+                }
+            });
+        }
     </script>
-
-
 @endsection
