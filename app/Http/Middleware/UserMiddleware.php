@@ -20,6 +20,14 @@ class UserMiddleware
 
             return $next($request);
         }
+
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'status_code' => 0,
+                'message' => 'Unauthenticated',
+                'redirect' => route('User.login')
+            ], 401);
+        }
         
         return redirect()->route('User.login');
     }

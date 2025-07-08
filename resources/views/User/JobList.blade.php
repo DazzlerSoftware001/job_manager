@@ -785,10 +785,16 @@
                         alert('Error: ' + response.message);
                     }
                 },
-                error: function() {
-                    alert('An error occurred while saving the job.');
+                error: function(xhr) {
+                    if (xhr.status === 401 && xhr.responseJSON?.redirect) {
+                        // Redirect to login page manually
+                        window.location.href = xhr.responseJSON.redirect;
+                    } else {
+                        alert('An error occurred while saving the job.');
+                    }
                 }
             });
         }
+
     </script>
 @endsection
