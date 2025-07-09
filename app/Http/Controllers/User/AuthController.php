@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\SignUp;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -19,102 +20,6 @@ class AuthController extends Controller
     {
         return view('User.Auth.register');
     }
-
-    // public function RegisterUser(Request $request)
-    // {
-    //     // Define validation rules
-    //     $rules = [
-    //         'sname'    => 'required|string|max:100',
-    //         'lname'    => 'required|string|max:100',
-    //         'email'    => 'required|email|unique:users,email',
-    //         'password' => 'required|min:6',
-    //     ];
-
-    //     // Validate the input
-    //     $validator = Validator::make($request->all(), $rules);
-    //     if ($validator->fails()) {
-    //         return response()->json([
-    //             'status_code' => 2,
-    //             'message'     => $validator->errors()->first(),
-    //         ]);
-    //     }
-
-    //     try {
-    //         // Save the user
-    //         $user               = new UserProfile();
-    //         $user->user_type    = 0;
-    //         $user->user_details = 'User';
-    //         $user->name         = $request->sname;
-    //         $user->lname        = $request->lname;
-    //         $user->email        = $request->email;
-    //         $user->password     = bcrypt($request->password); // Hash the password
-    //         $user->created_at   = now();
-    //         $user->save();
-
-    //         return response()->json([
-    //             'status_code'  => 1,
-    //             'message'      => 'Registration successful',
-    //             'redirect_url' => route('User.login'),
-
-    //         ]);
-    //     } catch (\Exception $e) {
-    //         return response()->json([
-    //             'status_code' => 0,
-    //             'message'     => 'Something went wrong while registering.',
-    //         ]);
-    //     }
-    // }
-
-    // public function RegisterUser(Request $request)
-    // {
-    //     $rules = [
-    //         'sname'    => 'required|string|max:100',
-    //         'lname'    => 'required|string|max:100',
-    //         'email'    => 'required|email|unique:users,email',
-    //         'password' => 'required|min:6|confirmed',
-    //     ];
-
-    //     $validator = Validator::make($request->all(), $rules);
-    //     if ($validator->fails()) {
-    //         return response()->json([
-    //             'status_code' => 2,
-    //             'message'     => $validator->errors()->first(),
-    //         ]);
-    //     }
-
-    //     try {
-    //         $user               = new UserProfile();
-    //         $user->user_type    = 0;
-    //         $user->user_details = 'User';
-    //         $user->name         = $request->sname;
-    //         $user->lname        = $request->lname;
-    //         $user->email        = $request->email;
-    //         $user->password     = bcrypt($request->password);
-    //         $user->created_at   = now();
-
-    //         // Generate OTP
-    //         $otp = rand(100000, 999999);
-
-    //         // Save OTP and expiration time
-    //         $user->otp_email         = $otp;
-    //         $user->email_verified_at = now()->addMinutes(5);
-
-    //         $user->save();
-
-    //         // Send OTP email
-    //         Mail::to($user->email)->send(new VerifyEmail($otp));
-
-    //         return response()->json([
-    //             'status_code' => 1,
-    //             'message'     => 'OTP sent to your email.',
-    //         ]);
-    //     } catch (\Exception $e) {
-    //         return response()->json([
-    //             'status_code' => 0,
-    //             'message'     => 'Something went wrong while registering.',
-    //         ]);
-    //     }
-    // }
 
     public function RegisterUser(Request $request)
     {
@@ -243,11 +148,14 @@ class AuthController extends Controller
 
     public function login()
     {
-        session(['url.intended' => url()->previous()]);
+        $previousUrl = url()->previous();
+
+        if (!Str::contains($previousUrl, ['login', 'Register'])) {
+            session(['url.intended' => $previousUrl]);
+        }
+
         return view('User.Auth.login');
     }
-
-    
 
     public function loginInsert(Request $request)
     {
@@ -266,13 +174,17 @@ class AuthController extends Controller
 
         try {
             $credentials = $request->only('email', 'password');
-            $remember    = $request->has('remember'); // true if checkbox is checked
+            $remember    = $request->has('remember');
 
             if (Auth::attempt($credentials, $remember)) {
                 $user = Auth::user();
 
                 if ($user->user_type == 0 && $user->email_verified == 1) {
-                    $redirectUrl = session()->pull('url.intended', route('User.Dashboard'));
+                    $intended = session()->pull('url.intended');
+
+                    $redirectUrl = $intended && url()->isValidUrl($intended)
+                        ? $intended
+                        : route('User.Dashboard'); // Make sure this route name exists
 
                     return response()->json([
                         'status_code'  => 1,
@@ -293,23 +205,12 @@ class AuthController extends Controller
                 ]);
             }
         } catch (\Exception $e) {
-            Log::error('Login error: ' . $e->getMessage());
             return response()->json([
                 'status_code' => 0,
                 'message'     => 'Something went wrong during login.',
             ]);
         }
     }
-
-    // public function logout(Request $request)
-    // {
-    //     $request->session()->flush(); // Clear all session data
-    //     return response()->json([
-    //         'status_code'  => 1,
-    //         'message'      => 'Logout successful',
-    //         'redirect_url' => route('User.Home'),
-    //     ]);
-    // }
 
     public function logout(Request $request)
     {

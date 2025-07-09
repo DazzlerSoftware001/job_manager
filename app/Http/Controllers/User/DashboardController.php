@@ -204,28 +204,6 @@ class DashboardController extends Controller
 
     }
 
-    // public function sendOtp(Request $request)
-    // {
-    //     $request->validate(['email' => 'required|email']);
-
-    //     $email = $request->email;
-    //     $otp   = rand(100000, 999999);
-
-    //     // Optional: Delete old OTPs for this email
-    //     // UserProfile::where('email', $email)->delete();
-
-    //     // Store OTP in DB with expiry
-    //     UserProfile::where('email', Auth::user()->email)->update([
-    //         'otp_email'         => $otp,
-    //         'email_verified_at' => Carbon::now()->addMinutes(1),
-    //     ]);
-
-    //     // Send the OTP
-    //     Mail::to($email)->send(new ChangeEmail($otp));
-
-    //     return response()->json(['success' => true, 'message' => 'OTP sent']);
-    // }
-
     public function sendOtp(Request $request)
     {
         $request->validate(['email' => 'required|email']);
@@ -595,59 +573,6 @@ class DashboardController extends Controller
         }
     }
 
-    // public function UpdateExperience(Request $request)
-    // {
-    //     // dd($request->all());
-    //     // Step 1: Validate the request
-    //     $validator = Validator::make($request->all(), [
-    //         'exp_id'       => 'required|exists:candidate_employment,id',
-    //         'company_name' => 'required|string|max:255',
-    //         'position'     => 'required|string|max:255',
-    //         'experience'   => 'required|string|max:255',
-    //         'desc'         => 'nullable|string',
-    //     ]);
-
-    //     if ($validator->fails()) {
-    //         return response()->json([
-    //             'status_code' => 0,
-    //             'message'     => 'Validation failed',
-    //             'errors'      => $validator->errors(),
-    //         ]);
-    //     }
-
-    //     try {
-    //         // Step 2: Get current user's education info
-    //         $experience = CandidateEmployment::where('user_id', Auth::id())->where('id', $request->exp_id)->first();
-
-    //         // If record not found, optionally create it
-    //         if (! $experience) {
-    //             return response()->json([
-    //                 'status_code' => 0,
-    //                 'message'     => 'Experience record not found.',
-    //             ]);
-    //         }
-
-    //         CandidateEmployment::where('id', $request->exp_id)
-    //             ->update([
-    //                 'company_name' => $request->company_name,
-    //                 'position'     => $request->position,
-    //                 'experience'   => $request->experience,
-    //                 'description'  => $request->desc,
-    //             ]);
-
-    //         return response()->json([
-    //             'status_code' => 1,
-    //             'message'     => 'Candidate Experience updated successfully!',
-    //         ]);
-
-    //     } catch (\Exception $e) {
-    //         return response()->json([
-    //             'status_code' => 0,
-    //             'message'     => 'Error: ' . $e->getMessage(),
-    //         ]);
-    //     }
-    // }
-
     public function UpdateExperience(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -704,19 +629,6 @@ class DashboardController extends Controller
             'message'     => 'Candidate Experience updated successfully!',
         ]);
     }
-
-    // public function deleteExperience($id)
-    // {
-    //     $experience = CandidateEmployment::where('id', $id)->first();
-
-    //     if (! $experience) {
-    //         return response()->json(['status_code' =>0, 'message' => 'Experience record not found.']);
-    //     }
-
-    //     CandidateEmployment::where('id', $id)->delete();
-
-    //     return response()->json(['status_code' => 1 ,'message' => 'Experience deleted successfully.'], 200);
-    // }
 
     public function deleteExperience($id)
     {
@@ -902,56 +814,6 @@ class DashboardController extends Controller
         }
     }
 
-    // public function updateAward(Request $request)
-    // {
-    //     // Step 1: Validate the request
-    //     $validator = Validator::make($request->all(), [
-    //         'award_id'    => 'required|exists:candidate_award,id',
-    //         'award_title' => 'required|string|max:255',
-    //         'award_date'  => 'required',
-    //         'award_desc'  => 'required',
-    //     ]);
-
-    //     if ($validator->fails()) {
-    //         return response()->json([
-    //             'status_code' => 0,
-    //             'message'     => 'Validation failed',
-    //             'errors'      => $validator->errors(),
-    //         ]);
-    //     }
-
-    //     try {
-    //         // Step 2: Get current user's education info
-    //         $award = CandidateAward::where('user_id', Auth::id())->where('id', $request->award_id)->first();
-
-    //         // If record not found, optionally create it
-    //         if (! $award) {
-    //             return response()->json([
-    //                 'status_code' => 0,
-    //                 'message'     => 'Education record not found.',
-    //             ]);
-    //         }
-
-    //         CandidateAward::where('id', $request->award_id)
-    //             ->update([
-    //                 'award_title' => $request->award_title,
-    //                 'award_date'  => $request->award_date,
-    //                 'award_desc'  => $request->award_desc,
-    //             ]);
-
-    //         return response()->json([
-    //             'status_code' => 1,
-    //             'message'     => 'Candidate Award updated successfully!',
-    //         ]);
-
-    //     } catch (\Exception $e) {
-    //         return response()->json([
-    //             'status_code' => 0,
-    //             'message'     => 'Error: ' . $e->getMessage(),
-    //         ]);
-    //     }
-    // }
-
     public function updateAward(Request $request)
     {
         // dd($request->all());
@@ -1079,15 +941,5 @@ class DashboardController extends Controller
 
         return response()->json(['success' => true, 'id' => $id]);
     }
-
-    // public function destroy($id)
-    // {
-    //     auth()->user()->notifications()->where('id', $id)->delete();
-
-    //     return response()->json([
-    //         'success' => true,
-    //         'message' => 'Notification deleted successfully.',
-    //     ]);
-    // }
 
 }
